@@ -4,38 +4,13 @@
     <meta charset="utf-8"/>
     <title>Wicket Test</title>
 </head>
-<body data-sidebar-layout>
-<nav data-topnav>
-    <button data-sidebar-toggle aria-label="Toggle menu" class="outline">☰</button>
-    <span>App Name</span>
-</nav>
-<aside data-sidebar>
-    <nav>
-        <ul>
-            <li><a href="#" aria-current="page">Home</a></li>
-            <li><a href="#">Users</a></li>
-            <li>
-                <details open>
-                    <summary>Settings</summary>
-                    <ul>
-                        <li><a href="#">General</a></li>
-                        <li><a href="#">Security</a></li>
-                        <li><a href="#">Billing</a></li>
-                    </ul>
-                </details>
-            </li>
-        </ul>
-    </nav>
-    <footer>
-        <button class="outline sm" style="width: 100%;">Logout</button>
-    </footer>
-</aside>
-<main>
+<body>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
     <h1 wicket:id="message">message-placeholder</h1>
     <p>Server time: <span wicket:id="now">now-placeholder</span></p>
     <form wicket:id="timeForm">
         <button type="button" wicket:id="refreshTime">Refresh time</button>
     </form>
-</main>
+</wicket:extend>
 </body>
 </html>

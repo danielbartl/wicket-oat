@@ -2,26 +2,13 @@ package dev.jbaby.wicket.oat;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 
 import java.time.Instant;
 
-public class HomePage extends WebPage {
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-
-        super.renderHead(response);
-
-        response.render(CssHeaderItem.forUrl("https://unpkg.com/@knadh/oat/oat.min.css"));
-        response.render(JavaScriptHeaderItem.forUrl("https://unpkg.com/@knadh/oat/oat.min.js"));
-    }
+public class HomePage extends AppLayout {
 
     public HomePage() {
         add(new Label("message", "Wicket is running!"));

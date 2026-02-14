@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+    <title wicket:id="appTitle">App</title>
+</head>
+<body data-sidebar-layout>
+
+<nav data-topnav>
+    <button data-sidebar-toggle aria-label="Toggle menu" class="outline">☰</button>
+    <span wicket:id="appName">App Name</span>
+</nav>
+
+<aside data-sidebar>
+    <nav>
+        <ul>
+            <li><a href="#" aria-current="page">Home</a></li>
+            <li><a href="#">Users</a></li>
+            <li>
+                <details open>
+                    <summary>Settings</summary>
+                    <ul>
+                        <li><a href="#">General</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Billing</a></li>
+                    </ul>
+                </details>
+            </li>
+        </ul>
+    </nav>
+    <footer>
+        <button class="outline sm" style="width: 100%;">Logout</button>
+    </footer>
+</aside>
+
+<main>
+    <wicket:child/>
+</main>
+
+</body>
+</html>

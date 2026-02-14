@@ -11,24 +11,15 @@
     <span wicket:id="appName">App Name</span>
 </nav>
 
-<aside data-sidebar>
+<aside data-sidebar wicket:id="sidebar">
     <nav>
         <ul>
-            <li><a href="#" aria-current="page">Home</a></li>
-            <li><a href="#">Users</a></li>
-            <li>
-                <details open>
-                    <summary>Settings</summary>
-                    <ul>
-                        <li><a href="#">General</a></li>
-                        <li><a href="#">Security</a></li>
-                        <li><a href="#">Billing</a></li>
-                    </ul>
-                </details>
+            <li wicket:id="menuItems">
+                <a wicket:id="link"><span wicket:id="label">Label</span></a>
             </li>
         </ul>
     </nav>
-    <footer>
+    <footer wicket:id="footer">
         <button class="outline sm" style="width: 100%;">Logout</button>
     </footer>
 </aside>

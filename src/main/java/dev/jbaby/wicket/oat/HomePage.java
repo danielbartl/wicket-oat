@@ -8,7 +8,7 @@ import org.apache.wicket.model.Model;
 
 import java.time.Instant;
 
-public class HomePage extends AppLayout {
+public class HomePage extends BasePage {
 
     public HomePage() {
         add(new Label("message", "Wicket is running!"));
@@ -33,4 +33,5 @@ public class HomePage extends AppLayout {
             }
         });
     }
+
 }

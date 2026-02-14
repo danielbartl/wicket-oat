@@ -1,4 +1,4 @@
-package dev.jbaby.wicket.oat;
+package dev.jbaby.wicket.oat.components;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;

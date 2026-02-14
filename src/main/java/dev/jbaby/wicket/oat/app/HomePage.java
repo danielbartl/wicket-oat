@@ -1,4 +1,4 @@
-package dev.jbaby.wicket.oat;
+package dev.jbaby.wicket.oat.app;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

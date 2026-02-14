@@ -1,5 +1,8 @@
 package dev.jbaby.wicket.oat;
 
+import dev.jbaby.wicket.oat.app.HomePage;
+import dev.jbaby.wicket.oat.app.SettingsPage;
+import dev.jbaby.wicket.oat.app.UsersPage;
 import org.apache.wicket.Page;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;

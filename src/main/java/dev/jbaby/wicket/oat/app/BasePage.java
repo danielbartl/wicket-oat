@@ -1,5 +1,7 @@
-package dev.jbaby.wicket.oat;
+package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.AppLayout;
+import dev.jbaby.wicket.oat.components.MenuItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.jspecify.annotations.NonNull;

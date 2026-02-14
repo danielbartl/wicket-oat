@@ -30,6 +30,10 @@ public class WicketOatApplication {
 
                 super.init();
 
+                mountPage("/home", HomePage.class);
+                mountPage("/users", UsersPage.class);
+                mountPage("/settings", SettingsPage.class);
+
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));
 

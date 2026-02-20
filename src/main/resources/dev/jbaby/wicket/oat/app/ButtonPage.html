@@ -1,0 +1,51 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Button Demo</h1>
+        <p>Buttons in Oat are styled from native <code>&lt;button&gt;</code> or <code>&lt;a class="button"&gt;</code> elements. <code>ButtonBehavior</code> automatically handles these.</p>
+
+        <h3>Variants</h3>
+        <div class="hstack gap-2 mt-4">
+            <a wicket:id="defaultButton">Default</a>
+            <a wicket:id="secondaryButton">Secondary</a>
+            <a wicket:id="dangerButton">Danger</a>
+        </div>
+
+        <h3 class="mt-6">Styles</h3>
+        <div class="hstack gap-2 mt-4">
+            <a wicket:id="outlineButton">Outline</a>
+            <a wicket:id="ghostButton">Ghost</a>
+        </div>
+
+        <h3 class="mt-6">Sizes</h3>
+        <div class="hstack gap-2 mt-4">
+            <a wicket:id="smallButton">Small</a>
+            <a wicket:id="largeButton">Large</a>
+        </div>
+
+        <h3 class="mt-6">Icon Style</h3>
+        <div class="hstack gap-2 mt-4">
+            <a wicket:id="iconButton">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+            </a>
+        </div>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <p>Simply add <code>ButtonBehavior</code> to any Wicket component (like <code>Link</code>, <code>Button</code>, or even <code>WebMarkupContainer</code>).</p>
+            
+            <pre><code>// Java - Using Behavior on a Link
+link.add(new ButtonBehavior(ButtonBehavior.Variant.SECONDARY)
+    .setStyle(ButtonBehavior.Style.OUTLINE)
+    .setSize(ButtonBehavior.Size.SMALL));</code></pre>
+
+            <pre><code>&lt;!-- HTML - Markup: can be &lt;a&gt;, &lt;button&gt;, or even &lt;div&gt; --&gt;
+&lt;a wicket:id="link"&gt;Click me&lt;/a&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

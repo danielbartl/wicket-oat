@@ -1,0 +1,45 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Badge Demo</h1>
+        <p>Badges are small status indicators or labels. In the Oat framework, they are created by applying the <code>.badge</code> class to a <code>&lt;span&gt;</code> or similar inline element.</p>
+
+        <h3>Variants</h3>
+        <div class="hstack gap-2 mt-4">
+            <span wicket:id="defaultBadge"></span>
+            <span wicket:id="secondaryBadge"></span>
+            <span wicket:id="outlineBadge"></span>
+            <span wicket:id="successBadge"></span>
+            <span wicket:id="warningBadge"></span>
+            <span wicket:id="dangerBadge"></span>
+        </div>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <p>You can use the <code>Badge</code> component for a simple label, or attach <code>BadgeBehavior</code> to any existing component.</p>
+            
+            <pre><code>// Java - Using the Badge component
+add(new Badge("myBadge", "Success", BadgeBehavior.Variant.SUCCESS));
+
+// Java - Using the Behavior on a regular Label
+Label label = new Label("myLabel", "New");
+label.add(new BadgeBehavior(BadgeBehavior.Variant.SUCCESS));</code></pre>
+
+            <pre><code>&lt;!-- HTML - Markup for both approaches --&gt;
+&lt;span wicket:id="myBadge"&gt;&lt;/span&gt;
+&lt;span wicket:id="myLabel"&gt;&lt;/span&gt;</code></pre>
+        </div>
+
+        <hr class="mt-6 mb-6"/>
+
+        <h3>Live Example (Behavior on Label)</h3>
+        <p>
+            Check out this notification <span wicket:id="customBehaviorBadge"></span>
+        </p>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

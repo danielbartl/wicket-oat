@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.ButtonBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
@@ -31,7 +32,7 @@ public class HomePage extends BasePage {
             protected void onError(AjaxRequestTarget target) {
                 // no validation here, so this should not happen
             }
-        });
+        }.add(new ButtonBehavior().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL)));
     }
 
 }

@@ -1,0 +1,44 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Card Demo</h1>
+        <p>Cards provide a flexible container for grouped content, often including a header and footer.</p>
+
+        <div class="mt-4">
+            <article wicket:id="simpleCard">
+                <header>
+                    <h3 wicket:id="title">Title</h3>
+                    <p wicket:id="description">Description</p>
+                </header>
+                <p wicket:id="content">Main content goes here.</p>
+                <footer class="flex gap-2 mt-4">
+                    <a wicket:id="cancel">Cancel</a>
+                    <a wicket:id="save">Save</a>
+                </footer>
+            </article>
+        </div>
+
+        <div class="mt-8">
+            <h3>How to use</h3>
+            <p>Use the <code>Card</code> component as a container. Inside, you can use standard <code>&lt;header&gt;</code> and <code>&lt;footer&gt;</code> tags in your markup.</p>
+            
+            <pre><code>// Java
+Card card = new Card("card");
+add(card);
+card.add(new Label("title", "Card Title"));</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;article wicket:id="card"&gt;
+    &lt;header&gt;
+        &lt;h3 wicket:id="title"&gt;&lt;/h3&gt;
+    &lt;/header&gt;
+    &lt;p&gt;Content...&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

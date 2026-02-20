@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Accordion Demo</h1>
+        <p>The Accordion component uses native <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements. It allows for collapsible content sections, and can be configured to allow only one section to be open at a time (exclusive grouping).</p>
+
+        <div style="max-width: 600px; margin-top: 2rem;">
+            <!-- The Accordion component should be attached to a <details> tag -->
+            <details wicket:id="accordion">
+                <summary wicket:id="title">Title</summary>
+                <div wicket:id="content">Content</div>
+            </details>
+        </div>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <p>The <code>Accordion</code> component is a specialized <code>ListView</code>. It automatically manages the grouping logic.</p>
+            
+            <pre><code>// Java - In your Page or Panel
+add(new Accordion&lt;MyData&gt;("accordion", model) {
+    @Override
+    protected void populateItem(ListItem&lt;MyData&gt; item) {
+        MyData data = item.getModelObject();
+        item.add(new Label("title", data.getTitle()));
+        item.add(new Label("content", data.getContent()));
+    }
+});</code></pre>
+
+            <pre><code>&lt;!-- HTML - Markup: attach to the &lt;details&gt; tag --&gt;
+&lt;details wicket:id="accordion"&gt;
+    &lt;summary wicket:id="title"&gt;Item Title&lt;/summary&gt;
+    &lt;div wicket:id="content"&gt;Item Content&lt;/div&gt;
+&lt;/details&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

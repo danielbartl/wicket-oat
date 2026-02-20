@@ -1,0 +1,58 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Table Demo</h1>
+        <p>Tables are styled by default in Oat.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr wicket:id="rows">
+                    <td wicket:id="name">Name</td>
+                    <td wicket:id="email">Email</td>
+                    <td wicket:id="role">Role</td>
+                    <td><span wicket:id="status">Status</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-8">
+            <h3>How to use</h3>
+            <p>Tables are automatically styled by Oat UI. Simply use standard <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, and <code>&lt;tbody&gt;</code> elements. You can use any Wicket repeater component like <code>ListView</code> or <code>DataTable</code> to populate the rows.</p>
+            
+            <pre><code>// Java - populating rows with a ListView
+add(new ListView&lt;&gt;("rows", items) {
+    @Override
+    protected void populateItem(ListItem&lt;Item&gt; item) {
+        item.add(new Label("name", item.getModelObject().getName()));
+        item.add(new Label("email", item.getModelObject().getEmail()));
+    }
+});</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Email&lt;/th&gt;&lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr wicket:id="rows"&gt;
+            &lt;td wicket:id="name"&gt;&lt;/td&gt;
+            &lt;td wicket:id="email"&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section class="vstack">
+        <h1>Oat Alert Demo</h1>
+        <p>Alerts provide contextual feedback messages for typical user actions. They use the <code>role="alert"</code> attribute and an optional <code>data-variant</code> attribute for styling.</p>
+
+        <h3>Variants</h3>
+        <div wicket:id="defaultAlert">
+            This is a <strong>default</strong> alert message.
+        </div>
+
+        <div wicket:id="successAlert">
+            <strong>Success!</strong> Your operation was completed successfully.
+        </div>
+
+        <div wicket:id="warningAlert">
+            <strong>Warning!</strong> There might be some issues with your input.
+        </div>
+
+        <div wicket:id="errorAlert">
+            <strong>Error!</strong> Something went wrong while processing your request.
+        </div>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <p>The <code>Alert</code> component is a container, while <code>AlertBehavior</code> can be added to any Wicket component.</p>
+            
+            <pre><code>// Java - Using the Alert component (container)
+add(new Alert("myAlert", AlertBehavior.Variant.SUCCESS));
+
+// Java - Using the Behavior on any component
+label.add(new AlertBehavior(AlertBehavior.Variant.SUCCESS));</code></pre>
+
+            <pre><code>&lt;!-- HTML - Markup for the container approach --&gt;
+&lt;div wicket:id="myAlert"&gt;
+    Any markup here...
+&lt;/div&gt;</code></pre>
+        </div>
+
+        <hr class="mt-6 mb-6"/>
+
+        <h3>Live Example (Behavior on Label)</h3>
+        <p wicket:id="customBehaviorAlert"></p>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

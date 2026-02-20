@@ -1,14 +1,15 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.OatSession;
+import dev.jbaby.wicket.oat.OatTheme;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -22,17 +23,10 @@ public abstract class AppLayout extends WebPage {
     protected WebMarkupContainer footer;
     private WebMarkupContainer sidebar;
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-
-        // Shared assets for all pages using this layout
-        response.render(CssHeaderItem.forUrl("https://unpkg.com/@knadh/oat/oat.min.css"));
-        response.render(JavaScriptHeaderItem.forUrl("https://unpkg.com/@knadh/oat/oat.min.js"));
-    }
-
     public AppLayout() {
-        // Put shared components here later if needed (nav, user menu, feedback, etc.)
+        TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
+        html.add(new OatThemeBehavior());
+        add(html);
     }
 
     @Override
@@ -110,9 +104,75 @@ public abstract class AppLayout extends WebPage {
         return Model.ofList(List.of());
     }
 
-
     protected void footer() {
         footer = new WebMarkupContainer("footer");
         sidebar.add(footer);
+
+        footer.add(new Link<Void>("lightTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.LIGHT);
+            }
+        });
+        footer.add(new Link<Void>("darkTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.DARK);
+            }
+        });
+        footer.add(new Link<Void>("midnightTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.MIDNIGHT);
+            }
+        });
+        footer.add(new Link<Void>("nordTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.NORD);
+            }
+        });
+        footer.add(new Link<Void>("everforestTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.EVERFOREST);
+            }
+        });
+        footer.add(new Link<Void>("tokyoNightTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.TOKYO_NIGHT);
+            }
+        });
+        footer.add(new Link<Void>("rosePineDawnTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.ROSE_PINE_DAWN);
+            }
+        });
+        footer.add(new Link<Void>("royalTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.ROYAL);
+            }
+        });
+        footer.add(new Link<Void>("clayTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.CLAY);
+            }
+        });
+        footer.add(new Link<Void>("catppuccinMochaTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.CATPPUCCIN_MOCHA);
+            }
+        });
+        footer.add(new Link<Void>("catppuccinLatteTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.CATPPUCCIN_LATTE);
+            }
+        });
     }
 }

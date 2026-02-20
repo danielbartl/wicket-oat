@@ -1,0 +1,136 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Dialog, Tabs & More</h1>
+
+        <h3>Tooltip</h3>
+        <p>Oat automatically styles the standard <code>title</code> attribute with a smooth transition.</p>
+        <button wicket:id="tooltipButton">Hover me for Tooltip</button>
+
+        <div class="mt-4">
+            <h4>How to use</h4>
+            <p>Use <code>TooltipBehavior</code> to set the <code>title</code> attribute on any component.</p>
+            <pre><code>// Java
+button.add(new TooltipBehavior("My Tooltip Content"));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;button wicket:id="button"&gt;Hover me&lt;/button&gt;</code></pre>
+        </div>
+
+        <h3 class="mt-10">Dialog</h3>
+        <p>Oat styles native <code>&lt;dialog&gt;</code> elements.</p>
+        <button wicket:id="openDialog">Open Dialog</button>
+
+        <dialog id="my-dialog" wicket:id="dialog">
+            <header>
+                <h3 wicket:id="dialogTitle">Title</h3>
+            </header>
+            <p>This is a native dialog styled by Oat. It can contain any HTML.</p>
+            <footer>
+                <button class="outline" wicket:id="closeDialog1">Close</button>
+                <button wicket:id="closeDialog2">Save</button>
+            </footer>
+        </dialog>
+
+        <div class="mt-4">
+            <h4>How to use</h4>
+            <p>Use a native <code>&lt;dialog&gt;</code> element in your markup and wrap it with a <code>WebMarkupContainer</code> in Java if you need to manage its content.</p>
+            <pre><code>// Java
+WebMarkupContainer dialog = new WebMarkupContainer("dialog");
+add(dialog);
+
+// Trigger button
+add(new WebMarkupContainer("open").add(new ClientSideClickBehavior("document.getElementById('my-id').showModal()")));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;dialog id="my-id" wicket:id="dialog"&gt;
+    &lt;header&gt;&lt;h3&gt;Title&lt;/h3&gt;&lt;/header&gt;
+    &lt;p&gt;Content...&lt;/p&gt;
+    &lt;footer&gt;&lt;button&gt;Close&lt;/button&gt;&lt;/footer&gt;
+&lt;/dialog&gt;</code></pre>
+        </div>
+
+        <h3 class="mt-10">Tabs</h3>
+        <p>Oat provides a <code>&lt;ot-tabs&gt;</code> Web Component.</p>
+
+        <ot-tabs wicket:id="tabs">
+            <div role="tablist">
+                <button role="tab">Account</button>
+                <button role="tab">Password</button>
+                <button role="tab">Notifications</button>
+            </div>
+            <div role="tabpanel">
+                <h3>Account Settings</h3>
+                <p>Manage your account information here.</p>
+            </div>
+            <div role="tabpanel">
+                <h3>Password Settings</h3>
+                <p>Change your password here.</p>
+            </div>
+            <div role="tabpanel">
+                <h3>Notification Settings</h3>
+                <p>Configure your notification preferences.</p>
+            </div>
+        </ot-tabs>
+
+        <div class="mt-4">
+            <h4>How to use</h4>
+            <p>Use the <code>&lt;ot-tabs&gt;</code> Web Component in your markup. Organize content with <code>role="tablist"</code>, <code>role="tab"</code>, and <code>role="tabpanel"</code>.</p>
+            <pre><code>// Java
+add(new WebMarkupContainer("tabs"));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;ot-tabs wicket:id="tabs"&gt;
+    &lt;div role="tablist"&gt;
+        &lt;button role="tab"&gt;Tab 1&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div role="tabpanel"&gt;Content 1&lt;/div&gt;
+&lt;/ot-tabs&gt;</code></pre>
+        </div>
+
+        <h3 class="mt-10">Toast</h3>
+        <p>Trigger a programmatic toast.</p>
+        <button wicket:id="successToast">Show Success Toast</button>
+        <button wicket:id="errorToast">Show Error Toast</button>
+
+        <div class="mt-4">
+            <h4>How to use</h4>
+            <p>Toasts are triggered programmatically via JavaScript using <code>ot.toast(message, options)</code>. To comply with CSP, use <code>ClientSideClickBehavior</code> to attach the listener.</p>
+            <pre><code>// Java - adding a trigger on a Component
+button.add(new ClientSideClickBehavior("ot.toast('Success!', {variant: 'success', title: 'Great news!'})"));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;button wicket:id="button"&gt;Show Toast&lt;/button&gt;</code></pre>
+            <p>Options include <code>variant</code>, <code>title</code>, and <code>duration</code> (in ms).</p>
+        </div>
+
+        <h3 class="mt-10">Typography</h3>
+        <article wicket:id="typography">
+            <h1>Heading 1</h1>
+            <p>This is a paragraph inside an <code>&lt;article&gt;</code> tag, which Oat uses for typography styling.</p>
+            <h2>Heading 2</h2>
+            <blockquote>
+                "Everything should be made as simple as possible, but not simpler."
+                <footer>— Albert Einstein</footer>
+            </blockquote>
+            <h3>Heading 3</h3>
+            <ul>
+                <li>Item 1</li>
+                <li>Item 2</li>
+            </ul>
+        </article>
+
+        <div class="mt-4">
+            <h4>How to use</h4>
+            <p>To apply Oat's default typography styling, wrap your content in an <code>&lt;article&gt;</code> tag. It styles headings, paragraphs, blockquotes, and lists automatically.</p>
+            <pre><code>// Java
+add(new WebMarkupContainer("typography"));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;article wicket:id="typography"&gt;
+    &lt;h1&gt;Title&lt;/h1&gt;
+    &lt;p&gt;Content...&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

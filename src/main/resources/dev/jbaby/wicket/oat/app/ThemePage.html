@@ -1,0 +1,59 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Theming Demo</h1>
+        <p>Oat UI is built with CSS variables, making it extremely easy to create and switch between themes.</p>
+
+        <div class="mt-8" wicket:id="themeDemo">
+            <h3>Current Theme Integration</h3>
+            <p>We use a custom <code>OatSession</code> to store the theme preference and a <code>OatThemeBehavior</code> to apply it to the <code>&lt;body&gt;</code> tag.</p>
+            
+            <div class="card mt-4">
+                <header><h3>Theme Switcher</h3></header>
+                <p>Use the sun, moon, and galaxy icons in the sidebar footer to switch themes instantly!</p>
+            </div>
+        </div>
+
+        <div class="mt-10">
+            <h3>How to use Themes</h3>
+            
+            <h4>1. Define Theme CSS</h4>
+            <p>Themes are defined by overriding Oat UI's CSS variables. You should wrap these in a <code>[data-theme="..."]</code> selector.</p>
+            <pre><code>/* Java - Ensure your CSS is registered */
+response.render(CssHeaderItem.forReference(new PackageResourceReference(getClass(), "my-themes.css")));</code></pre>
+            <pre><code>/* CSS - Define the variables */
+[data-theme="midnight"] {
+    color-scheme: dark;
+    --background: #020617;
+    --foreground: #f8fafc;
+    --primary: #38bdf8;
+    --card: #0f172a;
+}</code></pre>
+
+            <h4>2. Switch Theme Programmatically</h4>
+            <p>Use the <code>OatSession</code> to update the user's preference. Wicket Oat handles the rest by updating the <code>data-theme</code> attribute on the <code>&lt;html&gt;</code> tag.</p>
+            <pre><code>// Java - In a Link or AjaxButton
+public void onClick() {
+    OatSession.get().setTheme(OatTheme.MIDNIGHT);
+}</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;a wicket:id="switchBtn"&gt;Switch to Midnight&lt;/a&gt;</code></pre>
+
+            <h4>3. Apply Theme to the Document</h4>
+            <p>Ensure <code>OatThemeBehavior</code> is attached to your root <code>html</code> or <code>body</code> container in your base layout.</p>
+            <pre><code>// Java - Usually in AppLayout.java
+TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
+html.add(new OatThemeBehavior());
+add(html);</code></pre>
+            <pre><code>&lt;!-- HTML - AppLayout.html --&gt;
+&lt;html wicket:id="html"&gt;
+    &lt;body&gt;...&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

@@ -1,0 +1,174 @@
+/** Custom Midnight Theme **/
+[data-theme="midnight"] {
+    color-scheme: dark;
+    --background: #020617;
+    --foreground: #f8fafc;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --primary: #38bdf8;
+    --primary-foreground: #020617;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --faint: #0f172a;
+    --accent: #1e293b;
+    --danger-foreground: #f8fafc;
+    --success-foreground: #f8fafc;
+    --warning-foreground: #020617;
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #38bdf8;
+}
+
+/** Nord Theme **/
+[data-theme="nord"] {
+    color-scheme: dark;
+    --background: #2e3440;
+    --foreground: #d8dee9;
+    --card: #3b4252;
+    --card-foreground: #d8dee9;
+    --primary: #88c0d0;
+    --primary-foreground: #2e3440;
+    --secondary: #434c5e;
+    --secondary-foreground: #e5e9f0;
+    --muted: #4c566a;
+    --muted-foreground: #d8dee9;
+    --faint: #3b4252;
+    --border: #434c5e;
+    --input: #434c5e;
+    --ring: #88c0d0;
+}
+
+/** Everforest Theme **/
+[data-theme="everforest"] {
+    color-scheme: dark;
+    --background: #272e33;
+    --foreground: #d3c6aa;
+    --card: #2e383c;
+    --card-foreground: #d3c6aa;
+    --primary: #a7c080;
+    --primary-foreground: #272e33;
+    --secondary: #374145;
+    --secondary-foreground: #d3c6aa;
+    --muted: #414b50;
+    --muted-foreground: #859289;
+    --faint: #2e383c;
+    --border: #414b50;
+    --input: #414b50;
+    --ring: #a7c080;
+}
+
+/** Tokyo Night Theme **/
+[data-theme="tokyo-night"] {
+    color-scheme: dark;
+    --background: #1a1b26;
+    --foreground: #a9b1d6;
+    --card: #24283b;
+    --card-foreground: #a9b1d6;
+    --primary: #7aa2f7;
+    --primary-foreground: #1a1b26;
+    --secondary: #292e42;
+    --secondary-foreground: #c0caf5;
+    --muted: #414868;
+    --muted-foreground: #565f89;
+    --faint: #24283b;
+    --border: #292e42;
+    --input: #292e42;
+    --ring: #7aa2f7;
+}
+
+/** Rose Pine Dawn Theme (Light) **/
+[data-theme="rose-pine-dawn"] {
+    color-scheme: light;
+    --background: #faf4ed;
+    --foreground: #575279;
+    --card: #fffaf3;
+    --card-foreground: #575279;
+    --primary: #907aa9;
+    --primary-foreground: #faf4ed;
+    --secondary: #f2e9e1;
+    --secondary-foreground: #575279;
+    --muted: #cecacd;
+    --muted-foreground: #797593;
+    --faint: #f2e9e1;
+    --border: #dfdad9;
+    --input: #dfdad9;
+    --ring: #907aa9;
+}
+
+/** Royal Theme **/
+[data-theme="royal"] {
+    color-scheme: dark;
+    --background: #1e1b4b;
+    --foreground: #e0e7ff;
+    --card: #312e81;
+    --card-foreground: #e0e7ff;
+    --primary: #6366f1;
+    --primary-foreground: #ffffff;
+    --secondary: #3730a3;
+    --secondary-foreground: #e0e7ff;
+    --muted: #4338ca;
+    --muted-foreground: #a5b4fc;
+    --faint: #312e81;
+    --border: #4338ca;
+    --input: #4338ca;
+    --ring: #818cf8;
+}
+
+/** Clay Theme **/
+[data-theme="clay"] {
+    color-scheme: light;
+    --background: #fdfaf6;
+    --foreground: #4a4a4a;
+    --card: #ffffff;
+    --card-foreground: #4a4a4a;
+    --primary: #d2b48c;
+    --primary-foreground: #ffffff;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #4a4a4a;
+    --muted: #e5e5e5;
+    --muted-foreground: #8c8c8c;
+    --faint: #f5f5f5;
+    --border: #dcdcdc;
+    --input: #dcdcdc;
+    --ring: #d2b48c;
+}
+
+/** Catppuccin Mocha Theme **/
+[data-theme="catppuccin-mocha"] {
+    color-scheme: dark;
+    --background: #1e1e2e;
+    --foreground: #cdd6f4;
+    --card: #313244;
+    --card-foreground: #cdd6f4;
+    --primary: #cba6f7;
+    --primary-foreground: #1e1e2e;
+    --secondary: #74c7ec;
+    --secondary-foreground: #cdd6f4;
+    --muted: #6c7086;
+    --muted-foreground: #a6adc8;
+    --faint: #45475a;
+    --border: #585b70;
+    --input: #585b70;
+    --ring: #cba6f7;
+}
+
+/** Catppuccin Latte Theme **/
+[data-theme="catppuccin-latte"] {
+    color-scheme: light;
+    --background: #eff1f5;
+    --foreground: #4c4f69;
+    --card: #ccd0da;
+    --card-foreground: #4c4f69;
+    --primary: #8839ef;
+    --primary-foreground: #eff1f5;
+    --secondary: #209fb5;
+    --secondary-foreground: #4c4f69;
+    --muted: #9ca0b0;
+    --muted-foreground: #7c7f93;
+    --faint: #bcc0cc;
+    --border: #acb0be;
+    --input: #acb0be;
+    --ring: #8839ef;
+}

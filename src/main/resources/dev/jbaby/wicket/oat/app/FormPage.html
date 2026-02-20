@@ -1,0 +1,126 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Form & Feedback Demo</h1>
+
+        <form wicket:id="form">
+            <h3>Inputs</h3>
+            <label wicket:id="nameField">
+                Name
+                <input wicket:id="name" type="text" placeholder="Enter your name" />
+            </label>
+
+            <label wicket:id="emailField">
+                Email
+                <input wicket:id="email" type="text" placeholder="you@example.com" />
+            </label>
+
+            <label wicket:id="passwordField">
+                Password
+                <input wicket:id="password" type="password" placeholder="Password" />
+                <small wicket:id="hint">This is a small hint</small>
+            </label>
+
+            <h3 class="mt-6">Checkable</h3>
+            <label wicket:id="checkboxField">
+                <input wicket:id="agree" type="checkbox" /> I agree to the terms
+            </label>
+
+            <label wicket:id="switchField">
+                <input wicket:id="switch" type="checkbox" /> Notifications (Switch)
+            </label>
+
+            <h3 class="mt-6">Radio</h3>
+            <fieldset class="hstack" wicket:id="radioGroup">
+                <legend>Preference</legend>
+                <label><input wicket:id="radioA" type="radio">Option A</label>
+                <label><input wicket:id="radioB" type="radio">Option B</label>
+            </fieldset>
+
+            <h3 class="mt-6">Select & Textarea</h3>
+            <div wicket:id="selectField">
+                <label>Select an option</label>
+                <select wicket:id="select"></select>
+            </div>
+
+            <label wicket:id="textareaField" class="mt-4">
+                Message
+                <textarea wicket:id="message" placeholder="Your message..."></textarea>
+            </label>
+        </form>
+
+        <h3 class="mt-8">Spinners</h3>
+        <div class="hstack gap-4">
+            <div wicket:id="smallSpinner"></div>
+            <div wicket:id="defaultSpinner"></div>
+            <div wicket:id="largeSpinner"></div>
+        </div>
+
+        <h3 class="mt-8">Skeletons</h3>
+        <div class="vstack gap-2">
+            <div wicket:id="lineSkeleton" style="width: 200px"></div>
+            <div wicket:id="boxSkeleton" style="width: 100px; height: 100px"></div>
+        </div>
+
+        <h3 class="mt-8">Progress & Meter</h3>
+        <div class="vstack gap-2">
+            <progress wicket:id="progress"></progress>
+            <meter wicket:id="meter"></meter>
+        </div>
+
+        <div class="mt-10">
+            <h3>How to use</h3>
+            
+            <h4>Form Fields</h4>
+            <p>Use <code>FieldBehavior</code> on a container (like <code>&lt;label&gt;</code> or <code>&lt;div&gt;</code>) to style the field.</p>
+            <pre><code>// Java
+WebMarkupContainer container = new WebMarkupContainer("field");
+container.add(new FieldBehavior());
+container.add(new TextField&lt;&gt;("input", model));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;label wicket:id="field"&gt;
+    Label Text
+    &lt;input wicket:id="input" type="text" /&gt;
+&lt;/label&gt;</code></pre>
+
+            <h4>Switches</h4>
+            <p>Add <code>SwitchBehavior</code> to a <code>CheckBox</code>.</p>
+            <pre><code>// Java
+checkBox.add(new SwitchBehavior());</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;input wicket:id="switch" type="checkbox" /&gt;</code></pre>
+
+            <h4>Feedback</h4>
+            <p>Use <code>SpinnerBehavior</code> or <code>SkeletonBehavior</code> for loading states.</p>
+            <pre><code>// Java
+container.add(new SpinnerBehavior(SpinnerBehavior.Size.SMALL));
+container.add(new SkeletonBehavior(SkeletonBehavior.Shape.LINE));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="spinner"&gt;&lt;/div&gt;
+&lt;div wicket:id="skeleton"&gt;&lt;/div&gt;</code></pre>
+
+            <h4>Progress & Meter</h4>
+            <p>Use the specialized <code>Progress</code> and <code>Meter</code> components. <code>Meter</code> supports advanced ranges like low, high, and optimum.</p>
+            <pre><code>// Java - Simple Progress
+add(new Progress("progress", 60));
+
+// Java - Advanced Meter
+add(new Meter("meter", 
+    Model.of(0.8), // value
+    Model.of(0),   // min
+    Model.of(1),   // max
+    Model.of(0.3), // low
+    Model.of(0.7), // high
+    Model.of(1)    // optimum
+));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;progress wicket:id="progress"&gt;&lt;/progress&gt;
+&lt;meter wicket:id="meter"&gt;&lt;/meter&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

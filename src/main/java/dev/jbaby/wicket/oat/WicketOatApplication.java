@@ -1,12 +1,27 @@
 package dev.jbaby.wicket.oat;
 
+import dev.jbaby.wicket.oat.app.AccordionPage;
+import dev.jbaby.wicket.oat.app.AlertPage;
+import dev.jbaby.wicket.oat.app.BadgePage;
+import dev.jbaby.wicket.oat.app.ButtonGroupPage;
+import dev.jbaby.wicket.oat.app.ButtonPage;
+import dev.jbaby.wicket.oat.app.CardPage;
+import dev.jbaby.wicket.oat.app.ComponentsPage;
+import dev.jbaby.wicket.oat.app.FormPage;
 import dev.jbaby.wicket.oat.app.HomePage;
-import dev.jbaby.wicket.oat.app.SettingsPage;
-import dev.jbaby.wicket.oat.app.UsersPage;
+import dev.jbaby.wicket.oat.app.TablePage;
+import dev.jbaby.wicket.oat.app.ThemePage;
+import dev.jbaby.wicket.oat.components.AppLayout;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,21 +44,31 @@ public class WicketOatApplication {
             }
 
             @Override
+            public Session newSession(Request request, Response response) {
+                return new OatSession(request);
+            }
+
+            @Override
             protected void init() {
 
                 super.init();
 
                 mountPage("/home", HomePage.class);
-                mountPage("/users", UsersPage.class);
-                mountPage("/settings", SettingsPage.class);
+                mountPage("/accordion", AccordionPage.class);
+                mountPage("/alert", AlertPage.class);
+                mountPage("/badge", BadgePage.class);
+                mountPage("/button", ButtonPage.class);
+                mountPage("/button-group", ButtonGroupPage.class);
+                mountPage("/card", CardPage.class);
+                mountPage("/form", FormPage.class);
+                mountPage("/table", TablePage.class);
+                mountPage("/components", ComponentsPage.class);
+                mountPage("/theme", ThemePage.class);
 
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));
 
-                getCspSettings()
-                        .blocking()
-                        .add(CSPDirective.STYLE_SRC, "https://unpkg.com")
-                        .add(CSPDirective.SCRIPT_SRC, "https://unpkg.com");
+                WicketOats.install(this);
             }
         };
     }

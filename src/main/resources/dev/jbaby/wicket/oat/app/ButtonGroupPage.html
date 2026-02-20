@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Button Group Demo</h1>
+        <p>Button groups are created using <code>ButtonGroup</code> component, which renders a container with <code>class="buttons"</code>.</p>
+
+        <h3>Default Button Group</h3>
+        <menu wicket:id="group">
+            <button wicket:id="left">Left</button>
+            <button wicket:id="center">Center</button>
+            <button wicket:id="right">Right</button>
+        </menu>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <p>Use <code>ButtonGroup</code> component and add buttons inside it. Buttons typically use <code>ButtonBehavior</code>. You can mix different styles and variants within the same group.</p>
+            
+            <pre><code>// Java
+ButtonGroup group = new ButtonGroup("group");
+group.add(new Link&lt;Void&gt;("btn1").add(new ButtonBehavior(Variant.SECONDARY)));
+group.add(new Link&lt;Void&gt;("btn2").add(new ButtonBehavior(Variant.DANGER)));
+add(group);</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;menu wicket:id="group"&gt;
+    &lt;button wicket:id="btn1"&gt;Secondary&lt;/button&gt;
+    &lt;button wicket:id="btn2"&gt;Danger&lt;/button&gt;
+&lt;/menu&gt;</code></pre>
+        </div>
+
+    </section>
+</wicket:extend>
+</body>
+</html>

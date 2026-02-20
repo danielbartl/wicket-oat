@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org" wicket:id="html">
 <head>
     <meta charset="utf-8"/>
     <title wicket:id="appTitle">App</title>
@@ -20,7 +20,26 @@
         </ul>
     </nav>
     <footer wicket:id="footer">
-        <button class="outline sm" style="width: 100%;">Logout</button>
+        <div class="vstack gap-2">
+            <div class="hstack gap-2 justify-center">
+                <a wicket:id="lightTheme" title="Light Theme" style="cursor: pointer;">☀️</a>
+                <a wicket:id="darkTheme" title="Dark Theme" style="cursor: pointer;">🌙</a>
+                <a wicket:id="midnightTheme" title="Midnight Theme" style="cursor: pointer;">🌌</a>
+                <a wicket:id="nordTheme" title="Nord Theme" style="cursor: pointer;">❄️</a>
+                <a wicket:id="everforestTheme" title="Everforest Theme" style="cursor: pointer;">🌲</a>
+            </div>
+            <div class="hstack gap-2 justify-center">
+                <a wicket:id="tokyoNightTheme" title="Tokyo Night Theme" style="cursor: pointer;">🗼</a>
+                <a wicket:id="rosePineDawnTheme" title="Rose Pine Dawn Theme" style="cursor: pointer;">🌸</a>
+                <a wicket:id="royalTheme" title="Royal Theme" style="cursor: pointer;">👑</a>
+                <a wicket:id="clayTheme" title="Clay Theme" style="cursor: pointer;">🏺</a>
+            </div>
+            <div class="hstack gap-2 justify-center">
+                <a wicket:id="catppuccinMochaTheme" title="Catppuccin Mocha Theme" style="cursor: pointer;">☕</a>
+                <a wicket:id="catppuccinLatteTheme" title="Catppuccin Latte Theme" style="cursor: pointer;">🥛</a>
+            </div>
+            <button class="outline sm">Logout</button>
+        </div>
     </footer>
 </aside>
 

@@ -6,11 +6,106 @@
 </head>
 <body>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
-    <h1 wicket:id="message">message-placeholder</h1>
-    <p>Server time: <span wicket:id="now">now-placeholder</span></p>
-    <form wicket:id="timeForm">
-        <button type="button" wicket:id="refreshTime">Refresh time</button>
-    </form>
+    <section>
+        <h1>Welcome to Wicket Oat</h1>
+        <p class="lead">A modern, lightweight Wicket component library based on the <a href="https://oat.ink" target="_blank">Oat UI</a> framework.</p>
+
+        <div class="mt-8">
+            <h3>General Integration</h3>
+            <p>Wicket Oat provides a simple facade to install all necessary resources and security settings in your <code>WebApplication.init()</code> method:</p>
+            <pre><code>@Override
+protected void init() {
+    super.init();
+    
+    // Install Wicket Oat globally
+    WicketOats.install(this);
+}</code></pre>
+        </div>
+
+        <div class="mt-8">
+            <h3>What it does</h3>
+            <p>Calling <code>WicketOats.install(app)</code> performs several actions:</p>
+            <ul>
+                <li><strong>Global Resources:</strong> Registers local <code>oat.min.css</code> and <code>oat.min.js</code> using <code>getHeaderContributorListeners()</code>.</li>
+                <li><strong>Security Policy:</strong> Configures the Content Security Policy (CSP) to allow local resources and necessary inline styles for components like Toast.</li>
+            </ul>
+        </div>
+
+        <div class="mt-8">
+            <h3>Security & CSP</h3>
+            <p>To support Oat UI's dynamic features (like Toast notifications), the Content Security Policy should be configured to allow local resources and inline styles/scripts:</p>
+            <pre><code>getCspSettings().blocking()
+    .add(CSPDirective.STYLE_SRC, "'self'", "'unsafe-inline'")
+    .add(CSPDirective.SCRIPT_SRC, "'self'", "'unsafe-inline'");</code></pre>
+        </div>
+
+        <div class="mt-8">
+            <h3>Theming System</h3>
+            <p>Wicket Oat features a dynamic theming system based on the <code>data-theme</code> attribute. It supports both built-in and custom themes.</p>
+            
+            <h4>Programmatic Switching</h4>
+            <p>Themes are managed via <code>OatSession</code>. You can switch themes from any Wicket component:</p>
+            <pre><code>// Java
+OatSession.get().setTheme(OatTheme.MIDNIGHT);</code></pre>
+
+            <h4>Custom Theme Definition</h4>
+            <p>Themes are defined in CSS using variable overrides:</p>
+            <pre><code>/* themes.css */
+[data-theme="my-custom-theme"] {
+    color-scheme: dark;
+    --background: #123456;
+    --primary: #ffcc00;
+}</code></pre>
+        </div>
+
+        <div class="mt-8">
+            <h3>Advanced Usage: Programmatic Toasts</h3>
+            <p>Use the <code>ClientSideClickBehavior</code> to trigger Oat UI's native JavaScript functions while remaining CSP compliant:</p>
+            <pre><code>// Java
+button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', {variant: 'success'})"));</code></pre>
+        </div>
+
+        <div class="mt-8">
+            <h3>Component Architecture</h3>
+            <p>Wicket Oat follows two main patterns for implementing UI components:</p>
+            <ul>
+                <li><strong>Behaviors:</strong> Lightweight classes like <code>ButtonBehavior</code>, <code>BadgeBehavior</code>, or <code>SpinnerBehavior</code> that can be added to any Wicket component to apply Oat styling.</li>
+                <li><strong>Components:</strong> Specialized classes like <code>Alert</code>, <code>Badge</code>, <code>Progress</code>, or <code>Meter</code> that encapsulate both behavior and markup logic.</li>
+            </ul>
+        </div>
+
+        <div class="mt-8">
+            <h3>Implemented Components</h3>
+            <div class="hstack gap-2 wrap mt-2">
+                <span class="badge">Typography</span>
+                <span class="badge">Accordion</span>
+                <span class="badge">Alert</span>
+                <span class="badge">Badge</span>
+                <span class="badge">Button</span>
+                <span class="badge">Button Group</span>
+                <span class="badge">Card</span>
+                <span class="badge">Dialog</span>
+                <span class="badge">Forms</span>
+                <span class="badge">Meter</span>
+                <span class="badge">Progress</span>
+                <span class="badge">Spinner</span>
+                <span class="badge">Skeleton</span>
+                <span class="badge">Table</span>
+                <span class="badge">Tabs</span>
+                <span class="badge">Toast</span>
+                <span class="badge">Tooltip</span>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h3>Interactive Demo</h3>
+            <p>Message from Java: <strong wicket:id="message"></strong></p>
+            <p>Server time: <span wicket:id="now">now-placeholder</span></p>
+            <form wicket:id="timeForm">
+                <button type="button" wicket:id="refreshTime" class="outline small">Refresh time (AJAX)</button>
+            </form>
+        </div>
+    </section>
 </wicket:extend>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.behaviors.BadgeBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;

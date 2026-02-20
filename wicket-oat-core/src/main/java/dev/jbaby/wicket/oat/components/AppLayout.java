@@ -2,6 +2,7 @@ package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.OatSession;
 import dev.jbaby.wicket.oat.OatTheme;
+import dev.jbaby.wicket.oat.behaviors.OatThemeBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;

@@ -1,6 +1,8 @@
 package dev.jbaby.wicket.oat.app;
 
-import dev.jbaby.wicket.oat.components.*;
+import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
+import dev.jbaby.wicket.oat.behaviors.ClientSideClickBehavior;
+import dev.jbaby.wicket.oat.behaviors.TooltipBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 

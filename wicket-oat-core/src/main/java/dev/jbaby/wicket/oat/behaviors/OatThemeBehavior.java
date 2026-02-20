@@ -1,4 +1,4 @@
-package dev.jbaby.wicket.oat.components;
+package dev.jbaby.wicket.oat.behaviors;
 
 import dev.jbaby.wicket.oat.OatSession;
 import dev.jbaby.wicket.oat.OatTheme;

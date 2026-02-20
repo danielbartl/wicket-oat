@@ -1,7 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.components.Alert;
-import dev.jbaby.wicket.oat.components.AlertBehavior;
+import dev.jbaby.wicket.oat.behaviors.AlertBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 
 public class AlertPage extends BasePage {

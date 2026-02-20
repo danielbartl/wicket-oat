@@ -1,20 +1,19 @@
-package dev.jbaby.wicket.oat.components;
+package dev.jbaby.wicket.oat.behaviors;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 
 /**
- * Behavior that applies Oat's Button Group styling.
- * It adds class="buttons" and role="group".
+ * Behavior that applies Oat's Field styling.
+ * It adds data-field attribute.
  */
-public class ButtonGroupBehavior extends Behavior {
+public class FieldBehavior extends Behavior {
 
     @Override
     public void onComponentTag(Component component, ComponentTag tag) {
         super.onComponentTag(component, tag);
 
-        tag.append("class", "buttons", " ");
-        tag.put("role", "group");
+        tag.put("data-field", "");
     }
 }

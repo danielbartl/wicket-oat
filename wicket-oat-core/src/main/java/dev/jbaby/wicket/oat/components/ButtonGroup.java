@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.behaviors.ButtonGroupBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**

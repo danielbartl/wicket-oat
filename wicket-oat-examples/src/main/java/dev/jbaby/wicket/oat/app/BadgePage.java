@@ -1,7 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.components.Badge;
-import dev.jbaby.wicket.oat.components.BadgeBehavior;
+import dev.jbaby.wicket.oat.behaviors.BadgeBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 
 public class BadgePage extends BasePage {

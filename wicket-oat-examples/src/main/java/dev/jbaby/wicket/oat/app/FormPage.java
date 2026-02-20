@@ -1,6 +1,8 @@
 package dev.jbaby.wicket.oat.app;
 
-import dev.jbaby.wicket.oat.components.*;
+import dev.jbaby.wicket.oat.behaviors.*;
+import dev.jbaby.wicket.oat.components.Meter;
+import dev.jbaby.wicket.oat.components.Progress;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.Model;

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.2</version>
+		<version>4.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.jbaby</groupId>
@@ -36,7 +36,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<wicket.version>10.8.0</wicket.version>
-		<spring-modulith.version>2.0.2</spring-modulith.version>
+		<spring-modulith.version>2.0.3</spring-modulith.version>
 	</properties>
 
 	<dependencyManagement>

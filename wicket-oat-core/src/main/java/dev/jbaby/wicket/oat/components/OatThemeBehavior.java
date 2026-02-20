@@ -8,7 +8,7 @@ import org.apache.wicket.markup.ComponentTag;
 
 /**
  * A behavior that applies the current user's theme preference.
- * It adds 'data-theme' attribute to the tag.
+ * It adds the 'data-theme' attribute to the tag.
  */
 public class OatThemeBehavior extends Behavior {
 

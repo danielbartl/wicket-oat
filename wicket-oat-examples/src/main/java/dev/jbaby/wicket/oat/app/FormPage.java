@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.app;
 import dev.jbaby.wicket.oat.behaviors.*;
 import dev.jbaby.wicket.oat.components.Meter;
 import dev.jbaby.wicket.oat.components.Progress;
+import dev.jbaby.wicket.oat.components.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.Model;
@@ -15,6 +16,8 @@ public class FormPage extends BasePage {
         Form<Void> form = new Form<>("form");
         add(form);
 
+        // ... (existing code for individual behaviors)
+        
         // Input
         WebMarkupContainer nameField = new WebMarkupContainer("nameField");
         nameField.add(new FieldBehavior());
@@ -66,6 +69,24 @@ public class FormPage extends BasePage {
         textareaField.add(new FieldBehavior());
         textareaField.add(new TextArea<>("message", Model.of("")));
         form.add(textareaField);
+
+        // New Encapsulated Fields
+        form.add(new OatTextField<>("oatName", "Oat Name", Model.of(""))
+                .setPlaceholder(Model.of("Enter your name..."))
+                .setRequired(true));
+
+        form.add(new OatPasswordField("oatPassword", Model.of("Oat Password"), Model.of(""), Model.of("Must be at least 8 chars"))
+                .setPlaceholder(Model.of("Enter your password...")));
+
+        form.add(new OatEmailField("oatEmail", "Oat Email", Model.of(""))
+                .setPlaceholder(Model.of("you@example.com")));
+
+        form.add(new OatNumberField<>("oatAge", "Oat Age (18-99)", Model.of(25))
+                .setMin(18)
+                .setMax(99));
+
+        form.add(new OatTextArea<>("oatBio", "Oat Biography", Model.of(""))
+                .setPlaceholder(Model.of("Tell us about yourself...")));
         
         // Spinner
         WebMarkupContainer smallSpinner = new WebMarkupContainer("smallSpinner");

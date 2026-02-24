@@ -175,5 +175,35 @@ public abstract class AppLayout extends WebPage {
                 OatSession.get().setTheme(OatTheme.CATPPUCCIN_LATTE);
             }
         });
+        footer.add(new Link<Void>("materialTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.MATERIAL);
+            }
+        });
+        footer.add(new Link<Void>("daisyTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.DAISY);
+            }
+        });
+        footer.add(new Link<Void>("ultravioletTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.ULTRAVIOLET);
+            }
+        });
+        footer.add(new Link<Void>("halloweenTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.HALLOWEEN);
+            }
+        });
+        footer.add(new Link<Void>("wireframeTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.WIREFRAME);
+            }
+        });
     }
 }

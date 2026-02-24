@@ -13,7 +13,12 @@ public enum OatTheme implements Serializable {
     ROYAL("royal"),
     CLAY("clay"),
     CATPPUCCIN_MOCHA("catppuccin-mocha"),
-    CATPPUCCIN_LATTE("catppuccin-latte");
+    CATPPUCCIN_LATTE("catppuccin-latte"),
+    MATERIAL("material"),
+    DAISY("daisy"),
+    ULTRAVIOLET("ultraviolet"),
+    HALLOWEEN("halloween"),
+    WIREFRAME("wireframe");
 
     private final String value;
 

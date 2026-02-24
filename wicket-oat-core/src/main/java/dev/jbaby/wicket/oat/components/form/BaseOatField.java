@@ -11,7 +11,7 @@ import org.apache.wicket.validation.IValidator;
 
 public abstract class BaseOatField<T, C extends FormComponent<T>> extends Panel {
 
-    protected final C field;
+    protected C field;
     protected final WebMarkupContainer container;
     protected final IModel<String> helperText;
 

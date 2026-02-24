@@ -57,6 +57,20 @@
             <div wicket:id="oatEmail" class="mt-4"></div>
             <div wicket:id="oatAge" class="mt-4"></div>
             <div wicket:id="oatBio" class="mt-4"></div>
+            <div wicket:id="oatSelect" class="mt-4"></div>
+            <div wicket:id="oatDate" class="mt-4"></div>
+            <div wicket:id="oatUrl" class="mt-4"></div>
+            <div wicket:id="oatColor" class="mt-4"></div>
+            <div wicket:id="oatRange" class="mt-4"></div>
+            <div wicket:id="oatCheck" class="mt-4"></div>
+            <div wicket:id="oatSwitch" class="mt-4"></div>
+            <div wicket:id="oatTime" class="mt-4"></div>
+            <div wicket:id="oatSearch" class="mt-4"></div>
+            <div wicket:id="oatFile" class="mt-4"></div>
+            <div wicket:id="oatDateTime" class="mt-4"></div>
+            <div wicket:id="oatMonth" class="mt-4"></div>
+            <div wicket:id="oatWeek" class="mt-4"></div>
+            <div wicket:id="oatTel" class="mt-4"></div>
         </form>
 
         <h3 class="mt-8">Spinners</h3>
@@ -80,9 +94,21 @@
 
         <div class="mt-10">
             <h3>How to use</h3>
-            
-            <h4>Form Fields</h4>
-            <p>Use <code>FieldBehavior</code> on a container (like <code>&lt;label&gt;</code> or <code>&lt;div&gt;</code>) to style the field.</p>
+
+            <h4>Encapsulated Fields (Recommended)</h4>
+            <p>For most cases, use the specialized <code>Oat...</code> components. They handle labeling, feedback, and accessibility automatically.</p>
+            <pre><code>// Java
+form.add(new OatTextField&lt;&gt;("name", "Full Name", nameModel)
+    .setPlaceholder(Model.of("John Doe"))
+    .setRequired(true));
+
+form.add(new OatDropdownChoice&lt;String&gt;("status", "Status", statusModel, statusChoices));</code></pre>
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="name"&gt;&lt;/div&gt;
+&lt;div wicket:id="status"&gt;&lt;/div&gt;</code></pre>
+
+            <h4 class="mt-8">Custom Form Fields (Manual)</h4>
+            <p>Use <code>FieldBehavior</code> on a container (like <code>&lt;label&gt;</code> or <code>&lt;div&gt;</code>) to style manual fields.</p>
             <pre><code>// Java
 WebMarkupContainer container = new WebMarkupContainer("field");
 container.add(new FieldBehavior());

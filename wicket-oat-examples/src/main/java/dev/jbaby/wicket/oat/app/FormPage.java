@@ -14,9 +14,10 @@ public class FormPage extends BasePage {
 
     public FormPage() {
         Form<Void> form = new Form<>("form");
+        form.setMultiPart(true); // Required for file upload
         add(form);
 
-        // ... (existing code for individual behaviors)
+        // ... (existing code)
         
         // Input
         WebMarkupContainer nameField = new WebMarkupContainer("nameField");
@@ -87,6 +88,37 @@ public class FormPage extends BasePage {
 
         form.add(new OatTextArea<>("oatBio", "Oat Biography", Model.of(""))
                 .setPlaceholder(Model.of("Tell us about yourself...")));
+
+        form.add(new OatDropdownChoice<String>("oatSelect", "Oat Select", Model.of("A"), Model.ofList(Arrays.asList("A", "B", "C")))
+                .setRequired(true));
+
+        form.add(new OatDateField("oatDate", "Oat Date", Model.of(java.time.LocalDate.now())));
+
+        form.add(new OatUrlField("oatUrl", "Oat Website", Model.of("")));
+
+        form.add(new OatColorField("oatColor", "Oat Color Picker", Model.of("#6200ee")));
+
+        form.add(new OatRangeField<>("oatRange", "Oat Range", Model.of(50))
+                .setMin(0)
+                .setMax(100));
+
+        form.add(new OatCheckBox("oatCheck", "Oat Checkbox", Model.of(true)));
+
+        form.add(new OatSwitch("oatSwitch", "Oat Switch", Model.of(false)));
+
+        form.add(new OatTimeField("oatTime", "Oat Time", Model.of(java.time.LocalTime.now())));
+
+        form.add(new OatSearchField("oatSearch", "Oat Search", Model.of("")));
+
+        form.add(new OatFileUpload("oatFile", "Oat Upload", Model.ofList(new java.util.ArrayList<>())));
+
+        form.add(new OatDateTimeLocalField("oatDateTime", "Oat Date & Time", Model.of(java.time.LocalDateTime.now())));
+
+        form.add(new OatMonthField("oatMonth", "Oat Month", Model.of("2026-02")));
+
+        form.add(new OatWeekField("oatWeek", "Oat Week", Model.of("2026-W09")));
+
+        form.add(new OatTelField("oatTel", "Oat Phone", Model.of("")));
         
         // Spinner
         WebMarkupContainer smallSpinner = new WebMarkupContainer("smallSpinner");

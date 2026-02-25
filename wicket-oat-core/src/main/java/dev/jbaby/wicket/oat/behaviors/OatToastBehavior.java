@@ -1,6 +1,5 @@
 package dev.jbaby.wicket.oat.behaviors;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 

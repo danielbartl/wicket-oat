@@ -1,7 +1,8 @@
 package dev.jbaby.wicket.oat;
 
-import dev.jbaby.wicket.oat.components.AppLayout;
+import dev.jbaby.wicket.oat.components.OatAppLayout;
 import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -12,9 +13,9 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  */
 public class WicketOats {
 
-    private static final PackageResourceReference OAT_CSS = new PackageResourceReference(AppLayout.class, "oat.min.css");
-    private static final PackageResourceReference OAT_JS = new PackageResourceReference(AppLayout.class, "oat.min.js");
-    private static final PackageResourceReference THEMES_CSS = new PackageResourceReference(AppLayout.class, "themes.css");
+    private static final PackageResourceReference OAT_CSS = new PackageResourceReference(OatAppLayout.class, "oat.min.css");
+    private static final PackageResourceReference OAT_JS = new PackageResourceReference(OatAppLayout.class, "oat.min.js");
+    private static final PackageResourceReference THEMES_CSS = new PackageResourceReference(OatAppLayout.class, "themes.css");
 
     /**
      * Installs Wicket Oat UI into the given application.
@@ -34,5 +35,10 @@ public class WicketOats {
         // Oat UI (especially Toast) uses inline styles and dynamic scripts.
         // unsafeInline() removes nonces and allows 'unsafe-inline' for style-src and script-src.
         app.getCspSettings().blocking().unsafeInline();
+        
+        app.getCspSettings().blocking()
+                .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.IMG_SRC, "https://i.pravatar.cc")
+                .add(CSPDirective.IMG_SRC, "https://images.unsplash.com");
     }
 }

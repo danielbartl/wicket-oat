@@ -4,7 +4,7 @@
 <wicket:extend>
     <section>
         <h1>Oat Button Group Demo</h1>
-        <p>Button groups are created using <code>ButtonGroup</code> component, which renders a container with <code>class="buttons"</code>.</p>
+        <p>Button groups are created using <code>OatButtonGroup</code> component, which renders a container with <code>class="buttons"</code>.</p>
 
         <h3>Default Button Group</h3>
         <menu wicket:id="group">
@@ -15,12 +15,12 @@
 
         <div class="mt-6">
             <h3>How to use</h3>
-            <p>Use <code>ButtonGroup</code> component and add buttons inside it. Buttons typically use <code>ButtonBehavior</code>. You can mix different styles and variants within the same group.</p>
+            <p>Use <code>OatButtonGroup</code> component and add buttons inside it. Buttons typically use <code>ButtonBehavior</code>. You can mix different styles and variants within the same group.</p>
             
-            <pre><code>// Java
-ButtonGroup group = new ButtonGroup("group");
-group.add(new Link&lt;Void&gt;("btn1").add(new ButtonBehavior(Variant.SECONDARY)));
-group.add(new Link&lt;Void&gt;("btn2").add(new ButtonBehavior(Variant.DANGER)));
+            <pre><code>// Java - Using the Oat factory (recommended)
+OatButtonGroup group = Oat.buttonGroup("group");
+group.add(new Link&lt;Void&gt;("btn1").add(Oat.button().setVariant(Variant.SECONDARY)));
+group.add(new Link&lt;Void&gt;("btn2").add(Oat.button().setVariant(Variant.DANGER)));
 add(group);</code></pre>
 
             <pre><code>&lt;!-- HTML --&gt;

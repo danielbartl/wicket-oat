@@ -270,3 +270,23 @@
     --input: oklch(100% 0 0);
     --ring: oklch(87% 0 0);
 }
+
+/** Christmas Theme **/
+[data-theme="xmas"] {
+    color-scheme: dark;
+    --background: #064e3b;
+    --foreground: #fef2f2;
+    --card: #065f46;
+    --card-foreground: #fef2f2;
+    --primary: #dc2626;
+    --primary-foreground: #ffffff;
+    --secondary: #166534;
+    --secondary-foreground: #ffffff;
+    --accent: #fcd34d;
+    --muted: #065f46;
+    --muted-foreground: #a7f3d0;
+    --faint: #042f2e;
+    --border: #059669;
+    --input: #059669;
+    --ring: #dc2626;
+}

@@ -19,12 +19,12 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
-public abstract class AppLayout extends WebPage {
+public abstract class OatAppLayout extends WebPage {
 
     protected WebMarkupContainer footer;
     private WebMarkupContainer sidebar;
 
-    public AppLayout() {
+    public OatAppLayout() {
         TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
         html.add(new OatThemeBehavior());
         add(html);
@@ -197,6 +197,12 @@ public abstract class AppLayout extends WebPage {
             @Override
             public void onClick() {
                 OatSession.get().setTheme(OatTheme.HALLOWEEN);
+            }
+        });
+        footer.add(new Link<Void>("xmasTheme") {
+            @Override
+            public void onClick() {
+                OatSession.get().setTheme(OatTheme.XMAS);
             }
         });
         footer.add(new Link<Void>("wireframeTheme") {

@@ -9,22 +9,22 @@ import org.apache.wicket.model.IModel;
  *
  * <pre>
  * &lt;div wicket:id="alert"&gt;
- *     Alert message goes here.
+ *     OatAlert message goes here.
  * &lt;/div&gt;
  * </pre>
  */
-public class Alert extends WebMarkupContainer {
+public class OatAlert extends WebMarkupContainer {
 
-    public Alert(String id) {
+    public OatAlert(String id) {
         this(id, AlertBehavior.Variant.DEFAULT);
     }
 
-    public Alert(String id, AlertBehavior.Variant variant) {
+    public OatAlert(String id, AlertBehavior.Variant variant) {
         super(id);
         add(new AlertBehavior(variant));
     }
 
-    public Alert(String id, IModel<AlertBehavior.Variant> variantModel) {
+    public OatAlert(String id, IModel<AlertBehavior.Variant> variantModel) {
         super(id);
         add(new AlertBehavior(variantModel));
     }

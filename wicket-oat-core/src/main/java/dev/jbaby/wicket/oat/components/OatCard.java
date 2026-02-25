@@ -19,9 +19,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * &lt;/article&gt;
  * </pre>
  */
-public class Card extends WebMarkupContainer {
+public class OatCard extends WebMarkupContainer {
 
-    public Card(String id) {
+    public OatCard(String id) {
         super(id);
         add(new CardBehavior());
     }

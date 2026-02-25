@@ -1,27 +1,12 @@
 package dev.jbaby.wicket.oat;
 
-import dev.jbaby.wicket.oat.app.AccordionPage;
-import dev.jbaby.wicket.oat.app.AlertPage;
-import dev.jbaby.wicket.oat.app.BadgePage;
-import dev.jbaby.wicket.oat.app.ButtonGroupPage;
-import dev.jbaby.wicket.oat.app.ButtonPage;
-import dev.jbaby.wicket.oat.app.CardPage;
-import dev.jbaby.wicket.oat.app.ComponentsPage;
-import dev.jbaby.wicket.oat.app.FormPage;
-import dev.jbaby.wicket.oat.app.HomePage;
-import dev.jbaby.wicket.oat.app.TablePage;
-import dev.jbaby.wicket.oat.app.ThemePage;
-import dev.jbaby.wicket.oat.components.AppLayout;
+import dev.jbaby.wicket.oat.app.*;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
-import org.apache.wicket.csp.CSPDirective;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -62,6 +47,7 @@ public class WicketOatApplication {
                 mountPage("/card", CardPage.class);
                 mountPage("/form", FormPage.class);
                 mountPage("/table", TablePage.class);
+                mountPage("/data-table", DataTablePage.class);
                 mountPage("/components", ComponentsPage.class);
                 mountPage("/theme", ThemePage.class);
 

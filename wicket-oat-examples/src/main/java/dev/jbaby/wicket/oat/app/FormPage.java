@@ -1,8 +1,8 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.behaviors.*;
-import dev.jbaby.wicket.oat.components.Meter;
-import dev.jbaby.wicket.oat.components.Progress;
+import dev.jbaby.wicket.oat.components.OatMeter;
+import dev.jbaby.wicket.oat.components.OatProgress;
 import dev.jbaby.wicket.oat.components.form.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
@@ -143,7 +143,7 @@ public class FormPage extends BasePage {
         add(boxSkeleton);
 
         // Progress & Meter
-        add(new Progress("progress", 60));
-        add(new Meter("meter", Model.of(0.8), Model.of(0), Model.of(1), Model.of(0.3), Model.of(0.7), Model.of(1)));
+        add(new OatProgress("progress", 60));
+        add(new OatMeter("meter", Model.of(0.8), Model.of(0), Model.of(1), Model.of(0.3), Model.of(0.7), Model.of(1)));
     }
 }

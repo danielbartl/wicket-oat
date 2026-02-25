@@ -1,7 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
-import dev.jbaby.wicket.oat.components.Card;
+import dev.jbaby.wicket.oat.components.OatCard;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 
@@ -9,7 +9,7 @@ public class CardPage extends BasePage {
 
     public CardPage() {
         // Simple card with header, body and footer in markup
-        Card simpleCard = new Card("simpleCard");
+        OatCard simpleCard = new OatCard("simpleCard");
         add(simpleCard);
 
         simpleCard.add(new Label("title", "Project Alpha"));

@@ -9,7 +9,7 @@ import org.apache.wicket.model.Model;
  * A component that renders as an Oat Meter.
  * Uses the native &lt;meter&gt; element.
  */
-public class Meter extends WebComponent {
+public class OatMeter extends WebComponent {
 
     private final IModel<? extends Number> valueModel;
     private final IModel<? extends Number> minModel;
@@ -18,11 +18,11 @@ public class Meter extends WebComponent {
     private final IModel<? extends Number> highModel;
     private final IModel<? extends Number> optimumModel;
 
-    public Meter(String id, Number value) {
+    public OatMeter(String id, Number value) {
         this(id, Model.of(value), Model.of(0), Model.of(1), null, null, null);
     }
 
-    public Meter(String id, IModel<? extends Number> valueModel, IModel<? extends Number> minModel, IModel<? extends Number> maxModel,
+    public OatMeter(String id, IModel<? extends Number> valueModel, IModel<? extends Number> minModel, IModel<? extends Number> maxModel,
                  IModel<? extends Number> lowModel, IModel<? extends Number> highModel, IModel<? extends Number> optimumModel) {
         super(id);
         this.valueModel = valueModel;

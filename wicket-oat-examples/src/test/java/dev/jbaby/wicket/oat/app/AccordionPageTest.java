@@ -29,7 +29,7 @@ class AccordionPageTest {
         tester.assertRenderedPage(AccordionPage.class);
         
         // Assert the presence of the accordion component
-        tester.assertComponent("accordion", dev.jbaby.wicket.oat.components.Accordion.class);
+        tester.assertComponent("accordion", dev.jbaby.wicket.oat.components.OatAccordion.class);
         
         // Assert that we have 3 items (based on the sample data in AccordionPage)
         tester.assertComponent("accordion:0", org.apache.wicket.markup.html.list.ListItem.class);

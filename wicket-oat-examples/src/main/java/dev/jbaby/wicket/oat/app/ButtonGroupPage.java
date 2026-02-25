@@ -1,14 +1,14 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
-import dev.jbaby.wicket.oat.components.ButtonGroup;
+import dev.jbaby.wicket.oat.components.OatButtonGroup;
 import org.apache.wicket.markup.html.link.Link;
 
 public class ButtonGroupPage extends BasePage {
 
     public ButtonGroupPage() {
         // Default Button Group
-        ButtonGroup group = new ButtonGroup("group");
+        OatButtonGroup group = new OatButtonGroup("group");
         add(group);
 
         group.add(new Link<Void>("left") {

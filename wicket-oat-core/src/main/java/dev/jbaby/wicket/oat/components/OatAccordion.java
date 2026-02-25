@@ -21,15 +21,15 @@ import java.util.List;
  *
  * @param <T> the type of the list items
  */
-public abstract class Accordion<T> extends ListView<T> {
+public abstract class OatAccordion<T> extends ListView<T> {
 
     private final AccordionBehavior behavior;
 
-    public Accordion(String id, IModel<List<T>> model) {
+    public OatAccordion(String id, IModel<List<T>> model) {
         this(id, model, true);
     }
 
-    public Accordion(String id, IModel<List<T>> model, boolean exclusive) {
+    public OatAccordion(String id, IModel<List<T>> model, boolean exclusive) {
         super(id, model);
         this.behavior = new AccordionBehavior(exclusive);
         add(behavior);
@@ -54,7 +54,7 @@ public abstract class Accordion<T> extends ListView<T> {
         return behavior.isExclusive();
     }
 
-    public Accordion<T> setExclusive(boolean exclusive) {
+    public OatAccordion<T> setExclusive(boolean exclusive) {
         behavior.setExclusive(exclusive);
         return this;
     }

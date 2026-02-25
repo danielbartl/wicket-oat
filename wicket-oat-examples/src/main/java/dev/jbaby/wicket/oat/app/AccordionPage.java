@@ -1,6 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
-import dev.jbaby.wicket.oat.components.Accordion;
+import dev.jbaby.wicket.oat.components.OatAccordion;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
@@ -20,7 +20,7 @@ public class AccordionPage extends BasePage {
                 new AccordionData("Accordion Item 3", "Third item content. Note how opening one closes the others due to the exclusive group behavior.")
         );
 
-        add(new Accordion<>("accordion", Model.ofList(data)) {
+        add(new OatAccordion<>("accordion", Model.ofList(data)) {
             @Override
             protected void populateItem(ListItem<AccordionData> item) {
                 AccordionData model = item.getModelObject();

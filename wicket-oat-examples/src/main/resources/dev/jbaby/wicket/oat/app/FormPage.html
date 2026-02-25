@@ -120,28 +120,34 @@ container.add(new TextField&lt;&gt;("input", model));</code></pre>
 &lt;/label&gt;</code></pre>
 
             <h4>Switches</h4>
-            <p>Add <code>SwitchBehavior</code> to a <code>CheckBox</code>.</p>
+            <p>Add <code>SwitchBehavior</code> to a <code>CheckBox</code> via the <code>Oat</code> factory.</p>
             <pre><code>// Java
-checkBox.add(new SwitchBehavior());</code></pre>
+checkBox.add(Oat.switchBehavior());</code></pre>
             <pre><code>&lt;!-- HTML --&gt;
 &lt;input wicket:id="switch" type="checkbox" /&gt;</code></pre>
 
             <h4>Feedback</h4>
-            <p>Use <code>SpinnerBehavior</code> or <code>SkeletonBehavior</code> for loading states.</p>
-            <pre><code>// Java
-container.add(new SpinnerBehavior(SpinnerBehavior.Size.SMALL));
-container.add(new SkeletonBehavior(SkeletonBehavior.Shape.LINE));</code></pre>
+            <p>Use <code>OatSpinner</code>, <code>OatSkeleton</code> components or their behaviors for loading states.</p>
+            <pre><code>// Java - Components via Oat factory (recommended)
+add(Oat.spinner("spinner", SpinnerBehavior.Size.SMALL));
+add(Oat.skeleton("skeleton", SkeletonBehavior.Shape.LINE));
+
+// Java - Behaviors via Oat factory
+container.add(Oat.spinner(SpinnerBehavior.Size.SMALL));
+container.add(Oat.skeleton(SkeletonBehavior.Shape.LINE));</code></pre>
             <pre><code>&lt;!-- HTML --&gt;
 &lt;div wicket:id="spinner"&gt;&lt;/div&gt;
 &lt;div wicket:id="skeleton"&gt;&lt;/div&gt;</code></pre>
 
             <h4>Progress & Meter</h4>
-            <p>Use the specialized <code>Progress</code> and <code>Meter</code> components. <code>Meter</code> supports advanced ranges like low, high, and optimum.</p>
-            <pre><code>// Java - Simple Progress
-add(new Progress("progress", 60));
+            <p>Use the specialized <code>OatProgress</code> and <code>OatMeter</code> components via the <code>Oat</code> factory. <code>OatMeter</code> supports advanced ranges like low, high, and optimum.</p>
+            <pre><code>// Java - Simple Progress via Oat factory
+add(Oat.progress("progress", 60));
 
-// Java - Advanced Meter
-add(new Meter("meter", 
+// Java - Advanced Meter via Oat factory
+add(Oat.meter("meter", 0.8)); // Default values 0-1 range
+// or for full control:
+add(new OatMeter("meter", 
     Model.of(0.8), // value
     Model.of(0),   // min
     Model.of(1),   // max

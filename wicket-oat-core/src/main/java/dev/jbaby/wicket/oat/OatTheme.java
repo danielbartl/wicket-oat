@@ -18,6 +18,7 @@ public enum OatTheme implements Serializable {
     DAISY("daisy"),
     ULTRAVIOLET("ultraviolet"),
     HALLOWEEN("halloween"),
+    XMAS("xmas"),
     WIREFRAME("wireframe");
 
     private final String value;

@@ -1,7 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.TestcontainersConfiguration;
-import dev.jbaby.wicket.oat.components.Badge;
+import dev.jbaby.wicket.oat.components.OatBadge;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
@@ -42,7 +42,7 @@ class TablePageTest {
         tester.assertLabel("rows:0:name", "Alice Johnson");
         tester.assertLabel("rows:0:email", "alice@example.com");
         tester.assertLabel("rows:0:role", "Admin");
-        tester.assertComponent("rows:0:status", Badge.class);
+        tester.assertComponent("rows:0:status", OatBadge.class);
         tester.assertLabel("rows:0:status", "Active");
     }
 }

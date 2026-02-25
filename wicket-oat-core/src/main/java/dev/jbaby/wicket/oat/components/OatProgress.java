@@ -9,20 +9,20 @@ import org.apache.wicket.model.Model;
  * A component that renders as an Oat Progress bar.
  * Uses the native &lt;progress&gt; element.
  */
-public class Progress extends WebComponent {
+public class OatProgress extends WebComponent {
 
     private final IModel<? extends Number> valueModel;
     private final IModel<? extends Number> maxModel;
 
-    public Progress(String id, Number value) {
+    public OatProgress(String id, Number value) {
         this(id, Model.of(value), Model.of(100));
     }
 
-    public Progress(String id, IModel<? extends Number> valueModel) {
+    public OatProgress(String id, IModel<? extends Number> valueModel) {
         this(id, valueModel, Model.of(100));
     }
 
-    public Progress(String id, IModel<? extends Number> valueModel, IModel<? extends Number> maxModel) {
+    public OatProgress(String id, IModel<? extends Number> valueModel, IModel<? extends Number> maxModel) {
         super(id);
         this.valueModel = valueModel;
         this.maxModel = maxModel;

@@ -1,6 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
-import dev.jbaby.wicket.oat.components.Badge;
+import dev.jbaby.wicket.oat.components.OatBadge;
 import dev.jbaby.wicket.oat.behaviors.BadgeBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -29,7 +29,7 @@ public class TablePage extends BasePage {
                 item.add(new Label("email", user.email()));
                 item.add(new Label("role", user.role()));
                 
-                Badge statusBadge = new Badge("status", user.status());
+                OatBadge statusBadge = new OatBadge("status", user.status());
                 if ("Active".equals(user.status())) {
                     statusBadge.add(new BadgeBehavior(BadgeBehavior.Variant.SUCCESS));
                 } else {

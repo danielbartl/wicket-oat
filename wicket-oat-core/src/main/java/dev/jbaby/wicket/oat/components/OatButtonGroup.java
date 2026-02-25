@@ -14,9 +14,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * &lt;/div&gt;
  * </pre>
  */
-public class ButtonGroup extends WebMarkupContainer {
+public class OatButtonGroup extends WebMarkupContainer {
 
-    public ButtonGroup(String id) {
+    public OatButtonGroup(String id) {
         super(id);
         add(new ButtonGroupBehavior());
     }

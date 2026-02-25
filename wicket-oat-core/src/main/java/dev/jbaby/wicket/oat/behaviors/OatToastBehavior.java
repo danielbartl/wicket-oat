@@ -27,19 +27,20 @@ public class OatToastBehavior extends Behavior {
     }
 
     public static void toast(IPartialPageRequestHandler handler, String message, Variant variant, String title) {
+        Variant v = variant != null ? variant : Variant.DEFAULT;
         String script;
         if (title != null) {
-            script = String.format("ot.toast('%s', {variant: '%s', title: '%s'})", 
-                escapeJs(message), variant.getValue(), escapeJs(title));
+            script = String.format("ot.toast('%s', '%s', {variant: '%s'})", 
+                escapeJs(message), escapeJs(title), v.getValue());
         } else {
-            script = String.format("ot.toast('%s', {variant: '%s'})", 
-                escapeJs(message), variant.getValue());
+            script = String.format("ot.toast('%s', null, {variant: '%s'})", 
+                escapeJs(message), v.getValue());
         }
         handler.appendJavaScript(script);
     }
 
     private static String escapeJs(String input) {
         if (input == null) return "";
-        return input.replace("'", "'");
+        return input.replace("'", "\\'");
     }
 }

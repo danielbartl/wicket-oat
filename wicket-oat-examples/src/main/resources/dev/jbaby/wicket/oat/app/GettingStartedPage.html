@@ -1,0 +1,77 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section class="max-w-3xl">
+        <h1 class="mb-2">Getting Started</h1>
+        <p class="lead text-muted">Go from zero to a beautiful Oat-styled Wicket application in under 5 minutes.</p>
+
+        <div class="mt-10">
+            <h2 class="hstack gap-3">
+                <span class="badge secondary">1</span>
+                Add Dependency
+            </h2>
+            <p>Add the following dependency to your <code>pom.xml</code>:</p>
+            <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
+    &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="hstack gap-3">
+                <span class="badge secondary">2</span>
+                Install the Library
+            </h2>
+            <p>Initialize Oat UI in your <code>WebApplication.init()</code> method. This registers global CSS/JS and configures the Content Security Policy.</p>
+            <pre><code>@Override
+protected void init() {
+    super.init();
+    
+    // Auto-configures headers and CSP
+    WicketOats.install(this);
+}</code></pre>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="hstack gap-3">
+                <span class="badge secondary">3</span>
+                Create Your Base Page
+            </h2>
+            <p>Extend <code>OatAppLayout</code> to get the sidebar, top navigation, and automatic theme support for free.</p>
+            <pre><code>public class BasePage extends OatAppLayout {
+    // That's it! Your markup should use &lt;wicket:extend&gt;
+}</code></pre>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="hstack gap-3">
+                <span class="badge secondary">4</span>
+                Use the Oat Factory
+            </h2>
+            <p>Use the central <code>Oat</code> class to add components or behaviors to your page.</p>
+            <pre><code>// In your Page constructor
+add(Oat.button("myButton", "Click Me", target -> {
+    Oat.toast(target, "Hello from Oat!");
+}));</code></pre>
+        </div>
+
+        <hr class="mt-12 mb-8"/>
+
+        <div class="card p-6 bg-faint">
+            <h3>Test Your Setup</h3>
+            <p>If you've followed the steps correctly, your components should look like this:</p>
+            <div class="mt-4">
+                <a wicket:id="demoButton"><span wicket:id="label"></span></a>
+            </div>
+        </div>
+
+        <div class="mt-12 p-8 border border-dashed rounded-lg text-center">
+            <h3>Ready for more?</h3>
+            <p>Explore the sidebar to see detailed demos for every component available in the library.</p>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

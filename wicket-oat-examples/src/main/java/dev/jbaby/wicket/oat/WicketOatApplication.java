@@ -39,6 +39,7 @@ public class WicketOatApplication {
                 super.init();
 
                 mountPage("/home", HomePage.class);
+                mountPage("/getting-started", GettingStartedPage.class);
                 mountPage("/accordion", AccordionPage.class);
                 mountPage("/alert", AlertPage.class);
                 mountPage("/badge", BadgePage.class);

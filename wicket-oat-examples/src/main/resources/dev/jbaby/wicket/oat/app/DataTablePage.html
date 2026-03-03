@@ -6,17 +6,17 @@
         <h1>Oat Data Table Demo</h1>
         <p>A styled Wicket <code>DataTable</code> with built-in toolbars and empty state support.</p>
 
-        <h3 class="mt-8">Standard Data Table</h3>
+        <h3 class="mt-6">Standard Data Table</h3>
         <p>This table uses a <code>SortableDataProvider</code> and supports pagination and sorting.</p>
         <div wicket:id="dataTable" class="mt-4"></div>
 
-        <h3 class="mt-10">Empty Table with Placeholder</h3>
+        <h3 class="mt-6">Empty Table with Placeholder</h3>
         <p>If the data provider is empty, the <code>setEmptyState</code> component is displayed.</p>
         <div wicket:id="emptyDataTable" class="mt-4"></div>
 
-        <div class="mt-10">
+        <div class="mt-6">
             <h3>How to use</h3>
-            <p>Use the <code>OatDataTable</code> component via the <code>Oat</code> factory. It wraps a standard Wicket <code>DataTable</code> and provides convenient methods for common patterns.</p>
+            <p>Use the <code>OatDataTable</code> component via the <code>Oat</code> factory. It s a standard Wicket <code>DataTable</code> and provides convenient methods for common patterns.</p>
             
             <pre><code>// Java - Basic Table
 OatDataTable&lt;User, String&gt; table = Oat.Components.dataTable("id", columns, dataProvider, 10);

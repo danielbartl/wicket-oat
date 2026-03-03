@@ -50,7 +50,7 @@
                 <textarea wicket:id="message" placeholder="Your message..."></textarea>
             </label>
 
-            <h3 class="mt-8">Encapsulated Components</h3>
+            <h3 class="mt-6">Encapsulated Components</h3>
             <p class="mb-4">These components use <code>BaseOatField</code> for cleaner Java code and consistent styling.</p>
             <div wicket:id="oatName"></div>
             <div wicket:id="oatPassword" class="mt-4"></div>
@@ -73,26 +73,26 @@
             <div wicket:id="oatTel" class="mt-4"></div>
         </form>
 
-        <h3 class="mt-8">Spinners</h3>
+        <h3 class="mt-6">Spinners</h3>
         <div class="hstack gap-4">
             <div wicket:id="smallSpinner"></div>
             <div wicket:id="defaultSpinner"></div>
             <div wicket:id="largeSpinner"></div>
         </div>
 
-        <h3 class="mt-8">Skeletons</h3>
+        <h3 class="mt-6">Skeletons</h3>
         <div class="vstack gap-2">
             <div wicket:id="lineSkeleton" style="width: 200px"></div>
             <div wicket:id="boxSkeleton" style="width: 100px; height: 100px"></div>
         </div>
 
-        <h3 class="mt-8">Progress & Meter</h3>
+        <h3 class="mt-6">Progress & Meter</h3>
         <div class="vstack gap-2">
             <progress wicket:id="progress"></progress>
             <meter wicket:id="meter"></meter>
         </div>
 
-        <div class="mt-10">
+        <div class="mt-6">
             <h3>How to use</h3>
 
             <h4>Encapsulated Fields (Recommended)</h4>
@@ -107,7 +107,7 @@ form.add(new OatDropdownChoice&lt;String&gt;("status", "Status", statusModel, st
 &lt;div wicket:id="name"&gt;&lt;/div&gt;
 &lt;div wicket:id="status"&gt;&lt;/div&gt;</code></pre>
 
-            <h4 class="mt-8">Custom Form Fields (Manual)</h4>
+            <h4 class="mt-6">Custom Form Fields (Manual)</h4>
             <p>Use <code>FieldBehavior</code> on a container (like <code>&lt;label&gt;</code> or <code>&lt;div&gt;</code>) to style manual fields.</p>
             <pre><code>// Java
 WebMarkupContainer container = new WebMarkupContainer("field");

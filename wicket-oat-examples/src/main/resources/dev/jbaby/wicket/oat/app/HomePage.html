@@ -8,9 +8,9 @@
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
     <section>
         <h1>Welcome to Wicket Oat</h1>
-        <p class="lead">A modern, lightweight Wicket component library based on the <a href="https://oat.ink" target="_blank">Oat UI</a> framework.</p>
+        <p class="text-light">A modern, lightweight Wicket component library based on the <a href="https://oat.ink" target="_blank">Oat UI</a> framework.</p>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>General Integration</h3>
             <p>Wicket Oat provides a simple facade to install all necessary resources and security settings in your <code>WebApplication.init()</code> method:</p>
             <pre><code>@Override
@@ -22,7 +22,7 @@ protected void init() {
 }</code></pre>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>What it does</h3>
             <p>Calling <code>WicketOats.install(app)</code> performs several actions:</p>
             <ul>
@@ -31,7 +31,7 @@ protected void init() {
             </ul>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>Security & CSP</h3>
             <p>To support Oat UI's dynamic features (like Toast notifications), the Content Security Policy should be configured to allow local resources and inline styles/scripts:</p>
             <pre><code>getCspSettings().blocking()
@@ -39,7 +39,7 @@ protected void init() {
     .add(CSPDirective.SCRIPT_SRC, "'self'", "'unsafe-inline'");</code></pre>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>Theming System</h3>
             <p>Wicket Oat features a dynamic theming system based on the <code>data-theme</code> attribute. It supports both built-in and custom themes.</p>
             
@@ -58,14 +58,14 @@ OatSession.get().setTheme(OatTheme.MIDNIGHT);</code></pre>
 }</code></pre>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>Advanced Usage: Programmatic Toasts</h3>
             <p>Use the <code>ClientSideClickBehavior</code> to trigger Oat UI's native JavaScript functions while remaining CSP compliant:</p>
             <pre><code>// Java
 button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', {variant: 'success'})"));</code></pre>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>Component Architecture</h3>
             <p>Wicket Oat follows two main patterns for implementing UI components:</p>
             <ul>
@@ -74,9 +74,9 @@ button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', {varia
             </ul>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>Implemented Components</h3>
-            <div class="hstack gap-2 wrap mt-2">
+            <div class="hstack gap-2  mt-2">
                 <span class="badge">Typography</span>
                 <span class="badge">Accordion</span>
                 <span class="badge">Alert</span>
@@ -97,7 +97,7 @@ button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', {varia
             </div>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-6">
             <h3>Interactive Demo</h3>
             <p>Message from Java: <strong wicket:id="message"></strong></p>
             <p>Server time: <span wicket:id="now">now-placeholder</span></p>

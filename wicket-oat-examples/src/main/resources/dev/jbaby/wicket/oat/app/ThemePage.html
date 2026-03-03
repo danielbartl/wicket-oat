@@ -6,7 +6,7 @@
         <h1>Oat Theming Demo</h1>
         <p>Oat UI is built with CSS variables, making it extremely easy to create and switch between themes.</p>
 
-        <div class="mt-8" wicket:id="themeDemo">
+        <div class="mt-6" wicket:id="themeDemo">
             <h3>Current Theme Integration</h3>
             <p>We use a custom <code>OatSession</code> to store the theme preference and a <code>OatThemeBehavior</code> to apply it to the <code>&lt;body&gt;</code> tag.</p>
             
@@ -16,11 +16,11 @@
             </div>
         </div>
 
-        <div class="mt-10">
+        <div class="mt-6">
             <h3>How to use Themes</h3>
             
             <h4>1. Define Theme CSS</h4>
-            <p>Themes are defined by overriding Oat UI's CSS variables. You should wrap these in a <code>[data-theme="..."]</code> selector.</p>
+            <p>Themes are defined by overriding Oat UI's CSS variables. You should  these in a <code>[data-theme="..."]</code> selector.</p>
             <pre><code>/* Java - Ensure your CSS is registered */
 response.render(CssHeaderItem.forReference(new PackageResourceReference(getClass(), "my-themes.css")));</code></pre>
             <pre><code>/* CSS - Define the variables */

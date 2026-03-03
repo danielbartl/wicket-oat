@@ -37,12 +37,12 @@
             <p>You can use the <code>OatButton</code> component for a simple button, or attach <code>ButtonBehavior</code> to any existing component via the <code>Oat</code> factory.</p>
             
             <pre><code>// Java - Using the OatButton component via the Oat factory
-add(Oat.button("myButton", "Click me", target -> {
+add(Oat.Components.button("myButton", "Click me", target -> {
     // handle click
 }));
 
 // Java - Using Behavior on a Link via the Oat factory
-link.add(Oat.button()
+link.add(Oat.Behaviors.button()
     .setVariant(ButtonBehavior.Variant.SECONDARY)
     .setStyle(ButtonBehavior.Style.OUTLINE)
     .setSize(ButtonBehavior.Size.SMALL));</code></pre>

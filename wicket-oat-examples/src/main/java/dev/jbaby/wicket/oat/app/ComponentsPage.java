@@ -2,14 +2,11 @@ package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
-import dev.jbaby.wicket.oat.behaviors.ClientSideClickBehavior;
 import dev.jbaby.wicket.oat.behaviors.OatToastBehavior;
-import dev.jbaby.wicket.oat.behaviors.TooltipBehavior;
-import dev.jbaby.wicket.oat.components.*;
+import dev.jbaby.wicket.oat.components.OatAvatar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 
 public class ComponentsPage extends BasePage {
@@ -17,23 +14,23 @@ public class ComponentsPage extends BasePage {
     public ComponentsPage() {
         // Tooltip
         add(new WebMarkupContainer("tooltipButton")
-                .add(Oat.button())
-                .add(Oat.tooltip("This is an Oat Tooltip!")));
+                .add(Oat.Behaviors.button())
+                .add(Oat.Behaviors.tooltip("This is an Oat Tooltip!")));
 
         // Toasts
         add(new AjaxLink<Void>("successToast") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                OatToastBehavior.toast(target, "Operation successful!", OatToastBehavior.Variant.SUCCESS, "Great!");
+                Oat.toast(target, "Operation successful!", OatToastBehavior.Variant.SUCCESS, "Great!");
             }
-        }.add(Oat.button()));
+        }.add(Oat.Behaviors.button()));
 
         add(new AjaxLink<Void>("errorToast") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                OatToastBehavior.toast(target, "Something went wrong.", OatToastBehavior.Variant.ERROR, "Error");
+                Oat.toast(target, "Something went wrong.", OatToastBehavior.Variant.ERROR, "Error");
             }
-        }.add(Oat.button().setStyle(ButtonBehavior.Style.OUTLINE)));
+        }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE)));
 
         // Typography Container
         add(new WebMarkupContainer("typography"));

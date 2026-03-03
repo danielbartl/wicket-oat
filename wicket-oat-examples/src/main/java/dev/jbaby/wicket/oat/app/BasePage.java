@@ -2,6 +2,8 @@ package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.components.OatAppLayout;
 import dev.jbaby.wicket.oat.components.MenuItem;
+import dev.jbaby.wicket.oat.components.OatThemeSwitcher;
+import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.jspecify.annotations.NonNull;
@@ -9,6 +11,16 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 public class BasePage extends OatAppLayout {
+
+    @Override
+    protected @NonNull IModel<String> appNameModel() {
+        return Model.of("Wicket Oat Demo");
+    }
+
+    @Override
+    protected Component createFooter(String id) {
+        return new OatThemeSwitcher(id);
+    }
 
     @Override
     protected @NonNull IModel<List<MenuItem>> sidebarMenuItemsModel() {

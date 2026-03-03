@@ -1,7 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
-import dev.jbaby.wicket.oat.components.OatDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -10,7 +9,6 @@ import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,12 +30,12 @@ public class DataTablePage extends BasePage {
 
         UserDataProvider dataProvider = new UserDataProvider(users);
 
-        add(Oat.dataTable("dataTable", columns, dataProvider, 10));
+        add(Oat.Components.dataTable("dataTable", columns, dataProvider, 10));
         
         // Empty table demo
         List<IColumn<User, String>> emptyColumns = new ArrayList<>(columns);
-        add(Oat.dataTable("emptyDataTable", emptyColumns, new UserDataProvider(List.of()), 10)
-                .setEmptyState(Oat.emptyState("placeholder", Model.of("No users found"), Model.of("Try adjusting your filters or adding a new user."))));
+        add(Oat.Components.dataTable("emptyDataTable", emptyColumns, new UserDataProvider(List.of()), 10)
+                .setEmptyState(Oat.Components.emptyState("placeholder", Model.of("No users found"), Model.of("Try adjusting your filters or adding a new user."))));
     }
 
     private static class UserDataProvider extends SortableDataProvider<User, String> {

@@ -46,17 +46,17 @@ public class MyWicketApplication extends WebApplication {
 Use the `Oat` factory class to create components in your pages:
 
 ```java
-// Create a button with an Ajax click handler
-add(Oat.button("myButton", "Click Me", target -> {
+// Create a button with an Ajax click handler via Components factory
+add(Oat.Components.button("myButton", "Click Me", target -> {
     Oat.toast(target, "Hello from Wicket Oat!", OatToastBehavior.Variant.SUCCESS);
 }));
 
-// Create an alert
-add(Oat.alert("myAlert", AlertBehavior.Variant.INFO)
+// Create an alert via Components factory
+add(Oat.Components.alert("myAlert", AlertBehavior.Variant.INFO)
     .setBody(Model.of("This is an informative alert.")));
 
-// Create a badge
-add(Oat.badge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
+// Create a badge via Components factory
+add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
 ```
 
 ## Available Components
@@ -74,8 +74,8 @@ Wicket Oat comes with several built-in themes. You can apply a theme to your ses
 // Set a global theme in your session (if using OatSession)
 OatSession.get().setTheme(OatTheme.DARK);
 
-// Or add the theme behavior to a component/page
-add(Oat.theme().setTheme(OatTheme.NORD));
+// Or add the theme behavior to a component/page via Behaviors factory
+add(Oat.Behaviors.theme().setTheme(OatTheme.NORD));
 ```
 
 ### Built-in Themes:

@@ -18,9 +18,9 @@
             <p>Use <code>OatButtonGroup</code> component and add buttons inside it. Buttons typically use <code>ButtonBehavior</code>. You can mix different styles and variants within the same group.</p>
             
             <pre><code>// Java - Using the Oat factory (recommended)
-OatButtonGroup group = Oat.buttonGroup("group");
-group.add(new Link&lt;Void&gt;("btn1").add(Oat.button().setVariant(Variant.SECONDARY)));
-group.add(new Link&lt;Void&gt;("btn2").add(Oat.button().setVariant(Variant.DANGER)));
+OatButtonGroup group = Oat.Components.buttonGroup("group");
+group.add(new Link&lt;Void&gt;("btn1").add(Oat.Behaviors.button().setVariant(Variant.SECONDARY)));
+group.add(new Link&lt;Void&gt;("btn2").add(Oat.Behaviors.button().setVariant(Variant.DANGER)));
 add(group);</code></pre>
 
             <pre><code>&lt;!-- HTML --&gt;

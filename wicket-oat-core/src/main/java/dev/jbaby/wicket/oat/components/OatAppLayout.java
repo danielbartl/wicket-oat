@@ -1,16 +1,14 @@
 package dev.jbaby.wicket.oat.components;
 
-import dev.jbaby.wicket.oat.OatSession;
-import dev.jbaby.wicket.oat.OatTheme;
 import dev.jbaby.wicket.oat.behaviors.OatThemeBehavior;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -19,10 +17,14 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
+/**
+ * Base page providing the Oat UI application layout (sidebar + topnav).
+ * Override factory methods (e.g., {@link #createFooter(String)}) to customize the layout.
+ */
 public abstract class OatAppLayout extends WebPage {
 
-    protected WebMarkupContainer footer;
-    private WebMarkupContainer sidebar;
+    protected WebMarkupContainer sidebar;
+    protected WebMarkupContainer topNav;
 
     public OatAppLayout() {
         TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
@@ -34,182 +36,78 @@ public abstract class OatAppLayout extends WebPage {
     protected void onInitialize() {
         super.onInitialize();
 
-        appTitle();
-        appName();
-        sidebar();
-        sidebarMenu();
-        footer();
-
-    }
-
-    protected void appTitle() {
         add(new Label("appTitle", appTitleModel()));
+        
+        topNav();
+        sidebar();
     }
 
-    protected @NonNull IModel<?> appTitleModel() {
+    protected @NonNull IModel<String> appTitleModel() {
         return Model.of("Wicket Oat Application");
     }
 
-    protected void appName() {
-        add(new Label("appName", appNameModel()));
+    protected void topNav() {
+        topNav = new WebMarkupContainer("topNav");
+        add(topNav);
+
+        topNav.add(new Label("appName", appNameModel()));
+        topNav.add(createTopNavExtra("topNavExtra"));
     }
 
-    protected @NonNull IModel<?> appNameModel() {
+    protected @NonNull IModel<String> appNameModel() {
         return Model.of("Wicket Oat Application");
+    }
+
+    /**
+     * Hook to add extra components to the top navigation (e.g., user profile, search).
+     */
+    protected Component createTopNavExtra(String id) {
+        return new WebMarkupContainer(id).setVisible(false);
     }
 
     protected void sidebar() {
         sidebar = new WebMarkupContainer("sidebar");
         add(sidebar);
+
+        sidebarMenu();
+        sidebar.add(createFooter("footer"));
     }
 
     /**
      * Child pages/apps customize the menu by overriding {@link #sidebarMenuItemsModel()}.
-     * AppLayout owns the rendering (UL/LI) via a ListView.
      */
     protected void sidebarMenu() {
         sidebar.add(new ListView<>("menuItems", sidebarMenuItemsModel()) {
             @Override
             protected void populateItem(ListItem<MenuItem> item) {
-
                 MenuItem mi = item.getModelObject();
 
                 BookmarkablePageLink<?> link = new BookmarkablePageLink<>("link", mi.pageClass());
                 link.add(new Label("label", mi.label()));
                 item.add(link);
 
-                boolean isCurrent = getPage().getClass().equals(mi.pageClass());
-
-                if (isCurrent) {
-                    // Accessibility-friendly "current page" marker
+                if (getPage().getClass().equals(mi.pageClass())) {
                     link.add(AttributeModifier.replace("aria-current", "page"));
-
-                    // Optional: allow custom styling via CSS on the <li>
                     item.add(new AttributeAppender("class", Model.of("active"), " "));
-
                 } else {
-
-                    // Ensure non-current items don't keep aria-current from reuse
                     link.add(AttributeModifier.remove("aria-current"));
-
                 }
-
             }
         });
     }
 
     /**
-     * Override in child pages (or better: in an app-specific base page) to supply menu items.
+     * Override to supply menu items for the sidebar.
      */
     protected @NonNull IModel<List<MenuItem>> sidebarMenuItemsModel() {
         return Model.ofList(List.of());
     }
 
-    protected void footer() {
-        footer = new WebMarkupContainer("footer");
-        sidebar.add(footer);
-
-        footer.add(new Link<Void>("lightTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.LIGHT);
-            }
-        });
-        footer.add(new Link<Void>("darkTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.DARK);
-            }
-        });
-        footer.add(new Link<Void>("midnightTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.MIDNIGHT);
-            }
-        });
-        footer.add(new Link<Void>("nordTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.NORD);
-            }
-        });
-        footer.add(new Link<Void>("everforestTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.EVERFOREST);
-            }
-        });
-        footer.add(new Link<Void>("tokyoNightTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.TOKYO_NIGHT);
-            }
-        });
-        footer.add(new Link<Void>("rosePineDawnTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.ROSE_PINE_DAWN);
-            }
-        });
-        footer.add(new Link<Void>("royalTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.ROYAL);
-            }
-        });
-        footer.add(new Link<Void>("clayTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.CLAY);
-            }
-        });
-        footer.add(new Link<Void>("catppuccinMochaTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.CATPPUCCIN_MOCHA);
-            }
-        });
-        footer.add(new Link<Void>("catppuccinLatteTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.CATPPUCCIN_LATTE);
-            }
-        });
-        footer.add(new Link<Void>("materialTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.MATERIAL);
-            }
-        });
-        footer.add(new Link<Void>("daisyTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.DAISY);
-            }
-        });
-        footer.add(new Link<Void>("ultravioletTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.ULTRAVIOLET);
-            }
-        });
-        footer.add(new Link<Void>("halloweenTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.HALLOWEEN);
-            }
-        });
-        footer.add(new Link<Void>("xmasTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.XMAS);
-            }
-        });
-        footer.add(new Link<Void>("wireframeTheme") {
-            @Override
-            public void onClick() {
-                OatSession.get().setTheme(OatTheme.WIREFRAME);
-            }
-        });
+    /**
+     * Hook to customize the sidebar footer. 
+     * Default implementation is an empty container.
+     */
+    protected Component createFooter(String id) {
+        return new WebMarkupContainer(id).setVisible(false);
     }
 }

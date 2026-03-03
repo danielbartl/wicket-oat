@@ -33,7 +33,6 @@ public class HomePage extends BasePage {
             protected void onError(AjaxRequestTarget target) {
                 // no validation here, so this should not happen
             }
-        }.add(Oat.button().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL)));
+        }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL)));
     }
-
 }

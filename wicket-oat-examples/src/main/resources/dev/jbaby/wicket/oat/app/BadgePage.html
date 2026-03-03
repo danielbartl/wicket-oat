@@ -21,10 +21,10 @@
             <p>You can use the <code>OatBadge</code> component for a simple label, or attach <code>BadgeBehavior</code> to any existing component.</p>
             
             <pre><code>// Java - Using the OatBadge component via the Oat factory (recommended)
-add(Oat.badge("myBadge", "Success", BadgeBehavior.Variant.SUCCESS));
+add(Oat.Components.badge("myBadge", "Success", BadgeBehavior.Variant.SUCCESS));
 
 // Java - Using the BadgeBehavior via the Oat factory
-label.add(Oat.badge(BadgeBehavior.Variant.SUCCESS));</code></pre>
+label.add(Oat.Behaviors.badge(BadgeBehavior.Variant.SUCCESS));</code></pre>
 
             <pre><code>&lt;!-- HTML - Markup for both approaches --&gt;
 &lt;span wicket:id="myBadge"&gt;&lt;/span&gt;

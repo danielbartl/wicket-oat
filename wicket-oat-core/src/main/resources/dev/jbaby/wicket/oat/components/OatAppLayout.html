@@ -6,9 +6,12 @@
 </head>
 <body data-sidebar-layout>
 
-<nav data-topnav>
+<nav data-topnav wicket:id="topNav">
     <button data-sidebar-toggle aria-label="Toggle menu" class="outline">☰</button>
     <span wicket:id="appName">App Name</span>
+    <div wicket:id="topNavExtra" class="flex-grow flex justify-end">
+        <!-- Placeholder for user profile, logout, etc. -->
+    </div>
 </nav>
 
 <aside data-sidebar wicket:id="sidebar">
@@ -20,32 +23,7 @@
         </ul>
     </nav>
     <footer wicket:id="footer">
-        <div class="vstack gap-2">
-            <div class="hstack gap-2 justify-center">
-                <a wicket:id="lightTheme" title="Light Theme" style="cursor: pointer;">☀️</a>
-                <a wicket:id="darkTheme" title="Dark Theme" style="cursor: pointer;">🌙</a>
-                <a wicket:id="midnightTheme" title="Midnight Theme" style="cursor: pointer;">🌌</a>
-                <a wicket:id="nordTheme" title="Nord Theme" style="cursor: pointer;">❄️</a>
-                <a wicket:id="everforestTheme" title="Everforest Theme" style="cursor: pointer;">🌲</a>
-            </div>
-            <div class="hstack gap-2 justify-center">
-                <a wicket:id="tokyoNightTheme" title="Tokyo Night Theme" style="cursor: pointer;">🗼</a>
-                <a wicket:id="rosePineDawnTheme" title="Rose Pine Dawn Theme" style="cursor: pointer;">🌸</a>
-                <a wicket:id="royalTheme" title="Royal Theme" style="cursor: pointer;">👑</a>
-                <a wicket:id="clayTheme" title="Clay Theme" style="cursor: pointer;">🏺</a>
-            </div>
-            <div class="hstack gap-2 justify-center">
-                <a wicket:id="catppuccinMochaTheme" title="Catppuccin Mocha Theme" style="cursor: pointer;">☕</a>
-                <a wicket:id="catppuccinLatteTheme" title="Catppuccin Latte Theme" style="cursor: pointer;">🥛</a>
-                <a wicket:id="materialTheme" title="Material Design Theme" style="cursor: pointer;">🎨</a>
-                <a wicket:id="daisyTheme" title="Daisy UI Dark Theme" style="cursor: pointer;">🌼</a>
-                <a wicket:id="ultravioletTheme" title="Ultraviolet Theme" style="cursor: pointer;">🔮</a>
-                <a wicket:id="halloweenTheme" title="Halloween Theme" style="cursor: pointer;">🎃</a>
-                <a wicket:id="xmasTheme" title="Christmas Theme" style="cursor: pointer;">🎄</a>
-                <a wicket:id="wireframeTheme" title="Wireframe Theme" style="cursor: pointer;">📐</a>
-            </div>
-            <button class="outline sm">Logout</button>
-        </div>
+        <!-- Placeholder for custom footer -->
     </footer>
 </aside>
 

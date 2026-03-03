@@ -150,6 +150,27 @@ The project includes an examples module `wicket-oat-examples`. To run it:
    ```
 3. Access the demo at `http://localhost:8080/`.
 
+## AI-Powered Development
+
+Wicket Oat comes with a dedicated **Gemini CLI Skill** to help you build UI faster using AI. The skill provides the agent with deep knowledge of the Oat API, component library, and theming system.
+
+### Installing the Skill
+If you use the [Gemini CLI](https://github.com/google/gemini-cli), you can install the skill directly from this repository:
+
+```bash
+# Install the skill locally in your project
+gemini skills install ./wicket-oat.skill --scope workspace
+
+# Reload skills to enable it
+/skills reload
+```
+
+### How to Use
+Once installed, the AI agent will automatically understand instructions like:
+- "Add a primary Oat button to this page that shows a success toast on click."
+- "Turn this standard Wicket Label into an Oat success badge."
+- "Create a registration form using Oat components."
+
 ## Requirements
 
 - Java 25 or higher

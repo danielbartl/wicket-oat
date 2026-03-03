@@ -27,6 +27,7 @@ public class BasePage extends OatAppLayout {
         return Model.ofList(List.of(
                 MenuItem.of("Home", HomePage.class),
                 MenuItem.of("Getting Started", GettingStartedPage.class),
+                MenuItem.of("Event Registration (Form Demo)", EventRegistrationPage.class),
                 MenuItem.of("Accordion", AccordionPage.class),
                 MenuItem.of("Alert", AlertPage.class),
                 MenuItem.of("Badge", BadgePage.class),

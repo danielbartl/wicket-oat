@@ -16,6 +16,11 @@ import java.util.List;
 
 /**
  * Entry point for creating Oat components and behaviors.
+ * <p>
+ * This factory provides a "Fast Path" for the most common UI tasks. 
+ * For complex customization that requires subclassing or custom class hierarchies, 
+ * you are encouraged to use the standard component constructors and Oat behaviors 
+ * directly (Composition over Inheritance).
  */
 public final class Oat {
 

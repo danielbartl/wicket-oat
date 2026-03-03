@@ -91,6 +91,39 @@ Use a behavior when you want to "Oat-ify" an existing Wicket component. This is 
 | **Markup** | Handled by Oat | Handled by You |
 | **Best For** | Quick UI building | Customizing existing Wicket logic |
 
+## Usage Strategies
+
+Depending on your project's complexity, you can choose between two development styles:
+
+### 1. The Fast Path (Factory Methods)
+Use `Oat.Components` and `Oat.Behaviors` for standard UI assembly. This is the fastest way to build a modern Wicket application.
+```java
+// Fast and readable for 80% of use cases
+add(Oat.Components.button("id", "Click Me", target -> ...));
+```
+
+### 2. The Power Path (Inheritance & Behaviors)
+If you need deep customization or want to follow traditional Wicket patterns, you are not "trapped" by the factory. 
+
+**Subclassing:**
+Every component has a public constructor. You can extend `OatButton`, `OatAlert`, etc., just like any other Wicket component.
+```java
+public class MyBusinessButton extends OatButton {
+   // Your complex business logic here
+}
+```
+
+**Composition (Recommended):**
+Oat's behaviors are the most powerful way to customize. You can keep your own class hierarchy and "compose" the UI look.
+```java
+public class MyComplexActionLink extends AjaxLink<Void> {
+    public MyComplexActionLink(String id) {
+        super(id);
+        add(Oat.Behaviors.button().setVariant(Variant.PRIMARY));
+    }
+}
+```
+
 ## Theming
 
 Wicket Oat comes with several built-in themes. You can apply a theme to your session or specific components:

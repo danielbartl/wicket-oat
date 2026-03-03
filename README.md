@@ -66,6 +66,31 @@ add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
 - **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatTextArea`, `OatSwitch`, and more specialized HTML5 fields.
 
+## Architecture: Components vs. Behaviors
+
+Wicket Oat provides both **Components** and **Behaviors** for almost every UI element. This dual approach gives you maximum flexibility depending on your needs.
+
+### When to use Components (`Oat.Components`)
+Use a component when you want a self-contained UI widget and don't want to worry about the underlying HTML structure.
+- **Pros:** Easiest to use; encapsulates markup logic; handles internal structure (like headers/footers in a Card).
+- **Example:** `add(Oat.Components.alert("id", Variant.INFO))`
+- **Markup Requirement:** Requires a simple tag like `<div wicket:id="id"></div>`.
+
+### When to use Behaviors (`Oat.Behaviors`)
+Use a behavior when you want to "Oat-ify" an existing Wicket component. This is the power of **Composition over Inheritance**.
+- **Pros:** Highly flexible; can be applied to *any* component (Links, Labels, Containers); keeps your component hierarchy clean.
+- **Example:** `myWicketLink.add(Oat.Behaviors.button())` — This turns a standard Wicket `Link` into a styled Oat button without changing the Java class of the link.
+- **Markup Requirement:** You provide the markup (e.g., an `<a>` or `<button>` tag) and the behavior ensures the correct CSS classes and attributes are applied.
+
+### Summary Comparison
+
+| Feature | Component | Behavior |
+| :--- | :--- | :--- |
+| **Philosophy** | "Give me an Alert" | "Make this thing look like an Alert" |
+| **Java Usage** | `new OatAlert(...)` | `anyComponent.add(new AlertBehavior())` |
+| **Markup** | Handled by Oat | Handled by You |
+| **Best For** | Quick UI building | Customizing existing Wicket logic |
+
 ## Theming
 
 Wicket Oat comes with several built-in themes. You can apply a theme to your session or specific components:

@@ -57,7 +57,65 @@ add(Oat.Components.button("myButton", "Click Me", target -> {
 }));</code></pre>
         </div>
 
-        <hr class="mt-12 mb-8"/>
+        <div class="mt-16">
+            <h2>Core Concepts: Components vs. Behaviors</h2>
+            <p class="lead">Wicket Oat offers two ways to build your UI. Understanding the difference is key to using the library effectively.</p>
+            
+            <div class="grid cols-1 md:cols-2 gap-8 mt-8">
+                <div class="card p-6 border-muted">
+                    <h3 class="mb-2">1. Oat Components</h3>
+                    <p class="text-sm text-muted mb-4">Self-contained widgets that manage their own internal markup.</p>
+                    <ul class="text-sm vstack gap-2">
+                        <li><strong>Namespace:</strong> <code>Oat.Components</code></li>
+                        <li><strong>Philosophy:</strong> "Give me an Alert"</li>
+                        <li><strong>Best for:</strong> Building UI quickly without worrying about HTML tags.</li>
+                    </ul>
+                    <pre class="mt-4"><code>add(Oat.Components.alert("id", Variant.INFO));</code></pre>
+                </div>
+
+                <div class="card p-6 border-muted">
+                    <h3 class="mb-2">2. Oat Behaviors</h3>
+                    <p class="text-sm text-muted mb-4">Addons that "Oat-ify" existing Wicket components via composition.</p>
+                    <ul class="text-sm vstack gap-2">
+                        <li><strong>Namespace:</strong> <code>Oat.Behaviors</code></li>
+                        <li><strong>Philosophy:</strong> "Make this look like an Alert"</li>
+                        <li><strong>Best for:</strong> Styling standard Wicket links, labels, or containers.</li>
+                    </ul>
+                    <pre class="mt-4"><code>myLink.add(Oat.Behaviors.button());</code></pre>
+                </div>
+            </div>
+
+            <div class="mt-8 overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-muted">
+                            <th class="py-3 pr-4">Feature</th>
+                            <th class="py-3 px-4">Component</th>
+                            <th class="py-3 pl-4">Behavior</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b border-faint">
+                            <td class="py-3 pr-4 font-bold">Java Usage</td>
+                            <td class="py-3 px-4"><code>new OatAlert(...)</code></td>
+                            <td class="py-3 pl-4"><code>comp.add(new AlertBehavior())</code></td>
+                        </tr>
+                        <tr class="border-b border-faint">
+                            <td class="py-3 pr-4 font-bold">Markup</td>
+                            <td class="py-3 px-4">Handled by Oat</td>
+                            <td class="py-3 pl-4">Handled by You</td>
+                        </tr>
+                        <tr class="border-b border-faint">
+                            <td class="py-3 pr-4 font-bold">Flexibility</td>
+                            <td class="py-3 px-4">Fixed Structure</td>
+                            <td class="py-3 pl-4">Highly Flexible</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr class="mt-16 mb-8"/>
 
         <div class="card p-6 bg-faint">
             <h3>Test Your Setup</h3>

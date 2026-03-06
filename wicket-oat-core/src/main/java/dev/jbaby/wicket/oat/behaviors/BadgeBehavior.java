@@ -8,29 +8,18 @@ import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 
-/**
- * Behavior that applies Oat's Badge styling.
- * It adds the "badge" class and an optional variant class.
- */
 public class BadgeBehavior extends Behavior {
 
     public enum Variant implements Serializable {
         DEFAULT(null),
-        SECONDARY("secondary"),
-        OUTLINE("outline"),
         SUCCESS("success"),
         WARNING("warning"),
+        ERROR("error"),
         DANGER("danger");
 
-        private final String className;
-
-        Variant(String className) {
-            this.className = className;
-        }
-
-        public String getClassName() {
-            return className;
-        }
+        private final String value;
+        Variant(String value) { this.value = value; }
+        public String getValue() { return value; }
     }
 
     private final IModel<Variant> variantModel;
@@ -50,20 +39,10 @@ public class BadgeBehavior extends Behavior {
     @Override
     public void onComponentTag(Component component, ComponentTag tag) {
         super.onComponentTag(component, tag);
-
         tag.append("class", "badge", " ");
-
         Variant variant = variantModel.getObject();
-        if (variant != null && variant.getClassName() != null) {
-            tag.append("class", variant.getClassName(), " ");
-        }
-    }
-
-    @Override
-    public void detach(Component component) {
-        super.detach(component);
-        if (variantModel != null) {
-            variantModel.detach();
+        if (variant != null && variant.getValue() != null) {
+            tag.put("data-variant", variant.getValue());
         }
     }
 }

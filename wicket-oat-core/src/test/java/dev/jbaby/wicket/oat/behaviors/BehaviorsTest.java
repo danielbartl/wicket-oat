@@ -35,7 +35,7 @@ class BehaviorsTest {
         tester.startComponentInPage(label);
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("badge");
-        assertThat(tag.getAttribute("data-variant")).isEqualTo("danger");
+        assertThat(tag.getAttribute("class")).contains("danger");
     }
 
     @Test

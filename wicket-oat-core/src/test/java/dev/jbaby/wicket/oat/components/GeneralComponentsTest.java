@@ -25,7 +25,7 @@ class GeneralComponentsTest {
         tester.startComponentInPage(badge);
         TagTester tag = tester.getTagByWicketId("badge");
         assertThat(tag.getAttribute("class")).contains("badge");
-        assertThat(tag.getAttribute("data-variant")).isEqualTo("success");
+        assertThat(tag.getAttribute("class")).contains("success");
         tester.assertLabel("badge", "New");
     }
 

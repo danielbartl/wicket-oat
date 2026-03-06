@@ -12,6 +12,9 @@ public class BadgeBehavior extends Behavior {
 
     public enum Variant implements Serializable {
         DEFAULT(null),
+        PRIMARY("primary"),
+        SECONDARY("secondary"),
+        OUTLINE("outline"),
         SUCCESS("success"),
         WARNING("warning"),
         ERROR("error"),
@@ -42,7 +45,7 @@ public class BadgeBehavior extends Behavior {
         tag.append("class", "badge", " ");
         Variant variant = variantModel.getObject();
         if (variant != null && variant.getValue() != null) {
-            tag.put("data-variant", variant.getValue());
+            tag.append("class", variant.getValue(), " ");
         }
     }
 }

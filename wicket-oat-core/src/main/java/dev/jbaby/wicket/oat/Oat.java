@@ -120,11 +120,27 @@ public final class Oat {
         private Components() {}
 
         public static OatAlert alert(String id) {
-            return new OatAlert(id);
+            return new OatAlert(id, (String) null);
+        }
+
+        public static OatAlert alert(String id, String message) {
+            return new OatAlert(id, message);
         }
 
         public static OatAlert alert(String id, AlertBehavior.Variant variant) {
-            return new OatAlert(id, variant);
+            return new OatAlert(id, (String) null, variant);
+        }
+
+        public static OatAlert alert(String id, String message, AlertBehavior.Variant variant) {
+            return new OatAlert(id, message, variant);
+        }
+
+        public static OatAlert alert(String id, IModel<?> model) {
+            return new OatAlert(id, model);
+        }
+
+        public static OatAlert alert(String id, IModel<?> model, AlertBehavior.Variant variant) {
+            return new OatAlert(id, model, variant);
         }
 
         public static OatBadge badge(String id, String label) {

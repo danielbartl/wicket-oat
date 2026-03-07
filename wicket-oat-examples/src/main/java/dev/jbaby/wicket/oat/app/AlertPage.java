@@ -7,13 +7,13 @@ import org.apache.wicket.markup.html.basic.Label;
 public class AlertPage extends BasePage {
 
     public AlertPage() {
-        add(Oat.Components.alert("defaultAlert"));
+        add(Oat.Components.alert("defaultAlert", "This is a default alert message."));
         
-        add(Oat.Components.alert("successAlert", AlertBehavior.Variant.SUCCESS));
+        add(Oat.Components.alert("successAlert", "Success! Your operation was completed successfully.", AlertBehavior.Variant.SUCCESS));
         
-        add(Oat.Components.alert("warningAlert", AlertBehavior.Variant.WARNING));
+        add(Oat.Components.alert("warningAlert", "Warning! There might be some issues with your input.", AlertBehavior.Variant.WARNING));
         
-        add(Oat.Components.alert("errorAlert", AlertBehavior.Variant.ERROR));
+        add(Oat.Components.alert("errorAlert", "Error! Something went wrong while processing your request.", AlertBehavior.Variant.ERROR));
 
         // You can also use the behavior on any component
         Label customLabel = new Label("customBehaviorAlert", "This is a Label with AlertBehavior attached.");

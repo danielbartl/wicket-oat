@@ -17,10 +17,18 @@ class OatAlertTest {
 
     @Test
     void testOatAlertRenders() {
-        OatAlert alert = new OatAlert("alert");
+        OatAlert alert = new OatAlert("alert", "Test Message");
         tester.startComponentInPage(alert);
+        tester.assertLabel("alert", "Test Message");
         TagTester tag = tester.getTagByWicketId("alert");
-        assertThat(tag).isNotNull();
         assertThat(tag.getAttribute("role")).isEqualTo("alert");
+    }
+
+    @Test
+    void testOatAlertRendersHtml() {
+        OatAlert alert = new OatAlert("alert", "<strong>Html</strong>");
+        tester.startComponentInPage(alert);
+        // assertLabel checks the model object, but we want to check the response for HTML
+        assertThat(tester.getLastResponseAsString()).contains("<strong>Html</strong>");
     }
 }

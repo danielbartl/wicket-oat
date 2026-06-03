@@ -34,7 +34,7 @@
 	</modules>
 
 	<properties>
-		<java.version>25</java.version>
+		<java.version>21</java.version>
 		<wicket.version>10.8.0</wicket.version>
 		<spring-modulith.version>2.0.3</spring-modulith.version>
 	</properties>

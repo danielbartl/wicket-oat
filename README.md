@@ -61,10 +61,11 @@ add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
 
 ## Available Components
 
-- **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAlert`, `OatCard`, `OatEmptyState`
-- **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`
+- **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`
+- **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagination`
+- **Overlays:** `OatDialog`, `OatDropdown`, `OatTabs`
 - **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
-- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatTextArea`, `OatSwitch`, and more specialized HTML5 fields.
+- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, and more specialized HTML5 fields.
 
 ## Architecture: Components vs. Behaviors
 
@@ -179,4 +180,4 @@ Once installed, the AI agent will automatically understand instructions like:
 
 ## License
 
-[Add License Information Here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

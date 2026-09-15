@@ -32,17 +32,22 @@ class ButtonGroupPageTest {
         tester.startPage(ButtonGroupPage.class);
         tester.assertRenderedPage(ButtonGroupPage.class);
 
-        // Check group container
+        // Check group container - must be a <menu class="buttons" role="group">
         TagTester group = tester.getTagByWicketId("group");
+        assertEquals("menu", group.getName());
         assertTrue(group.getAttribute("class").contains("buttons"));
         assertEquals("group", group.getAttribute("role"));
 
-        // Check buttons inside group
-        tester.assertVisible("group:left");
-        tester.assertVisible("group:center");
-        tester.assertVisible("group:right");
+        // Check each button is wrapped in an <li>, which Oat's CSS requires for
+        // the connected/grouped button styling to apply
+        tester.assertVisible("group:items:0:button");
+        tester.assertVisible("group:items:1:button");
+        tester.assertVisible("group:items:2:button");
 
-        TagTester leftBtn = tester.getTagByWicketId("left");
-        assertTrue(leftBtn.getAttribute("class").contains("outline"));
+        TagTester firstItem = tester.getTagByWicketId("items");
+        assertEquals("li", firstItem.getName());
+
+        TagTester firstButton = tester.getTagByWicketId("button");
+        assertTrue(firstButton.getAttribute("class").contains("outline"));
     }
 }

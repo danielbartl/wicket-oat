@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum OatTheme implements Serializable {
     DARK("dark"),
-    LIGHT(null),
+    LIGHT("light"),
     MIDNIGHT("midnight"),
     NORD("nord"),
     EVERFOREST("everforest"),

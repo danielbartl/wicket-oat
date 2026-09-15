@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <button wicket:id="trigger" type="button" command="show-modal"><span wicket:id="triggerLabel"></span></button>
+    <dialog wicket:id="dialog">
+        <form method="dialog">
+            <header>
+                <h3 wicket:id="header"></h3>
+            </header>
+            <div wicket:id="body"></div>
+            <footer>
+                <button wicket:id="cancel" type="button" class="outline"><span wicket:id="cancelLabel"></span></button>
+                <button wicket:id="confirm" type="button"><span wicket:id="confirmLabel"></span></button>
+            </footer>
+        </form>
+    </dialog>
+</wicket:panel>
+</body>
+</html>

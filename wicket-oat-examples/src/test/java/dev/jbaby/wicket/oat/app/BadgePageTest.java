@@ -34,20 +34,22 @@ class BadgePageTest {
 
         // Check success badge
         TagTester successBadge = tester.getTagByWicketId("successBadge");
-        String successClass = successBadge.getAttribute("class");
-        assertTrue(successClass.contains("badge"), "Should have 'badge' class");
-        assertTrue(successClass.contains("success"), "Should have 'success' class");
+        assertTrue(successBadge.getAttribute("class").contains("badge"), "Should have 'badge' class");
+        assertEquals("success", successBadge.getAttribute("data-variant"));
 
         // Check danger badge
         TagTester dangerBadge = tester.getTagByWicketId("dangerBadge");
-        String dangerClass = dangerBadge.getAttribute("class");
-        assertTrue(dangerClass.contains("badge"), "Should have 'badge' class");
-        assertTrue(dangerClass.contains("danger"), "Should have 'danger' class");
-        
+        assertTrue(dangerBadge.getAttribute("class").contains("badge"), "Should have 'badge' class");
+        assertEquals("danger", dangerBadge.getAttribute("data-variant"));
+
+        // Check outline badge (secondary color + outline style modifier)
+        TagTester outlineBadge = tester.getTagByWicketId("outlineBadge");
+        assertTrue(outlineBadge.getAttribute("class").contains("outline"), "Should have 'outline' class");
+        assertEquals("secondary", outlineBadge.getAttribute("data-variant"));
+
         // Check custom behavior badge
         TagTester customBadge = tester.getTagByWicketId("customBehaviorBadge");
-        String customClass = customBadge.getAttribute("class");
-        assertTrue(customClass.contains("badge"), "Should have 'badge' class");
-        assertTrue(customClass.contains("success"), "Should have 'success' class");
+        assertTrue(customBadge.getAttribute("class").contains("badge"), "Should have 'badge' class");
+        assertEquals("success", customBadge.getAttribute("data-variant"));
     }
 }

@@ -1,0 +1,40 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Breadcrumb Demo</h1>
+        <p>Breadcrumbs use a semantic <code>&lt;nav&gt;</code> with an ordered list. <code>OatBreadcrumb</code> automatically marks the last item as the current page and hides its trailing separator.</p>
+
+        <nav wicket:id="breadcrumb">
+            <ol wicket:id="list">
+                <li wicket:id="items">
+                    <a wicket:id="link" class="unstyled"><span wicket:id="label"></span></a>
+                    <span wicket:id="separator" aria-hidden="true">/</span>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <pre><code>// Java
+add(Oat.Components.breadcrumb("breadcrumb", Model.ofList(crumbs), (item, label) -&gt; {
+    Link&lt;Void&gt; link = new Link&lt;&gt;("link") { public void onClick() {} };
+    link.add(new Label("label", label));
+    item.add(link);
+}));</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;nav wicket:id="breadcrumb"&gt;
+    &lt;ol wicket:id="list"&gt;
+        &lt;li wicket:id="items"&gt;
+            &lt;a wicket:id="link" class="unstyled"&gt;&lt;span wicket:id="label"&gt;&lt;/span&gt;&lt;/a&gt;
+            &lt;span wicket:id="separator" aria-hidden="true"&gt;/&lt;/span&gt;
+        &lt;/li&gt;
+    &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

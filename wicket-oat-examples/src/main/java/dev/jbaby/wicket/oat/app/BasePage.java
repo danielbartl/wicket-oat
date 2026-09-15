@@ -38,7 +38,13 @@ public class BasePage extends OatAppLayout {
                 MenuItem.of("Table (Simple)", TablePage.class),
                 MenuItem.of("Data Table (Advanced)", DataTablePage.class),
                 MenuItem.of("More Components", ComponentsPage.class),
-                MenuItem.of("Theme", ThemePage.class)
+                MenuItem.of("Theme", ThemePage.class),
+                MenuItem.of("Breadcrumb", BreadcrumbPage.class),
+                MenuItem.of("Pagination", PaginationPage.class),
+                MenuItem.of("Dialog", DialogPage.class),
+                MenuItem.of("Dropdown", DropdownPage.class),
+                MenuItem.of("Tabs", TabsPage.class),
+                MenuItem.of("Upload", UploadPage.class)
         ));
     }
 }

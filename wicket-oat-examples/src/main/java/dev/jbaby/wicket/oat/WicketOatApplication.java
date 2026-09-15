@@ -51,6 +51,12 @@ public class WicketOatApplication {
                 mountPage("/data-table", DataTablePage.class);
                 mountPage("/components", ComponentsPage.class);
                 mountPage("/theme", ThemePage.class);
+                mountPage("/breadcrumb", BreadcrumbPage.class);
+                mountPage("/pagination", PaginationPage.class);
+                mountPage("/dialog", DialogPage.class);
+                mountPage("/dropdown", DropdownPage.class);
+                mountPage("/tabs", TabsPage.class);
+                mountPage("/upload", UploadPage.class);
 
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));

@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Pagination Demo</h1>
+        <p>Pagination reuses the button-group markup: a <code>&lt;menu class="buttons"&gt;</code> wrapping each page link in an <code>&lt;li&gt;</code>. Since only the data model knows which page is current, styling the active page (dropping <code>.outline</code>, adding <code>aria-current="page"</code>) is the consumer's responsibility.</p>
+
+        <nav wicket:id="pagination">
+            <menu wicket:id="menu">
+                <li wicket:id="items">
+                    <a wicket:id="link" class="button outline small"><span wicket:id="label"></span></a>
+                </li>
+            </menu>
+        </nav>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <pre><code>// Java
+add(Oat.Components.pagination("pagination", Model.ofList(pages), (item, page) -&gt; {
+    Link&lt;Void&gt; link = new Link&lt;&gt;("link") { public void onClick() {} };
+    link.add(new Label("label", String.valueOf(page)));
+    boolean current = page == currentPage;
+    link.add(AttributeModifier.replace("class", current ? "button small" : "button outline small"));
+    if (current) link.add(AttributeModifier.replace("aria-current", "page"));
+    item.add(link);
+}));</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;nav wicket:id="pagination"&gt;
+    &lt;menu wicket:id="menu"&gt;
+        &lt;li wicket:id="items"&gt;
+            &lt;a wicket:id="link" class="button outline small"&gt;&lt;span wicket:id="label"&gt;&lt;/span&gt;&lt;/a&gt;
+        &lt;/li&gt;
+    &lt;/menu&gt;
+&lt;/nav&gt;</code></pre>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

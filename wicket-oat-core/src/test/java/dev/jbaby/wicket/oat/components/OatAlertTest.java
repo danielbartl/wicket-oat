@@ -25,10 +25,20 @@ class OatAlertTest {
     }
 
     @Test
-    void testOatAlertRendersHtml() {
+    void testOatAlertEscapesHtmlByDefault() {
         OatAlert alert = new OatAlert("alert", "<strong>Html</strong>");
         tester.startComponentInPage(alert);
-        // assertLabel checks the model object, but we want to check the response for HTML
+        // The message must be escaped by default - only an explicit opt-in should
+        // ever render raw HTML, since messages can come from user-controlled data.
+        assertThat(tester.getLastResponseAsString()).doesNotContain("<strong>Html</strong>");
+        assertThat(tester.getLastResponseAsString()).contains("&lt;strong&gt;Html&lt;/strong&gt;");
+    }
+
+    @Test
+    void testOatAlertRendersRawHtmlWhenOptedIn() {
+        OatAlert alert = new OatAlert("alert", "<strong>Html</strong>");
+        alert.setEscapeModelStrings(false);
+        tester.startComponentInPage(alert);
         assertThat(tester.getLastResponseAsString()).contains("<strong>Html</strong>");
     }
 }

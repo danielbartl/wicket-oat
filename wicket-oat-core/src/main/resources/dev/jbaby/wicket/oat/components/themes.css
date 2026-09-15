@@ -1,3 +1,19 @@
+/**
+ * Oat 0.8's built-in palette uses the CSS light-dark() function driven purely by
+ * the `color-scheme` property, which otherwise just follows the OS/browser's
+ * prefers-color-scheme -- Oat's own CSS ships no [data-theme="light"] or
+ * [data-theme="dark"] rule. Without forcing color-scheme here, selecting "Light"
+ * or "Dark" in OatThemeSwitcher has no visible effect and both look identical
+ * (whatever the system prefers). These two rules make the explicit choice stick.
+ **/
+[data-theme="light"] {
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+
 /** Custom Midnight Theme **/
 [data-theme="midnight"] {
     color-scheme: dark;

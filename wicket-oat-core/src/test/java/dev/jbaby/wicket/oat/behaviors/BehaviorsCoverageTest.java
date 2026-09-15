@@ -88,10 +88,32 @@ class BehaviorsCoverageTest {
     void testOatToastBehavior() {
         IPartialPageRequestHandler handler = mock(IPartialPageRequestHandler.class);
         OatToastBehavior.toast(handler, "Message", OatToastBehavior.Variant.SUCCESS, "Title");
-        
+
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(handler).appendJavaScript(captor.capture());
-        
+
         assertThat(captor.getValue()).contains("ot.toast('Message', 'Title', {variant: 'success'})");
+    }
+
+    @Test
+    void testOatToastBehaviorDanger() {
+        IPartialPageRequestHandler handler = mock(IPartialPageRequestHandler.class);
+        OatToastBehavior.toast(handler, "Message", OatToastBehavior.Variant.DANGER);
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(handler).appendJavaScript(captor.capture());
+
+        assertThat(captor.getValue()).contains("variant: 'danger'");
+    }
+
+    @Test
+    void testOatToastBehaviorDefaultOmitsVariant() {
+        IPartialPageRequestHandler handler = mock(IPartialPageRequestHandler.class);
+        OatToastBehavior.toast(handler, "Message");
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(handler).appendJavaScript(captor.capture());
+
+        assertThat(captor.getValue()).doesNotContain("variant:");
     }
 }

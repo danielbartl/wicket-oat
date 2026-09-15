@@ -10,6 +10,8 @@ import org.apache.wicket.model.Model;
  */
 public class OatBadge extends Label {
 
+    private final BadgeBehavior behavior;
+
     public OatBadge(String id, String label) {
         this(id, Model.of(label), BadgeBehavior.Variant.DEFAULT);
     }
@@ -24,11 +26,18 @@ public class OatBadge extends Label {
 
     public OatBadge(String id, IModel<?> model, BadgeBehavior.Variant variant) {
         super(id, model);
-        add(new BadgeBehavior(variant));
+        this.behavior = new BadgeBehavior(variant);
+        add(behavior);
     }
 
     public OatBadge(String id, IModel<?> model, IModel<BadgeBehavior.Variant> variantModel) {
         super(id, model);
-        add(new BadgeBehavior(variantModel));
+        this.behavior = new BadgeBehavior(variantModel);
+        add(behavior);
+    }
+
+    public OatBadge setOutline(boolean outline) {
+        behavior.setOutline(outline);
+        return this;
     }
 }

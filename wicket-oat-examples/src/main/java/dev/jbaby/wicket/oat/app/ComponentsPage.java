@@ -28,7 +28,7 @@ public class ComponentsPage extends BasePage {
         add(new AjaxLink<Void>("errorToast") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                Oat.toast(target, "Something went wrong.", OatToastBehavior.Variant.ERROR, "Error");
+                Oat.toast(target, "Something went wrong.", OatToastBehavior.Variant.DANGER, "Error");
             }
         }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE)));
 

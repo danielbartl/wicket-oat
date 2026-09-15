@@ -163,6 +163,27 @@ public final class Oat {
             return new OatCard(id);
         }
 
+        public static OatAvatar avatar(String id, IModel<String> imageUrl) {
+            return new OatAvatar(id, imageUrl);
+        }
+
+        public static OatAvatar avatar(String id, String initials) {
+            return new OatAvatar(id, initials);
+        }
+
+        public static OatAvatar avatar(String id, IModel<String> imageUrl, IModel<String> initials, OatAvatar.Size size) {
+            return new OatAvatar(id, imageUrl, initials, size);
+        }
+
+        public static <T> OatAvatarGroup<T> avatarGroup(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+            return new OatAvatarGroup<T>(id, model) {
+                @Override
+                protected void populateItem(ListItem<T> item) {
+                    populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
         public static OatProgress progress(String id, Number value) {
             return new OatProgress(id, value);
         }
@@ -207,8 +228,58 @@ public final class Oat {
             return new OatEmptyState(id, titleModel, messageModel);
         }
 
-        public static OatButtonGroup buttonGroup(String id) {
-            return new OatButtonGroup(id);
+        public static <T> OatButtonGroup<T> buttonGroup(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+            return new OatButtonGroup<T>(id, model) {
+                @Override
+                protected void populateItem(ListItem<T> item) {
+                    populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
+        public static <T> OatBreadcrumb<T> breadcrumb(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+            return new OatBreadcrumb<T>(id, model) {
+                @Override
+                protected void populateItem(ListItem<T> item) {
+                    populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
+        public static <T> OatPagination<T> pagination(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+            return new OatPagination<T>(id, model) {
+                @Override
+                protected void populateItem(ListItem<T> item) {
+                    populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
+        public static OatDialog dialog(String id, String triggerLabel, String header) {
+            return new OatDialog(id, Model.of(triggerLabel), Model.of(header));
+        }
+
+        public static <T> OatDropdown<T> dropdown(String id, String triggerLabel, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+            return new OatDropdown<T>(id, Model.of(triggerLabel), model) {
+                @Override
+                protected void populateItem(ListItem<T> item) {
+                    populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
+        public static <T> OatTabs<T> tabs(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateTab, SerializableBiConsumer<ListItem<T>, T> populatePanel) {
+            return new OatTabs<T>(id, model) {
+                @Override
+                protected void populateTab(ListItem<T> item) {
+                    populateTab.accept(item, item.getModelObject());
+                }
+
+                @Override
+                protected void populatePanel(ListItem<T> item) {
+                    populatePanel.accept(item, item.getModelObject());
+                }
+            };
         }
 
         public static OatButton button(String id, String label, SerializableConsumer<AjaxRequestTarget> onClick) {
@@ -345,6 +416,14 @@ public final class Oat {
 
         public static OatFileUpload fileUpload(String id, String label, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model) {
             return new OatFileUpload(id, label, model);
+        }
+
+        public static OatFileDropzone fileDropzone(String id, String label, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model) {
+            return new OatFileDropzone(id, label, model);
+        }
+
+        public static OatTagInput tagInput(String id, String label, IModel<String> model) {
+            return new OatTagInput(id, label, model);
         }
     }
 

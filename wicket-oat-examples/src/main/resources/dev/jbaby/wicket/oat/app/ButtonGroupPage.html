@@ -4,29 +4,33 @@
 <wicket:extend>
     <section>
         <h1>Oat Button Group Demo</h1>
-        <p>Button groups are created using <code>OatButtonGroup</code> component, which renders a container with <code>class="buttons"</code>.</p>
+        <p>Button groups are created using <code>OatButtonGroup</code> component, which renders a <code>&lt;menu class="buttons"&gt;</code> whose connected-button styling requires each button to be wrapped in an <code>&lt;li&gt;</code>.</p>
 
         <h3>Default Button Group</h3>
         <menu wicket:id="group">
-            <button wicket:id="left">Left</button>
-            <button wicket:id="center">Center</button>
-            <button wicket:id="right">Right</button>
+            <li wicket:id="items">
+                <button wicket:id="button"><span wicket:id="label"></span></button>
+            </li>
         </menu>
 
         <div class="mt-6">
             <h3>How to use</h3>
-            <p>Use <code>OatButtonGroup</code> component and add buttons inside it. Buttons typically use <code>ButtonBehavior</code>. You can mix different styles and variants within the same group.</p>
-            
+            <p>Use <code>Oat.Components.buttonGroup</code> with a model of items; it is a <code>ListView</code>, since Oat only styles buttons that sit inside <code>&lt;li&gt;</code> children of the <code>&lt;menu&gt;</code>.</p>
+
             <pre><code>// Java - Using the Oat factory (recommended)
-OatButtonGroup group = Oat.Components.buttonGroup("group");
-group.add(new Link&lt;Void&gt;("btn1").add(Oat.Behaviors.button().setVariant(Variant.SECONDARY)));
-group.add(new Link&lt;Void&gt;("btn2").add(Oat.Behaviors.button().setVariant(Variant.DANGER)));
+OatButtonGroup&lt;String&gt; group = Oat.Components.buttonGroup("group", Model.ofList(labels), (item, label) -&gt; {
+    Link&lt;Void&gt; button = new Link&lt;&gt;("button") { public void onClick() {} };
+    button.add(new Label("label", Model.of(label)));
+    button.add(Oat.Behaviors.button().setStyle(Style.OUTLINE));
+    item.add(button);
+});
 add(group);</code></pre>
 
             <pre><code>&lt;!-- HTML --&gt;
 &lt;menu wicket:id="group"&gt;
-    &lt;button wicket:id="btn1"&gt;Secondary&lt;/button&gt;
-    &lt;button wicket:id="btn2"&gt;Danger&lt;/button&gt;
+    &lt;li wicket:id="items"&gt;
+        &lt;button wicket:id="button"&gt;&lt;span wicket:id="label"&gt;&lt;/span&gt;&lt;/button&gt;
+    &lt;/li&gt;
 &lt;/menu&gt;</code></pre>
         </div>
 

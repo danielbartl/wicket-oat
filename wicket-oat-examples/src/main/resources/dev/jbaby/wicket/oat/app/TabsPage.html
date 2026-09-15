@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Tabs Demo</h1>
+        <p>A tabbed interface using the <code>ot-tabs</code> web component (JS vendored in <code>oat.min.js</code>). It wires <code>id</code>/<code>aria-controls</code> between tab buttons and panels automatically by DOM position.</p>
+
+        <ot-tabs wicket:id="tabs">
+            <div wicket:id="tablist" role="tablist">
+                <button wicket:id="tabButtons" role="tab"><span wicket:id="tabLabel"></span></button>
+            </div>
+            <div wicket:id="tabPanels" role="tabpanel">
+                <p wicket:id="panelContent"></p>
+            </div>
+        </ot-tabs>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <pre><code>// Java
+add(Oat.Components.tabs("tabs", Model.ofList(tabs),
+        (item, tab) -&gt; item.add(new Label("tabLabel", tab.label())),
+        (item, tab) -&gt; item.add(new Label("panelContent", tab.content()))));</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;ot-tabs wicket:id="tabs"&gt;
+    &lt;div wicket:id="tablist" role="tablist"&gt;
+        &lt;button wicket:id="tabButtons" role="tab"&gt;&lt;span wicket:id="tabLabel"&gt;&lt;/span&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div wicket:id="tabPanels" role="tabpanel"&gt;
+        &lt;p wicket:id="panelContent"&gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/ot-tabs&gt;</code></pre>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

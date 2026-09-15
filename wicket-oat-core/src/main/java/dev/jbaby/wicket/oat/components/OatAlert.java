@@ -7,6 +7,8 @@ import org.apache.wicket.model.Model;
 
 /**
  * A simple label component that renders as an Oat Alert.
+ * The message is HTML-escaped by default, like any {@link Label}; call
+ * {@code setEscapeModelStrings(false)} on the returned instance to render raw HTML.
  */
 public class OatAlert extends Label {
 
@@ -25,12 +27,10 @@ public class OatAlert extends Label {
     public OatAlert(String id, IModel<?> model, AlertBehavior.Variant variant) {
         super(id, model);
         add(new AlertBehavior(variant));
-        setEscapeModelStrings(false);
     }
 
     public OatAlert(String id, IModel<?> model, IModel<AlertBehavior.Variant> variantModel) {
         super(id, model);
         add(new AlertBehavior(variantModel));
-        setEscapeModelStrings(false);
     }
 }

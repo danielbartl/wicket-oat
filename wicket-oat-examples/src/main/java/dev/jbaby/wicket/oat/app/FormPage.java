@@ -116,7 +116,9 @@ public class FormPage extends BasePage {
         form.add(Oat.Components.weekField("oatWeek", "Oat Week", Model.of("2026-W09")));
 
         form.add(Oat.Components.telField("oatTel", "Oat Phone", Model.of("")));
-        
+
+        form.add(Oat.Components.tagInput("oatTags", "Oat Tags", Model.of("apple, mango")));
+
         // Spinner
         WebMarkupContainer smallSpinner = new WebMarkupContainer("smallSpinner");
         smallSpinner.add(Oat.Behaviors.spinner(SpinnerBehavior.Size.SMALL));

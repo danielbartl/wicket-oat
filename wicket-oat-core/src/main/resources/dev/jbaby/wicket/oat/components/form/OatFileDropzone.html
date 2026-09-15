@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <section wicket:id="container">
+        <label wicket:id="label"></label>
+        <ot-upload>
+            <input wicket:id="field" hidden=""/>
+            <button type="button" class="ghost" aria-label="Choose files">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4-4 4"/><path d="M20 16v4H4v-4"/></svg>
+            </button>
+            <div data-files="">
+                <small data-hint="">Drop files here or click to choose</small>
+            </div>
+        </ot-upload>
+        <div wicket:id="feedback" role="status"></div>
+    </section>
+</wicket:panel>
+</body>
+</html>

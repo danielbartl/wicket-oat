@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Dropdown Demo</h1>
+        <p>A dropdown menu using the <code>ot-dropdown</code> web component (JS vendored in <code>oat.min.js</code>) and the native popover API.</p>
+
+        <div wicket:id="dropdown"></div>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <pre><code>// Java
+add(Oat.Components.dropdown("dropdown", "Options", Model.ofList(items), (item, label) -&gt;
+        item.add(new Label("label", label))));</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="dropdown"&gt;&lt;/div&gt;</code></pre>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

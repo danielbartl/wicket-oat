@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1>Oat Dialog Demo</h1>
+        <p>A fully native modal dialog using <code>&lt;dialog&gt;</code> and <code>command</code>/<code>commandfor</code> attributes. Opening and cancelling need no JavaScript beyond what Oat already vendors; confirming also fires a server-side Ajax callback.</p>
+
+        <div wicket:id="dialog"></div>
+
+        <div class="mt-6">
+            <h3>How to use</h3>
+            <pre><code>// Java
+OatDialog dialog = new OatDialog("dialog", Model.of("Open dialog"), Model.of("Delete item")) {
+    @Override
+    protected void onConfirm(AjaxRequestTarget target) {
+        Oat.toast(target, "Item deleted.", OatToastBehavior.Variant.DANGER);
+    }
+};
+dialog.setBody(new Label("body", "This action cannot be undone."));
+add(dialog);</code></pre>
+
+            <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="dialog"&gt;&lt;/div&gt;</code></pre>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

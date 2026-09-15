@@ -6,11 +6,10 @@ import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 public class OatToastBehavior extends Behavior {
 
     public enum Variant {
-        DEFAULT("default"),
+        DEFAULT(null),
         SUCCESS("success"),
-        ERROR("error"),
         WARNING("warning"),
-        INFO("info");
+        DANGER("danger");
 
         private final String value;
         Variant(String value) { this.value = value; }
@@ -27,14 +26,11 @@ public class OatToastBehavior extends Behavior {
 
     public static void toast(IPartialPageRequestHandler handler, String message, Variant variant, String title) {
         Variant v = variant != null ? variant : Variant.DEFAULT;
-        String script;
-        if (title != null) {
-            script = String.format("ot.toast('%s', '%s', {variant: '%s'})", 
-                escapeJs(message), escapeJs(title), v.getValue());
-        } else {
-            script = String.format("ot.toast('%s', null, {variant: '%s'})", 
-                escapeJs(message), v.getValue());
-        }
+        String titleArg = title != null ? "'" + escapeJs(title) + "'" : "null";
+        // Oat's ot.toast() only recognizes variant: 'success'|'warning'|'danger'; omit the
+        // option entirely for the default/unstyled case instead of sending an unknown value.
+        String optionsArg = v.getValue() != null ? String.format("{variant: '%s'}", v.getValue()) : "{}";
+        String script = String.format("ot.toast('%s', %s, %s)", escapeJs(message), titleArg, optionsArg);
         handler.appendJavaScript(script);
     }
 

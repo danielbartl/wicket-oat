@@ -7,12 +7,16 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * Renders as an Oat Avatar: {@code <figure data-variant="avatar">} wrapping either
+ * an {@code <img>} or text initials in an {@code <abbr>}.
+ */
 public class OatAvatar extends Panel {
 
     public enum Size {
-        SMALL("sm"),
+        SMALL("small"),
         DEFAULT(null),
-        LARGE("lg");
+        LARGE("large");
 
         private final String className;
         Size(String className) { this.className = className; }
@@ -38,17 +42,20 @@ public class OatAvatar extends Panel {
             container.add(AttributeModifier.append("class", size.getClassName()));
         }
 
+        boolean hasImage = imageUrl != null && imageUrl.getObject() != null;
+
         WebMarkupContainer img = new WebMarkupContainer("img");
-        if (imageUrl != null && imageUrl.getObject() != null) {
+        if (hasImage) {
             img.add(AttributeModifier.replace("src", imageUrl));
-            img.setVisible(true);
-        } else {
-            img.setVisible(false);
         }
+        img.setVisible(hasImage);
         container.add(img);
 
         Label label = new Label("initials", initials != null ? initials : Model.of(""));
-        label.setVisible(imageUrl == null || imageUrl.getObject() == null);
+        label.setVisible(!hasImage);
+        if (!hasImage && initials != null) {
+            label.add(AttributeModifier.replace("title", initials));
+        }
         container.add(label);
     }
 }

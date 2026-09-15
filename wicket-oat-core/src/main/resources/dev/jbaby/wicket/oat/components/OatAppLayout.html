@@ -9,7 +9,7 @@
 <nav data-topnav wicket:id="topNav">
     <button data-sidebar-toggle aria-label="Toggle menu" class="outline">☰</button>
     <span wicket:id="appName">App Name</span>
-    <div wicket:id="topNavExtra" class="flex-grow flex justify-end">
+    <div wicket:id="topNavExtra" class="flex justify-end" style="flex:1">
         <!-- Placeholder for user profile, logout, etc. -->
     </div>
 </nav>
@@ -27,7 +27,7 @@
     </footer>
 </aside>
 
-<main>
+<main style="padding-inline: var(--space-6)">
     <wicket:child/>
 </main>
 

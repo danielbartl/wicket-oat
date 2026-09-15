@@ -12,12 +12,9 @@ public class BadgeBehavior extends Behavior {
 
     public enum Variant implements Serializable {
         DEFAULT(null),
-        PRIMARY("primary"),
         SECONDARY("secondary"),
-        OUTLINE("outline"),
         SUCCESS("success"),
         WARNING("warning"),
-        ERROR("error"),
         DANGER("danger");
 
         private final String value;
@@ -26,6 +23,7 @@ public class BadgeBehavior extends Behavior {
     }
 
     private final IModel<Variant> variantModel;
+    private boolean outline = false;
 
     public BadgeBehavior() {
         this(Variant.DEFAULT);
@@ -45,7 +43,19 @@ public class BadgeBehavior extends Behavior {
         tag.append("class", "badge", " ");
         Variant variant = variantModel.getObject();
         if (variant != null && variant.getValue() != null) {
-            tag.append("class", variant.getValue(), " ");
+            tag.put("data-variant", variant.getValue());
         }
+        if (outline) {
+            tag.append("class", "outline", " ");
+        }
+    }
+
+    public BadgeBehavior setOutline(boolean outline) {
+        this.outline = outline;
+        return this;
+    }
+
+    public boolean isOutline() {
+        return outline;
     }
 }

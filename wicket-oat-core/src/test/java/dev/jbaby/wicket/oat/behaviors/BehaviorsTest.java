@@ -35,7 +35,17 @@ class BehaviorsTest {
         tester.startComponentInPage(label);
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("badge");
-        assertThat(tag.getAttribute("class")).contains("danger");
+        assertThat(tag.getAttribute("data-variant")).isEqualTo("danger");
+    }
+
+    @Test
+    void testBadgeBehaviorOutline() {
+        Label label = new Label("id", "New");
+        label.add(new BadgeBehavior(BadgeBehavior.Variant.SECONDARY).setOutline(true));
+        tester.startComponentInPage(label);
+        TagTester tag = tester.getTagByWicketId("id");
+        assertThat(tag.getAttribute("class")).contains("outline");
+        assertThat(tag.getAttribute("data-variant")).isEqualTo("secondary");
     }
 
     @Test
@@ -64,5 +74,15 @@ class BehaviorsTest {
         tester.startComponentInPage(container);
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("title")).isEqualTo("Helpful text");
+        assertThat(tag.getAttribute("data-tooltip-placement")).isNull();
+    }
+
+    @Test
+    void testTooltipBehaviorPlacement() {
+        WebMarkupContainer container = new WebMarkupContainer("id");
+        container.add(new TooltipBehavior("Helpful text").setPlacement(TooltipBehavior.Placement.BOTTOM));
+        tester.startComponentInPage(container);
+        TagTester tag = tester.getTagByWicketId("id");
+        assertThat(tag.getAttribute("data-tooltip-placement")).isEqualTo("bottom");
     }
 }

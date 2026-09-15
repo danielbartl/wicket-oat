@@ -31,8 +31,11 @@ public class WicketOats {
             response.render(JavaScriptHeaderItem.forReference(OAT_JS));
         });
 
-        // Configure CSP for Oat UI compatibility
-        // Oat UI (especially Toast) uses inline styles and dynamic scripts.
+        // Configure CSP for Oat UI compatibility.
+        // In Oat 0.8, the ot-dropdown web component positions its popover menu by
+        // setting element.style.top/left directly from JS, which requires 'unsafe-inline'
+        // for style-src; Oat's other dynamic components (toast, tabs, taginput, upload,
+        // sidebar) only toggle classes/attributes and don't need it themselves.
         // unsafeInline() removes nonces and allows 'unsafe-inline' for style-src and script-src.
         app.getCspSettings().blocking().unsafeInline();
         

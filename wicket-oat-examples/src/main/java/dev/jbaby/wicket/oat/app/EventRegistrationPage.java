@@ -58,7 +58,7 @@ public class EventRegistrationPage extends BasePage {
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                Oat.toast(target, "Please fix the errors in the form.", OatToastBehavior.Variant.ERROR, "Error");
+                Oat.toast(target, "Please fix the errors in the form.", OatToastBehavior.Variant.DANGER, "Error");
             }
         }.add(Oat.Behaviors.button()));
     }

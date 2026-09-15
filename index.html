@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wicket Oat</title>
+<meta name="description" content="Wicket Oat is a modern, themeable UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.0/oat.min.css">
+<link rel="stylesheet" href="assets/themes.css">
+<link rel="stylesheet" href="assets/style.css">
+
+<script>
+(function () {
+  var STORAGE_KEY = 'wicket-oat-site-theme';
+  var root = document.documentElement;
+
+  function apply(theme) {
+    if (theme) { root.setAttribute('data-theme', theme); }
+    else { root.removeAttribute('data-theme'); }
+  }
+
+  function stored() {
+    try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+  }
+
+  window.__wicketOatSetTheme = function (theme) {
+    apply(theme);
+    try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
+    if (window.__wicketOatUpdateToggle) window.__wicketOatUpdateToggle();
+  };
+
+  var initial = stored();
+  if (initial) apply(initial);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-nav">
+    <a class="brand" href="#top">
+        <img src="assets/favicon.svg" alt="" width="24" height="24">
+        Wicket Oat
+    </a>
+    <nav class="site-nav-links">
+        <a href="#features">Features</a>
+        <a href="#applayout">AppLayout</a>
+        <a href="#components">Components</a>
+        <a href="#theming">Theming</a>
+        <a href="#quick-start">Get Started</a>
+    </nav>
+    <button id="theme-toggle" class="ghost icon small" aria-label="Toggle light/dark theme" title="Toggle light/dark theme">🌙</button>
+    <a class="button outline small" href="https://github.com/danielbartl/wicket-oat" aria-label="View on GitHub">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+    </a>
+</header>
+
+<main>
+
+<section id="top" class="hero">
+    <div class="container">
+        <p class="eyebrow">Apache Wicket &times; Oat UI</p>
+        <h1>Wicket Oat</h1>
+        <p class="tagline">A modern, themeable component library for Apache Wicket &mdash; built on
+            <a href="https://oat.ink" target="_blank" rel="noopener">Oat</a>'s ultra-lightweight,
+            semantic CSS and JS. No utility-class soup, no client framework, just Wicket the way
+            you already write it.</p>
+        <div class="badges">
+            <span class="badge" data-variant="secondary">Wicket 10.8+</span>
+            <span class="badge" data-variant="secondary">Java 25</span>
+            <span class="badge" data-variant="secondary">Oat 0.8</span>
+            <span class="badge" data-variant="success">MIT Licensed</span>
+        </div>
+        <div class="cta">
+            <a class="button large" href="#quick-start">Get Started</a>
+            <a class="button outline large" href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">View on GitHub</a>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Why Wicket Oat</p>
+            <h2>Server-side components, modern look, zero JS framework</h2>
+            <p>Wicket Oat wraps Oat's semantic HTML/CSS/JS in idiomatic Wicket
+                <code>Component</code>s and <code>Behavior</code>s, so you get a current, themeable
+                UI without leaving Wicket's component model.</p>
+        </div>
+        <div class="feature-grid">
+            <article class="card">
+                <h3>Fluent, dual API</h3>
+                <p>Use <code>Oat.Components</code> for self-contained widgets, or apply
+                    <code>Oat.Behaviors</code> to any existing Wicket component &mdash;
+                    composition over inheritance, your choice per case.</p>
+            </article>
+            <article class="card">
+                <h3>Semantic &amp; lightweight</h3>
+                <p>Oat styles real HTML elements by default. ~10KB of CSS and JS total, no build
+                    step, no bundler, no utility-class soup in your markup.</p>
+            </article>
+            <article class="card">
+                <h3>Themeable</h3>
+                <p>17 built-in themes switchable per session out of the box, plus full CSS
+                    custom-property theming to match your own brand.</p>
+            </article>
+            <article class="card">
+                <h3>Just Wicket</h3>
+                <p>Every component is an ordinary <code>WebMarkupContainer</code>, <code>Panel</code>,
+                    or <code>Behavior</code> subclass &mdash; test it with <code>WicketTester</code>
+                    like anything else in your app.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section id="quick-start" class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Get Started</p>
+            <h2>Three steps to your first Oat component</h2>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-num">1</span>
+                <div>
+                    <h3>Add the dependency</h3>
+                    <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
+    &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <div>
+                    <h3>Install it in your application</h3>
+                    <pre><code>public class MyWicketApplication extends WebApplication {
+    &#64;Override
+    protected void init() {
+        super.init();
+        WicketOats.install(this);
+    }
+}</code></pre>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <div>
+                    <h3>Build your first UI</h3>
+                    <pre><code>add(Oat.Components.button("save", "Save changes", target -&gt;
+    Oat.toast(target, "Saved!", OatToastBehavior.Variant.SUCCESS)));
+
+add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCESS));</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="applayout" class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">The Application Frame</p>
+            <h2>OatAppLayout: sidebar, topnav, and content &mdash; solved</h2>
+            <p>Most business applications share the same shell: a collapsible sidebar for
+                navigation, a top bar for identity and actions, and a content area in between.
+                <code>OatAppLayout</code> is a <code>WebPage</code> base class that gives you
+                exactly that, backed by Oat's <code>data-sidebar-layout</code> CSS grid &mdash;
+                no layout CSS to write yourself.</p>
+        </div>
+
+        <div class="applayout-intro">
+            <div>
+                <p>Extend <code>OatAppLayout</code> (or the ready-made <code>BasePage</code>
+                    pattern shown here) and override a handful of hook methods. The sidebar
+                    collapses to an off-canvas panel under 768px automatically, toggled by the
+                    <code>&#9776;</code> button &mdash; no extra JavaScript required, it's wired
+                    into Oat's vendored JS already.</p>
+                <pre><code>public class BasePage extends OatAppLayout {
+
+    &#64;Override
+    protected IModel&lt;String&gt; appNameModel() {
+        return Model.of("My Business App");
+    }
+
+    &#64;Override
+    protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {
+        return Model.ofList(List.of(
+            MenuItem.of("Dashboard", DashboardPage.class),
+            MenuItem.of("Customers", CustomersPage.class)
+        ));
+    }
+
+    &#64;Override
+    protected Component createFooter(String id) {
+        // Any component works here - the built-in switcher is one option
+        return new OatThemeSwitcher(id);
+    }
+}</code></pre>
+                <p>Pages then simply extend <code>BasePage</code> and add their own content
+                    &mdash; the sidebar, top bar, active-link highlighting, and responsive
+                    behavior are already handled.</p>
+            </div>
+
+            <div class="applayout-demo-wrap">
+                <div class="applayout-demo">
+                    <div data-sidebar-layout>
+                        <nav data-topnav>
+                            <button data-sidebar-toggle aria-label="Toggle menu" class="outline small">&#9776;</button>
+                            <span>My Business App</span>
+                            <div class="flex justify-end" style="flex:1">
+                                <figure data-variant="avatar" class="small" aria-label="Jane Doe"><abbr title="Jane Doe">JD</abbr></figure>
+                            </div>
+                        </nav>
+                        <aside data-sidebar>
+                            <nav>
+                                <ul>
+                                    <li><a href="#applayout" aria-current="page">Dashboard</a></li>
+                                    <li><a href="#applayout">Customers</a></li>
+                                    <li><a href="#applayout">Invoices</a></li>
+                                    <li>
+                                        <details open>
+                                            <summary>Settings</summary>
+                                            <ul>
+                                                <li><a href="#applayout">General</a></li>
+                                                <li><a href="#applayout">Billing</a></li>
+                                            </ul>
+                                        </details>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <footer>
+                                <button class="outline small" style="width:100%">Logout</button>
+                            </footer>
+                        </aside>
+                        <main>
+                            <h4>Dashboard</h4>
+                            <p class="text-light">Your page content renders here, inside <code>&lt;wicket:child/&gt;</code>.</p>
+                            <article class="card">
+                                <p style="margin:0">Sample widget content&hellip;</p>
+                            </article>
+                        </main>
+                    </div>
+                </div>
+                <p class="applayout-demo-caption">Live demo &mdash; try the &#9776; toggle, and resize your window.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="components" class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Component Showcase</p>
+            <h2>Everything below is real, live Oat markup</h2>
+            <p>Not screenshots &mdash; this page loads the same Oat 0.8 build the library
+                vendors, so what you see here is exactly what renders in your app.</p>
+        </div>
+
+        <div class="showcase-group">
+            <h3>General</h3>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button>Primary</button>
+                        <button data-variant="secondary">Secondary</button>
+                        <button class="outline">Outline</button>
+                    </div>
+                    <div class="showcase-footer"><strong>OatButton</strong><code>Oat.Components.button(id, label, onClick)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <span class="badge">Default</span>
+                        <span class="badge" data-variant="success">Success</span>
+                        <span class="badge outline" data-variant="danger">Danger</span>
+                    </div>
+                    <div class="showcase-footer"><strong>OatBadge</strong><code>Oat.Components.badge(id, label, Variant)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <figure data-variant="avatar" role="group">
+                            <figure data-variant="avatar" aria-label="Jane Doe"><img src="https://i.pravatar.cc/64?img=5" alt=""></figure>
+                            <figure data-variant="avatar" aria-label="John Smith"><img src="https://i.pravatar.cc/64?img=8" alt=""></figure>
+                            <figure data-variant="avatar" aria-label="Oat"><abbr title="Oat User">OT</abbr></figure>
+                        </figure>
+                    </div>
+                    <div class="showcase-footer"><strong>OatAvatar / OatAvatarGroup</strong><code>Oat.Components.avatar(id, imageUrl)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <div role="alert" data-variant="success"><strong>Saved.</strong> Your changes were applied.</div>
+                    </div>
+                    <div class="showcase-footer"><strong>OatAlert</strong><code>Oat.Components.alert(id, message, Variant)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <article class="card" style="margin:0">
+                            <header><h5 style="margin:0">Plan</h5></header>
+                            <p style="margin-block:var(--space-2) 0">Any HTML can live inside.</p>
+                        </article>
+                    </div>
+                    <div class="showcase-footer"><strong>OatCard</strong><code>Oat.Components.card(id)</code></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase-group">
+            <h3>Navigation</h3>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <details>
+                            <summary>What is Wicket Oat?</summary>
+                            <p class="p-4">A themeable component library for Apache Wicket, built on Oat.</p>
+                        </details>
+                    </div>
+                    <div class="showcase-footer"><strong>OatAccordion</strong><code>Oat.Components.accordion(id, model, populateItem)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <menu class="buttons">
+                            <li><button class="outline small">Left</button></li>
+                            <li><button class="outline small">Center</button></li>
+                            <li><button class="outline small">Right</button></li>
+                        </menu>
+                    </div>
+                    <div class="showcase-footer"><strong>OatButtonGroup</strong><code>Oat.Components.buttonGroup(id, model, populateItem)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <nav aria-label="Breadcrumb">
+                            <ol class="unstyled hstack" style="font-size: var(--text-7)">
+                                <li><a href="#components" class="unstyled">Home</a></li>
+                                <li aria-hidden="true">/</li>
+                                <li><a href="#components" class="unstyled" aria-current="page"><strong>Components</strong></a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="showcase-footer"><strong>OatBreadcrumb</strong><code>Oat.Components.breadcrumb(id, model, populateItem)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <nav aria-label="Pagination">
+                            <menu class="buttons">
+                                <li><a href="#components" class="button outline small">&larr;</a></li>
+                                <li><a href="#components" class="button small" aria-current="page">1</a></li>
+                                <li><a href="#components" class="button outline small">2</a></li>
+                                <li><a href="#components" class="button outline small">&rarr;</a></li>
+                            </menu>
+                        </nav>
+                    </div>
+                    <div class="showcase-footer"><strong>OatPagination</strong><code>Oat.Components.pagination(id, model, populateItem)</code></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase-group">
+            <h3>Overlays</h3>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button commandfor="demo-dialog" command="show-modal" class="outline">Open dialog</button>
+                        <dialog id="demo-dialog" closedby="any">
+                            <form method="dialog">
+                                <header><h3>Delete item?</h3></header>
+                                <div><p>This action cannot be undone.</p></div>
+                                <footer>
+                                    <button type="button" commandfor="demo-dialog" command="close" class="outline">Cancel</button>
+                                    <button type="button" commandfor="demo-dialog" command="close" data-variant="danger">Delete</button>
+                                </footer>
+                            </form>
+                        </dialog>
+                    </div>
+                    <div class="showcase-footer"><strong>OatDialog</strong><code>Oat.Components.dialog(id, triggerLabel, header)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <ot-dropdown>
+                            <button popovertarget="demo-menu" class="outline">
+                                Options
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                            </button>
+                            <menu popover id="demo-menu">
+                                <button role="menuitem" class="ghost">Profile</button>
+                                <button role="menuitem" class="ghost">Settings</button>
+                                <hr>
+                                <button role="menuitem" class="ghost" data-variant="danger">Logout</button>
+                            </menu>
+                        </ot-dropdown>
+                    </div>
+                    <div class="showcase-footer"><strong>OatDropdown</strong><code>Oat.Components.dropdown(id, triggerLabel, model, populateItem)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <ot-tabs>
+                            <div role="tablist">
+                                <button role="tab">Account</button>
+                                <button role="tab">Password</button>
+                            </div>
+                            <div role="tabpanel"><p style="margin:0">Manage your account here.</p></div>
+                            <div role="tabpanel"><p style="margin:0">Change your password here.</p></div>
+                        </ot-tabs>
+                    </div>
+                    <div class="showcase-footer"><strong>OatTabs</strong><code>Oat.Components.tabs(id, model, populateTab, populatePanel)</code></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase-group">
+            <h3>Data Display</h3>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <div class="table">
+                            <table class="w-100 align-left small">
+                                <thead><tr><th>Name</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Invoice #1042</td><td><span class="badge" data-variant="success">Paid</span></td></tr>
+                                    <tr><td>Invoice #1043</td><td><span class="badge" data-variant="warning">Due</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><strong>OatDataTable</strong><code>Oat.Components.dataTable(id, columns, provider, rows)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <progress value="60" max="100" style="width:100%"></progress>
+                        <meter value="0.8" min="0" max="1" style="width:100%; margin-top: var(--space-2)"></meter>
+                    </div>
+                    <div class="showcase-footer"><strong>OatProgress / OatMeter</strong><code>Oat.Components.progress(id, value)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <div aria-busy="true" data-spinner="small"></div>
+                        <div aria-busy="true"></div>
+                        <div role="status" class="skeleton line" style="width:6rem"></div>
+                    </div>
+                    <div class="showcase-footer"><strong>OatSpinner / OatSkeleton</strong><code>Oat.Components.spinner(id)</code></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase-group">
+            <h3>Forms</h3>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <label data-field>
+                            Email
+                            <input type="email" placeholder="you@example.com">
+                            <span data-hint>We'll never share it.</span>
+                        </label>
+                    </div>
+                    <div class="showcase-footer"><strong>OatTextField</strong><code>Oat.Components.textField(id, label, model)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <label><input type="checkbox" role="switch" checked> Email notifications</label>
+                    </div>
+                    <div class="showcase-footer"><strong>OatSwitch</strong><code>Oat.Components.oatSwitch(id, label, model)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <ot-taginput value="apple, mango">
+                            <input placeholder="Add tags&hellip;" maxlength="20">
+                        </ot-taginput>
+                    </div>
+                    <div class="showcase-footer"><strong>OatTagInput</strong><code>Oat.Components.tagInput(id, label, model)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <ot-upload>
+                            <div data-field class="vstack">
+                                <input type="file" multiple hidden>
+                                <button type="button" class="ghost" aria-label="Choose files">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4-4 4"/><path d="M20 16v4H4v-4"/></svg>
+                                </button>
+                                <div data-files><small data-hint>Drop files or click to choose</small></div>
+                            </div>
+                        </ot-upload>
+                    </div>
+                    <div class="showcase-footer"><strong>OatFileDropzone</strong><code>Oat.Components.fileDropzone(id, label, model)</code></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase-group">
+            <h3>Feedback</h3>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button onclick="ot.toast('Changes saved successfully', 'All good', {variant:'success'})">Success toast</button>
+                        <button class="outline" onclick="ot.toast('Something went wrong', 'Error', {variant:'danger'})" data-variant="danger">Danger toast</button>
+                    </div>
+                    <div class="showcase-footer"><strong>OatToastBehavior</strong><code>Oat.toast(target, message, Variant)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button title="Saved to your account">Hover me</button>
+                        <button class="outline" title="Shown below" data-tooltip-placement="bottom">And me</button>
+                    </div>
+                    <div class="showcase-footer"><strong>TooltipBehavior</strong><code>Oat.Behaviors.tooltip(text)</code></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="theming" class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Theming</p>
+            <h2>17 built-in themes, switchable per session</h2>
+            <p>Click a theme below to preview it live on this entire page &mdash; the same
+                mechanism <code>OatThemeSwitcher</code> uses via <code>OatSession</code> in your
+                app.</p>
+        </div>
+        <div class="theme-switcher">
+            <button class="theme-swatch outline" data-set-theme=""><span class="dot"></span>System</button>
+            <button class="theme-swatch outline" data-set-theme="light"><span class="dot"></span>Light</button>
+            <button class="theme-swatch outline" data-set-theme="dark"><span class="dot"></span>Dark</button>
+            <button class="theme-swatch outline" data-set-theme="midnight"><span class="dot"></span>Midnight</button>
+            <button class="theme-swatch outline" data-set-theme="nord"><span class="dot"></span>Nord</button>
+            <button class="theme-swatch outline" data-set-theme="everforest"><span class="dot"></span>Everforest</button>
+            <button class="theme-swatch outline" data-set-theme="tokyo-night"><span class="dot"></span>Tokyo Night</button>
+            <button class="theme-swatch outline" data-set-theme="rose-pine-dawn"><span class="dot"></span>Ros&eacute; Pine Dawn</button>
+            <button class="theme-swatch outline" data-set-theme="royal"><span class="dot"></span>Royal</button>
+            <button class="theme-swatch outline" data-set-theme="clay"><span class="dot"></span>Clay</button>
+            <button class="theme-swatch outline" data-set-theme="catppuccin-mocha"><span class="dot"></span>Catppuccin Mocha</button>
+            <button class="theme-swatch outline" data-set-theme="catppuccin-latte"><span class="dot"></span>Catppuccin Latte</button>
+            <button class="theme-swatch outline" data-set-theme="material"><span class="dot"></span>Material</button>
+            <button class="theme-swatch outline" data-set-theme="daisy"><span class="dot"></span>Daisy</button>
+            <button class="theme-swatch outline" data-set-theme="ultraviolet"><span class="dot"></span>Ultraviolet</button>
+            <button class="theme-swatch outline" data-set-theme="halloween"><span class="dot"></span>Halloween</button>
+            <button class="theme-swatch outline" data-set-theme="xmas"><span class="dot"></span>Xmas</button>
+            <button class="theme-swatch outline" data-set-theme="wireframe"><span class="dot"></span>Wireframe</button>
+        </div>
+        <pre style="margin-top:var(--space-6)"><code>OatSession.get().setTheme(OatTheme.NORD);
+// or, scoped to one component/page:
+add(Oat.Behaviors.theme().setTheme(OatTheme.NORD));</code></pre>
+    </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-links">
+        <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/danielbartl/wicket-oat/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        <a href="https://oat.ink" target="_blank" rel="noopener">Built on Oat</a>
+    </div>
+    <p>Wicket Oat is an independent project and is not affiliated with the Apache Software Foundation.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.0/oat.min.js"></script>
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+
+  function isDark() {
+    var current = root.getAttribute('data-theme');
+    if (current === 'light') return false;
+    if (current === 'dark') return true;
+    if (current) {
+      var scheme = getComputedStyle(root).colorScheme || '';
+      return scheme.indexOf('dark') !== -1 && scheme.indexOf('light') === -1;
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function updateToggle() {
+    if (toggle) toggle.textContent = isDark() ? '☀️' : '🌙';
+  }
+
+  window.__wicketOatUpdateToggle = updateToggle;
+  updateToggle();
+
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      window.__wicketOatSetTheme(isDark() ? 'light' : 'dark');
+    });
+  }
+
+  document.querySelectorAll('[data-set-theme]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      window.__wicketOatSetTheme(el.getAttribute('data-set-theme'));
+    });
+  });
+})();
+</script>
+</body>
+</html>

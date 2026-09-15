@@ -1,0 +1,308 @@
+/**
+ * Oat 0.8's built-in palette uses the CSS light-dark() function driven purely by
+ * the `color-scheme` property, which otherwise just follows the OS/browser's
+ * prefers-color-scheme -- Oat's own CSS ships no [data-theme="light"] or
+ * [data-theme="dark"] rule. Without forcing color-scheme here, selecting "Light"
+ * or "Dark" in OatThemeSwitcher has no visible effect and both look identical
+ * (whatever the system prefers). These two rules make the explicit choice stick.
+ **/
+[data-theme="light"] {
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/** Custom Midnight Theme **/
+[data-theme="midnight"] {
+    color-scheme: dark;
+    --background: #020617;
+    --foreground: #f8fafc;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --primary: #38bdf8;
+    --primary-foreground: #020617;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --faint: #0f172a;
+    --accent: #1e293b;
+    --danger-foreground: #f8fafc;
+    --success-foreground: #f8fafc;
+    --warning-foreground: #020617;
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #38bdf8;
+}
+
+/** Nord Theme **/
+[data-theme="nord"] {
+    color-scheme: dark;
+    --background: #2e3440;
+    --foreground: #d8dee9;
+    --card: #3b4252;
+    --card-foreground: #d8dee9;
+    --primary: #88c0d0;
+    --primary-foreground: #2e3440;
+    --secondary: #434c5e;
+    --secondary-foreground: #e5e9f0;
+    --muted: #4c566a;
+    --muted-foreground: #d8dee9;
+    --faint: #3b4252;
+    --border: #434c5e;
+    --input: #434c5e;
+    --ring: #88c0d0;
+}
+
+/** Everforest Theme **/
+[data-theme="everforest"] {
+    color-scheme: dark;
+    --background: #272e33;
+    --foreground: #d3c6aa;
+    --card: #2e383c;
+    --card-foreground: #d3c6aa;
+    --primary: #a7c080;
+    --primary-foreground: #272e33;
+    --secondary: #374145;
+    --secondary-foreground: #d3c6aa;
+    --muted: #414b50;
+    --muted-foreground: #859289;
+    --faint: #2e383c;
+    --border: #414b50;
+    --input: #414b50;
+    --ring: #a7c080;
+}
+
+/** Tokyo Night Theme **/
+[data-theme="tokyo-night"] {
+    color-scheme: dark;
+    --background: #1a1b26;
+    --foreground: #a9b1d6;
+    --card: #24283b;
+    --card-foreground: #a9b1d6;
+    --primary: #7aa2f7;
+    --primary-foreground: #1a1b26;
+    --secondary: #292e42;
+    --secondary-foreground: #c0caf5;
+    --muted: #414868;
+    --muted-foreground: #565f89;
+    --faint: #24283b;
+    --border: #292e42;
+    --input: #292e42;
+    --ring: #7aa2f7;
+}
+
+/** Rose Pine Dawn Theme (Light) **/
+[data-theme="rose-pine-dawn"] {
+    color-scheme: light;
+    --background: #faf4ed;
+    --foreground: #575279;
+    --card: #fffaf3;
+    --card-foreground: #575279;
+    --primary: #907aa9;
+    --primary-foreground: #faf4ed;
+    --secondary: #f2e9e1;
+    --secondary-foreground: #575279;
+    --muted: #cecacd;
+    --muted-foreground: #797593;
+    --faint: #f2e9e1;
+    --border: #dfdad9;
+    --input: #dfdad9;
+    --ring: #907aa9;
+}
+
+/** Royal Theme **/
+[data-theme="royal"] {
+    color-scheme: dark;
+    --background: #1e1b4b;
+    --foreground: #e0e7ff;
+    --card: #312e81;
+    --card-foreground: #e0e7ff;
+    --primary: #6366f1;
+    --primary-foreground: #ffffff;
+    --secondary: #3730a3;
+    --secondary-foreground: #e0e7ff;
+    --muted: #4338ca;
+    --muted-foreground: #a5b4fc;
+    --faint: #312e81;
+    --border: #4338ca;
+    --input: #4338ca;
+    --ring: #818cf8;
+}
+
+/** Clay Theme **/
+[data-theme="clay"] {
+    color-scheme: light;
+    --background: #fdfaf6;
+    --foreground: #4a4a4a;
+    --card: #ffffff;
+    --card-foreground: #4a4a4a;
+    --primary: #d2b48c;
+    --primary-foreground: #ffffff;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #4a4a4a;
+    --muted: #e5e5e5;
+    --muted-foreground: #8c8c8c;
+    --faint: #f5f5f5;
+    --border: #dcdcdc;
+    --input: #dcdcdc;
+    --ring: #d2b48c;
+}
+
+/** Catppuccin Mocha Theme **/
+[data-theme="catppuccin-mocha"] {
+    color-scheme: dark;
+    --background: #1e1e2e;
+    --foreground: #cdd6f4;
+    --card: #313244;
+    --card-foreground: #cdd6f4;
+    --primary: #cba6f7;
+    --primary-foreground: #1e1e2e;
+    --secondary: #74c7ec;
+    --secondary-foreground: #cdd6f4;
+    --muted: #6c7086;
+    --muted-foreground: #a6adc8;
+    --faint: #45475a;
+    --border: #585b70;
+    --input: #585b70;
+    --ring: #cba6f7;
+}
+
+/** Catppuccin Latte Theme **/
+[data-theme="catppuccin-latte"] {
+    color-scheme: light;
+    --background: #eff1f5;
+    --foreground: #4c4f69;
+    --card: #ccd0da;
+    --card-foreground: #4c4f69;
+    --primary: #8839ef;
+    --primary-foreground: #eff1f5;
+    --secondary: #209fb5;
+    --secondary-foreground: #4c4f69;
+    --muted: #9ca0b0;
+    --muted-foreground: #7c7f93;
+    --faint: #bcc0cc;
+    --border: #acb0be;
+    --input: #acb0be;
+    --ring: #8839ef;
+}
+
+/** Material Design Theme **/
+[data-theme="material"] {
+    color-scheme: light;
+    --background: #fafafa;
+    --foreground: #212121;
+    --card: #ffffff;
+    --card-foreground: #212121;
+    --primary: #6200ee;
+    --primary-foreground: #ffffff;
+    --secondary: #03dac6;
+    --secondary-foreground: #000000;
+    --muted: #f5f5f5;
+    --muted-foreground: #757575;
+    --faint: #eeeeee;
+    --border: #e0e0e0;
+    --input: #e0e0e0;
+    --ring: #bb86fc;
+}
+
+/** Daisy UI Dark Theme **/
+[data-theme="daisy"] {
+    color-scheme: dark;
+    --background: #1d232a;
+    --foreground: #a6adbb;
+    --card: #2a323c;
+    --card-foreground: #a6adbb;
+    --primary: #661ae6;
+    --primary-foreground: #ffffff;
+    --secondary: #d926aa;
+    --secondary-foreground: #ffffff;
+    --muted: #191d24;
+    --muted-foreground: #717d91;
+    --faint: #15191e;
+    --border: #38414e;
+    --input: #191d24;
+    --ring: #661ae6;
+}
+
+/** Ultraviolet OKLCH Theme **/
+[data-theme="ultraviolet"] {
+    color-scheme: dark;
+    --background: oklch(25.33% 0.016 252.42);
+    --foreground: oklch(74% 0.16 232.661);
+    --card: oklch(23.26% 0.014 253.1);
+    --card-foreground: oklch(74% 0.16 232.661);
+    --primary: oklch(58% 0.233 277.117);
+    --primary-foreground: #ffffff;
+    --secondary: oklch(65% 0.241 354.308);
+    --secondary-foreground: #ffffff;
+    --accent: oklch(77% 0.152 181.912);
+    --muted: oklch(21.15% 0.012 254.09);
+    --muted-foreground: oklch(74% 0.16 232.661);
+    --faint: oklch(14% 0.005 285.823);
+    --border: oklch(21.15% 0.012 254.09);
+    --input: oklch(21.15% 0.012 254.09);
+    --ring: oklch(58% 0.233 277.117);
+}
+
+/** Halloween OKLCH Theme **/
+[data-theme="halloween"] {
+    color-scheme: dark;
+    --background: oklch(21% 0.006 56.043);
+    --foreground: oklch(90% 0.05 60);
+    --card: oklch(14% 0.004 49.25);
+    --card-foreground: oklch(77.48% 0.204 60.62);
+    --primary: oklch(77.48% 0.204 60.62);
+    --primary-foreground: #000000;
+    --secondary: oklch(45.98% 0.248 305.03);
+    --secondary-foreground: #ffffff;
+    --accent: oklch(64.8% 0.223 136.073);
+    --muted: oklch(24.371% 0.046 65.681);
+    --muted-foreground: oklch(77.48% 0.204 60.62);
+    --faint: oklch(0% 0 0);
+    --border: oklch(24.371% 0.046 65.681);
+    --input: oklch(24.371% 0.046 65.681);
+    --ring: oklch(77.48% 0.204 60.62);
+}
+
+/** Wireframe OKLCH Theme **/
+[data-theme="wireframe"] {
+    color-scheme: light;
+    --background: oklch(100% 0 0);
+    --foreground: #000000;
+    --card: oklch(97% 0 0);
+    --card-foreground: #000000;
+    --primary: oklch(87% 0 0);
+    --primary-foreground: #000000;
+    --secondary: oklch(87% 0 0);
+    --secondary-foreground: #000000;
+    --accent: oklch(87% 0 0);
+    --muted: oklch(94% 0 0);
+    --muted-foreground: #666666;
+    --faint: oklch(97% 0 0);
+    --border: #000000;
+    --input: oklch(100% 0 0);
+    --ring: oklch(87% 0 0);
+}
+
+/** Christmas Theme **/
+[data-theme="xmas"] {
+    color-scheme: dark;
+    --background: #064e3b;
+    --foreground: #fef2f2;
+    --card: #065f46;
+    --card-foreground: #fef2f2;
+    --primary: #dc2626;
+    --primary-foreground: #ffffff;
+    --secondary: #166534;
+    --secondary-foreground: #ffffff;
+    --accent: #fcd34d;
+    --muted: #065f46;
+    --muted-foreground: #a7f3d0;
+    --faint: #042f2e;
+    --border: #059669;
+    --input: #059669;
+    --ring: #dc2626;
+}

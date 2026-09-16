@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -45,6 +46,11 @@ class BehaviorsCoverageTest {
         assertThat(container.getBehaviors(ClientSideClickBehavior.class)).hasSize(1);
         // Verify outputMarkupId was set (required for JS selection)
         assertThat(container.getOutputMarkupId()).isTrue();
+    }
+
+    @Test
+    void testClientSideClickBehaviorRejectsNull() {
+        assertThatNullPointerException().isThrownBy(() -> new ClientSideClickBehavior(null));
     }
 
     @Test

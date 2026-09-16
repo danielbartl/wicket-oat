@@ -46,7 +46,7 @@ public class FormPage extends BasePage {
         // Switch
         WebMarkupContainer switchField = new WebMarkupContainer("switchField");
         CheckBox switchBtn = new CheckBox("switch", Model.of(true));
-        switchBtn.add(Oat.Behaviors.switchBehavior());
+        switchBtn.add(Oat.Behaviors.oatSwitch());
         switchField.add(switchBtn);
         form.add(switchField);
 

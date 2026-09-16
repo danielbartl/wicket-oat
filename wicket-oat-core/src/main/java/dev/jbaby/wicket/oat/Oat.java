@@ -80,7 +80,7 @@ public final class Oat {
             return new HintBehavior();
         }
 
-        public static SwitchBehavior switchBehavior() {
+        public static SwitchBehavior oatSwitch() {
             return new SwitchBehavior();
         }
 
@@ -112,8 +112,8 @@ public final class Oat {
             return new TooltipBehavior(textModel);
         }
 
-        public static ClientSideClickBehavior clientSideClick(String script) {
-            return new ClientSideClickBehavior(script);
+        public static ClientSideClickBehavior clientSideClick(String javascript) {
+            return new ClientSideClickBehavior(javascript);
         }
 
         public static OatThemeBehavior theme() {

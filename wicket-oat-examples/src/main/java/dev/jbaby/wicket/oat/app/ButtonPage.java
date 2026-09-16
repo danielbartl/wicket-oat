@@ -3,7 +3,6 @@ package dev.jbaby.wicket.oat.app;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.behaviors.OatToastBehavior;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 
 public class ButtonPage extends BasePage {

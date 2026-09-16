@@ -5,6 +5,8 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 
+import java.util.Objects;
+
 /**
  * A behavior that attaches a client-side click listener to a component.
  * This is CSP-compliant as it uses Wicket's nonced script mechanism
@@ -15,7 +17,7 @@ public class ClientSideClickBehavior extends Behavior {
     private final String javascript;
 
     public ClientSideClickBehavior(String javascript) {
-        this.javascript = javascript;
+        this.javascript = Objects.requireNonNull(javascript, "javascript must not be null");
     }
 
     @Override

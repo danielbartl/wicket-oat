@@ -58,6 +58,7 @@
         <a href="#applayout">AppLayout</a>
         <a href="#components">Components</a>
         <a href="#theming">Theming</a>
+        <a href="#ai-skill">AI Skill</a>
         <a href="#quick-start">Get Started</a>
         <a href="tutorial.html">Tutorial</a>
     </nav>
@@ -569,6 +570,46 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
         <pre style="margin-top:var(--space-6)"><code>OatSession.get().setTheme(OatTheme.NORD);
 // or, scoped to one component/page:
 add(Oat.Behaviors.theme().setTheme(OatTheme.NORD));</code></pre>
+    </div>
+</section>
+
+<section id="ai-skill" class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">AI-Powered Development</p>
+            <h2>Give your AI coding agent a Wicket Oat cheat sheet</h2>
+            <p>Wicket Oat ships a standard <a href="https://github.com/danielbartl/wicket-oat/tree/master/wicket-oat" target="_blank" rel="noopener">Agent Skill</a>
+                &mdash; a plain <code>SKILL.md</code> plus a <code>references/</code> folder &mdash; giving the agent
+                deep knowledge of the Oat API, component library, and theming system. It works with any tool that
+                supports this directory-based skill convention.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <span class="step-num">1</span>
+                <div>
+                    <h3>Grab the skill</h3>
+                    <p>It lives in the repo at <code>wicket-oat/</code>
+                        (<code>SKILL.md</code> + <code>references/</code>).</p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <div>
+                    <h3>Point your agent at it</h3>
+                    <p>Copy it into your agent's own skills folder &mdash; for example, with Claude Code:</p>
+                    <pre><code>cp -r wicket-oat .claude/skills/wicket-oat</code></pre>
+                    <p class="text-light">Check your agent's own documentation for how it discovers or loads skills.</p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <div>
+                    <h3>Just ask</h3>
+                    <p>Once installed, try: <em>&ldquo;Add a primary Oat button that shows a success toast on click.&rdquo;</em>
+                        or <em>&ldquo;Turn this standard Wicket Label into an Oat success badge.&rdquo;</em></p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

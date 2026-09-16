@@ -155,6 +155,12 @@
     Oat.toast(target, "Saved!", OatToastBehavior.Variant.SUCCESS)));
 
 add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCESS));</code></pre>
+                    <p class="text-light">Prefer plain Wicket constructors? Components like
+                        <code>OatAlert</code>, <code>OatBadge</code>, and <code>OatCard</code> work
+                        the same way with <code>new</code> &mdash; the factory is mainly there for
+                        components like <code>OatButton</code> that need a callback and would
+                        otherwise require subclassing:</p>
+                    <pre><code>add(new OatAlert("notice", "Welcome back!", AlertBehavior.Variant.SUCCESS));</code></pre>
                 </div>
             </div>
         </div>

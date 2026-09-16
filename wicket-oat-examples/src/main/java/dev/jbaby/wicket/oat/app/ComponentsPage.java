@@ -3,11 +3,17 @@ package dev.jbaby.wicket.oat.app;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.behaviors.OatToastBehavior;
+import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import dev.jbaby.wicket.oat.components.OatAvatar;
+import dev.jbaby.wicket.oat.components.OatAvatarGroup;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
+
+import java.util.List;
 
 public class ComponentsPage extends BasePage {
 
@@ -39,5 +45,17 @@ public class ComponentsPage extends BasePage {
         add(new OatAvatar("avatar1", "JD"));
         add(new OatAvatar("avatar2", Model.of("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150")));
         add(new OatAvatar("avatar3", Model.of("https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150"), Model.of("AS"), OatAvatar.Size.LARGE));
+
+        // Avatar Group
+        add(new OatAvatarGroup<String>("avatarGroup", Model.ofList(List.of("JD", "AS", "KP"))) {
+            @Override
+            protected void populateItem(ListItem<String> item) {
+                item.add(new OatAvatar("avatar", item.getModelObject()));
+            }
+        });
+
+        // Spinner and Skeleton
+        add(Oat.Components.spinner("spinnerComponent"));
+        add(Oat.Components.skeleton("skeletonComponent", SkeletonBehavior.Shape.BOX));
     }
 }

@@ -4,6 +4,11 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <textarea>} ({@link TextArea}).
+ *
+ * @param <T> the model object type
+ */
 public class OatTextArea<T> extends BaseOatField<T, TextArea<T>> {
 
     public OatTextArea(String id, String label, IModel<T> model) {

@@ -5,6 +5,10 @@ import org.apache.wicket.markup.html.form.UrlTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="url">}
+ * ({@link UrlTextField}).
+ */
 public class OatUrlField extends BaseOatField<String, UrlTextField> {
 
     public OatUrlField(String id, String label, IModel<String> model) {

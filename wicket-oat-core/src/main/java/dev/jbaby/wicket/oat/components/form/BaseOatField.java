@@ -9,6 +9,16 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.IValidator;
 
+/**
+ * Base class for every Oat form field: wraps a label, the underlying Wicket
+ * {@link FormComponent}, and a feedback/hint message in Oat's standard field
+ * markup. Wires accessibility automatically - the field's {@code aria-describedby}
+ * points at the feedback message, and {@code aria-invalid}/{@code data-field="error"}
+ * are toggled based on validation state - so subclasses get this for free.
+ *
+ * @param <T> the model object type
+ * @param <C> the concrete {@link FormComponent} type this field wraps
+ */
 public abstract class BaseOatField<T, C extends FormComponent<T>> extends Panel {
 
     protected C field;

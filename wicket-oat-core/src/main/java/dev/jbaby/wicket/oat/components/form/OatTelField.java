@@ -3,6 +3,9 @@ package dev.jbaby.wicket.oat.components.form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="tel">}.
+ */
 public class OatTelField extends BaseOatField<String, Html5TextField<String>> {
 
     public OatTelField(String id, String label, IModel<String> model) {

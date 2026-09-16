@@ -4,6 +4,10 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="checkbox">}
+ * ({@link CheckBox}).
+ */
 public class OatCheckBox extends BaseOatField<Boolean, CheckBox> {
 
     public OatCheckBox(String id, String label, IModel<Boolean> model) {

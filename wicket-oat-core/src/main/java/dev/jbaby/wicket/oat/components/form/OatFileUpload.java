@@ -8,6 +8,11 @@ import org.apache.wicket.model.Model;
 
 import java.util.List;
 
+/**
+ * An Oat-styled form field wrapping a plain multi-file
+ * {@code <input type="file">} ({@link FileUploadField}). {@link OatFileDropzone}
+ * is the richer, drag-and-drop-capable alternative to this component.
+ */
 public class OatFileUpload extends BaseOatField<List<FileUpload>, FileUploadField> {
 
     public OatFileUpload(String id, String label, IModel<List<FileUpload>> model) {

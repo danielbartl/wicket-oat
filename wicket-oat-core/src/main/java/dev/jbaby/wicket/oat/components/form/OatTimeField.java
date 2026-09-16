@@ -5,6 +5,10 @@ import org.apache.wicket.model.Model;
 
 import java.time.LocalTime;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="time">},
+ * bound to a {@link LocalTime} model.
+ */
 public class OatTimeField extends BaseOatField<LocalTime, Html5TextField<LocalTime>> {
 
     public OatTimeField(String id, String label, IModel<LocalTime> model) {

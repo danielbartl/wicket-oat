@@ -5,6 +5,12 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="text">}
+ * ({@link TextField}).
+ *
+ * @param <T> the model object type
+ */
 public class OatTextField<T> extends BaseOatField<T, TextField<T>> {
 
     public OatTextField(String id, String label, IModel<T> model) {

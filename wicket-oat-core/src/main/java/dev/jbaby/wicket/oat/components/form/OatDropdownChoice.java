@@ -10,6 +10,11 @@ import org.apache.wicket.model.Model;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <select>} ({@link DropDownChoice}).
+ *
+ * @param <T> the type of the selectable choices
+ */
 public class OatDropdownChoice<T> extends BaseOatField<T, DropDownChoice<T>> {
 
     private final IModel<? extends List<? extends T>> choices;

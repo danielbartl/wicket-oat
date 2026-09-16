@@ -5,6 +5,12 @@ import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="number">}
+ * ({@link NumberTextField}), with fluent {@link #setMin}/{@link #setMax} bounds.
+ *
+ * @param <N> the numeric model type
+ */
 public class OatNumberField<N extends Number & Comparable<N>> extends BaseOatField<N, NumberTextField<N>> {
 
     public OatNumberField(String id, String label, IModel<N> model) {

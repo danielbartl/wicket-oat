@@ -5,6 +5,12 @@ import org.apache.wicket.markup.html.form.RangeTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="range">}
+ * ({@link RangeTextField}), with fluent {@link #setMin}/{@link #setMax} bounds.
+ *
+ * @param <N> the numeric model type
+ */
 public class OatRangeField<N extends Number & Comparable<N>> extends BaseOatField<N, RangeTextField<N>> {
 
     public OatRangeField(String id, String label, IModel<N> model) {

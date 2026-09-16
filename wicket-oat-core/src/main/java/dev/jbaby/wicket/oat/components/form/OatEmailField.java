@@ -5,6 +5,10 @@ import org.apache.wicket.markup.html.form.EmailTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="email">}
+ * ({@link EmailTextField}).
+ */
 public class OatEmailField extends BaseOatField<String, EmailTextField> {
 
     public OatEmailField(String id, String label, IModel<String> model) {

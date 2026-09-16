@@ -4,6 +4,10 @@ import dev.jbaby.wicket.oat.behaviors.SwitchBehavior;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An {@link OatCheckBox} that renders as an Oat toggle switch
+ * ({@code role="switch"}) via {@link SwitchBehavior}, instead of a plain checkbox.
+ */
 public class OatSwitch extends OatCheckBox {
 
     public OatSwitch(String id, String label, IModel<Boolean> model) {

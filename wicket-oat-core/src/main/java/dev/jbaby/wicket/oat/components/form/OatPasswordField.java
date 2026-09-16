@@ -5,6 +5,10 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="password">}
+ * ({@link PasswordTextField}).
+ */
 public class OatPasswordField extends BaseOatField<String, PasswordTextField> {
 
     public OatPasswordField(String id, String label, IModel<String> model) {

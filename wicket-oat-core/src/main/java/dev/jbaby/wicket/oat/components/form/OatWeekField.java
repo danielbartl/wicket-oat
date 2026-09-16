@@ -3,6 +3,9 @@ package dev.jbaby.wicket.oat.components.form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * An Oat-styled form field wrapping a native {@code <input type="week">}.
+ */
 public class OatWeekField extends BaseOatField<String, Html5TextField<String>> {
 
     public OatWeekField(String id, String label, IModel<String> model) {

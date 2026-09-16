@@ -39,6 +39,10 @@ a.unstyled, .site-nav a {
     border-bottom: 1px solid var(--border);
 }
 
+#nav-toggle {
+    display: none;
+}
+
 .site-nav .brand {
     display: flex;
     align-items: center;
@@ -70,7 +74,29 @@ a.unstyled, .site-nav a {
 }
 
 @media (max-width: 720px) {
-    .site-nav-links { display: none; }
+    #nav-toggle {
+        display: inline-flex;
+    }
+
+    .site-nav-links {
+        position: absolute;
+        top: 100%;
+        inset-inline: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: var(--space-3) var(--space-6);
+        background-color: var(--background);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .site-nav-links a {
+        padding-block: var(--space-3);
+    }
+
+    .site-nav-links[hidden] {
+        display: none;
+    }
 }
 
 /* ---------- Sections ---------- */
@@ -247,7 +273,7 @@ a.unstyled, .site-nav a {
     padding-inline: var(--space-5);
 }
 
-.applayout-demo main h4 {
+.applayout-demo main h3 {
     margin-block-start: var(--space-4);
 }
 

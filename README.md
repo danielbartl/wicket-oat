@@ -10,6 +10,7 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 - **Wicket 10+:** Fully compatible with Apache Wicket 10 and Java 25.
 - **Spring Boot Integration:** Seamless integration with Spring Boot applications.
 - **Comprehensive Component Set:** Includes everything from basic buttons to complex data tables.
+- **Accessible Forms by Default:** Every form field automatically wires `aria-describedby` (linking the field to its feedback/hint message) and toggles `aria-invalid` when validation fails — no extra markup or wiring required.
 
 ## Quick Start
 

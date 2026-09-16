@@ -49,7 +49,7 @@ protected void init() {
 OatSession.get().setTheme(OatTheme.MIDNIGHT);</code></pre>
 
             <h4>Custom Theme Definition</h4>
-            <p>Themes are defined in CSS using variable overrides:</p>
+            <p>Themes are defined in CSS using variable overrides. Note that <code>OatSession.setTheme(OatTheme)</code> only accepts the built-in enum values above, so a custom theme name like this has to be applied by setting the <code>data-theme</code> attribute yourself (e.g. in markup or via an <code>AttributeModifier</code>) rather than through <code>OatSession</code>:</p>
             <pre><code>/* themes.css */
 [data-theme="my-custom-theme"] {
     color-scheme: dark;
@@ -60,9 +60,9 @@ OatSession.get().setTheme(OatTheme.MIDNIGHT);</code></pre>
 
         <div class="mt-6">
             <h3>Advanced Usage: Programmatic Toasts</h3>
-            <p>Use the <code>ClientSideClickBehavior</code> to trigger Oat UI's native JavaScript functions while remaining CSP compliant:</p>
+            <p>Use the <code>ClientSideClickBehavior</code> to trigger Oat UI's native JavaScript functions while remaining CSP compliant. <code>ot.toast</code> takes <code>(message, title, options)</code>, so pass <code>null</code> for the title if you only want to set variant options:</p>
             <pre><code>// Java
-button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', {variant: 'success'})"));</code></pre>
+button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', null, {variant: 'success'})"));</code></pre>
         </div>
 
         <div class="mt-6">

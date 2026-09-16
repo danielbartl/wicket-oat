@@ -194,18 +194,16 @@ The project includes an examples module `wicket-oat-examples`. To run it:
 
 ## AI-Powered Development
 
-Wicket Oat comes with a dedicated **Gemini CLI Skill** to help you build UI faster using AI. The skill provides the agent with deep knowledge of the Oat API, component library, and theming system.
+Wicket Oat ships a standard Agent Skill at [`wicket-oat/`](wicket-oat/) — a plain `SKILL.md` plus a `references/` folder — to help you build UI faster with an AI coding agent. It gives the agent deep knowledge of the Oat API, component library, and theming system, and works with any tool that supports this directory-based skill convention.
 
 ### Installing the Skill
-If you use the [Gemini CLI](https://github.com/google/gemini-cli), you can install the skill directly from this repository:
+Point your agent at the `wicket-oat/` directory, or copy it into your agent's own skills folder. For example, with Claude Code:
 
 ```bash
-# Install the skill locally in your project
-gemini skills install ./wicket-oat.skill --scope workspace
-
-# Reload skills to enable it
-/skills reload
+cp -r wicket-oat .claude/skills/wicket-oat
 ```
+
+Check your agent's own documentation for how it discovers or loads skills.
 
 ### How to Use
 Once installed, the AI agent will automatically understand instructions like:

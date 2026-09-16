@@ -335,6 +335,19 @@ a.unstyled, .site-nav a {
     word-break: break-word;
 }
 
+/* ---------- Tutorial ---------- */
+
+.tutorial-preview {
+    padding: var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    background-color: var(--card);
+}
+
+.tutorial-preview .vstack {
+    max-width: 420px;
+}
+
 /* ---------- Theming ---------- */
 
 .theme-switcher {

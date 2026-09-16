@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Build a Contact Form — Wicket Oat Tutorial</title>
+<meta name="description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, from an empty page to a working Ajax submit handler.">
+<link rel="canonical" href="https://danielbartl.github.io/wicket-oat/tutorial.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://danielbartl.github.io/wicket-oat/tutorial.html">
+<meta property="og:title" content="Build a Contact Form — Wicket Oat Tutorial">
+<meta property="og:description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, from an empty page to a working Ajax submit handler.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Build a Contact Form — Wicket Oat Tutorial">
+<meta name="twitter:description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, from an empty page to a working Ajax submit handler.">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.0/oat.min.css"
+      integrity="sha384-tz2nNs8TdiXi8W0cwDk+NdErDDMPczzvWVRhpChcoEL8+kHuuchEEEn+HDBmhFi1" crossorigin="anonymous">
+<link rel="stylesheet" href="assets/themes.css">
+<link rel="stylesheet" href="assets/style.css">
+
+<script>
+(function () {
+  var STORAGE_KEY = 'wicket-oat-site-theme';
+  var root = document.documentElement;
+
+  function apply(theme) {
+    if (theme) { root.setAttribute('data-theme', theme); }
+    else { root.removeAttribute('data-theme'); }
+  }
+
+  function stored() {
+    try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+  }
+
+  window.__wicketOatSetTheme = function (theme) {
+    apply(theme);
+    try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
+    if (window.__wicketOatUpdateToggle) window.__wicketOatUpdateToggle();
+  };
+
+  var initial = stored();
+  if (initial) apply(initial);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-nav">
+    <a class="brand" href="index.html">
+        <img src="assets/favicon.svg" alt="" width="24" height="24">
+        Wicket Oat
+    </a>
+    <nav id="site-nav-links" class="site-nav-links" hidden>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#applayout">AppLayout</a>
+        <a href="index.html#components">Components</a>
+        <a href="index.html#theming">Theming</a>
+        <a href="index.html#quick-start">Get Started</a>
+        <a href="tutorial.html" aria-current="page">Tutorial</a>
+    </nav>
+    <button id="theme-toggle" class="ghost icon small" aria-label="Toggle light/dark theme" title="Toggle light/dark theme">🌙</button>
+    <a class="button outline small" href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener" aria-label="View on GitHub">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+    </a>
+    <button id="nav-toggle" class="ghost icon small" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="site-nav-links">☰</button>
+</header>
+
+<main>
+
+<section class="hero" style="padding-block: var(--space-10) var(--space-8);">
+    <div class="container">
+        <p class="eyebrow">Tutorial</p>
+        <h1>Build a Contact Form</h1>
+        <p class="tagline">A step-by-step walkthrough of assembling a real, validated Wicket page
+            with Oat's form components &mdash; from an empty form to a working submit handler.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p>This picks up right after the <a href="index.html#quick-start">Quick Start</a> steps
+                on the homepage &mdash; we'll assume you've already called
+                <code>WicketOats.install(this)</code> in your application's <code>init()</code>.
+                Every snippet below uses real component signatures, checked against the library
+                source.</p>
+        </div>
+
+        <div class="steps">
+
+            <div class="step">
+                <span class="step-num">1</span>
+                <div>
+                    <h3>The model</h3>
+                    <p>Start with a plain model object and a <code>Form</code> bound to it &mdash;
+                        nothing Oat-specific yet, just standard Wicket.</p>
+                    <pre><code>// A simple model object
+public static class ContactMessage implements Serializable {
+    public String name;
+    public String email;
+    public String message;
+}</code></pre>
+                    <pre><code>// Inside your page's constructor
+ContactMessage data = new ContactMessage();
+CompoundPropertyModel&lt;ContactMessage&gt; model = new CompoundPropertyModel&lt;&gt;(data);
+Form&lt;ContactMessage&gt; form = new Form&lt;&gt;("contactForm", model);
+add(form);</code></pre>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-num">2</span>
+                <div>
+                    <h3>Add the name field</h3>
+                    <p><code>Oat.Components.textField(...)</code> gives you a labeled text input
+                        with a feedback slot, bound to the model by property name.</p>
+                    <pre><code>form.add(Oat.Components.textField("name", "Your Name", model.bind("name"))
+    .setRequired(true));</code></pre>
+                    <div class="tutorial-preview">
+                        <div class="vstack gap-4">
+                            <section data-field>
+                                <label>Your Name</label>
+                                <input type="text">
+                                <div role="status" data-hint></div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-num">3</span>
+                <div>
+                    <h3>Add the email field</h3>
+                    <p>Same shape, a different field type &mdash; <code>emailField</code> renders a
+                        native <code>&lt;input type="email"&gt;</code>.</p>
+                    <pre><code>form.add(Oat.Components.emailField("email", "Email Address", model.bind("email"))
+    .setRequired(true));</code></pre>
+                    <div class="tutorial-preview">
+                        <div class="vstack gap-4">
+                            <section data-field>
+                                <label>Your Name</label>
+                                <input type="text">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field>
+                                <label>Email Address</label>
+                                <input type="email">
+                                <div role="status" data-hint></div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-num">4</span>
+                <div>
+                    <h3>Add the message field</h3>
+                    <p><code>textArea</code> follows the exact same pattern, just backed by a
+                        <code>&lt;textarea&gt;</code> instead of an <code>&lt;input&gt;</code>.</p>
+                    <pre><code>form.add(Oat.Components.textArea("message", "Message", model.bind("message"))
+    .setRequired(true));</code></pre>
+                    <div class="tutorial-preview">
+                        <div class="vstack gap-4">
+                            <section data-field>
+                                <label>Your Name</label>
+                                <input type="text">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field>
+                                <label>Email Address</label>
+                                <input type="email">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field>
+                                <label>Message</label>
+                                <textarea></textarea>
+                                <div role="status" data-hint></div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-num">5</span>
+                <div>
+                    <h3>Add the submit button and feedback</h3>
+                    <p>An <code>AjaxButton</code> styled with <code>Oat.Behaviors.button()</code>
+                        submits the form over Ajax. <code>onSubmit</code> and <code>onError</code>
+                        are where you hook in <code>Oat.toast(...)</code> for feedback.</p>
+                    <pre><code>form.add(new AjaxButton("submit") {
+    &#64;Override
+    protected void onSubmit(AjaxRequestTarget target) {
+        Oat.toast(target, "Thanks, " + form.getModelObject().name + "! We'll be in touch.",
+            OatToastBehavior.Variant.SUCCESS, "Message sent");
+    }
+
+    &#64;Override
+    protected void onError(AjaxRequestTarget target) {
+        Oat.toast(target, "Please fix the errors below.", OatToastBehavior.Variant.DANGER, "Error");
+    }
+}.add(Oat.Behaviors.button()));</code></pre>
+                    <div class="tutorial-preview">
+                        <div class="vstack gap-4">
+                            <section data-field>
+                                <label>Your Name</label>
+                                <input type="text">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field>
+                                <label>Email Address</label>
+                                <input type="email">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field>
+                                <label>Message</label>
+                                <textarea></textarea>
+                                <div role="status" data-hint></div>
+                            </section>
+                            <footer class="hstack justify-end mt-2">
+                                <button type="submit">Send Message</button>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-num">6</span>
+                <div>
+                    <h3>Validation and accessibility, for free</h3>
+                    <p>Every Oat form field extends <code>BaseOatField</code>, which already wires
+                        <code>aria-describedby</code> from the input to its feedback message, and
+                        toggles <code>aria-invalid</code>/<code>data-field="error"</code> when
+                        validation fails &mdash; there's no <code>FeedbackPanel</code> to add and no
+                        extra markup to write. Submit the real form with an empty field and the error
+                        message appears right where the hint text was, already linked to the input
+                        for screen readers.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Put it all together</p>
+            <h2>The finished page</h2>
+        </div>
+        <pre><code>public class ContactPage extends WebPage {
+
+    public static class ContactMessage implements Serializable {
+        public String name;
+        public String email;
+        public String message;
+    }
+
+    public ContactPage() {
+        ContactMessage data = new ContactMessage();
+        CompoundPropertyModel&lt;ContactMessage&gt; model = new CompoundPropertyModel&lt;&gt;(data);
+        Form&lt;ContactMessage&gt; form = new Form&lt;&gt;("contactForm", model);
+        add(form);
+
+        form.add(Oat.Components.textField("name", "Your Name", model.bind("name")).setRequired(true));
+        form.add(Oat.Components.emailField("email", "Email Address", model.bind("email")).setRequired(true));
+        form.add(Oat.Components.textArea("message", "Message", model.bind("message")).setRequired(true));
+
+        form.add(new AjaxButton("submit") {
+            &#64;Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                Oat.toast(target, "Thanks, " + form.getModelObject().name + "! We'll be in touch.",
+                    OatToastBehavior.Variant.SUCCESS, "Message sent");
+            }
+
+            &#64;Override
+            protected void onError(AjaxRequestTarget target) {
+                Oat.toast(target, "Please fix the errors below.", OatToastBehavior.Variant.DANGER, "Error");
+            }
+        }.add(Oat.Behaviors.button()));
+    }
+}</code></pre>
+        <pre><code>&lt;!-- ContactPage.html --&gt;
+&lt;wicket:extend&gt;
+    &lt;form wicket:id="contactForm" class="vstack gap-4"&gt;
+        &lt;div wicket:id="name"&gt;&lt;/div&gt;
+        &lt;div wicket:id="email"&gt;&lt;/div&gt;
+        &lt;div wicket:id="message"&gt;&lt;/div&gt;
+        &lt;footer class="hstack justify-end mt-2"&gt;
+            &lt;button wicket:id="submit" type="submit"&gt;Send Message&lt;/button&gt;
+        &lt;/footer&gt;
+    &lt;/form&gt;
+&lt;/wicket:extend&gt;</code></pre>
+
+        <div class="tutorial-preview mt-6">
+            <div class="vstack gap-4">
+                <section data-field>
+                    <label>Your Name</label>
+                    <input type="text">
+                    <div role="status" data-hint></div>
+                </section>
+                <section data-field>
+                    <label>Email Address</label>
+                    <input type="email">
+                    <div role="status" data-hint></div>
+                </section>
+                <section data-field>
+                    <label>Message</label>
+                    <textarea></textarea>
+                    <div role="status" data-hint></div>
+                </section>
+                <footer class="hstack justify-end mt-2">
+                    <button type="submit">Send Message</button>
+                </footer>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Going further</p>
+            <h2>Where to next</h2>
+        </div>
+        <div class="feature-grid">
+            <article class="card">
+                <h3>A more advanced form</h3>
+                <p>The examples app's <code>EventRegistrationPage</code> builds on the same pattern
+                    with a dropdown, a toggle switch, and placeholder text. Clone the repo and run
+                    <code>./mvnw spring-boot:run -pl wicket-oat-examples</code> to see it live.</p>
+            </article>
+            <article class="card">
+                <h3>Factory vs. constructor</h3>
+                <p>Every field here also works with a plain <code>new OatTextField(...)</code>
+                    constructor. See the README's
+                    <a href="https://github.com/danielbartl/wicket-oat#usage-strategies" target="_blank" rel="noopener">Usage Strategies</a>
+                    section for when to reach for which.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-links">
+        <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/danielbartl/wicket-oat/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        <a href="https://oat.ink" target="_blank" rel="noopener">Built on Oat</a>
+    </div>
+    <p>Wicket Oat is an independent project and is not affiliated with the Apache Software Foundation.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.0/oat.min.js"
+        integrity="sha384-eJVbbdVUAZ/FEhLkv5jBwfngbELmd929nOOAH6CbbJpNb6MZga0aYEEd+VgaJV+O" crossorigin="anonymous"></script>
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+  var navToggle = document.getElementById('nav-toggle');
+  var navLinks = document.getElementById('site-nav-links');
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function () {
+      var isOpen = !navLinks.hidden;
+      navLinks.hidden = isOpen;
+      navToggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    navLinks.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navLinks.hidden = true;
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  function isDark() {
+    var current = root.getAttribute('data-theme');
+    if (current === 'light') return false;
+    if (current === 'dark') return true;
+    if (current) {
+      var scheme = getComputedStyle(root).colorScheme || '';
+      return scheme.indexOf('dark') !== -1 && scheme.indexOf('light') === -1;
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function updateToggle() {
+    if (toggle) toggle.textContent = isDark() ? '☀️' : '🌙';
+  }
+
+  window.__wicketOatUpdateToggle = updateToggle;
+  updateToggle();
+
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      window.__wicketOatSetTheme(isDark() ? 'light' : 'dark');
+    });
+  }
+
+  document.querySelectorAll('[data-set-theme]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      window.__wicketOatSetTheme(el.getAttribute('data-set-theme'));
+    });
+  });
+})();
+</script>
+</body>
+</html>

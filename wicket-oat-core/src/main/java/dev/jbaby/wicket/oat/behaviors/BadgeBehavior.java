@@ -8,6 +8,10 @@ import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 
+/**
+ * Behavior that applies Oat's Badge styling ({@code data-variant}, optional
+ * {@code outline} class) to any component.
+ */
 public class BadgeBehavior extends Behavior {
 
     public enum Variant implements Serializable {

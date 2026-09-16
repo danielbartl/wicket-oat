@@ -3,6 +3,13 @@ package dev.jbaby.wicket.oat.behaviors;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 
+/**
+ * Not a component-attaching behavior in the usual sense - a holder for the
+ * static {@code toast(...)} helpers that trigger Oat's {@code ot.toast()} JS
+ * notification via an Ajax response, plus the {@link Variant} enum they share
+ * with other behaviors. See {@link dev.jbaby.wicket.oat.Oat} for the public
+ * entry point.
+ */
 public class OatToastBehavior extends Behavior {
 
     public enum Variant {

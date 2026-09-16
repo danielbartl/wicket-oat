@@ -1,6 +1,10 @@
 # Wicket Oat
 
+[![Build](https://github.com/danielbartl/wicket-oat/actions/workflows/build.yml/badge.svg)](https://github.com/danielbartl/wicket-oat/actions/workflows/build.yml)
+
 Wicket Oat is a modern, lightweight, and themeable UI component library for [Apache Wicket](https://wicket.apache.org/). It provides a set of high-quality components and behaviors built on top of a sleek, modern design system.
+
+**[Live demo & docs](https://danielbartl.github.io/wicket-oat/)** &middot; **[Step-by-step tutorial](https://danielbartl.github.io/wicket-oat/tutorial.html)**
 
 ## Features
 

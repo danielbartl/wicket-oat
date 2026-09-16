@@ -136,10 +136,10 @@ add(new OatAlert("id", "Saved!", AlertBehavior.Variant.SUCCESS));
 ```
 For `OatAlert`/`OatBadge` the constructor is actually the *more* capable
 option: it has an overload that binds the variant to a reactive
-`IModel<Variant>` which the factory doesn't expose. `OatDialog` is the one
-place the two don't line up — its constructor takes `IModel<String>`
-arguments, while `Oat.Components.dialog(...)` takes plain `String`s — so
-pick whichever shape matches what you already have on hand.
+`IModel<Variant>` which the factory doesn't expose. `OatDialog` and
+`OatDropdown` accept either a plain `String` or an `IModel<String>` on both
+the constructor and the factory, so pick whichever shape matches what you
+already have on hand.
 
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,

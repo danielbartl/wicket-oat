@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.form.OatFileDropzone;
 import dev.jbaby.wicket.oat.components.form.OatTagInput;
 import org.apache.wicket.markup.Markup;
@@ -109,6 +110,24 @@ class NewComponentsTest {
     }
 
     @Test
+    void testOatDialogStringConstructor() {
+        OatDialog dialog = new OatDialog("dialog", "Open dialog", "Title");
+        tester.startComponentInPage(dialog);
+
+        tester.assertLabel("dialog:trigger:triggerLabel", "Open dialog");
+        tester.assertLabel("dialog:dialog:header", "Title");
+    }
+
+    @Test
+    void testOatDialogFactoryWithModel() {
+        OatDialog dialog = Oat.Components.dialog("dialog", Model.of("Open dialog"), Model.of("Title"));
+        tester.startComponentInPage(dialog);
+
+        tester.assertLabel("dialog:trigger:triggerLabel", "Open dialog");
+        tester.assertLabel("dialog:dialog:header", "Title");
+    }
+
+    @Test
     void testOatDropdown() {
         List<String> items = List.of("Profile", "Logout");
         OatDropdown<String> dropdown = new OatDropdown<String>("dropdown", Model.of("Options"), Model.ofList(items)) {
@@ -126,6 +145,30 @@ class NewComponentsTest {
         assertThat(trigger.getAttribute("popovertarget")).isEqualTo(menuMarkupId);
 
         tester.assertLabel("dropdown:menu:items:0:label", "Profile");
+    }
+
+    @Test
+    void testOatDropdownStringConstructor() {
+        List<String> items = List.of("Profile", "Logout");
+        OatDropdown<String> dropdown = new OatDropdown<String>("dropdown", "Options", Model.ofList(items)) {
+            @Override
+            protected void populateItem(ListItem<String> item) {
+                item.add(new Label("label", item.getModelObject()));
+            }
+        };
+        tester.startComponentInPage(dropdown);
+
+        tester.assertLabel("dropdown:trigger:triggerLabel", "Options");
+    }
+
+    @Test
+    void testOatDropdownFactoryWithModel() {
+        List<String> items = List.of("Profile", "Logout");
+        OatDropdown<String> dropdown = Oat.Components.dropdown("dropdown", Model.of("Options"), Model.ofList(items),
+                (item, value) -> item.add(new Label("label", value)));
+        tester.startComponentInPage(dropdown);
+
+        tester.assertLabel("dropdown:trigger:triggerLabel", "Options");
     }
 
     @Test

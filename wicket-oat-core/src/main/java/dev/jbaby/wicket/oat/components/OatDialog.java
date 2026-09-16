@@ -21,6 +21,10 @@ public class OatDialog extends Panel {
     private final WebMarkupContainer dialog;
     private final WebMarkupContainer body;
 
+    public OatDialog(String id, String triggerLabel, String header) {
+        this(id, Model.of(triggerLabel), Model.of(header));
+    }
+
     public OatDialog(String id, IModel<String> triggerLabel, IModel<String> headerModel) {
         super(id);
         setRenderBodyOnly(true);

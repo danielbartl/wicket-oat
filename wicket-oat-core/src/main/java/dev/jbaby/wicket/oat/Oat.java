@@ -256,11 +256,24 @@ public final class Oat {
         }
 
         public static OatDialog dialog(String id, String triggerLabel, String header) {
-            return new OatDialog(id, Model.of(triggerLabel), Model.of(header));
+            return new OatDialog(id, triggerLabel, header);
+        }
+
+        public static OatDialog dialog(String id, IModel<String> triggerLabel, IModel<String> header) {
+            return new OatDialog(id, triggerLabel, header);
         }
 
         public static <T> OatDropdown<T> dropdown(String id, String triggerLabel, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
-            return new OatDropdown<T>(id, Model.of(triggerLabel), model) {
+            return new OatDropdown<T>(id, triggerLabel, model) {
+                @Override
+                protected void populateItem(ListItem<T> item) {
+                    populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
+        public static <T> OatDropdown<T> dropdown(String id, IModel<String> triggerLabel, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+            return new OatDropdown<T>(id, triggerLabel, model) {
                 @Override
                 protected void populateItem(ListItem<T> item) {
                     populateItem.accept(item, item.getModelObject());

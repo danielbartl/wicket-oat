@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import java.util.List;
 
@@ -20,6 +21,10 @@ import java.util.List;
 public abstract class OatDropdown<T> extends Panel {
 
     private final WebMarkupContainer menu;
+
+    public OatDropdown(String id, String triggerLabel, IModel<List<T>> model) {
+        this(id, Model.of(triggerLabel), model);
+    }
 
     public OatDropdown(String id, IModel<String> triggerLabel, IModel<List<T>> model) {
         super(id);

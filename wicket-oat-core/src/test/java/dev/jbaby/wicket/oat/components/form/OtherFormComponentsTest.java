@@ -1,5 +1,7 @@
 package dev.jbaby.wicket.oat.components.form;
 
+import dev.jbaby.wicket.oat.Oat;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.TagTester;
@@ -36,6 +38,14 @@ class OtherFormComponentsTest {
         tester.startComponentInPage(field);
         TagTester input = tester.getTagByWicketId("field");
         assertThat(input.getAttribute("type")).isEqualTo("date");
+    }
+
+    @Test
+    void testOatDateFieldFactoryWithModelLabelAndHelper() {
+        OatDateField field = Oat.Components.dateField("id", Model.of("Date"), Model.of(LocalDate.of(2023, 10, 27)), Model.of("Pick a date"));
+        tester.startComponentInPage(field);
+        tester.assertLabel("id:container:label", "Date");
+        tester.assertLabel("id:container:feedback", "Pick a date");
     }
 
     @Test
@@ -122,6 +132,15 @@ class OtherFormComponentsTest {
     @Test
     void testOatDropdownChoice() {
         OatDropdownChoice<String> field = new OatDropdownChoice<String>("id", "Select", Model.of("A"), Model.ofList(Arrays.asList("A", "B")));
+        tester.startComponentInPage(field);
+        TagTester select = tester.getTagByWicketId("field");
+        assertThat(select.getName()).isEqualTo("select");
+    }
+
+    @Test
+    void testOatDropdownChoiceFactoryWithRenderer() {
+        OatDropdownChoice<String> field = Oat.Components.dropdownChoice("id", Model.of("Select"), Model.of("A"),
+                Model.ofList(Arrays.asList("A", "B")), new ChoiceRenderer<>());
         tester.startComponentInPage(field);
         TagTester select = tester.getTagByWicketId("field");
         assertThat(select.getName()).isEqualTo("select");

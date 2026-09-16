@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components.form;
 
+import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -40,5 +41,13 @@ class CoreFormTest {
         tester.startComponentInPage(field);
         tester.assertLabel("id:container:label", "Label");
         tester.assertModelValue("id:container:field", "Value");
+    }
+
+    @Test
+    void testOatCheckBoxFactoryWithHelper() {
+        OatCheckBox field = Oat.Components.checkBox("id", Model.of("Label"), Model.of(true), Model.of("Helper text"));
+        tester.startComponentInPage(field);
+        tester.assertLabel("id:container:label", "Label");
+        tester.assertLabel("id:container:feedback", "Helper text");
     }
 }

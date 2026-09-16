@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -56,6 +57,15 @@ class BehaviorsTest {
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("button");
         assertThat(tag.getAttribute("data-variant")).isEqualTo("secondary");
+    }
+
+    @Test
+    void testButtonBehaviorFactoryVariant() {
+        WebMarkupContainer link = new WebMarkupContainer("id");
+        link.add(Oat.Behaviors.button(ButtonBehavior.Variant.DANGER));
+        tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\"></a>"));
+        TagTester tag = tester.getTagByWicketId("id");
+        assertThat(tag.getAttribute("data-variant")).isEqualTo("danger");
     }
 
     @Test

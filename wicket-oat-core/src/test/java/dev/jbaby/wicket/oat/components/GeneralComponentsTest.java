@@ -1,7 +1,9 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.BadgeBehavior;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
+import dev.jbaby.wicket.oat.behaviors.SpinnerBehavior;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -65,6 +67,33 @@ class GeneralComponentsTest {
     }
 
     @Test
+    void testOatAvatarGroup() {
+        List<String> data = List.of("JD", "AS");
+        OatAvatarGroup<String> group = new OatAvatarGroup<String>("group", Model.ofList(data)) {
+            @Override
+            protected void populateItem(ListItem<String> item) {
+                item.add(new Label("label", item.getModelObject()));
+            }
+        };
+        tester.startComponentInPage(group, Markup.of(
+                "<figure wicket:id=\"group\" data-variant=\"avatar\" role=\"group\"><figure wicket:id=\"avatars\"><span wicket:id=\"label\"></span></figure></figure>"));
+        TagTester tag = tester.getTagByWicketId("group");
+        assertThat(tag.getAttribute("role")).isEqualTo("group");
+        tester.assertLabel("group:avatars:0:label", "JD");
+    }
+
+    @Test
+    void testOatAvatarGroupFactoryWithSize() {
+        List<String> data = List.of("JD");
+        OatAvatarGroup<String> group = Oat.Components.avatarGroup("group", Model.ofList(data), OatAvatarGroup.Size.LARGE,
+                (item, value) -> item.add(new Label("label", value)));
+        tester.startComponentInPage(group, Markup.of(
+                "<figure wicket:id=\"group\"><figure wicket:id=\"avatars\"><span wicket:id=\"label\"></span></figure></figure>"));
+        TagTester tag = tester.getTagByWicketId("group");
+        assertThat(tag.getAttribute("class")).contains("large");
+    }
+
+    @Test
     void testOatCard() {
         OatCard card = new OatCard("card");
         tester.startComponentInPage(card);
@@ -115,6 +144,33 @@ class GeneralComponentsTest {
         tester.startComponentInPage(spinner);
         TagTester tag = tester.getTagByWicketId("spinner");
         assertThat(tag.getAttribute("aria-busy")).isEqualTo("true");
+    }
+
+    @Test
+    void testOatProgressFactoryWithMax() {
+        OatProgress progress = Oat.Components.progress("progress", Model.of(50), Model.of(200));
+        tester.startComponentInPage(progress, Markup.of("<progress wicket:id=\"progress\"></progress>"));
+        TagTester tag = tester.getTagByWicketId("progress");
+        assertThat(tag.getAttribute("value")).isEqualTo("50");
+        assertThat(tag.getAttribute("max")).isEqualTo("200");
+    }
+
+    @Test
+    void testOatMeterFactoryFull() {
+        OatMeter meter = Oat.Components.meter("meter", Model.of(5), Model.of(0), Model.of(10), Model.of(2), Model.of(8), Model.of(6));
+        tester.startComponentInPage(meter, Markup.of("<meter wicket:id=\"meter\"></meter>"));
+        TagTester tag = tester.getTagByWicketId("meter");
+        assertThat(tag.getAttribute("low")).isEqualTo("2");
+        assertThat(tag.getAttribute("high")).isEqualTo("8");
+        assertThat(tag.getAttribute("optimum")).isEqualTo("6");
+    }
+
+    @Test
+    void testOatSpinnerFactoryWithModel() {
+        OatSpinner spinner = Oat.Components.spinner("spinner", Model.of(SpinnerBehavior.Size.LARGE));
+        tester.startComponentInPage(spinner);
+        TagTester tag = tester.getTagByWicketId("spinner");
+        assertThat(tag.getAttribute("data-spinner")).isEqualTo("large");
     }
 
     @Test

@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatSession;
 import dev.jbaby.wicket.oat.OatTheme;
 import org.apache.wicket.Session;
@@ -17,6 +18,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,6 +80,19 @@ class OtherGeneralComponentsTest {
         };
         // Use full markup since startComponentInPage can be tricky with abstract components nested
         tester.startComponentInPage(accordion, Markup.of("<details wicket:id=\"accordion\"><summary wicket:id=\"title\"></summary><div wicket:id=\"content\"></div></details>"));
+        tester.assertLabel("accordion:0:title", "Title " + data.get(0));
+    }
+
+    @Test
+    void testOatAccordionFactoryNonExclusive() {
+        List<String> data = Arrays.asList("1", "2");
+        OatAccordion<String> accordion = Oat.Components.accordion("accordion", Model.ofList(data), false,
+                (item, value) -> {
+                    item.add(new Label("title", "Title " + value));
+                    item.add(new Label("content", "Content " + value));
+                });
+        tester.startComponentInPage(accordion, Markup.of("<details wicket:id=\"accordion\"><summary wicket:id=\"title\"></summary><div wicket:id=\"content\"></div></details>"));
+        assertFalse(accordion.isExclusive());
         tester.assertLabel("accordion:0:title", "Title " + data.get(0));
     }
 

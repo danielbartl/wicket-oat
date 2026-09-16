@@ -59,6 +59,20 @@ add(Oat.Components.alert("myAlert", AlertBehavior.Variant.INFO)
 add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
 ```
 
+Every Oat component is also a plain Wicket component, so for components that
+don't need a callback or a list of items, a regular constructor works just as
+well:
+
+```java
+// The alert and badge above, built directly with their constructors
+add(new OatAlert("myAlert", "This is an informative alert.", AlertBehavior.Variant.INFO));
+add(new OatBadge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
+```
+
+`OatButton` above is one of the components whose constructor requires
+subclassing (see [Usage Strategies](#usage-strategies) below), so the factory
+is the more natural choice for it.
+
 ## Available Components
 
 - **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`
@@ -94,28 +108,50 @@ Use a behavior when you want to "Oat-ify" an existing Wicket component. This is 
 
 ## Usage Strategies
 
-Depending on your project's complexity, you can choose between two development styles:
+Wicket Oat components are plain Wicket components — you can always create
+them with `new`. Whether you reach for `Oat.Components`/`Oat.Behaviors` or a
+constructor mostly comes down to what the component needs.
 
-### 1. The Fast Path (Factory Methods)
-Use `Oat.Components` and `Oat.Behaviors` for standard UI assembly. This is the fastest way to build a modern Wicket application.
+### When to use the factory (`Oat.Components` / `Oat.Behaviors`)
+Components whose behavior is driven by a callback or a list of items —
+`OatButton`, `OatTabs`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`,
+`OatPagination`, `OatDropdown`, `OatAvatarGroup` — are backed by an `abstract`
+class. Their constructors alone aren't enough; you'd need to write an
+anonymous subclass to implement a method like `onClick` or `populateItem`.
+The factory does that for you from a lambda, so it's the natural default
+here, not just a shortcut:
 ```java
-// Fast and readable for 80% of use cases
+// No subclass needed - the factory implements onClick() for you
 add(Oat.Components.button("id", "Click Me", target -> ...));
 ```
 
-### 2. The Power Path (Inheritance & Behaviors)
-If you need deep customization or want to follow traditional Wicket patterns, you are not "trapped" by the factory. 
+### When to use a constructor
+Every other component — `OatAlert`, `OatBadge`, `OatCard`, `OatDialog`,
+`OatAvatar`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`,
+`OatDataTable`, `OatEmptyState`, the form fields, and more — has no abstract
+methods, so a plain constructor works just as well, and is the more familiar
+style if you're used to plain Wicket:
+```java
+add(new OatAlert("id", "Saved!", AlertBehavior.Variant.SUCCESS));
+```
+For `OatAlert`/`OatBadge` the constructor is actually the *more* capable
+option: it has an overload that binds the variant to a reactive
+`IModel<Variant>` which the factory doesn't expose. `OatDialog` is the one
+place the two don't line up — its constructor takes `IModel<String>`
+arguments, while `Oat.Components.dialog(...)` takes plain `String`s — so
+pick whichever shape matches what you already have on hand.
 
-**Subclassing:**
-Every component has a public constructor. You can extend `OatButton`, `OatAlert`, etc., just like any other Wicket component.
+### Going further: subclassing and composition
+Every component has a public constructor, so you can extend `OatButton`,
+`OatAlert`, etc., just like any other Wicket component:
 ```java
 public class MyBusinessButton extends OatButton {
    // Your complex business logic here
 }
 ```
-
-**Composition (Recommended):**
-Oat's behaviors are the most powerful way to customize. You can keep your own class hierarchy and "compose" the UI look.
+Or keep your own class hierarchy entirely and use behaviors to apply the Oat
+look to it — the most flexible option when a component already has its own
+base class:
 ```java
 public class MyComplexActionLink extends AjaxLink<Void> {
     public MyComplexActionLink(String id) {

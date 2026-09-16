@@ -3,9 +3,11 @@
 Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via composition.
 
 ## Available Behaviors
+- `accordion(exclusive?)`: Turns a container into an accordion.
 - `alert(variant?)`: Applies alert styling and `role="alert"`.
 - `badge(variant?)`: Applies badge styling.
 - `button()`: Styles any component (Link, Button, etc.) as an Oat button.
+- `buttonGroup()`: Styles a container as a button group.
 - `card()`: Styles a container as a card.
 - `field()`: Styles a form field container.
 - `hint()`: Styles a small text hint inside a field.

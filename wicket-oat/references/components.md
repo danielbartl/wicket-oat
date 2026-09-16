@@ -3,11 +3,12 @@
 Use `Oat.Components` for a "Fast Path" to build UI with encapsulated markup.
 
 ## General
-- `alert(id, variant?)`: Creates an `OatAlert`.
-- `badge(id, label, variant?)`: Creates an `OatBadge`.
+- `alert(id, message?, variant?)`: Creates an `OatAlert`. `message`/`variant` can each be a plain value, an `IModel`, or omitted.
+- `badge(id, label, variant?)`: Creates an `OatBadge`. `label` can be a `String` or an `IModel<?>`.
 - `button(id, label, onClick)`: Creates an `OatButton` with an Ajax click handler.
 - `card(id)`: Creates an `OatCard` container.
-- `avatar(id, urlModel, labelModel, size?)`: Creates an `OatAvatar`.
+- `avatar(id, urlModel)` / `avatar(id, initials)`: Creates an `OatAvatar` from just an image URL or just initials.
+- `avatar(id, urlModel, initials, size)`: Creates an `OatAvatar` with both an image and initials fallback; `size` is required in this overload.
 - `avatarGroup(id, model, size?, populateItem)`: Creates an `OatAvatarGroup` (a clustered/overlapping set of avatars).
 - `emptyState(id, title, message?)`: Creates an `OatEmptyState` placeholder.
 
@@ -22,9 +23,10 @@ Use `Oat.Components` for a "Fast Path" to build UI with encapsulated markup.
 - `OatAppLayout`: (Base Page) Provides sidebar and topnav.
 
 ## Form Components
-All form components follow the naming `Oat[Type]Field` and are available via `Oat.Components.[type]Field`.
-Every one also takes an optional trailing hint-text model:
-`Oat.Components.[type]Field(id, label, model, helper?)`.
+Most form components are available via `Oat.Components.[type]Field` and produce an `Oat[Type]Field`, but a few don't follow the `Field` naming: `textArea` → `OatTextArea`, `dropdownChoice` → `OatDropdownChoice`, `checkBox` → `OatCheckBox`, `oatSwitch` → `OatSwitch`, `fileUpload` → `OatFileUpload`, `fileDropzone` → `OatFileDropzone`, `tagInput` → `OatTagInput`.
+
+Every one takes an optional trailing hint-text model — but only when `label` is passed as an `IModel<String>`, not a plain `String`:
+`Oat.Components.[type]Field(id, IModel<String> labelModel, model, hintModel?)`. There is no `(id, String label, model, hintModel)` overload; wrap the label in `Model.of("Label")` if you need a hint.
 
 - `textField(id, label, model)`
 - `passwordField(id, label, model)`
@@ -50,8 +52,9 @@ Every one also takes an optional trailing hint-text model:
 
 ## Data & Feedback
 - `dataTable(id, columns, dataProvider, rowsPerPage)`: Styled Wicket DataTable.
-- `progress(id, value)`: Standard `<progress>` bar.
-- `meter(id, value)`: Advanced `<meter>` for ranges.
+- `progress(id, value, max?)`: Standard `<progress>` bar; `max` is an optional bound model.
+- `meter(id, value)`: Simple `<meter>`.
+- `meter(id, value, min, max, low, high, optimum)`: Advanced `<meter>` with full range/zone control.
 - `spinner(id, size?)`: Loading indicator.
 - `skeleton(id, shape?)`: Placeholder for loading content.
 

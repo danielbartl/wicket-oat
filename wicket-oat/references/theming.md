@@ -25,7 +25,4 @@ Define custom themes in your CSS:
 }
 ```
 
-Then apply it via code:
-```java
-OatSession.get().setCustomTheme("custom-blue");
-```
+`OatSession.setTheme(OatTheme)` only accepts the built-in `OatTheme` enum values above, so it cannot select a custom theme name like `custom-blue`. To apply one, set the `data-theme` attribute yourself instead of going through `OatSession` — e.g. hardcode it in markup (`<html data-theme="custom-blue">`) or add an `AttributeModifier("data-theme", "custom-blue")` to the component that carries the attribute.

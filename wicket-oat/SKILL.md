@@ -1,6 +1,6 @@
 ---
 name: wicket-oat
-description: Support for Wicket Oat UI library. Use when building or maintaining Wicket applications that use Oat components, behaviors, and themes. Provides guidance on factory usage (Fast Path) vs composition (Power Path).
+description: Support for the Wicket Oat UI library — a themeable Java/Apache Wicket component library (buttons, forms, cards, dialogs, tabs, toasts, badges, dark/light themes, etc.). Use whenever writing or modifying Apache Wicket pages/components in this project: adding UI elements, building forms, styling an existing Wicket component, showing toasts or alerts, or switching/defining themes — even if the user doesn't mention "Oat" by name. Covers Oat.Components (Fast Path factory methods for common widgets) and Oat.Behaviors (Power Path composition for custom components/styling), plus the full built-in theme list and how to switch or define custom themes.
 ---
 
 # Wicket Oat Support
@@ -51,5 +51,5 @@ form.add(Oat.Components.textField("name", "Name", model.bind("name")));
 ### Toasts & Notifications
 Trigger toasts from Java via the `Oat` facade:
 ```java
-Oat.toast(target, "Message", Variant.SUCCESS, "Title");
+Oat.toast(target, "Message", OatToastBehavior.Variant.SUCCESS, "Title");
 ```

@@ -57,11 +57,10 @@ add(Oat.Components.button("myButton", "Click Me", target -> {
 }));
 
 // Create an alert via Components factory
-add(Oat.Components.alert("myAlert", AlertBehavior.Variant.INFO)
-    .setBody(Model.of("This is an informative alert.")));
+add(Oat.Components.alert("myAlert", "Your changes were saved.", AlertBehavior.Variant.SUCCESS));
 
 // Create a badge via Components factory
-add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
+add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.SUCCESS));
 ```
 
 Every Oat component is also a plain Wicket component, so for components that
@@ -70,8 +69,8 @@ well:
 
 ```java
 // The alert and badge above, built directly with their constructors
-add(new OatAlert("myAlert", "This is an informative alert.", AlertBehavior.Variant.INFO));
-add(new OatBadge("myBadge", "New", BadgeBehavior.Variant.PRIMARY));
+add(new OatAlert("myAlert", "Your changes were saved.", AlertBehavior.Variant.SUCCESS));
+add(new OatBadge("myBadge", "New", BadgeBehavior.Variant.SUCCESS));
 ```
 
 `OatButton` above is one of the components whose constructor requires
@@ -93,7 +92,7 @@ Wicket Oat provides both **Components** and **Behaviors** for almost every UI el
 ### When to use Components (`Oat.Components`)
 Use a component when you want a self-contained UI widget and don't want to worry about the underlying HTML structure.
 - **Pros:** Easiest to use; encapsulates markup logic; handles internal structure (like headers/footers in a Card).
-- **Example:** `add(Oat.Components.alert("id", Variant.INFO))`
+- **Example:** `add(Oat.Components.alert("id", "Saved!", Variant.SUCCESS))`
 - **Markup Requirement:** Requires a simple tag like `<div wicket:id="id"></div>`.
 
 ### When to use Behaviors (`Oat.Behaviors`)
@@ -161,7 +160,7 @@ base class:
 public class MyComplexActionLink extends AjaxLink<Void> {
     public MyComplexActionLink(String id) {
         super(id);
-        add(Oat.Behaviors.button().setVariant(Variant.PRIMARY));
+        add(Oat.Behaviors.button().setVariant(Variant.SECONDARY));
     }
 }
 ```

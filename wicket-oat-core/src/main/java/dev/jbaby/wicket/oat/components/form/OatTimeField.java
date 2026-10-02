@@ -25,6 +25,6 @@ public class OatTimeField extends BaseOatField<LocalTime, Html5TextField<LocalTi
 
     @Override
     protected Html5TextField<LocalTime> createFormComponent(String id, IModel<LocalTime> model) {
-        return new Html5TextField<>(id, model, LocalTime.class, "time");
+        return new Html5TextField<>(id, model, LocalTime.class, "time", Html5Converters.time());
     }
 }

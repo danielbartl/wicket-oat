@@ -24,6 +24,7 @@ public abstract class BaseOatField<T, C extends FormComponent<T>> extends Panel 
     protected C field;
     protected final WebMarkupContainer container;
     protected final IModel<String> helperText;
+    private final Label feedback;
 
     public BaseOatField(String id, IModel<String> label, IModel<T> model, IModel<String> helperText) {
 
@@ -36,20 +37,34 @@ public abstract class BaseOatField<T, C extends FormComponent<T>> extends Panel 
         container.setOutputMarkupId(true); // Essential for AJAX
         add(container);
 
-        field = createFormComponent("field", model); // Subclasses implement this
-        field.setLabel(label);
-        field.setOutputMarkupId(true);
-
-        Label feedback = new Label("feedback", this::getFeedbackContent);
+        feedback = new Label("feedback", this::getFeedbackContent);
         feedback.setOutputMarkupId(true);
         feedback.add(new HintBehavior()); // Add standard Oat hint styling
 
-        // Link input to feedback for screen readers
-        field.add(AttributeModifier.replace("aria-describedby", feedback.getMarkupId()));
+        // Oat's magic: data-field="error" on the container, aria-invalid on the input.
+        // Added once with a dynamic model; re-evaluated on every render.
+        container.add(AttributeModifier.replace("data-field", (IModel<String>) () -> field.hasErrorMessage() ? "error" : ""));
 
-        container.add(new Label("label", label).add(AttributeModifier.replace("for", field.getMarkupId())));
+        field = createFormComponent("field", model); // Subclasses implement this
+        wireField(label);
+
+        // Resolved at render time so it follows a field replaced by a subclass
+        container.add(new Label("label", label).add(AttributeModifier.replace("for", (IModel<String>) () -> field.getMarkupId())));
         container.add(field);
         container.add(feedback);
+    }
+
+    /**
+     * Applies the standard Oat label/accessibility wiring to {@link #field}. Subclasses
+     * that replace {@link #field} after construction must call this again for the new
+     * instance.
+     */
+    protected final void wireField(IModel<String> label) {
+        field.setLabel(label);
+        field.setOutputMarkupId(true);
+        // Link input to feedback for screen readers
+        field.add(AttributeModifier.replace("aria-describedby", feedback.getMarkupId()));
+        field.add(AttributeModifier.replace("aria-invalid", (IModel<String>) () -> field.hasErrorMessage() ? "true" : "false"));
     }
 
     protected abstract C createFormComponent(String id, IModel<T> model);
@@ -59,15 +74,6 @@ public abstract class BaseOatField<T, C extends FormComponent<T>> extends Panel 
             return field.getFeedbackMessages().first().getMessage().toString();
         }
         return (helperText != null) ? helperText.getObject() : "";
-    }
-
-    @Override
-    protected void onConfigure() {
-        super.onConfigure();
-        boolean invalid = field.hasErrorMessage();
-        // Oat's magic: data-field="error" on the container, aria-invalid on the input
-        container.add(AttributeModifier.replace("data-field", invalid ? "error" : ""));
-        field.add(AttributeModifier.replace("aria-invalid", invalid ? "true" : "false"));
     }
 
     // Fluent API for adding validators and setting the required status

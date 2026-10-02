@@ -25,6 +25,6 @@ public class OatDateField extends BaseOatField<LocalDate, Html5TextField<LocalDa
 
     @Override
     protected Html5TextField<LocalDate> createFormComponent(String id, IModel<LocalDate> model) {
-        return new Html5TextField<>(id, model, LocalDate.class, "date");
+        return new Html5TextField<>(id, model, LocalDate.class, "date", Html5Converters.date());
     }
 }

@@ -98,7 +98,7 @@ class BehaviorsCoverageTest {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(handler).appendJavaScript(captor.capture());
 
-        assertThat(captor.getValue()).contains("ot.toast('Message', 'Title', {variant: 'success'})");
+        assertThat(captor.getValue()).isEqualTo("ot.toast(\"Message\", \"Title\", {variant: \"success\"})");
     }
 
     @Test
@@ -109,7 +109,7 @@ class BehaviorsCoverageTest {
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(handler).appendJavaScript(captor.capture());
 
-        assertThat(captor.getValue()).contains("variant: 'danger'");
+        assertThat(captor.getValue()).contains("variant: \"danger\"");
     }
 
     @Test
@@ -121,5 +121,18 @@ class BehaviorsCoverageTest {
         verify(handler).appendJavaScript(captor.capture());
 
         assertThat(captor.getValue()).doesNotContain("variant:");
+    }
+
+    @Test
+    void testOatToastBehaviorEscapesUserText() {
+        IPartialPageRequestHandler handler = mock(IPartialPageRequestHandler.class);
+        // A backslash before the quote used to end the JS string early and run alert(1)
+        OatToastBehavior.toast(handler, "a\\'); alert(1); //\nline2 \"q\" </script>", null, "it's");
+
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(handler).appendJavaScript(captor.capture());
+
+        assertThat(captor.getValue()).isEqualTo(
+                "ot.toast(\"a\\\\'); alert(1); //\\nline2 \\\"q\\\" <\\/script>\", \"it's\", {})");
     }
 }

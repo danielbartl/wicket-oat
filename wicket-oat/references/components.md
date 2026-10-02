@@ -51,7 +51,7 @@ Every one takes an optional trailing hint-text model — but only when `label` i
 - `tagInput(id, label, model)`: Comma-separated tag/chip input.
 
 ## Data & Feedback
-- `dataTable(id, columns, dataProvider, rowsPerPage)`: Styled Wicket DataTable.
+- `dataTable(id, columns, dataProvider, rowsPerPage)`: Styled Wicket DataTable. Use `setEmptyState(id -> emptyState(id, "No results"))` for a custom placeholder when it has no rows; the factory must use the id it is given.
 - `progress(id, value, max?)`: Standard `<progress>` bar; `max` is an optional bound model.
 - `meter(id, value)`: Simple `<meter>`.
 - `meter(id, value, min, max, low, high, optimum)`: Advanced `<meter>` with full range/zone control.

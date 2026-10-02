@@ -35,7 +35,7 @@ public class DataTablePage extends BasePage {
         // Empty table demo
         List<IColumn<User, String>> emptyColumns = new ArrayList<>(columns);
         add(Oat.Components.dataTable("emptyDataTable", emptyColumns, new UserDataProvider(List.of()), 10)
-                .setEmptyState(Oat.Components.emptyState("placeholder", Model.of("No users found"), Model.of("Try adjusting your filters or adding a new user."))));
+                .setEmptyState(id -> Oat.Components.emptyState(id, "No users found", "Try adjusting your filters or adding a new user.")));
     }
 
     private static class UserDataProvider extends SortableDataProvider<User, String> {

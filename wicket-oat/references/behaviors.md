@@ -20,9 +20,9 @@ Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via
 
 ## Composition Example
 ```java
-// Style a standard Wicket AjaxLink as a primary Oat button
+// Style a standard Wicket AjaxLink as a primary Oat button (the default variant)
 add(new AjaxLink<Void>("id") {
     @Override
     public void onClick(AjaxRequestTarget target) { ... }
-}.add(Oat.Behaviors.button().setVariant(ButtonBehavior.Variant.PRIMARY)));
+}.add(Oat.Behaviors.button()));
 ```

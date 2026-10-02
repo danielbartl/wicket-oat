@@ -1,9 +1,13 @@
 package dev.jbaby.wicket.oat.components.form;
 
 import dev.jbaby.wicket.oat.Oat;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -169,5 +174,65 @@ class OtherFormComponentsTest {
         tester.startComponentInPage(field);
         TagTester input = tester.getTagByWicketId("field");
         assertThat(input.getAttribute("type")).isEqualTo("week");
+    }
+
+    private String renderedValue(Component field) {
+        tester.startComponentInPage(field);
+        return tester.getTagByWicketId("field").getAttribute("value");
+    }
+
+    @Test
+    void html5FieldsRenderTheirModelValue() {
+        assertThat(renderedValue(new OatColorField("id", "Color", Model.of("#ff0000")))).isEqualTo("#ff0000");
+        assertThat(renderedValue(new OatSearchField("id", "Search", Model.of("query")))).isEqualTo("query");
+        assertThat(renderedValue(new OatTelField("id", "Tel", Model.of("12345678")))).isEqualTo("12345678");
+        assertThat(renderedValue(new OatMonthField("id", "Month", Model.of("2023-10")))).isEqualTo("2023-10");
+        assertThat(renderedValue(new OatWeekField("id", "Week", Model.of("2023-W43")))).isEqualTo("2023-W43");
+    }
+
+    @Test
+    void dateAndTimeFieldsRenderIsoValuesRegardlessOfLocale() {
+        tester.getSession().setLocale(Locale.US);
+
+        assertThat(renderedValue(new OatDateField("id", "Date", Model.of(LocalDate.of(2023, 10, 27)))))
+                .isEqualTo("2023-10-27");
+        assertThat(renderedValue(new OatTimeField("id", "Time", Model.of(LocalTime.of(10, 30)))))
+                .isEqualTo("10:30");
+        assertThat(renderedValue(new OatDateTimeLocalField("id", "DateTime", Model.of(LocalDateTime.of(2023, 10, 27, 10, 30)))))
+                .isEqualTo("2023-10-27T10:30");
+    }
+
+    @Test
+    void timeFieldsTruncateToMillisecondsWhichIsTheMostHtmlAllows() {
+        assertThat(renderedValue(new OatTimeField("id", "Time", Model.of(LocalTime.of(10, 30, 15, 123_456_789)))))
+                .isEqualTo("10:30:15.123");
+        assertThat(renderedValue(new OatDateTimeLocalField("id", "DateTime", Model.of(LocalDateTime.of(2023, 10, 27, 10, 30, 15, 123_456_789)))))
+                .isEqualTo("2023-10-27T10:30:15.123");
+    }
+
+    @Test
+    void dateAndTimeFieldsParseTheIsoValuesBrowsersSubmit() {
+        tester.getSession().setLocale(Locale.US);
+        Model<LocalDate> date = Model.of(LocalDate.of(2023, 10, 27));
+        Model<LocalTime> time = Model.of(LocalTime.of(10, 30));
+        Model<LocalDateTime> dateTime = Model.of(LocalDateTime.of(2023, 10, 27, 10, 30));
+
+        Form<Void> form = new Form<>("form");
+        form.add(new OatDateField("date", "Date", date),
+                new OatTimeField("time", "Time", time),
+                new OatDateTimeLocalField("dateTime", "DateTime", dateTime));
+        tester.startComponentInPage(form, Markup.of(
+                "<form wicket:id='form'><div wicket:id='date'></div><div wicket:id='time'></div><div wicket:id='dateTime'></div></form>"));
+
+        FormTester formTester = tester.newFormTester("form");
+        formTester.setValue("date:container:field", "2026-12-24");
+        formTester.setValue("time:container:field", "14:05");
+        formTester.setValue("dateTime:container:field", "2026-12-24T14:05:30");
+        formTester.submit();
+
+        tester.assertNoErrorMessage();
+        assertThat(date.getObject()).isEqualTo(LocalDate.of(2026, 12, 24));
+        assertThat(time.getObject()).isEqualTo(LocalTime.of(14, 5));
+        assertThat(dateTime.getObject()).isEqualTo(LocalDateTime.of(2026, 12, 24, 14, 5, 30));
     }
 }

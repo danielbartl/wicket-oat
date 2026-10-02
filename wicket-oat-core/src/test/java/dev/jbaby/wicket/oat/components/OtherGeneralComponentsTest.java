@@ -19,6 +19,8 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.Serializable;
@@ -115,5 +117,60 @@ class OtherGeneralComponentsTest {
     void testOatAppLayout() {
         tester.startPage(new MockAppLayout());
         tester.assertLabel("appTitle", "Wicket Oat Application");
+    }
+
+    private OatDataTable<TestData, String> tableOf(List<TestData> list) {
+        SortableDataProvider<TestData, String> provider = new SortableDataProvider<>() {
+            @Override
+            public Iterator<? extends TestData> iterator(long first, long count) {
+                return list.iterator();
+            }
+            @Override
+            public long size() { return list.size(); }
+            @Override
+            public IModel<TestData> model(TestData object) { return Model.of(object); }
+        };
+        List<IColumn<TestData, String>> columns = new ArrayList<>();
+        columns.add(new PropertyColumn<>(Model.of("Name"), "name", "name"));
+        return new OatDataTable<>("table", columns, provider, 10);
+    }
+
+    @Test
+    void testOatDataTableShowsEmptyStateWhenEmpty() {
+        OatDataTable<TestData, String> table = tableOf(List.of())
+                .setEmptyState(id -> new OatEmptyState(id, "No users found"));
+        tester.startComponentInPage(table);
+
+        OatEmptyState emptyState = table.visitChildren(OatEmptyState.class, (c, visit) -> visit.stop((OatEmptyState) c));
+        assertThat(emptyState).isNotNull();
+        assertThat(emptyState.isVisibleInHierarchy()).isTrue();
+        assertThat(tester.getLastResponseAsString()).contains("No users found").doesNotContain("No Records Found");
+    }
+
+    @Test
+    void testOatDataTableHidesEmptyStateWhenNotEmpty() {
+        OatDataTable<TestData, String> table = tableOf(List.of(new TestData("A")))
+                .setEmptyState(id -> new OatEmptyState(id, "No users found"));
+        tester.startComponentInPage(table);
+
+        assertThat(tester.getLastResponseAsString()).doesNotContain("No users found");
+    }
+
+    @Test
+    void testOatDataTableSetEmptyStateTwiceReplacesInsteadOfStacking() {
+        OatDataTable<TestData, String> table = tableOf(List.of())
+                .setEmptyState(id -> new OatEmptyState(id, "First"))
+                .setEmptyState(id -> new OatEmptyState(id, "Second"));
+        tester.startComponentInPage(table);
+
+        assertThat(tester.getLastResponseAsString()).contains("Second").doesNotContain("First");
+    }
+
+    @Test
+    void testOatDataTableRejectsEmptyStateWithWrongId() {
+        OatDataTable<TestData, String> table = tableOf(List.of());
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> table.setEmptyState(id -> new OatEmptyState("placeholder", "No users found")))
+                .withMessageContaining("\"placeholder\"");
     }
 }

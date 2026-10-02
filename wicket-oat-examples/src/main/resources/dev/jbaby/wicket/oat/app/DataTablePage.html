@@ -11,7 +11,7 @@
         <div wicket:id="dataTable" class="mt-4"></div>
 
         <h3 class="mt-6">Empty Table with Placeholder</h3>
-        <p>If the data provider is empty, the <code>setEmptyState</code> component is displayed.</p>
+        <p>If the data provider is empty, the component created by <code>setEmptyState</code> is displayed.</p>
         <div wicket:id="emptyDataTable" class="mt-4"></div>
 
         <div class="mt-6">
@@ -22,8 +22,8 @@
 OatDataTable&lt;User, String&gt; table = Oat.Components.dataTable("id", columns, dataProvider, 10);
 add(table);
 
-// With custom empty state
-table.setEmptyState(Oat.Components.emptyState("placeholder", "No results found", Model.of("Try a different search.")));</code></pre>
+// With custom empty state - the factory receives the component id to use
+table.setEmptyState(id -&gt; Oat.Components.emptyState(id, "No results found", "Try a different search."));</code></pre>
 
             <pre><code>&lt;!-- HTML --&gt;
 &lt;div wicket:id="id"&gt;&lt;/div&gt;</code></pre>

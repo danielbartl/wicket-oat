@@ -1,7 +1,5 @@
 package dev.jbaby.wicket.oat.components.form;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
@@ -41,15 +39,8 @@ public class OatDropdownChoice<T> extends BaseOatField<T, DropDownChoice<T>> {
         field = createFormComponent("field", model);
         container.replace(field);
 
-        // Re-apply standard Oat field configuration
-        field.setLabel(label);
-        field.setOutputMarkupId(true);
-        
-        Label feedback = (Label) container.get("feedback");
-        field.add(AttributeModifier.replace("aria-describedby", feedback.getMarkupId()));
-        
-        Label fieldLabel = (Label) container.get("label");
-        fieldLabel.add(AttributeModifier.replace("for", field.getMarkupId()));
+        // Re-apply standard Oat field configuration to the new instance
+        wireField(label);
     }
 
     @Override

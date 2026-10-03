@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -49,4 +50,11 @@ public abstract class OatDropdown<T> extends Panel {
 
     /** Populate a menu item; the item's root tag should carry {@code role="menuitem"}. */
     protected abstract void populateItem(ListItem<T> item);
+
+    /** Closes the menu, e.g. after handling a click on one of its items. */
+    public OatDropdown<T> close(IPartialPageRequestHandler target) {
+        target.appendJavaScript("(function(m){if(m&&m.matches(':popover-open'))m.hidePopover();})(document.getElementById('"
+                + menu.getMarkupId() + "'))");
+        return this;
+    }
 }

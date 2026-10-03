@@ -13,6 +13,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -27,6 +29,21 @@ public abstract class OatAppLayout extends WebPage {
     protected WebMarkupContainer topNav;
 
     public OatAppLayout() {
+        this((PageParameters) null);
+    }
+
+    /** For bookmarkable pages: pass their {@code PageParameters} on. */
+    public OatAppLayout(PageParameters parameters) {
+        super(parameters);
+        addThemedHtml();
+    }
+
+    public OatAppLayout(IModel<?> model) {
+        super(model);
+        addThemedHtml();
+    }
+
+    private void addThemedHtml() {
         TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
         html.add(new OatThemeBehavior());
         add(html);
@@ -42,8 +59,9 @@ public abstract class OatAppLayout extends WebPage {
         sidebar();
     }
 
+    /** The page {@code <title>}; by default the {@code OatAppLayout.title} resource. */
     protected @NonNull IModel<String> appTitleModel() {
-        return Model.of("Wicket Oat Application");
+        return new StringResourceModel("OatAppLayout.title", this).setDefaultValue("Wicket Oat Application");
     }
 
     protected void topNav() {
@@ -54,8 +72,9 @@ public abstract class OatAppLayout extends WebPage {
         topNav.add(createTopNavExtra("topNavExtra"));
     }
 
+    /** The name in the top navigation; by default the {@code OatAppLayout.name} resource. */
     protected @NonNull IModel<String> appNameModel() {
-        return Model.of("Wicket Oat Application");
+        return new StringResourceModel("OatAppLayout.name", this).setDefaultValue("Wicket Oat Application");
     }
 
     /**
@@ -82,11 +101,15 @@ public abstract class OatAppLayout extends WebPage {
             protected void populateItem(ListItem<MenuItem> item) {
                 MenuItem mi = item.getModelObject();
 
-                BookmarkablePageLink<?> link = new BookmarkablePageLink<>("link", mi.pageClass());
+                BookmarkablePageLink<?> link = new BookmarkablePageLink<>("link", mi.pageClass(), mi.parameters());
                 link.add(new Label("label", mi.label()));
                 item.add(link);
 
-                if (getPage().getClass().equals(mi.pageClass())) {
+                // Leave out pages the current user may not open
+                item.setVisible(getApplication().getSecuritySettings().getAuthorizationStrategy()
+                        .isInstantiationAuthorized(mi.pageClass()));
+
+                if (isCurrentPage(mi)) {
                     link.add(AttributeModifier.replace("aria-current", "page"));
                     item.add(new AttributeAppender("class", Model.of("active"), " "));
                 } else {
@@ -94,6 +117,15 @@ public abstract class OatAppLayout extends WebPage {
                 }
             }
         });
+    }
+
+    /**
+     * Whether a menu item points at this page: the same page class and, if the item
+     * has parameters, the same parameters.
+     */
+    protected boolean isCurrentPage(MenuItem item) {
+        return getPage().getClass().equals(item.pageClass())
+                && (item.parameters() == null || item.parameters().equals(getPage().getPageParameters()));
     }
 
     /**

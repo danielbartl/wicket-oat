@@ -26,15 +26,6 @@ public class AccordionBehavior extends Behavior {
     }
 
     @Override
-    public void bind(Component component) {
-        super.bind(component);
-        // Ensure the component renders a tag that can contain children if it's a ListView
-        if (component instanceof ListView) {
-            component.setOutputMarkupId(true);
-        }
-    }
-
-    @Override
     public void onComponentTag(Component component, ComponentTag tag) {
         super.onComponentTag(component, tag);
         

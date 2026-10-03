@@ -10,9 +10,16 @@
 
         <div class="mt-6">
             <h3>How to use</h3>
-            <pre><code>// Java
-add(Oat.Components.dropdown("dropdown", "Options", Model.ofList(items), (item, label) -&gt;
-        item.add(new Label("label", label))));</code></pre>
+            <pre><code>// Java - each item's label, and what happens when it's chosen
+add(Oat.Components.dropdown("dropdown", "Options", Model.ofList(items), item -&gt; item,
+        (target, item) -&gt; info("You chose " + item + ".")));
+
+// Or populate the items yourself (each item is a &lt;button role="menuitem"&gt; with a "label" child),
+// and call dropdown.close(target) after handling a click
+add(new OatDropdown&lt;String&gt;("dropdown", "Options", Model.ofList(items)) {
+    @Override
+    protected void populateItem(ListItem&lt;String&gt; item) { ... }
+});</code></pre>
 
             <pre><code>&lt;!-- HTML --&gt;
 &lt;div wicket:id="dropdown"&gt;&lt;/div&gt;</code></pre>

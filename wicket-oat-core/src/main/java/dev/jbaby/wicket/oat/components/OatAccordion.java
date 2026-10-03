@@ -36,13 +36,6 @@ public abstract class OatAccordion<T> extends ListView<T> {
     }
 
     @Override
-    protected void onInitialize() {
-        super.onInitialize();
-        // Ensure the component renders a tag
-        setOutputMarkupId(true);
-    }
-
-    @Override
     protected ListItem<T> newItem(int index, IModel<T> itemModel) {
         ListItem<T> item = super.newItem(index, itemModel);
         // Add the same behavior instance to the item so it can contribute the "name" attribute

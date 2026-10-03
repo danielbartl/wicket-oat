@@ -1,16 +1,27 @@
 package dev.jbaby.wicket.oat.app;
 
-import dev.jbaby.wicket.oat.components.OatAppLayout;
 import dev.jbaby.wicket.oat.components.MenuItem;
+import dev.jbaby.wicket.oat.components.OatAppLayout;
 import dev.jbaby.wicket.oat.components.OatThemeSwitcher;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
 public class BasePage extends OatAppLayout {
+
+    private static final CssResourceReference EXAMPLES_CSS = new CssResourceReference(BasePage.class, "examples.css");
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(CssHeaderItem.forReference(EXAMPLES_CSS));
+    }
 
     @Override
     protected @NonNull IModel<String> appNameModel() {

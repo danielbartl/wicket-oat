@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat;
 import dev.jbaby.wicket.oat.app.*;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.Request;
@@ -62,6 +63,10 @@ public class WicketOatApplication {
                         new SpringComponentInjector(this, ctx));
 
                 WicketOats.install(this);
+
+                // The avatar demo loads photos from Unsplash; image hosts for an app's own
+                // content are the app's to allow, on top of Wicket's strict default CSP.
+                getCspSettings().blocking().add(CSPDirective.IMG_SRC, "https://images.unsplash.com");
             }
         };
     }

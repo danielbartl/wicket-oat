@@ -1,0 +1,26 @@
+/**
+ * Sizing for the demo pages. Kept out of style="" attributes because the demo app
+ * runs under Wicket's strict Content Security Policy, which blocks inline styles.
+ */
+.demo-accordion {
+    max-width: 600px;
+    margin-top: 2rem;
+}
+
+.demo-upload-form {
+    max-width: 480px;
+}
+
+.demo-skeleton-line {
+    width: 200px;
+}
+
+.demo-skeleton-box {
+    width: 100px;
+    height: 100px;
+}
+
+.demo-skeleton-small {
+    width: 160px;
+    height: 16px;
+}

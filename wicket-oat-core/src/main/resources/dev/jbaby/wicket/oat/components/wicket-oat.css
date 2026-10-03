@@ -1,0 +1,16 @@
+/**
+ * Layout rules for Wicket Oat's own components. They live here rather than in
+ * style="" attributes so the markup works under Wicket's strict Content Security
+ * Policy, which blocks inline styles.
+ */
+.oat-app-main {
+    padding-inline: var(--space-6);
+}
+
+.oat-topnav-extra {
+    flex: 1;
+}
+
+.oat-breadcrumb {
+    font-size: var(--text-7);
+}

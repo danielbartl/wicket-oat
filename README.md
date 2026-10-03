@@ -166,6 +166,32 @@ public class MyComplexActionLink extends AjaxLink<Void> {
 }
 ```
 
+## Content Security Policy
+
+Wicket Oat works under Wicket's default strict, nonce-based CSP. The library
+renders no inline scripts or `style` attributes, and Oat's JavaScript only sets
+styles through the CSSOM, which CSP doesn't restrict. `WicketOats.install(app)`
+adds just `img-src data:` (for the icons Oat's CSS embeds as `data:` URLs) and
+leaves the rest of your policy alone, so add sources for your own content
+yourself:
+
+```java
+getCspSettings().blocking().add(CSPDirective.IMG_SRC, "https://images.example.com");
+```
+
+If your own markup relies on inline `style` attributes, allow them for styles
+only. Browsers ignore `'unsafe-inline'` while a nonce is present, so replace the
+directive rather than adding to it:
+
+```java
+getCspSettings().blocking()
+        .remove(CSPDirective.STYLE_SRC)
+        .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_INLINE);
+```
+
+Call `install()` after any `strict()`/`clear()` of your own, since those reset
+the directives it adds.
+
 ## Forms
 
 Oat form fields (`OatTextField`, `OatDropdownChoice`, `OatSwitch`, ...) wrap a

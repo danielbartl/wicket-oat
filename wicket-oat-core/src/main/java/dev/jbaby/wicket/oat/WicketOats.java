@@ -2,7 +2,6 @@ package dev.jbaby.wicket.oat;
 
 import dev.jbaby.wicket.oat.components.OatAppLayout;
 import org.apache.wicket.csp.CSPDirective;
-import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -16,10 +15,12 @@ public class WicketOats {
     private static final PackageResourceReference OAT_CSS = new PackageResourceReference(OatAppLayout.class, "oat.min.css");
     private static final PackageResourceReference OAT_JS = new PackageResourceReference(OatAppLayout.class, "oat.min.js");
     private static final PackageResourceReference THEMES_CSS = new PackageResourceReference(OatAppLayout.class, "themes.css");
+    private static final PackageResourceReference WICKET_OAT_CSS = new PackageResourceReference(OatAppLayout.class, "wicket-oat.css");
 
     /**
      * Installs Wicket Oat UI into the given application.
-     * This registers global CSS/JS contributors and configures the required CSP settings.
+     * This registers global CSS/JS contributors and adds the one Content Security
+     * Policy source Oat needs on top of Wicket's strict default.
      * 
      * @param app the application to configure
      */
@@ -28,20 +29,16 @@ public class WicketOats {
         app.getHeaderContributorListeners().add(response -> {
             response.render(CssHeaderItem.forReference(OAT_CSS));
             response.render(CssHeaderItem.forReference(THEMES_CSS));
+            response.render(CssHeaderItem.forReference(WICKET_OAT_CSS));
             response.render(JavaScriptHeaderItem.forReference(OAT_JS));
         });
 
-        // Configure CSP for Oat UI compatibility.
-        // In Oat 0.8, the ot-dropdown web component positions its popover menu by
-        // setting element.style.top/left directly from JS, which requires 'unsafe-inline'
-        // for style-src; Oat's other dynamic components (toast, tabs, taginput, upload,
-        // sidebar) only toggle classes/attributes and don't need it themselves.
-        // unsafeInline() removes nonces and allows 'unsafe-inline' for style-src and script-src.
-        app.getCspSettings().blocking().unsafeInline();
-        
-        app.getCspSettings().blocking()
-                .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
-                .add(CSPDirective.IMG_SRC, "https://i.pravatar.cc")
-                .add(CSPDirective.IMG_SRC, "https://images.unsplash.com");
+        // Oat works under Wicket's strict, nonce-based CSP: the library renders no inline
+        // scripts or style attributes, and oat.min.js only sets styles through the CSSOM
+        // (element.style.top = ...), which CSP doesn't restrict. The one addition is
+        // img-src data:, for the SVG icons oat.min.css embeds as data: URLs (checkbox
+        // tick, radio dot, select arrow). Anything else, such as image hosts for your own
+        // content, is up to the application to add.
+        app.getCspSettings().blocking().add(CSPDirective.IMG_SRC, "data:");
     }
 }

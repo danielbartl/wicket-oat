@@ -35,8 +35,7 @@ public abstract class OatBreadcrumb<T> extends WebMarkupContainer {
         add(new BreadcrumbBehavior());
 
         WebMarkupContainer list = new WebMarkupContainer("list");
-        list.add(AttributeModifier.append("class", "unstyled hstack"));
-        list.add(AttributeModifier.append("style", "font-size: var(--text-7)"));
+        list.add(AttributeModifier.append("class", "unstyled hstack oat-breadcrumb"));
         add(list);
 
         list.add(new ListView<>("items", model) {

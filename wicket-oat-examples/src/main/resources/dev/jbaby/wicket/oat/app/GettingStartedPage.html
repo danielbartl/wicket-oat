@@ -24,12 +24,12 @@
                 <span class="badge secondary">2</span>
                 Install the Library
             </h2>
-            <p>Initialize Oat UI in your <code>WebApplication.init()</code> method. This registers global CSS/JS and configures the Content Security Policy.</p>
+            <p>Initialize Oat UI in your <code>WebApplication.init()</code> method. This registers global CSS/JS and adds the one Content Security Policy source Oat needs (<code>img-src data:</code>) to Wicket's strict default.</p>
             <pre><code>@Override
 protected void init() {
     super.init();
     
-    // Auto-configures headers and CSP
+    // Registers Oat's CSS/JS; keeps Wicket's strict CSP
     WicketOats.install(this);
 }</code></pre>
         </div>

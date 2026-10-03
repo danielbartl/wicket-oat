@@ -27,16 +27,20 @@ protected void init() {
             <p>Calling <code>WicketOats.install(app)</code> performs several actions:</p>
             <ul>
                 <li><strong>Global Resources:</strong> Registers local <code>oat.min.css</code> and <code>oat.min.js</code> using <code>getHeaderContributorListeners()</code>.</li>
-                <li><strong>Security Policy:</strong> Configures the Content Security Policy (CSP) to allow local resources and necessary inline styles for components like Toast.</li>
+                <li><strong>Security Policy:</strong> Adds <code>img-src data:</code> to Wicket's strict Content Security Policy (CSP), for the icons Oat's CSS embeds as <code>data:</code> URLs. Nothing else is relaxed.</li>
             </ul>
         </div>
 
         <div class="mt-6">
             <h3>Security & CSP</h3>
-            <p>To support Oat UI's dynamic features (like Toast notifications), the Content Security Policy should be configured to allow local resources and inline styles/scripts:</p>
+            <p>Wicket Oat works under Wicket's default strict, nonce-based CSP: the library renders no inline scripts or <code>style</code> attributes, and Oat's JavaScript (dropdowns, toasts, tabs) only sets styles through the CSSOM, which CSP doesn't restrict. You don't need <code>'unsafe-inline'</code> or <code>'unsafe-eval'</code>.</p>
+            <p>Sources for your own content are yours to add, e.g. an image host:</p>
             <pre><code>getCspSettings().blocking()
-    .add(CSPDirective.STYLE_SRC, "'self'", "'unsafe-inline'")
-    .add(CSPDirective.SCRIPT_SRC, "'self'", "'unsafe-inline'");</code></pre>
+    .add(CSPDirective.IMG_SRC, "https://images.example.com");</code></pre>
+            <p>If your own markup relies on inline <code>style</code> attributes, allow them for styles only. Browsers ignore <code>'unsafe-inline'</code> while a nonce is present, so replace the directive rather than adding to it:</p>
+            <pre><code>getCspSettings().blocking()
+    .remove(CSPDirective.STYLE_SRC)
+    .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_INLINE);</code></pre>
         </div>
 
         <div class="mt-6">

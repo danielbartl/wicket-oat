@@ -11,7 +11,20 @@ import org.apache.wicket.model.Model;
  *
  * @param <N> the numeric model type
  */
-public class OatRangeField<N extends Number & Comparable<N>> extends BaseOatField<N, RangeTextField<N>> {
+public class OatRangeField<N extends Number & Comparable<N>> extends BaseOatField<N, RangeTextField<N>, OatRangeField<N>> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatRangeField(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatRangeField(String id, IModel<N> model) {
+        this(id, null, model, null);
+    }
 
     public OatRangeField(String id, String label, IModel<N> model) {
         this(id, Model.of(label), model, null);
@@ -26,12 +39,12 @@ public class OatRangeField<N extends Number & Comparable<N>> extends BaseOatFiel
     }
 
     public OatRangeField<N> setMin(N min) {
-        field.setMinimum(min);
+        getField().setMinimum(min);
         return this;
     }
 
     public OatRangeField<N> setMax(N max) {
-        field.setMaximum(max);
+        getField().setMaximum(max);
         return this;
     }
 

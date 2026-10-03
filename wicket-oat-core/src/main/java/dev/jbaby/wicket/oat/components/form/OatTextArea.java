@@ -9,7 +9,20 @@ import org.apache.wicket.model.Model;
  *
  * @param <T> the model object type
  */
-public class OatTextArea<T> extends BaseOatField<T, TextArea<T>> {
+public class OatTextArea<T> extends BaseOatField<T, TextArea<T>, OatTextArea<T>> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatTextArea(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatTextArea(String id, IModel<T> model) {
+        this(id, null, model, null);
+    }
 
     public OatTextArea(String id, String label, IModel<T> model) {
         this(id, Model.of(label), model, null);

@@ -11,7 +11,20 @@ import org.apache.wicket.model.Model;
  *
  * @param <T> the model object type
  */
-public class OatTextField<T> extends BaseOatField<T, TextField<T>> {
+public class OatTextField<T> extends BaseOatField<T, TextField<T>, OatTextField<T>> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatTextField(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatTextField(String id, IModel<T> model) {
+        this(id, null, model, null);
+    }
 
     public OatTextField(String id, String label, IModel<T> model) {
         this(id, Model.of(label), model, null);

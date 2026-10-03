@@ -12,7 +12,20 @@ import org.apache.wicket.model.Model;
  * The model is a comma-separated string of tags, matching Oat's own
  * {@code value="apple, mango"} attribute convention.
  */
-public class OatTagInput extends BaseOatField<String, TextField<String>> {
+public class OatTagInput extends BaseOatField<String, TextField<String>, OatTagInput> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatTagInput(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatTagInput(String id, IModel<String> model) {
+        this(id, null, model, null);
+    }
 
     public OatTagInput(String id, String label, IModel<String> model) {
         this(id, Model.of(label), model, null);
@@ -26,7 +39,7 @@ public class OatTagInput extends BaseOatField<String, TextField<String>> {
         super(id, label, model, helper);
 
         WebMarkupContainer taginput = new WebMarkupContainer("taginput");
-        taginput.add(new TagInputBehavior(field));
+        taginput.add(new TagInputBehavior(getField()));
         container.add(taginput);
     }
 

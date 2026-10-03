@@ -13,7 +13,20 @@ import java.util.List;
  * {@code <input type="file">} ({@link FileUploadField}). {@link OatFileDropzone}
  * is the richer, drag-and-drop-capable alternative to this component.
  */
-public class OatFileUpload extends BaseOatField<List<FileUpload>, FileUploadField> {
+public class OatFileUpload extends BaseOatField<List<FileUpload>, FileUploadField, OatFileUpload> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatFileUpload(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatFileUpload(String id, IModel<List<FileUpload>> model) {
+        this(id, null, model, null);
+    }
 
     public OatFileUpload(String id, String label, IModel<List<FileUpload>> model) {
         this(id, Model.of(label), model, null);

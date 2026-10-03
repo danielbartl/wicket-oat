@@ -2,6 +2,11 @@ package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.OatToastBehavior;
+import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
+import dev.jbaby.wicket.oat.components.form.OatEmailField;
+import dev.jbaby.wicket.oat.components.form.OatSwitch;
+import dev.jbaby.wicket.oat.components.form.OatTextArea;
+import dev.jbaby.wicket.oat.components.form.OatTextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -25,40 +30,44 @@ public class EventRegistrationPage extends BasePage {
 
     public EventRegistrationPage() {
         RegistrationData data = new RegistrationData();
-        CompoundPropertyModel<RegistrationData> model = new CompoundPropertyModel<>(data);
-        Form<RegistrationData> form = new Form<>("registrationForm", model);
+        // Fields take their model from the CompoundPropertyModel by id, and their label
+        // from EventRegistrationPage.properties by id - just like plain Wicket components.
+        Form<RegistrationData> form = new Form<>("registrationForm", new CompoundPropertyModel<>(data));
+        form.setOutputMarkupId(true);
         add(form);
 
-        form.add(Oat.Components.textField("fullName", "Full Name", model.bind("fullName"))
+        form.add(new OatTextField<String>("fullName")
                 .setRequired(true)
                 .setPlaceholder(Model.of("Enter your full name")));
 
-        form.add(Oat.Components.emailField("email", "Email Address", model.bind("email"))
+        form.add(new OatEmailField("email")
                 .setRequired(true)
                 .setPlaceholder(Model.of("you@example.com")));
 
-        form.add(Oat.Components.textField("organization", "Organization / Company", model.bind("organization"))
+        form.add(new OatTextField<String>("organization")
                 .setPlaceholder(Model.of("Where do you work?")));
 
         List<String> tickets = Arrays.asList("Early Bird", "Standard", "VIP", "Student");
-        form.add(Oat.Components.dropdownChoice("ticketType", "Ticket Type", model.bind("ticketType"), Model.ofList(tickets))
+        form.add(new OatDropdownChoice<String>("ticketType", Model.ofList(tickets))
                 .setRequired(true));
 
-        form.add(Oat.Components.textArea("dietaryRequirements", "Dietary Requirements", model.bind("dietaryRequirements"))
+        form.add(new OatTextArea<String>("dietaryRequirements")
                 .setPlaceholder(Model.of("Allergies, preferences...")));
 
-        form.add(Oat.Components.oatSwitch("subscribeNewsletter", "Subscribe to Newsletter", model.bind("subscribeNewsletter")));
+        form.add(new OatSwitch("subscribeNewsletter"));
 
         form.add(new AjaxButton("submit") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 RegistrationData submittedData = form.getModelObject();
                 Oat.toast(target, "Registration successful for " + submittedData.fullName + "!", OatToastBehavior.Variant.SUCCESS, "Success");
+                target.add(form); // clear any inline errors from a previous attempt
             }
 
             @Override
             protected void onError(AjaxRequestTarget target) {
                 Oat.toast(target, "Please fix the errors in the form.", OatToastBehavior.Variant.DANGER, "Error");
+                target.add(form); // show the inline validation errors
             }
         }.add(Oat.Behaviors.button()));
     }

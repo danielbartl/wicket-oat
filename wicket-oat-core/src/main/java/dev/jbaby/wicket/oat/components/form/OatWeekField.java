@@ -6,7 +6,20 @@ import org.apache.wicket.model.Model;
 /**
  * An Oat-styled form field wrapping a native {@code <input type="week">}.
  */
-public class OatWeekField extends BaseOatField<String, Html5TextField<String>> {
+public class OatWeekField extends BaseOatField<String, Html5TextField<String>, OatWeekField> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatWeekField(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatWeekField(String id, IModel<String> model) {
+        this(id, null, model, null);
+    }
 
     public OatWeekField(String id, String label, IModel<String> model) {
         this(id, Model.of(label), model, null);

@@ -108,6 +108,14 @@ form.add(new OatDropdownChoice&lt;String&gt;("status", "Status", statusModel, st
 &lt;div wicket:id="name"&gt;&lt;/div&gt;
 &lt;div wicket:id="status"&gt;&lt;/div&gt;</code></pre>
 
+            <p>Like plain Wicket form components, they can also take their model from a parent <code>CompoundPropertyModel</code> and their label from the page's <code>.properties</code> file, both by id. They render their own tag, so an Ajax <code>onError</code> can re-render them to show inline errors. See the Event Registration demo.</p>
+            <pre><code>// Java
+Form&lt;Person&gt; form = new Form&lt;&gt;("form", new CompoundPropertyModel&lt;&gt;(person));
+form.add(new OatTextField&lt;String&gt;("name").setRequired(true));
+
+// MyPage.properties
+name=Full Name</code></pre>
+
             <h4 class="mt-6">Custom Form Fields (Manual)</h4>
             <p>Use <code>FieldBehavior</code> on a container (like <code>&lt;label&gt;</code> or <code>&lt;div&gt;</code>) to style manual fields.</p>
             <pre><code>// Java

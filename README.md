@@ -15,6 +15,7 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 - **Spring Boot Integration:** Seamless integration with Spring Boot applications.
 - **Comprehensive Component Set:** Includes everything from basic buttons to complex data tables.
 - **Accessible Forms by Default:** Every form field automatically wires `aria-describedby` (linking the field to its feedback/hint message) and toggles `aria-invalid` when validation fails — no extra markup or wiring required.
+- **Wicket-Style Forms:** Form fields work with `CompoundPropertyModel`, take their labels from `.properties` files, and re-render via Ajax like any Wicket component (see [Forms](#forms)).
 
 ## Quick Start
 
@@ -164,6 +165,38 @@ public class MyComplexActionLink extends AjaxLink<Void> {
     }
 }
 ```
+
+## Forms
+
+Oat form fields (`OatTextField`, `OatDropdownChoice`, `OatSwitch`, ...) wrap a
+label, the Wicket form component and an inline feedback/hint message, but are
+meant to be used like the plain Wicket components they wrap:
+
+```java
+Form<Person> form = new Form<>("form", new CompoundPropertyModel<>(person));
+form.setOutputMarkupId(true);
+add(form);
+
+// Model inherited from the CompoundPropertyModel by id ("name" -> person.name),
+// label looked up by id in the page's .properties file (name=Full name)
+OatTextField<String> name = new OatTextField<String>("name").setRequired(true);
+name.add(StringValidator.maximumLength(50)); // validators and Ajax form-component behaviors go to the wrapped input
+form.add(name);
+
+form.add(new OatNumberField<Integer>("age").setMin(0)); // fluent setters keep the concrete type
+form.add(new OatDropdownChoice<String>("country", Model.ofList(countries)));
+
+form.add(new AjaxButton("save") {
+    @Override
+    protected void onError(AjaxRequestTarget target) {
+        target.add(form); // fields render their own tag, so they can be re-rendered to show inline errors
+    }
+});
+```
+
+You can still pass a model and a label explicitly
+(`new OatTextField<>("name", "Full name", model)`), and `getField()` gives
+access to the wrapped `FormComponent` for anything else.
 
 ## Theming
 

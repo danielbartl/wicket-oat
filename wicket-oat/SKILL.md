@@ -42,10 +42,12 @@ myLabel.add(Oat.Behaviors.badge(Variant.SUCCESS));
 ## Common Tasks
 
 ### Form Handling
-Use `CompoundPropertyModel` with `Oat.Components` form fields for clean, readable code.
+Oat form fields work like plain Wicket form components: with a `CompoundPropertyModel` on the form, leave out the model (it is inherited by id) and the label (looked up by id in the `.properties` file).
 ```java
 Form<MyData> form = new Form<>("form", new CompoundPropertyModel<>(data));
-form.add(Oat.Components.textField("name", "Name", model.bind("name")));
+form.setOutputMarkupId(true);
+form.add(new OatTextField<String>("name").setRequired(true)); // MyPage.properties: name=Name
+// In an AjaxButton's onError: target.add(form) shows the inline validation errors
 ```
 
 ### Toasts & Notifications

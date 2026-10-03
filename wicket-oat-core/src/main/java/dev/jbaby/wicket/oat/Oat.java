@@ -363,6 +363,14 @@ public final class Oat {
 
         // --- Form Components ---
 
+        public static <T> OatTextField<T> textField(String id) {
+            return new OatTextField<>(id);
+        }
+
+        public static <T> OatTextField<T> textField(String id, IModel<T> model) {
+            return new OatTextField<>(id, model);
+        }
+
         public static <T> OatTextField<T> textField(String id, String label, IModel<T> model) {
             return new OatTextField<>(id, label, model);
         }
@@ -373,6 +381,14 @@ public final class Oat {
 
         public static <T> OatTextField<T> textField(String id, IModel<String> labelModel, IModel<T> model, IModel<String> hintModel) {
             return new OatTextField<>(id, labelModel, model, hintModel);
+        }
+
+        public static OatPasswordField passwordField(String id) {
+            return new OatPasswordField(id);
+        }
+
+        public static OatPasswordField passwordField(String id, IModel<String> model) {
+            return new OatPasswordField(id, model);
         }
 
         public static OatPasswordField passwordField(String id, String label, IModel<String> model) {
@@ -387,6 +403,14 @@ public final class Oat {
             return new OatPasswordField(id, labelModel, model, hintModel);
         }
 
+        public static OatEmailField emailField(String id) {
+            return new OatEmailField(id);
+        }
+
+        public static OatEmailField emailField(String id, IModel<String> model) {
+            return new OatEmailField(id, model);
+        }
+
         public static OatEmailField emailField(String id, String label, IModel<String> model) {
             return new OatEmailField(id, label, model);
         }
@@ -397,6 +421,14 @@ public final class Oat {
 
         public static OatEmailField emailField(String id, IModel<String> labelModel, IModel<String> model, IModel<String> hintModel) {
             return new OatEmailField(id, labelModel, model, hintModel);
+        }
+
+        public static <N extends Number & Comparable<N>> OatNumberField<N> numberField(String id) {
+            return new OatNumberField<>(id);
+        }
+
+        public static <N extends Number & Comparable<N>> OatNumberField<N> numberField(String id, IModel<N> model) {
+            return new OatNumberField<>(id, model);
         }
 
         public static <N extends Number & Comparable<N>> OatNumberField<N> numberField(String id, String label, IModel<N> model) {
@@ -411,6 +443,14 @@ public final class Oat {
             return new OatNumberField<>(id, labelModel, model, hintModel);
         }
 
+        public static <T> OatTextArea<T> textArea(String id) {
+            return new OatTextArea<>(id);
+        }
+
+        public static <T> OatTextArea<T> textArea(String id, IModel<T> model) {
+            return new OatTextArea<>(id, model);
+        }
+
         public static <T> OatTextArea<T> textArea(String id, String label, IModel<T> model) {
             return new OatTextArea<>(id, label, model);
         }
@@ -421,6 +461,22 @@ public final class Oat {
 
         public static <T> OatTextArea<T> textArea(String id, IModel<String> labelModel, IModel<T> model, IModel<String> hintModel) {
             return new OatTextArea<>(id, labelModel, model, hintModel);
+        }
+
+        public static <T> OatDropdownChoice<T> dropdownChoice(String id, IModel<? extends List<? extends T>> choices) {
+            return new OatDropdownChoice<>(id, choices);
+        }
+
+        public static <T> OatDropdownChoice<T> dropdownChoice(String id, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatDropdownChoice<>(id, choices, renderer);
+        }
+
+        public static <T> OatDropdownChoice<T> dropdownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
+            return new OatDropdownChoice<>(id, model, choices);
+        }
+
+        public static <T> OatDropdownChoice<T> dropdownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatDropdownChoice<>(id, model, choices, renderer);
         }
 
         public static <T> OatDropdownChoice<T> dropdownChoice(String id, String label, IModel<T> model, IModel<? extends List<? extends T>> choices) {
@@ -439,6 +495,14 @@ public final class Oat {
             return new OatDropdownChoice<>(id, labelModel, model, choices, renderer, hintModel);
         }
 
+        public static OatCheckBox checkBox(String id) {
+            return new OatCheckBox(id);
+        }
+
+        public static OatCheckBox checkBox(String id, IModel<Boolean> model) {
+            return new OatCheckBox(id, model);
+        }
+
         public static OatCheckBox checkBox(String id, String label, IModel<Boolean> model) {
             return new OatCheckBox(id, label, model);
         }
@@ -449,6 +513,14 @@ public final class Oat {
 
         public static OatCheckBox checkBox(String id, IModel<String> labelModel, IModel<Boolean> model, IModel<String> hintModel) {
             return new OatCheckBox(id, labelModel, model, hintModel);
+        }
+
+        public static OatSwitch oatSwitch(String id) {
+            return new OatSwitch(id);
+        }
+
+        public static OatSwitch oatSwitch(String id, IModel<Boolean> model) {
+            return new OatSwitch(id, model);
         }
 
         public static OatSwitch oatSwitch(String id, String label, IModel<Boolean> model) {
@@ -463,6 +535,14 @@ public final class Oat {
             return new OatSwitch(id, labelModel, model, hintModel);
         }
 
+        public static OatDateField dateField(String id) {
+            return new OatDateField(id);
+        }
+
+        public static OatDateField dateField(String id, IModel<java.time.LocalDate> model) {
+            return new OatDateField(id, model);
+        }
+
         public static OatDateField dateField(String id, String label, IModel<java.time.LocalDate> model) {
             return new OatDateField(id, label, model);
         }
@@ -473,6 +553,14 @@ public final class Oat {
 
         public static OatDateField dateField(String id, IModel<String> labelModel, IModel<java.time.LocalDate> model, IModel<String> hintModel) {
             return new OatDateField(id, labelModel, model, hintModel);
+        }
+
+        public static OatDateTimeLocalField dateTimeLocalField(String id) {
+            return new OatDateTimeLocalField(id);
+        }
+
+        public static OatDateTimeLocalField dateTimeLocalField(String id, IModel<java.time.LocalDateTime> model) {
+            return new OatDateTimeLocalField(id, model);
         }
 
         public static OatDateTimeLocalField dateTimeLocalField(String id, String label, IModel<java.time.LocalDateTime> model) {
@@ -487,6 +575,14 @@ public final class Oat {
             return new OatDateTimeLocalField(id, labelModel, model, hintModel);
         }
 
+        public static OatTimeField timeField(String id) {
+            return new OatTimeField(id);
+        }
+
+        public static OatTimeField timeField(String id, IModel<java.time.LocalTime> model) {
+            return new OatTimeField(id, model);
+        }
+
         public static OatTimeField timeField(String id, String label, IModel<java.time.LocalTime> model) {
             return new OatTimeField(id, label, model);
         }
@@ -497,6 +593,14 @@ public final class Oat {
 
         public static OatTimeField timeField(String id, IModel<String> labelModel, IModel<java.time.LocalTime> model, IModel<String> hintModel) {
             return new OatTimeField(id, labelModel, model, hintModel);
+        }
+
+        public static OatColorField colorField(String id) {
+            return new OatColorField(id);
+        }
+
+        public static OatColorField colorField(String id, IModel<String> model) {
+            return new OatColorField(id, model);
         }
 
         public static OatColorField colorField(String id, String label, IModel<String> model) {
@@ -511,6 +615,14 @@ public final class Oat {
             return new OatColorField(id, labelModel, model, hintModel);
         }
 
+        public static OatUrlField urlField(String id) {
+            return new OatUrlField(id);
+        }
+
+        public static OatUrlField urlField(String id, IModel<String> model) {
+            return new OatUrlField(id, model);
+        }
+
         public static OatUrlField urlField(String id, String label, IModel<String> model) {
             return new OatUrlField(id, label, model);
         }
@@ -521,6 +633,14 @@ public final class Oat {
 
         public static OatUrlField urlField(String id, IModel<String> labelModel, IModel<String> model, IModel<String> hintModel) {
             return new OatUrlField(id, labelModel, model, hintModel);
+        }
+
+        public static OatSearchField searchField(String id) {
+            return new OatSearchField(id);
+        }
+
+        public static OatSearchField searchField(String id, IModel<String> model) {
+            return new OatSearchField(id, model);
         }
 
         public static OatSearchField searchField(String id, String label, IModel<String> model) {
@@ -535,6 +655,14 @@ public final class Oat {
             return new OatSearchField(id, labelModel, model, hintModel);
         }
 
+        public static OatTelField telField(String id) {
+            return new OatTelField(id);
+        }
+
+        public static OatTelField telField(String id, IModel<String> model) {
+            return new OatTelField(id, model);
+        }
+
         public static OatTelField telField(String id, String label, IModel<String> model) {
             return new OatTelField(id, label, model);
         }
@@ -545,6 +673,14 @@ public final class Oat {
 
         public static OatTelField telField(String id, IModel<String> labelModel, IModel<String> model, IModel<String> hintModel) {
             return new OatTelField(id, labelModel, model, hintModel);
+        }
+
+        public static OatMonthField monthField(String id) {
+            return new OatMonthField(id);
+        }
+
+        public static OatMonthField monthField(String id, IModel<String> model) {
+            return new OatMonthField(id, model);
         }
 
         public static OatMonthField monthField(String id, String label, IModel<String> model) {
@@ -559,6 +695,14 @@ public final class Oat {
             return new OatMonthField(id, labelModel, model, hintModel);
         }
 
+        public static OatWeekField weekField(String id) {
+            return new OatWeekField(id);
+        }
+
+        public static OatWeekField weekField(String id, IModel<String> model) {
+            return new OatWeekField(id, model);
+        }
+
         public static OatWeekField weekField(String id, String label, IModel<String> model) {
             return new OatWeekField(id, label, model);
         }
@@ -569,6 +713,14 @@ public final class Oat {
 
         public static OatWeekField weekField(String id, IModel<String> labelModel, IModel<String> model, IModel<String> hintModel) {
             return new OatWeekField(id, labelModel, model, hintModel);
+        }
+
+        public static <N extends Number & Comparable<N>> OatRangeField<N> rangeField(String id) {
+            return new OatRangeField<>(id);
+        }
+
+        public static <N extends Number & Comparable<N>> OatRangeField<N> rangeField(String id, IModel<N> model) {
+            return new OatRangeField<>(id, model);
         }
 
         public static <N extends Number & Comparable<N>> OatRangeField<N> rangeField(String id, String label, IModel<N> model) {
@@ -583,6 +735,14 @@ public final class Oat {
             return new OatRangeField<>(id, labelModel, model, hintModel);
         }
 
+        public static OatFileUpload fileUpload(String id) {
+            return new OatFileUpload(id);
+        }
+
+        public static OatFileUpload fileUpload(String id, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model) {
+            return new OatFileUpload(id, model);
+        }
+
         public static OatFileUpload fileUpload(String id, String label, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model) {
             return new OatFileUpload(id, label, model);
         }
@@ -595,6 +755,14 @@ public final class Oat {
             return new OatFileUpload(id, labelModel, model, hintModel);
         }
 
+        public static OatFileDropzone fileDropzone(String id) {
+            return new OatFileDropzone(id);
+        }
+
+        public static OatFileDropzone fileDropzone(String id, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model) {
+            return new OatFileDropzone(id, model);
+        }
+
         public static OatFileDropzone fileDropzone(String id, String label, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model) {
             return new OatFileDropzone(id, label, model);
         }
@@ -605,6 +773,14 @@ public final class Oat {
 
         public static OatFileDropzone fileDropzone(String id, IModel<String> labelModel, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model, IModel<String> hintModel) {
             return new OatFileDropzone(id, labelModel, model, hintModel);
+        }
+
+        public static OatTagInput tagInput(String id) {
+            return new OatTagInput(id);
+        }
+
+        public static OatTagInput tagInput(String id, IModel<String> model) {
+            return new OatTagInput(id, model);
         }
 
         public static OatTagInput tagInput(String id, String label, IModel<String> model) {

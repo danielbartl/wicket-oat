@@ -9,7 +9,20 @@ import org.apache.wicket.model.Model;
  * An Oat-styled form field wrapping a native {@code <input type="email">}
  * ({@link EmailTextField}).
  */
-public class OatEmailField extends BaseOatField<String, EmailTextField> {
+public class OatEmailField extends BaseOatField<String, EmailTextField, OatEmailField> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatEmailField(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatEmailField(String id, IModel<String> model) {
+        this(id, null, model, null);
+    }
 
     public OatEmailField(String id, String label, IModel<String> model) {
         this(id, Model.of(label), model, null);

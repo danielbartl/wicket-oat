@@ -9,7 +9,20 @@ import java.time.LocalDate;
  * An Oat-styled form field wrapping a native {@code <input type="date">},
  * bound to a {@link LocalDate} model.
  */
-public class OatDateField extends BaseOatField<LocalDate, Html5TextField<LocalDate>> {
+public class OatDateField extends BaseOatField<LocalDate, Html5TextField<LocalDate>, OatDateField> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatDateField(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatDateField(String id, IModel<LocalDate> model) {
+        this(id, null, model, null);
+    }
 
     public OatDateField(String id, String label, IModel<LocalDate> model) {
         this(id, Model.of(label), model, null);

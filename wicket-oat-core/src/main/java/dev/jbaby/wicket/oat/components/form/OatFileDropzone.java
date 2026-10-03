@@ -17,7 +17,20 @@ import java.util.List;
  * {@code ot-upload} only enhances presentation and leaves native file
  * selection/submission untouched.
  */
-public class OatFileDropzone extends BaseOatField<List<FileUpload>, FileUploadField> {
+public class OatFileDropzone extends BaseOatField<List<FileUpload>, FileUploadField, OatFileDropzone> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatFileDropzone(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatFileDropzone(String id, IModel<List<FileUpload>> model) {
+        this(id, null, model, null);
+    }
 
     public OatFileDropzone(String id, String label, IModel<List<FileUpload>> model) {
         this(id, Model.of(label), model, null);

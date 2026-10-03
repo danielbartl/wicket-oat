@@ -13,10 +13,36 @@ import java.util.List;
  *
  * @param <T> the type of the selectable choices
  */
-public class OatDropdownChoice<T> extends BaseOatField<T, DropDownChoice<T>> {
+public class OatDropdownChoice<T> extends BaseOatField<T, DropDownChoice<T>, OatDropdownChoice<T>> {
 
     private final IModel<? extends List<? extends T>> choices;
     private final IChoiceRenderer<? super T> renderer;
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatDropdownChoice(String id, IModel<? extends List<? extends T>> choices) {
+        this(id, null, null, choices, null, null);
+    }
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatDropdownChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
+        this(id, null, null, choices, renderer, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatDropdownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
+        this(id, null, model, choices, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatDropdownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
+        this(id, null, model, choices, renderer, null);
+    }
 
     public OatDropdownChoice(String id, String label, IModel<T> model, IModel<? extends List<? extends T>> choices) {
         this(id, Model.of(label), model, choices, null, null);
@@ -29,18 +55,11 @@ public class OatDropdownChoice<T> extends BaseOatField<T, DropDownChoice<T>> {
     public OatDropdownChoice(String id, IModel<String> label, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
         this(id, label, model, choices, renderer, null);
     }
-    
+
     public OatDropdownChoice(String id, IModel<String> label, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer, IModel<String> helper) {
         super(id, label, model, helper);
         this.choices = choices;
         this.renderer = renderer;
-
-        // Re-create the component correctly now that choices are available
-        field = createFormComponent("field", model);
-        container.replace(field);
-
-        // Re-apply standard Oat field configuration to the new instance
-        wireField(label);
     }
 
     @Override

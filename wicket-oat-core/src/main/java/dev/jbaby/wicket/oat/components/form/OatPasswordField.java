@@ -9,7 +9,20 @@ import org.apache.wicket.model.Model;
  * An Oat-styled form field wrapping a native {@code <input type="password">}
  * ({@link PasswordTextField}).
  */
-public class OatPasswordField extends BaseOatField<String, PasswordTextField> {
+public class OatPasswordField extends BaseOatField<String, PasswordTextField, OatPasswordField> {
+
+    /**
+     * Label looked up by {@code id} in the {@code .properties} files, model inherited
+     * from a parent {@code CompoundPropertyModel}.
+     */
+    public OatPasswordField(String id) {
+        this(id, null, null, null);
+    }
+
+    /** Label looked up by {@code id} in the {@code .properties} files. */
+    public OatPasswordField(String id, IModel<String> model) {
+        this(id, null, model, null);
+    }
 
     public OatPasswordField(String id, String label, IModel<String> model) {
         this(id, Model.of(label), model, null);

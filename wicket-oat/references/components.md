@@ -28,6 +28,13 @@ Most form components are available via `Oat.Components.[type]Field` and produce 
 Every one takes an optional trailing hint-text model — but only when `label` is passed as an `IModel<String>`, not a plain `String`:
 `Oat.Components.[type]Field(id, IModel<String> labelModel, model, hintModel?)`. There is no `(id, String label, model, hintModel)` overload; wrap the label in `Model.of("Label")` if you need a hint.
 
+The label and the model can also be left out, exactly like plain Wicket form components: `[type]Field(id)` / `new Oat[Type]Field(id)` inherits the model from a parent `CompoundPropertyModel` by id, and `[type]Field(id, model)` / `new Oat[Type]Field(id, model)` keeps an explicit model. A missing label is looked up in the `.properties` files with the id as the key (falling back to the id). `dropdownChoice` mirrors `DropDownChoice`: `(id, choices, renderer?)` and `(id, model, choices, renderer?)`.
+
+Behavior of the field panels:
+- They render their own tag with a markup id, so `target.add(field)` (or `target.add(form)`) re-renders them, e.g. to show inline errors in an Ajax `onError`. Attributes on that tag in your markup (e.g. `class`) are kept.
+- `field.add(...)` sends validators and `AjaxFormComponentUpdatingBehavior`s to the wrapped input; other behaviors apply to the panel's own tag. `getField()` returns the wrapped `FormComponent`.
+- Fluent setters (`setRequired`, `setLabel`, `setPlaceholder`, `addValidator`, `add`, and `setMin`/`setMax` on number/range fields) return the concrete field type, so they chain freely.
+
 - `textField(id, label, model)`
 - `passwordField(id, label, model)`
 - `emailField(id, label, model)`

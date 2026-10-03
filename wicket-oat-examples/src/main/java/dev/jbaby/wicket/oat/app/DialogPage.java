@@ -55,7 +55,7 @@ public class DialogPage extends BasePage {
         table.setOutputMarkupId(true);
         add(table);
 
-        Model<Person> selected = Model.of(people.getFirst());
+        Model<Person> selected = Model.of(people.get(0));
         OatDialog editDialog = new OatDialog("editDialog", Model.of("Edit person")) {
             @Override
             protected void onConfirm(AjaxRequestTarget target) {

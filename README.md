@@ -11,7 +11,7 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 - **Fluent API:** Easily create components and behaviors using the `Oat` factory class.
 - **Modern Design:** Beautifully designed components like Buttons, Cards, Modals, and more.
 - **Themeable:** Built-in support for multiple themes (Light, Dark, Midnight, Nord, etc.) that can be switched dynamically.
-- **Wicket 10+:** Fully compatible with Apache Wicket 10 and Java 25.
+- **Wicket 10+:** Fully compatible with Apache Wicket 10, on Java 17 or newer.
 - **Spring Boot Integration:** Seamless integration with Spring Boot applications.
 - **Comprehensive Component Set:** Includes everything from basic buttons to complex data tables.
 - **Accessible Forms by Default:** Every form field automatically wires `aria-describedby` (linking the field to its feedback/hint message) and toggles `aria-invalid` when validation fails — no extra markup or wiring required.
@@ -27,7 +27,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>dev.jbaby</groupId>
     <artifactId>wicket-oat-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -387,10 +387,13 @@ Once installed, the AI agent will automatically understand instructions like:
 
 ## Requirements
 
-- Java 25 or higher
+- Java 17 or higher
 - Apache Wicket 10.8.0+
 - Maven
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+It bundles [Oat UI](https://github.com/knadh/oat) by Kailash Nadh, also MIT
+licensed - see [LICENSE-oat.txt](wicket-oat-core/src/main/resources/META-INF/LICENSE-oat.txt).

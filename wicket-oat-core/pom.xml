@@ -4,13 +4,26 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>dev.jbaby</groupId>
-		<artifactId>wicket-oat</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<artifactId>wicket-oat-parent</artifactId>
+		<version>0.1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-oat-core</artifactId>
 	<name>wicket-oat-core</name>
-	<description>Core library for Wicket Oat components</description>
+	<description>Themeable Apache Wicket components and behaviors built on Oat UI</description>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Aligns the JUnit modules that wicket-tester brings in with junit-jupiter -->
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>6.0.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -25,6 +38,7 @@
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -40,9 +54,52 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.27.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.20.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/..</directory>
+				<includes>
+					<include>LICENSE</include>
+				</includes>
+				<targetPath>META-INF</targetPath>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Automatic-Module-Name>dev.jbaby.wicket.oat</Automatic-Module-Name>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

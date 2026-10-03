@@ -1,0 +1,80 @@
+/**
+ * Layout rules for Wicket Oat's own components. They live here rather than in
+ * style="" attributes so the markup works under Wicket's strict Content Security
+ * Policy, which blocks inline styles.
+ */
+.oat-app-main {
+    padding-inline: var(--space-6);
+}
+
+.oat-topnav-extra {
+    flex: 1;
+}
+
+.oat-breadcrumb {
+    font-size: var(--text-7);
+}
+
+/*
+ * An OatDialog inside another Wicket form renders its own form as a <div>, because
+ * HTML forbids nested forms. Mirror Oat's "dialog > form > ..." rules for that case,
+ * and undo the padding Oat gives to any "dialog > div".
+ */
+dialog > div.oat-dialog-form {
+    padding: 0;
+    overflow: visible;
+}
+
+dialog > div.oat-dialog-form > header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-6);
+    padding-block-end: 0;
+}
+
+dialog > div.oat-dialog-form > header > :is(h1, h2, h3, h4, h5, h6) {
+    margin-block-end: 0;
+}
+
+dialog > div.oat-dialog-form > :is(p, div, section) {
+    padding: var(--space-6);
+    overflow-y: auto;
+}
+
+dialog > div.oat-dialog-form > footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    padding-block-start: 0;
+}
+
+.oat-theme-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+}
+
+.oat-theme-switcher a {
+    text-decoration: none;
+    padding: var(--space-1);
+    border-radius: var(--radius-small);
+}
+
+.oat-theme-switcher a[aria-current="true"] {
+    outline: 1px solid var(--border);
+}
+
+/* Required Oat form fields (BaseOatField sets data-required on the field container) */
+[data-required] > label::after,
+[data-required] > legend::after {
+    content: " *";
+    color: var(--danger);
+}
+
+/* Oat draws a dropdown arrow on every <select>; a multi-select (OatListMultipleChoice) has none */
+select[multiple] {
+    background-image: none;
+}

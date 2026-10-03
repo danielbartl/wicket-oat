@@ -4,21 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Build a Contact Form — Wicket Oat Tutorial</title>
-<meta name="description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, from an empty page to a working Ajax submit handler.">
+<meta name="description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, the way you'd write plain Wicket - from an empty page to a working Ajax submit with inline errors and toasts.">
 <link rel="canonical" href="https://danielbartl.github.io/wicket-oat/tutorial.html">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielbartl.github.io/wicket-oat/tutorial.html">
 <meta property="og:title" content="Build a Contact Form — Wicket Oat Tutorial">
-<meta property="og:description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, from an empty page to a working Ajax submit handler.">
+<meta property="og:description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, the way you'd write plain Wicket - from an empty page to a working Ajax submit with inline errors and toasts.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Build a Contact Form — Wicket Oat Tutorial">
-<meta name="twitter:description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, from an empty page to a working Ajax submit handler.">
+<meta name="twitter:description" content="A step-by-step tutorial: build a validated contact form with Wicket Oat's form components, the way you'd write plain Wicket - from an empty page to a working Ajax submit with inline errors and toasts.">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.0/oat.min.css"
       integrity="sha384-tz2nNs8TdiXi8W0cwDk+NdErDDMPczzvWVRhpChcoEL8+kHuuchEEEn+HDBmhFi1" crossorigin="anonymous">
 <link rel="stylesheet" href="assets/themes.css">
+<link rel="stylesheet" href="assets/wicket-oat.css">
 <link rel="stylesheet" href="assets/style.css">
 
 <script>
@@ -58,6 +59,7 @@
         <a href="index.html#applayout">AppLayout</a>
         <a href="index.html#components">Components</a>
         <a href="index.html#theming">Theming</a>
+        <a href="index.html#ai-skill">AI Skill</a>
         <a href="index.html#quick-start">Get Started</a>
         <a href="tutorial.html" aria-current="page">Tutorial</a>
     </nav>
@@ -86,8 +88,9 @@
             <p>This picks up right after the <a href="index.html#quick-start">Quick Start</a> steps
                 on the homepage &mdash; we'll assume you've already called
                 <code>WicketOats.install(this)</code> in your application's <code>init()</code>.
-                Every snippet below uses real component signatures, checked against the library
-                source.</p>
+                Oat's form fields work like plain Wicket form components, so the page reads like
+                any other Wicket form. Every snippet below is taken from a page we compiled and ran
+                against the library.</p>
         </div>
 
         <div class="steps">
@@ -96,8 +99,10 @@
                 <span class="step-num">1</span>
                 <div>
                     <h3>The model</h3>
-                    <p>Start with a plain model object and a <code>Form</code> bound to it &mdash;
-                        nothing Oat-specific yet, just standard Wicket.</p>
+                    <p>Start with a plain model object and a <code>Form</code> with a
+                        <code>CompoundPropertyModel</code> &mdash; nothing Oat-specific yet, just
+                        standard Wicket. The form gets a markup id so the Ajax submit in step 5 can
+                        re-render it.</p>
                     <pre><code>// A simple model object
 public static class ContactMessage implements Serializable {
     public String name;
@@ -105,9 +110,9 @@ public static class ContactMessage implements Serializable {
     public String message;
 }</code></pre>
                     <pre><code>// Inside your page's constructor
-ContactMessage data = new ContactMessage();
-CompoundPropertyModel&lt;ContactMessage&gt; model = new CompoundPropertyModel&lt;&gt;(data);
-Form&lt;ContactMessage&gt; form = new Form&lt;&gt;("contactForm", model);
+Form&lt;ContactMessage&gt; form = new Form&lt;&gt;("contactForm",
+        new CompoundPropertyModel&lt;&gt;(new ContactMessage()));
+form.setOutputMarkupId(true);
 add(form);</code></pre>
                 </div>
             </div>
@@ -116,13 +121,18 @@ add(form);</code></pre>
                 <span class="step-num">2</span>
                 <div>
                     <h3>Add the name field</h3>
-                    <p><code>Oat.Components.textField(...)</code> gives you a labeled text input
-                        with a feedback slot, bound to the model by property name.</p>
-                    <pre><code>form.add(Oat.Components.textField("name", "Your Name", model.bind("name"))
-    .setRequired(true));</code></pre>
+                    <p><code>OatTextField</code> renders a label, the input and a feedback slot.
+                        Just like a Wicket <code>TextField</code>, it takes its model from the
+                        <code>CompoundPropertyModel</code> by id (<code>"name"</code> &rarr;
+                        <code>ContactMessage.name</code>), and its label from your page's
+                        <code>.properties</code> file by the same id. Required fields get an asterisk
+                        and <code>aria-required</code>.</p>
+                    <pre><code>form.add(new OatTextField&lt;String&gt;("name").setRequired(true));</code></pre>
+                    <pre><code># ContactPage.properties
+name=Your Name</code></pre>
                     <div class="tutorial-preview">
                         <div class="vstack gap-4">
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Your Name</label>
                                 <input type="text">
                                 <div role="status" data-hint></div>
@@ -136,18 +146,19 @@ add(form);</code></pre>
                 <span class="step-num">3</span>
                 <div>
                     <h3>Add the email field</h3>
-                    <p>Same shape, a different field type &mdash; <code>emailField</code> renders a
-                        native <code>&lt;input type="email"&gt;</code>.</p>
-                    <pre><code>form.add(Oat.Components.emailField("email", "Email Address", model.bind("email"))
-    .setRequired(true));</code></pre>
+                    <p>Same shape, a different field type &mdash; <code>OatEmailField</code> renders a
+                        native <code>&lt;input type="email"&gt;</code> and validates the address.</p>
+                    <pre><code>form.add(new OatEmailField("email").setRequired(true));</code></pre>
+                    <pre><code># ContactPage.properties
+email=Email Address</code></pre>
                     <div class="tutorial-preview">
                         <div class="vstack gap-4">
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Your Name</label>
                                 <input type="text">
                                 <div role="status" data-hint></div>
                             </section>
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Email Address</label>
                                 <input type="email">
                                 <div role="status" data-hint></div>
@@ -161,23 +172,24 @@ add(form);</code></pre>
                 <span class="step-num">4</span>
                 <div>
                     <h3>Add the message field</h3>
-                    <p><code>textArea</code> follows the exact same pattern, just backed by a
+                    <p><code>OatTextArea</code> follows the exact same pattern, just backed by a
                         <code>&lt;textarea&gt;</code> instead of an <code>&lt;input&gt;</code>.</p>
-                    <pre><code>form.add(Oat.Components.textArea("message", "Message", model.bind("message"))
-    .setRequired(true));</code></pre>
+                    <pre><code>form.add(new OatTextArea&lt;String&gt;("message").setRequired(true));</code></pre>
+                    <pre><code># ContactPage.properties
+message=Message</code></pre>
                     <div class="tutorial-preview">
                         <div class="vstack gap-4">
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Your Name</label>
                                 <input type="text">
                                 <div role="status" data-hint></div>
                             </section>
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Email Address</label>
                                 <input type="email">
                                 <div role="status" data-hint></div>
                             </section>
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Message</label>
                                 <textarea></textarea>
                                 <div role="status" data-hint></div>
@@ -191,34 +203,40 @@ add(form);</code></pre>
                 <span class="step-num">5</span>
                 <div>
                     <h3>Add the submit button and feedback</h3>
-                    <p>An <code>AjaxButton</code> styled with <code>Oat.Behaviors.button()</code>
-                        submits the form over Ajax. <code>onSubmit</code> and <code>onError</code>
-                        are where you hook in <code>Oat.toast(...)</code> for feedback.</p>
-                    <pre><code>form.add(new AjaxButton("submit") {
-    &#64;Override
-    protected void onSubmit(AjaxRequestTarget target) {
-        Oat.toast(target, "Thanks, " + form.getModelObject().name + "! We'll be in touch.",
-            OatToastBehavior.Variant.SUCCESS, "Message sent");
-    }
+                    <p><code>Oat.Components.submitButton</code> creates an Oat-styled
+                        <code>AjaxButton</code>: the first handler runs when the form is valid, the
+                        second when it isn't. Report the outcome with Wicket's own
+                        <code>success()</code> and <code>error()</code>, and let
+                        <code>Oat.Behaviors.feedbackToasts()</code> show them as toasts &mdash; on Ajax
+                        requests too, without touching the <code>AjaxRequestTarget</code>. Re-rendering
+                        the form with <code>target.add(form)</code> shows the fields' inline errors.</p>
+                    <pre><code>// Show success()/error() messages as toasts
+add(Oat.Behaviors.feedbackToasts());
 
-    &#64;Override
-    protected void onError(AjaxRequestTarget target) {
-        Oat.toast(target, "Please fix the errors below.", OatToastBehavior.Variant.DANGER, "Error");
-    }
-}.add(Oat.Behaviors.button()));</code></pre>
+form.add(Oat.Components.submitButton("submit", "Send Message",
+        target -&gt; {
+            success("Thanks, " + form.getModelObject().name + "! We'll be in touch.");
+            target.add(form);
+        },
+        target -&gt; {
+            error("Please fix the errors below.");
+            target.add(form); // show the inline errors
+        }));</code></pre>
+                    <pre><code>&lt;!-- The label comes from Java, so the markup is just --&gt;
+&lt;button wicket:id="submit"&gt;&lt;/button&gt;</code></pre>
                     <div class="tutorial-preview">
                         <div class="vstack gap-4">
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Your Name</label>
                                 <input type="text">
                                 <div role="status" data-hint></div>
                             </section>
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Email Address</label>
                                 <input type="email">
                                 <div role="status" data-hint></div>
                             </section>
-                            <section data-field>
+                            <section data-field data-required>
                                 <label>Message</label>
                                 <textarea></textarea>
                                 <div role="status" data-hint></div>
@@ -228,6 +246,10 @@ add(form);</code></pre>
                             </footer>
                         </div>
                     </div>
+                    <div class="hstack gap-2 mt-4">
+                        <button class="outline small" onclick="ot.toast('Thanks, Ada! We\'ll be in touch.', null, {variant:'success'})">Preview the success toast</button>
+                        <button class="outline small" onclick="ot.toast('Please fix the errors below.', null, {variant:'danger'})">Preview the error toast</button>
+                    </div>
                 </div>
             </div>
 
@@ -235,13 +257,34 @@ add(form);</code></pre>
                 <span class="step-num">6</span>
                 <div>
                     <h3>Validation and accessibility, for free</h3>
-                    <p>Every Oat form field extends <code>BaseOatField</code>, which already wires
-                        <code>aria-describedby</code> from the input to its feedback message, and
-                        toggles <code>aria-invalid</code>/<code>data-field="error"</code> when
-                        validation fails &mdash; there's no <code>FeedbackPanel</code> to add and no
-                        extra markup to write. Submit the real form with an empty field and the error
-                        message appears right where the hint text was, already linked to the input
-                        for screen readers.</p>
+                    <p>Submit with an empty name and the field shows Wicket's validation message right
+                        where the hint was, using the label from your properties file. The input gets
+                        <code>aria-invalid</code> and is linked to the message with
+                        <code>aria-describedby</code>, so screen readers announce it. The toast only
+                        says what the inline errors don't: Oat leaves out the field errors already
+                        shown inline, so nothing appears twice.</p>
+                    <div class="tutorial-preview">
+                        <div class="vstack gap-4">
+                            <section data-field="error" data-required>
+                                <label>Your Name</label>
+                                <input type="text" aria-invalid="true">
+                                <div role="status" data-hint>'Your Name' is required.</div>
+                            </section>
+                            <section data-field data-required>
+                                <label>Email Address</label>
+                                <input type="email">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field data-required>
+                                <label>Message</label>
+                                <textarea></textarea>
+                                <div role="status" data-hint></div>
+                            </section>
+                            <footer class="hstack justify-end mt-2">
+                                <button type="submit">Send Message</button>
+                            </footer>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -255,7 +298,7 @@ add(form);</code></pre>
             <p class="eyebrow">Put it all together</p>
             <h2>The finished page</h2>
         </div>
-        <pre><code>public class ContactPage extends WebPage {
+        <pre><code>public class ContactPage extends BasePage {
 
     public static class ContactMessage implements Serializable {
         public String name;
@@ -264,29 +307,34 @@ add(form);</code></pre>
     }
 
     public ContactPage() {
-        ContactMessage data = new ContactMessage();
-        CompoundPropertyModel&lt;ContactMessage&gt; model = new CompoundPropertyModel&lt;&gt;(data);
-        Form&lt;ContactMessage&gt; form = new Form&lt;&gt;("contactForm", model);
+        // Show success()/error() messages as toasts
+        add(Oat.Behaviors.feedbackToasts());
+
+        Form&lt;ContactMessage&gt; form = new Form&lt;&gt;("contactForm",
+                new CompoundPropertyModel&lt;&gt;(new ContactMessage()));
+        form.setOutputMarkupId(true);
         add(form);
 
-        form.add(Oat.Components.textField("name", "Your Name", model.bind("name")).setRequired(true));
-        form.add(Oat.Components.emailField("email", "Email Address", model.bind("email")).setRequired(true));
-        form.add(Oat.Components.textArea("message", "Message", model.bind("message")).setRequired(true));
+        // Models come from the CompoundPropertyModel, labels from ContactPage.properties - both by id
+        form.add(new OatTextField&lt;String&gt;("name").setRequired(true));
+        form.add(new OatEmailField("email").setRequired(true));
+        form.add(new OatTextArea&lt;String&gt;("message").setRequired(true));
 
-        form.add(new AjaxButton("submit") {
-            &#64;Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                Oat.toast(target, "Thanks, " + form.getModelObject().name + "! We'll be in touch.",
-                    OatToastBehavior.Variant.SUCCESS, "Message sent");
-            }
-
-            &#64;Override
-            protected void onError(AjaxRequestTarget target) {
-                Oat.toast(target, "Please fix the errors below.", OatToastBehavior.Variant.DANGER, "Error");
-            }
-        }.add(Oat.Behaviors.button()));
+        form.add(Oat.Components.submitButton("submit", "Send Message",
+                target -&gt; {
+                    success("Thanks, " + form.getModelObject().name + "! We'll be in touch.");
+                    target.add(form);
+                },
+                target -&gt; {
+                    error("Please fix the errors below.");
+                    target.add(form); // show the inline errors
+                }));
     }
 }</code></pre>
+        <pre><code># ContactPage.properties
+name=Your Name
+email=Email Address
+message=Message</code></pre>
         <pre><code>&lt;!-- ContactPage.html --&gt;
 &lt;wicket:extend&gt;
     &lt;form wicket:id="contactForm" class="vstack gap-4"&gt;
@@ -294,32 +342,32 @@ add(form);</code></pre>
         &lt;div wicket:id="email"&gt;&lt;/div&gt;
         &lt;div wicket:id="message"&gt;&lt;/div&gt;
         &lt;footer class="hstack justify-end mt-2"&gt;
-            &lt;button wicket:id="submit" type="submit"&gt;Send Message&lt;/button&gt;
+            &lt;button wicket:id="submit"&gt;&lt;/button&gt;
         &lt;/footer&gt;
     &lt;/form&gt;
 &lt;/wicket:extend&gt;</code></pre>
 
         <div class="tutorial-preview mt-6">
-            <div class="vstack gap-4">
-                <section data-field>
-                    <label>Your Name</label>
-                    <input type="text">
-                    <div role="status" data-hint></div>
-                </section>
-                <section data-field>
-                    <label>Email Address</label>
-                    <input type="email">
-                    <div role="status" data-hint></div>
-                </section>
-                <section data-field>
-                    <label>Message</label>
-                    <textarea></textarea>
-                    <div role="status" data-hint></div>
-                </section>
-                <footer class="hstack justify-end mt-2">
-                    <button type="submit">Send Message</button>
-                </footer>
-            </div>
+                        <div class="vstack gap-4">
+                            <section data-field data-required>
+                                <label>Your Name</label>
+                                <input type="text">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field data-required>
+                                <label>Email Address</label>
+                                <input type="email">
+                                <div role="status" data-hint></div>
+                            </section>
+                            <section data-field data-required>
+                                <label>Message</label>
+                                <textarea></textarea>
+                                <div role="status" data-hint></div>
+                            </section>
+                            <footer class="hstack justify-end mt-2">
+                                <button type="submit">Send Message</button>
+                            </footer>
+                        </div>
         </div>
     </div>
 </section>
@@ -334,15 +382,23 @@ add(form);</code></pre>
             <article class="card">
                 <h3>A more advanced form</h3>
                 <p>The examples app's <code>EventRegistrationPage</code> builds on the same pattern
-                    with a dropdown, a toggle switch, and placeholder text. Clone the repo and run
-                    <code>./mvnw spring-boot:run -pl wicket-oat-examples</code> to see it live.</p>
+                    with a dropdown, a toggle switch and placeholder text. Clone the repo and run
+                    <code>./mvnw spring-boot:run -pl wicket-oat-examples -Dspring-boot.run.arguments=--spring.docker.compose.file=../compose.yaml</code>
+                    (it starts MongoDB with Docker Compose) to see it at
+                    <code>http://localhost:8080</code>.</p>
             </article>
             <article class="card">
-                <h3>Factory vs. constructor</h3>
-                <p>Every field here also works with a plain <code>new OatTextField(...)</code>
-                    constructor. See the README's
-                    <a href="https://github.com/danielbartl/wicket-oat#usage-strategies" target="_blank" rel="noopener">Usage Strategies</a>
-                    section for when to reach for which.</p>
+                <h3>Edit in a dialog</h3>
+                <p>Put the same fields in an <code>OatDialog</code>'s body and open it from any Ajax
+                    handler with <code>dialog.open(target)</code>. Its Confirm button validates them,
+                    and the dialog stays open to show any errors.</p>
+            </article>
+            <article class="card">
+                <h3>More field types</h3>
+                <p>Dates, times, numbers, dropdowns, radio groups, checkbox groups, multi-selects, tag
+                    inputs and file uploads all follow the same pattern. Prefer factories? Each also
+                    has an <code>Oat.Components</code> method, e.g.
+                    <code>Oat.Components.textField("name")</code>.</p>
             </article>
         </div>
     </div>

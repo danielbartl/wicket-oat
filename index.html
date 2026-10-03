@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.0/oat.min.css"
       integrity="sha384-tz2nNs8TdiXi8W0cwDk+NdErDDMPczzvWVRhpChcoEL8+kHuuchEEEn+HDBmhFi1" crossorigin="anonymous">
 <link rel="stylesheet" href="assets/themes.css">
+<link rel="stylesheet" href="assets/wicket-oat.css">
 <link rel="stylesheet" href="assets/style.css">
 
 <script>
@@ -116,8 +117,9 @@
             </article>
             <article class="card">
                 <h3>Themeable</h3>
-                <p>17 built-in themes switchable per session out of the box, plus full CSS
-                    custom-property theming to match your own brand.</p>
+                <p>17 built-in themes, remembered per user in a cookie, plus your own themes
+                    registered in one line &mdash; full CSS custom-property theming to match your
+                    brand.</p>
             </article>
             <article class="card">
                 <h3>Just Wicket</h3>
@@ -128,8 +130,19 @@
             <article class="card">
                 <h3>Accessible forms by default</h3>
                 <p>Every form field automatically wires <code>aria-describedby</code> to its feedback
-                    message and toggles <code>aria-invalid</code> on validation errors &mdash; no
-                    extra markup or wiring required.</p>
+                    message, toggles <code>aria-invalid</code> on validation errors and marks
+                    required fields &mdash; no extra markup or wiring required.</p>
+            </article>
+            <article class="card">
+                <h3>Forms the Wicket way</h3>
+                <p>Fields take their model from a <code>CompoundPropertyModel</code> and their label
+                    from <code>.properties</code>, by id. Validation errors show inline, and
+                    feedback panels and toasts update themselves over Ajax.</p>
+            </article>
+            <article class="card">
+                <h3>Strict CSP out of the box</h3>
+                <p>Works under Wicket's default nonce-based Content Security Policy: no inline
+                    scripts or styles, no <code>'unsafe-inline'</code>, no <code>'unsafe-eval'</code>.</p>
             </article>
         </div>
     </div>
@@ -161,7 +174,7 @@
     &#64;Override
     protected void init() {
         super.init();
-        WicketOats.install(this);
+        WicketOats.install(this); // adds Oat's CSS/JS; returns OatSettings for themes
     }
 }</code></pre>
                 </div>
@@ -171,15 +184,17 @@
                 <div>
                     <h3>Build your first UI</h3>
                     <pre><code>add(Oat.Components.button("save", "Save changes", target -&gt;
-    Oat.toast(target, "Saved!", OatToastBehavior.Variant.SUCCESS)));
+    Oat.toast(target, "Saved!", OatVariant.SUCCESS)));
 
-add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCESS));</code></pre>
+add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code></pre>
+                    <pre><code>&lt;a wicket:id="save"&gt;&lt;/a&gt;
+&lt;div wicket:id="notice"&gt;&lt;/div&gt;</code></pre>
                     <p class="text-light">Prefer plain Wicket constructors? Components like
-                        <code>OatAlert</code>, <code>OatBadge</code>, and <code>OatCard</code> work
-                        the same way with <code>new</code> &mdash; the factory is mainly there for
-                        components like <code>OatButton</code> that need a callback and would
-                        otherwise require subclassing:</p>
-                    <pre><code>add(new OatAlert("notice", "Welcome back!", AlertBehavior.Variant.SUCCESS));</code></pre>
+                        <code>OatAlert</code>, <code>OatBadge</code>, <code>OatCard</code> and the
+                        form fields work the same way with <code>new</code> &mdash; the factory is
+                        mainly there for components like <code>OatButton</code> that need a callback
+                        and would otherwise require subclassing:</p>
+                    <pre><code>add(new OatAlert("notice", "Welcome back!", OatVariant.SUCCESS));</code></pre>
                     <p class="text-light">Want the full walkthrough? See the
                         <a href="tutorial.html">Build a Contact Form tutorial</a>.</p>
                 </div>
@@ -229,8 +244,11 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
     }
 }</code></pre>
                 <p>Pages then simply extend <code>BasePage</code> and add their own content
-                    &mdash; the sidebar, top bar, active-link highlighting, and responsive
-                    behavior are already handled.</p>
+                    &mdash; the sidebar, top bar, active-link highlighting, responsive behavior and
+                    the user's theme are already handled. Bookmarkable pages pass their
+                    <code>PageParameters</code> to <code>super(...)</code>; menu items can carry
+                    parameters and translatable labels, and items for pages the user isn't
+                    authorized to open are left out.</p>
             </div>
 
             <div class="applayout-demo-wrap">
@@ -297,7 +315,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                         <button data-variant="secondary">Secondary</button>
                         <button class="outline">Outline</button>
                     </div>
-                    <div class="showcase-footer"><strong>OatButton</strong><code>Oat.Components.button(id, label, onClick)</code></div>
+                    <div class="showcase-footer"><strong>OatButton / OatSubmitButton</strong><code>Oat.Components.button(id, label, onClick)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -305,7 +323,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                         <span class="badge" data-variant="success">Success</span>
                         <span class="badge outline" data-variant="danger">Danger</span>
                     </div>
-                    <div class="showcase-footer"><strong>OatBadge</strong><code>Oat.Components.badge(id, label, Variant)</code></div>
+                    <div class="showcase-footer"><strong>OatBadge</strong><code>Oat.Components.badge(id, label, OatVariant)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -321,7 +339,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                     <div class="showcase-preview" style="display:block">
                         <div role="alert" data-variant="success"><strong>Saved.</strong> Your changes were applied.</div>
                     </div>
-                    <div class="showcase-footer"><strong>OatAlert</strong><code>Oat.Components.alert(id, message, Variant)</code></div>
+                    <div class="showcase-footer"><strong>OatAlert</strong><code>Oat.Components.alert(id, message, OatVariant)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -372,15 +390,18 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                 <div class="showcase-card">
                     <div class="showcase-preview">
                         <nav aria-label="Pagination">
-                            <menu class="buttons">
-                                <li><a href="#components" class="button outline small">&larr;</a></li>
-                                <li><a href="#components" class="button small" aria-current="page">1</a></li>
+                            <menu class="buttons" role="group">
+                                <li><a class="button outline small" aria-disabled="true">&laquo;</a></li>
+                                <li><a class="button outline small" aria-disabled="true">&lsaquo;</a></li>
+                                <li><a class="button small" aria-current="page">1</a></li>
                                 <li><a href="#components" class="button outline small">2</a></li>
-                                <li><a href="#components" class="button outline small">&rarr;</a></li>
+                                <li><a href="#components" class="button outline small">3</a></li>
+                                <li><a href="#components" class="button outline small">&rsaquo;</a></li>
+                                <li><a href="#components" class="button outline small">&raquo;</a></li>
                             </menu>
                         </nav>
                     </div>
-                    <div class="showcase-footer"><strong>OatPagination</strong><code>Oat.Components.pagination(id, model, populateItem)</code></div>
+                    <div class="showcase-footer"><strong>OatPagingNavigator</strong><code>new OatAjaxPagingNavigator(id, dataView)</code></div>
                 </div>
             </div>
         </div>
@@ -402,7 +423,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                             </form>
                         </dialog>
                     </div>
-                    <div class="showcase-footer"><strong>OatDialog</strong><code>Oat.Components.dialog(id, triggerLabel, header)</code></div>
+                    <div class="showcase-footer"><strong>OatDialog</strong><code>Oat.Components.dialog(id, header) &middot; dialog.open(target)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -419,7 +440,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                             </menu>
                         </ot-dropdown>
                     </div>
-                    <div class="showcase-footer"><strong>OatDropdown</strong><code>Oat.Components.dropdown(id, triggerLabel, model, populateItem)</code></div>
+                    <div class="showcase-footer"><strong>OatDropdown</strong><code>Oat.Components.dropdown(id, trigger, items, label, onClick)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -432,7 +453,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                             <div role="tabpanel"><p style="margin:0">Change your password here.</p></div>
                         </ot-tabs>
                     </div>
-                    <div class="showcase-footer"><strong>OatTabs</strong><code>Oat.Components.tabs(id, model, populateTab, populatePanel)</code></div>
+                    <div class="showcase-footer"><strong>OatTabbedPanel / OatTabs</strong><code>Oat.tab("Account", AccountPanel::new)</code></div>
                 </div>
             </div>
         </div>
@@ -452,7 +473,7 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                             </table>
                         </div>
                     </div>
-                    <div class="showcase-footer"><strong>OatDataTable</strong><code>Oat.Components.dataTable(id, columns, provider, rows)</code></div>
+                    <div class="showcase-footer"><strong>OatDataTable</strong><code>Oat.Components.dataTable(id, columns, provider, rowsPerPage)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -477,13 +498,13 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
             <div class="showcase-grid">
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
-                        <label data-field>
-                            Email
-                            <input type="email" placeholder="you@example.com">
-                            <span data-hint>We'll never share it.</span>
-                        </label>
+                        <section data-field data-required>
+                            <label for="demo-email">Email</label>
+                            <input id="demo-email" type="email" placeholder="you@example.com" aria-required="true">
+                            <div role="status" data-hint>We'll never share it.</div>
+                        </section>
                     </div>
-                    <div class="showcase-footer"><strong>OatTextField</strong><code>Oat.Components.textField(id, label, model)</code></div>
+                    <div class="showcase-footer"><strong>OatTextField / OatEmailField / &hellip;</strong><code>new OatEmailField("email").setRequired(true)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -497,7 +518,20 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                             <input placeholder="Add tags&hellip;" maxlength="20">
                         </ot-taginput>
                     </div>
-                    <div class="showcase-footer"><strong>OatTagInput</strong><code>Oat.Components.tagInput(id, label, model)</code></div>
+                    <div class="showcase-footer"><strong>OatTagInput</strong><code>Oat.Components.tagInput(id, label, listModel)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <fieldset data-field style="margin:0">
+                            <legend>Size</legend>
+                            <div class="hstack" role="radiogroup">
+                                <label><input type="radio" name="demo-size"> Small</label>
+                                <label><input type="radio" name="demo-size" checked> Medium</label>
+                                <label><input type="radio" name="demo-size"> Large</label>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="showcase-footer"><strong>OatRadioChoice / OatCheckBoxMultipleChoice</strong><code>Oat.Components.radioChoice(id, label, model, choices)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -524,7 +558,16 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
                         <button onclick="ot.toast('Changes saved successfully', 'All good', {variant:'success'})">Success toast</button>
                         <button class="outline" onclick="ot.toast('Something went wrong', 'Error', {variant:'danger'})" data-variant="danger">Danger toast</button>
                     </div>
-                    <div class="showcase-footer"><strong>OatToastBehavior</strong><code>Oat.toast(target, message, Variant)</code></div>
+                    <div class="showcase-footer"><strong>Toasts</strong><code>success("Saved.") + Oat.Behaviors.feedbackToasts()</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview" style="display:block">
+                        <div class="vstack gap-2">
+                            <div role="alert" data-variant="success">Your changes were saved.</div>
+                            <div role="alert" data-variant="danger">The server could not be reached.</div>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><strong>OatFeedbackPanel</strong><code>add(new OatFeedbackPanel("feedback"))</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -542,10 +585,11 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Theming</p>
-            <h2>17 built-in themes, switchable per session</h2>
+            <h2>17 built-in themes, plus your own</h2>
             <p>Click a theme below to preview it live on this entire page &mdash; the same
-                mechanism <code>OatThemeSwitcher</code> uses via <code>OatSession</code> in your
-                app.</p>
+                <code>data-theme</code> mechanism <code>OatThemeSwitcher</code> uses in your app,
+                where the user's choice is remembered in a cookie (and works with any session
+                class).</p>
         </div>
         <div class="theme-switcher">
             <button class="theme-swatch outline" data-set-theme=""><span class="dot"></span>System</button>
@@ -567,9 +611,16 @@ add(Oat.Components.alert("notice", "Welcome back!", AlertBehavior.Variant.SUCCES
             <button class="theme-swatch outline" data-set-theme="xmas"><span class="dot"></span>Xmas</button>
             <button class="theme-swatch outline" data-set-theme="wireframe"><span class="dot"></span>Wireframe</button>
         </div>
-        <pre style="margin-top:var(--space-6)"><code>OatSession.get().setTheme(OatTheme.NORD);
-// or, scoped to one component/page:
-add(Oat.Behaviors.theme().setTheme(OatTheme.NORD));</code></pre>
+        <pre style="margin-top:var(--space-6)"><code>// Switch the current user's theme (kept in a cookie)
+OatTheme.setCurrent(OatTheme.NORD);
+
+// In init(): the default theme, and your own themes defined in CSS
+WicketOats.install(this)
+        .setDefaultTheme(OatTheme.LIGHT)   // or null to follow the browser
+        .addTheme(new OatTheme("brand", "Brand", "🏷️"));
+
+// Pin one component to a theme, whatever the user chose
+card.add(Oat.Behaviors.theme(OatTheme.LIGHT));</code></pre>
     </div>
 </section>
 

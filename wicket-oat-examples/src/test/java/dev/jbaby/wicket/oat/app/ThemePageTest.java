@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
 class ThemePageTest {
@@ -23,12 +25,32 @@ class ThemePageTest {
         tester = new WicketTester(wicketApp);
     }
 
+    private String htmlTheme() {
+        return org.apache.wicket.util.tester.TagTester
+                .createTagByName(tester.getLastResponseAsString(), "html").getAttribute("data-theme");
+    }
+
     @Test
     void testThemePageRenders() {
         tester.startPage(ThemePage.class);
         tester.assertRenderedPage(ThemePage.class);
-        
-        // Assert the presence of the theme demo container
-        tester.assertComponent("themeDemo", org.apache.wicket.markup.html.WebMarkupContainer.class);
+
+        assertEquals("dark", htmlTheme());
+        tester.assertLabel("currentTheme", "Dark (dark)");
+        assertEquals("light", tester.getTagByWicketId("pinnedCard").getAttribute("data-theme"));
+    }
+
+    @Test
+    void customThemeCanBeChosenAndReset() {
+        tester.startPage(ThemePage.class);
+
+        tester.clickLink("useOcean");
+        assertEquals("ocean", htmlTheme());
+        tester.assertLabel("currentTheme", "Ocean (ocean)");
+        // The pinned card keeps its theme
+        assertEquals("light", tester.getTagByWicketId("pinnedCard").getAttribute("data-theme"));
+
+        tester.clickLink("useDefault");
+        assertEquals("dark", htmlTheme());
     }
 }

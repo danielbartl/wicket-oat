@@ -1,9 +1,6 @@
 package dev.jbaby.wicket.oat;
 
-import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,11 +24,6 @@ class WicketOatsTest {
                 // Render in one pass so the CSP header is on the page response, not a redirect
                 getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
             }
-
-            @Override
-            public Session newSession(Request request, Response response) {
-                return new OatSession(request);
-            }
         });
     }
 
@@ -53,7 +45,7 @@ class WicketOatsTest {
         tester.startPage(LayoutTestPage.class);
         String html = tester.getLastResponseAsString();
 
-        assertThat(html).contains("oat-app-main").contains("oat-breadcrumb").contains("Midnight Theme");
+        assertThat(html).contains("oat-app-main").contains("oat-breadcrumb").contains("title=\"Midnight\"");
         // Inline style attributes are blocked by the strict CSP's nonce-only style-src
         assertThat(html).doesNotContain("style=");
     }

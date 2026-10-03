@@ -2,12 +2,9 @@ package dev.jbaby.wicket.oat;
 
 import dev.jbaby.wicket.oat.app.*;
 import org.apache.wicket.Page;
-import org.apache.wicket.Session;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,11 +24,6 @@ public class WicketOatApplication {
             @Override
             public Class<? extends Page> getHomePage() {
                 return HomePage.class;
-            }
-
-            @Override
-            public Session newSession(Request request, Response response) {
-                return new OatSession(request);
             }
 
             @Override
@@ -62,7 +54,9 @@ public class WicketOatApplication {
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));
 
-                WicketOats.install(this);
+                // Built-in themes plus a custom one, whose CSS is in examples.css
+                WicketOats.install(this)
+                        .addTheme(new OatTheme("ocean", "Ocean", "🌊"));
 
                 // The avatar demo loads photos from Unsplash; image hosts for an app's own
                 // content are the app's to allow, on top of Wicket's strict default CSP.

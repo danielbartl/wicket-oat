@@ -24,3 +24,23 @@
     width: 160px;
     height: 16px;
 }
+
+/* A custom theme, registered in WicketOatApplication with
+   WicketOats.install(this).addTheme(new OatTheme("ocean", "Ocean", "🌊")) */
+[data-theme="ocean"] {
+    color-scheme: dark;
+    --background: #0b1d2e;
+    --foreground: #d6e9f8;
+    --card: #10283f;
+    --card-foreground: #d6e9f8;
+    --primary: #2fb3c9;
+    --primary-foreground: #0b1d2e;
+    --secondary: #173552;
+    --secondary-foreground: #d6e9f8;
+    --muted: #1c3d5c;
+    --muted-foreground: #8fb3cf;
+    --faint: #10283f;
+    --border: #1c3d5c;
+    --input: #1c3d5c;
+    --ring: #2fb3c9;
+}

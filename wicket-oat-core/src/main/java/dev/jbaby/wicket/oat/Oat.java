@@ -122,8 +122,14 @@ public final class Oat {
             return new ClientSideClickBehavior(javascript);
         }
 
+        /** Applies the current user's theme ({@code data-theme}); put it on the {@code <html>} tag. */
         public static OatThemeBehavior theme() {
             return new OatThemeBehavior();
+        }
+
+        /** Pins a component to the given theme, whatever the user chose. */
+        public static OatThemeBehavior theme(OatTheme theme) {
+            return new OatThemeBehavior(theme);
         }
 
         public static FeedbackToastsBehavior feedbackToasts() {

@@ -49,3 +49,20 @@ dialog > div.oat-dialog-form > footer {
     padding: var(--space-6);
     padding-block-start: 0;
 }
+
+.oat-theme-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+}
+
+.oat-theme-switcher a {
+    text-decoration: none;
+    padding: var(--space-1);
+    border-radius: var(--radius-small);
+}
+
+.oat-theme-switcher a[aria-current="true"] {
+    outline: 1px solid var(--border);
+}

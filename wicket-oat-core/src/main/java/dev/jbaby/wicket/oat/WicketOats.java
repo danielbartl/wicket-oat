@@ -23,8 +23,9 @@ public class WicketOats {
      * Policy source Oat needs on top of Wicket's strict default.
      * 
      * @param app the application to configure
+     * @return the application's {@link OatSettings}, to configure themes
      */
-    public static void install(WebApplication app) {
+    public static OatSettings install(WebApplication app) {
         // Register global header contributors
         app.getHeaderContributorListeners().add(response -> {
             response.render(CssHeaderItem.forReference(OAT_CSS));
@@ -40,5 +41,7 @@ public class WicketOats {
         // tick, radio dot, select arrow). Anything else, such as image hosts for your own
         // content, is up to the application to add.
         app.getCspSettings().blocking().add(CSPDirective.IMG_SRC, "data:");
+
+        return OatSettings.get(app);
     }
 }

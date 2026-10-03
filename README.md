@@ -301,15 +301,32 @@ access to the wrapped `FormComponent` for anything else.
 
 ## Theming
 
-Wicket Oat comes with several built-in themes. You can apply a theme to your session or specific components:
+Wicket Oat ships 17 themes, and `OatAppLayout` applies the current user's theme
+as the `data-theme` attribute on `<html>`. The choice is kept in a cookie
+(cached in the session), so it survives the session and works with any session
+class:
 
 ```java
-// Set a global theme in your session (if using OatSession)
-OatSession.get().setTheme(OatTheme.DARK);
+// In WebApplication.init(): defaults, and custom themes defined in your CSS
+WicketOats.install(this)
+        .setDefaultTheme(OatTheme.LIGHT)                 // or null to follow the browser
+        .addTheme(new OatTheme("brand", "Brand", "🏷️"));
 
-// Or add the theme behavior to a component/page via Behaviors factory
-add(Oat.Behaviors.theme().setTheme(OatTheme.NORD));
+// Anywhere during a request
+OatTheme.setCurrent(OatTheme.NORD);
+OatTheme theme = OatTheme.current();
+
+// A picker for all registered themes, and a component pinned to one theme
+add(new OatThemeSwitcher("themes"));
+card.add(Oat.Behaviors.theme(OatTheme.LIGHT));
 ```
+
+A custom theme is a `[data-theme="brand"] { --background: ...; --primary: ...; }`
+block overriding Oat's CSS variables. To keep the choice somewhere else - only in
+the session, or in a user profile - pass an `OatThemeStore` to
+`setThemeStore(...)` (`SessionThemeStore` is built in). Without `OatAppLayout`,
+add `Oat.Behaviors.theme()` to a `TransparentWebMarkupContainer` on your
+`<html wicket:id="html">` tag.
 
 ### Built-in Themes:
 `DARK`, `LIGHT`, `MIDNIGHT`, `NORD`, `EVERFOREST`, `TOKYO_NIGHT`, `ROSE_PINE_DAWN`, `ROYAL`, `CLAY`, `CATPPUCCIN_MOCHA`, `CATPPUCCIN_LATTE`, `MATERIAL`, `DAISY`, `ULTRAVIOLET`, `HALLOWEEN`, `XMAS`, `WIREFRAME`.

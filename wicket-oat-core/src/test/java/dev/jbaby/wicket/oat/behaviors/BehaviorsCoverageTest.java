@@ -1,16 +1,11 @@
 package dev.jbaby.wicket.oat.behaviors;
 
 import dev.jbaby.wicket.oat.OatVariant;
-import dev.jbaby.wicket.oat.OatSession;
 import dev.jbaby.wicket.oat.OatTheme;
-import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,12 +22,7 @@ class BehaviorsCoverageTest {
 
     @BeforeEach
     void setUp() {
-        tester = new WicketTester(new MockApplication() {
-            @Override
-            public Session newSession(Request request, Response response) {
-                return new OatSession(request);
-            }
-        });
+        tester = new WicketTester();
     }
 
     @Test
@@ -76,7 +66,7 @@ class BehaviorsCoverageTest {
     void testOatThemeBehavior() {
         WebMarkupContainer container = new WebMarkupContainer("id");
         container.add(new OatThemeBehavior());
-        OatSession.get().setTheme(OatTheme.NORD);
+        OatTheme.setCurrent(OatTheme.NORD);
         tester.startComponentInPage(container, Markup.of("<div wicket:id=\"id\"></div>"));
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("data-theme")).isEqualTo("nord");

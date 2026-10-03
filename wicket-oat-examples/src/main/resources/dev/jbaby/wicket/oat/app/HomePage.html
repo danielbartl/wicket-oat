@@ -48,18 +48,21 @@ protected void init() {
             <p>Wicket Oat features a dynamic theming system based on the <code>data-theme</code> attribute. It supports both built-in and custom themes.</p>
             
             <h4>Programmatic Switching</h4>
-            <p>Themes are managed via <code>OatSession</code>. You can switch themes from any Wicket component:</p>
+            <p>The current user's theme is kept in a cookie (cached in the session), so any session class works. Switch it from any Wicket component:</p>
             <pre><code>// Java
-OatSession.get().setTheme(OatTheme.MIDNIGHT);</code></pre>
+OatTheme.setCurrent(OatTheme.MIDNIGHT);</code></pre>
 
             <h4>Custom Theme Definition</h4>
-            <p>Themes are defined in CSS using variable overrides. Note that <code>OatSession.setTheme(OatTheme)</code> only accepts the built-in enum values above, so a custom theme name like this has to be applied by setting the <code>data-theme</code> attribute yourself (e.g. in markup or via an <code>AttributeModifier</code>) rather than through <code>OatSession</code>:</p>
+            <p>Themes are defined in CSS using variable overrides, then registered so users can choose them:</p>
             <pre><code>/* themes.css */
 [data-theme="my-custom-theme"] {
     color-scheme: dark;
     --background: #123456;
     --primary: #ffcc00;
-}</code></pre>
+}
+
+// Java - in WebApplication.init()
+WicketOats.install(this).addTheme(new OatTheme("my-custom-theme", "My Theme"));</code></pre>
         </div>
 
         <div class="mt-6">

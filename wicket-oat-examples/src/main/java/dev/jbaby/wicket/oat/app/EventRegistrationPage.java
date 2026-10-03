@@ -1,7 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
-import dev.jbaby.wicket.oat.behaviors.OatToastBehavior;
 import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatEmailField;
 import dev.jbaby.wicket.oat.components.form.OatSwitch;
@@ -29,6 +28,9 @@ public class EventRegistrationPage extends BasePage {
     }
 
     public EventRegistrationPage() {
+        // Show info()/success()/error() messages as toasts, on full renders and Ajax requests
+        add(Oat.Behaviors.feedbackToasts());
+
         RegistrationData data = new RegistrationData();
         // Fields take their model from the CompoundPropertyModel by id, and their label
         // from EventRegistrationPage.properties by id - just like plain Wicket components.
@@ -60,13 +62,13 @@ public class EventRegistrationPage extends BasePage {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 RegistrationData submittedData = form.getModelObject();
-                Oat.toast(target, "Registration successful for " + submittedData.fullName + "!", OatToastBehavior.Variant.SUCCESS, "Success");
+                success("Registration successful for " + submittedData.fullName + "!");
                 target.add(form); // clear any inline errors from a previous attempt
             }
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                Oat.toast(target, "Please fix the errors in the form.", OatToastBehavior.Variant.DANGER, "Error");
+                error("Please fix the errors in the form."); // field errors themselves show inline
                 target.add(form); // show the inline validation errors
             }
         }.add(Oat.Behaviors.button()));

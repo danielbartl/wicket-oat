@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.behaviors;
 import com.github.openjson.JSONObject;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.feedback.FeedbackMessage;
 
 /**
  * Not a component-attaching behavior in the usual sense - a holder for the
@@ -22,6 +23,14 @@ public class OatToastBehavior extends Behavior {
         private final String value;
         Variant(String value) { this.value = value; }
         public String getValue() { return value; }
+
+        /** The toast variant for a feedback message's level: errors are danger, info and debug the default. */
+        public static Variant forFeedback(FeedbackMessage message) {
+            if (message.isError()) return DANGER;
+            if (message.isWarning()) return WARNING;
+            if (message.isSuccess()) return SUCCESS;
+            return DEFAULT;
+        }
     }
 
     public static void toast(IPartialPageRequestHandler handler, String message) {
@@ -33,6 +42,14 @@ public class OatToastBehavior extends Behavior {
     }
 
     public static void toast(IPartialPageRequestHandler handler, String message, Variant variant, String title) {
+        handler.appendJavaScript(script(message, variant, title));
+    }
+
+    /**
+     * The JavaScript that shows a toast, for use outside an Ajax request (e.g. in an
+     * {@code OnDomReadyHeaderItem}).
+     */
+    public static String script(String message, Variant variant, String title) {
         Variant v = variant != null ? variant : Variant.DEFAULT;
         // JSON string literals are valid JS string literals, and quote() escapes quotes,
         // backslashes, control characters and "</", so user-supplied text can't break out.
@@ -40,7 +57,6 @@ public class OatToastBehavior extends Behavior {
         // Oat's ot.toast() only recognizes variant: 'success'|'warning'|'danger'; omit the
         // option entirely for the default/unstyled case instead of sending an unknown value.
         String optionsArg = v.getValue() != null ? "{variant: " + JSONObject.quote(v.getValue()) + "}" : "{}";
-        String script = "ot.toast(" + JSONObject.quote(message) + ", " + titleArg + ", " + optionsArg + ")";
-        handler.appendJavaScript(script);
+        return "ot.toast(" + JSONObject.quote(message) + ", " + titleArg + ", " + optionsArg + ")";
     }
 }

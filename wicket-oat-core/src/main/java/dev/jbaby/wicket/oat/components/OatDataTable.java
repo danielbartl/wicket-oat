@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.components;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -25,7 +26,12 @@ public class OatDataTable<T, S> extends Panel {
         
         // Add standard Oat toolbars
         table.addTopToolbar(new HeadersToolbar<>(table, dataProvider));
-        table.addBottomToolbar(new NavigationToolbar(table));
+        table.addBottomToolbar(new NavigationToolbar(table) {
+            @Override
+            protected PagingNavigator newPagingNavigator(String navigatorId, DataTable<?, ?> table) {
+                return new OatPagingNavigator(navigatorId, table);
+            }
+        });
         
         add(table);
     }

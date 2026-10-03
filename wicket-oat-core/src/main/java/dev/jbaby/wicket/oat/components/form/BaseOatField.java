@@ -4,6 +4,7 @@ import dev.jbaby.wicket.oat.behaviors.HintBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -104,8 +105,10 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     }
 
     private String getFeedbackContent() {
-        if (getField().hasErrorMessage()) {
-            return getField().getFeedbackMessages().first().getMessage().toString();
+        FeedbackMessage error = getField().getFeedbackMessages().first(FeedbackMessage.ERROR);
+        if (error != null) {
+            error.markRendered();
+            return String.valueOf(error.getMessage());
         }
         return (helperText != null) ? helperText.getObject() : "";
     }

@@ -4,7 +4,26 @@
 <wicket:extend>
     <section>
         <h1>Oat Pagination Demo</h1>
-        <p>Pagination reuses the button-group markup: a <code>&lt;menu class="buttons"&gt;</code> wrapping each page link in an <code>&lt;li&gt;</code>. Since only the data model knows which page is current, styling the active page (dropping <code>.outline</code>, adding <code>aria-current="page"</code>) is the consumer's responsibility.</p>
+
+        <h3>Paging navigator</h3>
+        <p><code>OatPagingNavigator</code> and <code>OatAjaxPagingNavigator</code> are Wicket's <code>PagingNavigator</code>/<code>AjaxPagingNavigator</code> rendered as Oat pagination. Give them any <code>IPageable</code> &mdash; a <code>DataView</code>, <code>PageableListView</code> or <code>DataTable</code> &mdash; and they handle the current page (solid, <code>aria-current="page"</code>) and the inactive first/previous/next/last buttons.</p>
+
+        <ul wicket:id="results" class="unstyled">
+            <li wicket:id="items"><span wicket:id="item"></span></li>
+        </ul>
+        <div wicket:id="navigator" class="mt-2"></div>
+
+        <pre class="mt-4"><code>// Java
+WebMarkupContainer results = new WebMarkupContainer("results");
+results.setOutputMarkupId(true); // the Ajax navigator re-renders this
+add(results);
+results.add(items); // a PageableListView, DataView, ...
+add(new OatAjaxPagingNavigator("navigator", items)); // or OatPagingNavigator</code></pre>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="navigator"&gt;&lt;/div&gt;</code></pre>
+
+        <h3 class="mt-6">Custom pagination</h3>
+        <p>Without an <code>IPageable</code>, <code>OatPagination</code> reuses the button-group markup: a <code>&lt;menu class="buttons"&gt;</code> wrapping each page link in an <code>&lt;li&gt;</code>. Since only the data model knows which page is current, styling the active page (dropping <code>.outline</code>, adding <code>aria-current="page"</code>) is the consumer's responsibility.</p>
 
         <nav wicket:id="pagination">
             <menu wicket:id="menu">
@@ -14,8 +33,8 @@
             </menu>
         </nav>
 
-        <div class="mt-6">
-            <h3>How to use</h3>
+        <div class="mt-4">
+            <h4>How to use</h4>
             <pre><code>// Java
 add(Oat.Components.pagination("pagination", Model.ofList(pages), (item, page) -&gt; {
     Link&lt;Void&gt; link = new Link&lt;&gt;("link") { public void onClick() {} };

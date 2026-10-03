@@ -74,6 +74,26 @@
             <div wicket:id="oatTags" class="mt-4"></div>
         </form>
 
+        <h3 class="mt-6">Feedback Messages</h3>
+        <p><code>OatFeedbackPanel</code> shows Wicket's <code>info()</code>, <code>success()</code>, <code>warn()</code> and <code>error()</code> messages as Oat alerts. It adds itself to Ajax responses: these links only report a message and never touch the <code>AjaxRequestTarget</code>.</p>
+        <div wicket:id="feedback"></div>
+        <div class="hstack gap-2 mt-2">
+            <a wicket:id="infoMessage">Info</a>
+            <a wicket:id="successMessage">Success</a>
+            <a wicket:id="warningMessage">Warning</a>
+            <a wicket:id="errorMessage">Error</a>
+        </div>
+        <pre class="mt-4"><code>// Java
+add(new OatFeedbackPanel("feedback"));
+
+add(new AjaxLink&lt;Void&gt;("save") {
+    @Override
+    public void onClick(AjaxRequestTarget target) {
+        success("Saved."); // no target.add(feedback) needed
+    }
+});</code></pre>
+        <p>To show messages as toasts instead, add <code>Oat.Behaviors.feedbackToasts()</code> to the page (see the Event Registration demo). Both leave out errors that Oat form fields already show inline.</p>
+
         <h3 class="mt-6">Spinners</h3>
         <div class="hstack gap-4">
             <div wicket:id="smallSpinner"></div>

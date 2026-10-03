@@ -2,6 +2,7 @@ package dev.jbaby.wicket.oat.behaviors;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -29,6 +30,14 @@ public class AlertBehavior extends Behavior {
 
         public String getValue() {
             return value;
+        }
+
+        /** The alert variant for a feedback message's level: info and debug use the default style. */
+        public static Variant forFeedback(FeedbackMessage message) {
+            if (message.isError()) return ERROR;
+            if (message.isWarning()) return WARNING;
+            if (message.isSuccess()) return SUCCESS;
+            return DEFAULT;
         }
     }
 

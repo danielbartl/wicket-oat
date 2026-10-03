@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<!-- OatPagingNavigator.html and OatAjaxPagingNavigator.html are identical; keep them in sync. -->
+<wicket:panel>
+    <nav wicket:message="aria-label:OatPagingNavigator.label">
+        <menu class="buttons" role="group">
+            <li><a wicket:id="first">&laquo;</a></li>
+            <li><a wicket:id="prev" rel="prev">&lsaquo;</a></li>
+            <li wicket:id="navigation"><a wicket:id="pageLink"><span wicket:id="pageNumber"></span></a></li>
+            <li><a wicket:id="next" rel="next">&rsaquo;</a></li>
+            <li><a wicket:id="last">&raquo;</a></li>
+        </menu>
+    </nav>
+</wicket:panel>
+</body>
+</html>

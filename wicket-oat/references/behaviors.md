@@ -17,6 +17,7 @@ Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via
 - `skeleton(shape?)`: Adds a skeleton loading effect.
 - `theme()`: Allows programmatic theme application to a component.
 - `clientSideClick(javascript)`: Efficiently runs JS on click while maintaining CSP.
+- `feedbackToasts(filter?)`: Add to a page (or base page) to show `info()`/`success()`/`warn()`/`error()` feedback messages - including session messages - as Oat toasts, on full renders and during Ajax requests without touching the `AjaxRequestTarget`. By default leaves out errors Oat form fields already show inline.
 
 ## Composition Example
 ```java

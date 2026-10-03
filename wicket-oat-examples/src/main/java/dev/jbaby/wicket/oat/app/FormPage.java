@@ -1,8 +1,14 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
+import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.behaviors.SpinnerBehavior;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
+import dev.jbaby.wicket.oat.components.OatFeedbackPanel;
+import dev.jbaby.wicket.oat.util.SerializableConsumer;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.Model;
@@ -119,6 +125,13 @@ public class FormPage extends BasePage {
 
         form.add(Oat.Components.tagInput("oatTags", "Oat Tags", Model.of("apple, mango")));
 
+        // Feedback messages, shown by an OatFeedbackPanel that updates itself via Ajax
+        add(new OatFeedbackPanel("feedback"));
+        add(messageLink("infoMessage", link -> link.info("Your profile is visible to your team.")));
+        add(messageLink("successMessage", link -> link.success("Your changes were saved.")));
+        add(messageLink("warningMessage", link -> link.warn("Your session expires in 5 minutes.")));
+        add(messageLink("errorMessage", link -> link.error("The server could not be reached.")));
+
         // Spinner
         WebMarkupContainer smallSpinner = new WebMarkupContainer("smallSpinner");
         smallSpinner.add(Oat.Behaviors.spinner(SpinnerBehavior.Size.SMALL));
@@ -144,5 +157,16 @@ public class FormPage extends BasePage {
         // Progress & Meter
         add(Oat.Components.progress("progress", 60));
         add(Oat.Components.meter("meter", 0.8));
+    }
+
+    private static AjaxLink<Void> messageLink(String id, SerializableConsumer<Component> report) {
+        AjaxLink<Void> link = new AjaxLink<>(id) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                report.accept(this);
+            }
+        };
+        link.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL));
+        return link;
     }
 }

@@ -51,7 +51,11 @@ form.add(new OatTextField<String>("name").setRequired(true)); // MyPage.properti
 ```
 
 ### Toasts & Notifications
-Trigger toasts from Java via the `Oat` facade:
+Prefer Wicket's own feedback messages and let Oat display them - as toasts with `add(Oat.Behaviors.feedbackToasts())` on the (base) page, or as alerts with `add(new OatFeedbackPanel("feedback"))`. Both update during Ajax requests on their own:
+```java
+success("Saved."); // in any event handler; no target.add(...) needed
+```
+For a one-off toast with a title, call the `Oat` facade directly:
 ```java
 Oat.toast(target, "Message", OatToastBehavior.Variant.SUCCESS, "Title");
 ```

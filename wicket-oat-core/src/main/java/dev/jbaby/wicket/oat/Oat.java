@@ -8,7 +8,9 @@ import dev.jbaby.wicket.oat.util.SerializableConsumer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -118,6 +120,14 @@ public final class Oat {
 
         public static OatThemeBehavior theme() {
             return new OatThemeBehavior();
+        }
+
+        public static FeedbackToastsBehavior feedbackToasts() {
+            return new FeedbackToastsBehavior();
+        }
+
+        public static FeedbackToastsBehavior feedbackToasts(IFeedbackMessageFilter filter) {
+            return new FeedbackToastsBehavior(filter);
         }
     }
 
@@ -244,6 +254,22 @@ public final class Oat {
 
         public static <T, S> OatDataTable<T, S> dataTable(String id, List<? extends IColumn<T, S>> columns, ISortableDataProvider<T, S> dataProvider, long rowsPerPage) {
             return new OatDataTable<>(id, columns, dataProvider, rowsPerPage);
+        }
+
+        public static OatFeedbackPanel feedbackPanel(String id) {
+            return new OatFeedbackPanel(id);
+        }
+
+        public static OatFeedbackPanel feedbackPanel(String id, IFeedbackMessageFilter filter) {
+            return new OatFeedbackPanel(id, filter);
+        }
+
+        public static OatPagingNavigator pagingNavigator(String id, IPageable pageable) {
+            return new OatPagingNavigator(id, pageable);
+        }
+
+        public static OatAjaxPagingNavigator ajaxPagingNavigator(String id, IPageable pageable) {
+            return new OatAjaxPagingNavigator(id, pageable);
         }
 
         public static OatEmptyState emptyState(String id, String title) {

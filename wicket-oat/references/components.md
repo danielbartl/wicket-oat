@@ -16,7 +16,8 @@ Use `Oat.Components` for a "Fast Path" to build UI with encapsulated markup.
 - `accordion(id, model, exclusive?, populateItem)`: Creates an `OatAccordion`.
 - `buttonGroup(id, model, populateItem)`: Creates an `OatButtonGroup` container for buttons.
 - `breadcrumb(id, model, populateItem)`: Creates an `OatBreadcrumb` trail.
-- `pagination(id, model, populateItem)`: Creates an `OatPagination` control.
+- `pagingNavigator(id, pageable)` / `ajaxPagingNavigator(id, pageable)`: `OatPagingNavigator` / `OatAjaxPagingNavigator`, Wicket's (Ajax)`PagingNavigator` rendered as Oat pagination for any `IPageable` (`DataView`, `PageableListView`, `DataTable`). Prefer these whenever there is an `IPageable`. For the Ajax one, the pageable or a parent needs `setOutputMarkupId(true)`.
+- `pagination(id, model, populateItem)`: Creates an `OatPagination` control - hand-rolled page links for when there's no `IPageable`; you style the current page yourself.
 - `dropdown(id, triggerLabel, model, populateItem)`: Creates an `OatDropdown` popover menu.
 - `tabs(id, model, populateTab, populatePanel)`: Creates an `OatTabs` tab strip + panels.
 - `dialog(id, triggerLabel, header)`: Creates an `OatDialog` modal, opened via its trigger.
@@ -58,7 +59,8 @@ Behavior of the field panels:
 - `tagInput(id, label, model)`: Comma-separated tag/chip input.
 
 ## Data & Feedback
-- `dataTable(id, columns, dataProvider, rowsPerPage)`: Styled Wicket DataTable. Use `setEmptyState(id -> emptyState(id, "No results"))` for a custom placeholder when it has no rows; the factory must use the id it is given.
+- `feedbackPanel(id, filter?)`: `OatFeedbackPanel`, a Wicket `FeedbackPanel` rendering each `info()`/`success()`/`warn()`/`error()` message as an Oat alert of the matching variant. It adds itself to Ajax responses when it has messages to show or clear, so no `target.add(feedback)` is needed. By default it leaves out errors Oat form fields already show inline (`NotShownInlineFilter`); pass `null` to show everything.
+- `dataTable(id, columns, dataProvider, rowsPerPage)`: Styled Wicket DataTable, paged with `OatPagingNavigator`. Use `setEmptyState(id -> emptyState(id, "No results"))` for a custom placeholder when it has no rows; the factory must use the id it is given.
 - `progress(id, value, max?)`: Standard `<progress>` bar; `max` is an optional bound model.
 - `meter(id, value)`: Simple `<meter>`.
 - `meter(id, value, min, max, low, high, optimum)`: Advanced `<meter>` with full range/zone control.

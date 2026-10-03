@@ -80,8 +80,8 @@ is the more natural choice for it.
 
 ## Available Components
 
-- **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`
-- **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagination`
+- **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`, `OatFeedbackPanel`
+- **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatDropdown`, `OatTabs`
 - **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, and more specialized HTML5 fields.
@@ -164,6 +164,37 @@ public class MyComplexActionLink extends AjaxLink<Void> {
         add(Oat.Behaviors.button().setVariant(Variant.SECONDARY));
     }
 }
+```
+
+## Feedback Messages
+
+Wicket's `info()`, `success()`, `warn()` and `error()` messages can be shown as
+Oat alerts or as Oat toasts:
+
+```java
+// A FeedbackPanel that renders each message as an alert of the matching variant
+add(new OatFeedbackPanel("feedback"));
+
+// ...or show them as toasts - add this to your base page to cover every page
+add(Oat.Behaviors.feedbackToasts());
+```
+
+Both update themselves during Ajax requests, so an event handler only needs to
+call `success("Saved.")` - no `target.add(...)` or `Oat.toast(...)`. The toasts
+also pick up session messages, so a `getSession().success(...)` before
+`setResponsePage(...)` appears on the next page. Both leave out the errors that
+Oat form fields already show inline; pass your own `IFeedbackMessageFilter` to
+change what they show.
+
+## Paging
+
+`OatPagingNavigator` and `OatAjaxPagingNavigator` are Wicket's `PagingNavigator`
+and `AjaxPagingNavigator` rendered as Oat pagination, for any `IPageable`
+(`DataView`, `PageableListView`, `DataTable`, ...). `OatDataTable` uses
+`OatPagingNavigator` for its navigation toolbar.
+
+```java
+add(new OatAjaxPagingNavigator("navigator", dataView));
 ```
 
 ## Content Security Policy

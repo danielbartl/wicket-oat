@@ -25,6 +25,7 @@ public class OatSettings implements Serializable {
     private OatTheme defaultTheme = OatTheme.DARK;
     private final List<OatTheme> themes = new ArrayList<>(OatTheme.builtIns());
     private OatThemeStore themeStore = new CookieThemeStore();
+    private boolean addResources = true;
 
     /** The settings of the current application. */
     public static OatSettings get() {
@@ -75,6 +76,19 @@ public class OatSettings implements Serializable {
     /** The selectable theme with the given {@code data-theme} value, or {@code null}. */
     public OatTheme findTheme(String value) {
         return value == null ? null : themes.stream().filter(t -> t.value().equals(value)).findFirst().orElse(null);
+    }
+
+    public boolean isAddResources() {
+        return addResources;
+    }
+
+    /**
+     * Whether Oat's CSS and JS are added to every page (the default). Turn it off to add
+     * them yourself with {@link WicketOats#renderResources} only where Oat is used.
+     */
+    public OatSettings setAddResources(boolean addResources) {
+        this.addResources = addResources;
+        return this;
     }
 
     public OatThemeStore getThemeStore() {

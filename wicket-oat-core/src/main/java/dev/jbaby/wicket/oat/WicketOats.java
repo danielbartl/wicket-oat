@@ -3,19 +3,29 @@ package dev.jbaby.wicket.oat;
 import dev.jbaby.wicket.oat.components.OatAppLayout;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
  * Central facade for configuring Wicket Oat UI in a WebApplication.
+ * <p>
+ * The resource references are public so they can be swapped with Wicket's own
+ * mechanism, e.g. to serve Oat from a CDN:
+ * {@code addResourceReplacement(WicketOats.OAT_JS, new UrlResourceReference(Url.parse("https://.../oat.min.js")))}.
  */
 public class WicketOats {
 
-    private static final PackageResourceReference OAT_CSS = new PackageResourceReference(OatAppLayout.class, "oat.min.css");
-    private static final PackageResourceReference OAT_JS = new PackageResourceReference(OatAppLayout.class, "oat.min.js");
-    private static final PackageResourceReference THEMES_CSS = new PackageResourceReference(OatAppLayout.class, "themes.css");
-    private static final PackageResourceReference WICKET_OAT_CSS = new PackageResourceReference(OatAppLayout.class, "wicket-oat.css");
+    /** Oat's stylesheet. */
+    public static final CssResourceReference OAT_CSS = new CssResourceReference(OatAppLayout.class, "oat.min.css");
+    /** Oat's web components and {@code ot.toast()}. */
+    public static final JavaScriptResourceReference OAT_JS = new JavaScriptResourceReference(OatAppLayout.class, "oat.min.js");
+    /** The built-in themes beyond Oat's light/dark default. */
+    public static final CssResourceReference THEMES_CSS = new CssResourceReference(OatAppLayout.class, "themes.css");
+    /** Wicket Oat's own component rules. */
+    public static final CssResourceReference WICKET_OAT_CSS = new CssResourceReference(OatAppLayout.class, "wicket-oat.css");
 
     /**
      * Installs Wicket Oat UI into the given application.
@@ -26,12 +36,11 @@ public class WicketOats {
      * @return the application's {@link OatSettings}, to configure themes
      */
     public static OatSettings install(WebApplication app) {
-        // Register global header contributors
+        // Add Oat's CSS/JS to every page, unless the application opted out
         app.getHeaderContributorListeners().add(response -> {
-            response.render(CssHeaderItem.forReference(OAT_CSS));
-            response.render(CssHeaderItem.forReference(THEMES_CSS));
-            response.render(CssHeaderItem.forReference(WICKET_OAT_CSS));
-            response.render(JavaScriptHeaderItem.forReference(OAT_JS));
+            if (OatSettings.get(app).isAddResources()) {
+                renderResources(response);
+            }
         });
 
         // Oat works under Wicket's strict, nonce-based CSP: the library renders no inline
@@ -43,5 +52,17 @@ public class WicketOats {
         app.getCspSettings().blocking().add(CSPDirective.IMG_SRC, "data:");
 
         return OatSettings.get(app);
+    }
+
+    /**
+     * Renders Oat's CSS and JS. {@link #install} does this on every page; call it from a
+     * page's {@code renderHead} after {@code OatSettings.setAddResources(false)} to add
+     * them only where they're used.
+     */
+    public static void renderResources(IHeaderResponse response) {
+        response.render(CssHeaderItem.forReference(OAT_CSS));
+        response.render(CssHeaderItem.forReference(THEMES_CSS));
+        response.render(CssHeaderItem.forReference(WICKET_OAT_CSS));
+        response.render(JavaScriptHeaderItem.forReference(OAT_JS));
     }
 }

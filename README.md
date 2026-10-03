@@ -267,6 +267,27 @@ getCspSettings().blocking()
 Call `install()` after any `strict()`/`clear()` of your own, since those reset
 the directives it adds.
 
+## Resources
+
+`install()` adds Oat's CSS and JS to every page. The references are public
+(`WicketOats.OAT_CSS`, `OAT_JS`, `THEMES_CSS`, `WICKET_OAT_CSS`), so Wicket's own
+resource replacement can swap them, e.g. to serve Oat from a CDN:
+
+```java
+addResourceReplacement(WicketOats.OAT_JS,
+        new UrlResourceReference(Url.parse("https://cdn.example.com/oat.min.js")));
+```
+
+To add them only on the pages that use Oat, turn the automatic contribution off
+and render them yourself:
+
+```java
+WicketOats.install(this).setAddResources(false);
+
+// in a page's renderHead(IHeaderResponse response)
+WicketOats.renderResources(response);
+```
+
 ## Forms
 
 Oat form fields (`OatTextField`, `OatDropdownChoice`, `OatSwitch`, ...) wrap a

@@ -377,6 +377,37 @@ public final class Oat {
             };
         }
 
+        public static OatSubmitButton submitButton(String id, String label, SerializableConsumer<AjaxRequestTarget> onSubmit) {
+            return submitButton(id, Model.of(label), onSubmit, null);
+        }
+
+        public static OatSubmitButton submitButton(String id, IModel<String> labelModel, SerializableConsumer<AjaxRequestTarget> onSubmit) {
+            return submitButton(id, labelModel, onSubmit, null);
+        }
+
+        public static OatSubmitButton submitButton(String id, String label, SerializableConsumer<AjaxRequestTarget> onSubmit, SerializableConsumer<AjaxRequestTarget> onError) {
+            return submitButton(id, Model.of(label), onSubmit, onError);
+        }
+
+        /**
+         * @param onError called when the form doesn't validate, or {@code null} to do nothing
+         */
+        public static OatSubmitButton submitButton(String id, IModel<String> labelModel, SerializableConsumer<AjaxRequestTarget> onSubmit, SerializableConsumer<AjaxRequestTarget> onError) {
+            return new OatSubmitButton(id, labelModel) {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target) {
+                    onSubmit.accept(target);
+                }
+
+                @Override
+                protected void onError(AjaxRequestTarget target) {
+                    if (onError != null) {
+                        onError.accept(target);
+                    }
+                }
+            };
+        }
+
         public static <T> OatAccordion<T> accordion(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
             return new OatAccordion<T>(id, model) {
                 @Override

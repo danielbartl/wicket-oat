@@ -35,7 +35,7 @@
         <h3 class="mt-6">The OatButton Component</h3>
         <p>Same result, built via the <code>Oat.Components.button(...)</code> factory instead of a plain <code>Link</code> + <code>ButtonBehavior</code>.</p>
         <div class="hstack gap-2 mt-4">
-            <a wicket:id="liveButton"><span wicket:id="label"></span></a>
+            <a wicket:id="liveButton"></a>
         </div>
 
         <div class="mt-6">
@@ -51,10 +51,15 @@ add(Oat.Components.button("myButton", "Click me", target -> {
 link.add(Oat.Behaviors.button()
     .setVariant(OatVariant.SECONDARY)
     .setStyle(ButtonBehavior.Style.OUTLINE)
-    .setSize(ButtonBehavior.Size.SMALL));</code></pre>
+    .setSize(ButtonBehavior.Size.SMALL));
 
-            <pre><code>&lt;!-- HTML - Markup: can be &lt;a&gt;, &lt;button&gt;, or even &lt;div&gt; --&gt;
-&lt;a wicket:id="myButton"&gt;&lt;span wicket:id="label"&gt;&lt;/span&gt;&lt;/a&gt;
+// Java - A submit button for a form, via the Oat factory
+form.add(Oat.Components.submitButton("save", "Save",
+        target -&gt; success("Saved."),          // the form is valid
+        target -&gt; target.add(form)));         // show the validation errors</code></pre>
+
+            <pre><code>&lt;!-- HTML - OatButton renders its label as the tag's text; &lt;a&gt; or &lt;button&gt; --&gt;
+&lt;a wicket:id="myButton"&gt;&lt;/a&gt;
 &lt;a wicket:id="link"&gt;Click me&lt;/a&gt;</code></pre>
         </div>
 

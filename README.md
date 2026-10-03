@@ -135,7 +135,10 @@ The factory does that for you from a lambda, so it's the natural default
 here, not just a shortcut:
 ```java
 // No subclass needed - the factory implements onClick() for you
-add(Oat.Components.button("id", "Click Me", target -> ...));
+add(Oat.Components.button("id", "Click Me", target -> ...));   // <a wicket:id="id"></a>
+
+// The same for a form's submit button: onSubmit when valid, onError when not
+form.add(Oat.Components.submitButton("save", "Save", target -> ..., target -> target.add(form)));
 ```
 
 ### When to use a constructor

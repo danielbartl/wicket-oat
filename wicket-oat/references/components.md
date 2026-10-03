@@ -8,7 +8,8 @@ Colors are a single `dev.jbaby.wicket.oat.OatVariant` enum everywhere (alerts, b
 ## General
 - `alert(id, message?, variant?)`: Creates an `OatAlert`. `message`/`variant` can each be a plain value, an `IModel`, or omitted.
 - `badge(id, label, variant?)`: Creates an `OatBadge`. `label` can be a `String` or an `IModel<?>`.
-- `button(id, label, onClick)`: Creates an `OatButton` with an Ajax click handler.
+- `button(id, label, onClick)`: Creates an `OatButton` with an Ajax click handler, on an `<a>` or `<button>`. The label is rendered as the tag's text, so the markup is just `<a wicket:id="save"></a>` (no inner `<span wicket:id="label">` - that now fails). `new OatButton(id) { onClick... }` without a label renders the markup body instead, e.g. an icon with `setIcon(true)`.
+- `submitButton(id, label, onSubmit, onError?)`: Creates an `OatSubmitButton`, an Oat-styled `AjaxButton` that submits its form: `onSubmit` runs when the form is valid, `onError` when it isn't (e.g. `target -> target.add(form)` to show inline errors). Markup: `<button wicket:id="save"></button>`. Subclass `OatSubmitButton` directly to override `onSubmit`/`onError` instead.
 - `card(id)`: Creates an `OatCard` container.
 - `avatar(id, urlModel)` / `avatar(id, initials)`: Creates an `OatAvatar` from just an image URL or just initials.
 - `avatar(id, urlModel, initials, size)`: Creates an `OatAvatar` with both an image and initials fallback; `size` is required in this overload.

@@ -1,13 +1,13 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
+import dev.jbaby.wicket.oat.components.OatSubmitButton;
 import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatEmailField;
 import dev.jbaby.wicket.oat.components.form.OatSwitch;
 import dev.jbaby.wicket.oat.components.form.OatTextArea;
 import dev.jbaby.wicket.oat.components.form.OatTextField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -58,7 +58,7 @@ public class EventRegistrationPage extends BasePage {
 
         form.add(new OatSwitch("subscribeNewsletter"));
 
-        form.add(new AjaxButton("submit") {
+        form.add(new OatSubmitButton("submit") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 RegistrationData submittedData = form.getModelObject();
@@ -71,6 +71,6 @@ public class EventRegistrationPage extends BasePage {
                 error("Please fix the errors in the form."); // field errors themselves show inline
                 target.add(form); // show the inline validation errors
             }
-        }.add(Oat.Behaviors.button()));
+        });
     }
 }

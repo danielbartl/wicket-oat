@@ -357,9 +357,12 @@ add `Oat.Behaviors.theme()` to a `TransparentWebMarkupContainer` on your
 The project includes an examples module `wicket-oat-examples`. To run it:
 
 1. Clone the repository.
-2. Run the application using Maven:
+2. Run the application using Maven (it starts MongoDB through Docker Compose,
+   so Docker must be running; the argument points it at the repository's
+   `compose.yaml`, since the app runs in the module directory):
    ```bash
-   ./mvnw spring-boot:run -pl wicket-oat-examples
+   ./mvnw spring-boot:run -pl wicket-oat-examples \
+       -Dspring-boot.run.arguments=--spring.docker.compose.file=../compose.yaml
    ```
 3. Access the demo at `http://localhost:8080/`.
 

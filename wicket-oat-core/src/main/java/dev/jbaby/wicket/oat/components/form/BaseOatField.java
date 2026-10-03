@@ -2,9 +2,11 @@ package dev.jbaby.wicket.oat.components.form;
 
 import dev.jbaby.wicket.oat.behaviors.HintBehavior;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -62,10 +64,20 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
         container = new WebMarkupContainer("container");
         // Oat's magic: data-field="error" on the container (aria-invalid goes on the input)
         container.add(AttributeModifier.replace("data-field", (IModel<String>) () -> getField().hasErrorMessage() ? "error" : ""));
+        // Marks required fields for wicket-oat.css (an asterisk after the label)
+        container.add(AttributeModifier.replace("data-required", (IModel<String>) () -> getField().isRequired() ? "" : null));
         add(container);
 
         this.label = new Label("label", label != null ? label : new StringResourceModel(id, this).setDefaultValue(id));
-        this.label.add(AttributeModifier.replace("for", (IModel<String>) () -> getField().getMarkupId()));
+        this.label.add(new Behavior() {
+            @Override
+            public void onComponentTag(Component component, ComponentTag tag) {
+                // Only a <label> takes "for"; group fields label themselves with a <legend>
+                if ("label".equalsIgnoreCase(tag.getName())) {
+                    tag.put("for", getField().getMarkupId());
+                }
+            }
+        });
         container.add(this.label);
 
         feedback = new Label("feedback", this::getFeedbackContent);
@@ -93,6 +105,9 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
             // Link input to feedback for screen readers
             field.add(AttributeModifier.replace("aria-describedby", (IModel<String>) feedback::getMarkupId));
             field.add(AttributeModifier.replace("aria-invalid", (IModel<String>) () -> field.hasErrorMessage() ? "true" : "false"));
+            // Not the native "required", which would make the browser block the submit
+            // with its own message before Wicket's validation could show one inline
+            field.add(AttributeModifier.replace("aria-required", (IModel<String>) () -> field.isRequired() ? "true" : null));
             container.add(field);
         }
         return field;

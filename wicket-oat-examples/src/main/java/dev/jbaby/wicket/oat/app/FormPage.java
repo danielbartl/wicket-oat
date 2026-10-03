@@ -97,6 +97,16 @@ public class FormPage extends BasePage {
         form.add(Oat.Components.dropdownChoice("oatSelect", "Oat Select", Model.of("A"), Model.ofList(Arrays.asList("A", "B", "C")))
                 .setRequired(true));
 
+        form.add(Oat.Components.radioChoice("oatRadio", Model.of("Oat Radio Choice"), Model.of("B"), Model.ofList(Arrays.asList("A", "B", "C")))
+                .setInline(true));
+
+        form.add(Oat.Components.checkBoxMultipleChoice("oatCheckGroup", Model.of("Oat Checkbox Group"),
+                Model.ofList(new ArrayList<>(List.of("Email"))), Model.ofList(Arrays.asList("Email", "SMS", "Push"))));
+
+        form.add(Oat.Components.listMultipleChoice("oatMultiSelect", Model.of("Oat Multi-Select"),
+                Model.ofList(new ArrayList<>()), Model.ofList(Arrays.asList("Red", "Green", "Blue", "Yellow")))
+                .setMaxRows(4));
+
         form.add(Oat.Components.dateField("oatDate", "Oat Date", Model.of(java.time.LocalDate.now())));
 
         form.add(Oat.Components.urlField("oatUrl", "Oat Website", Model.of("")));

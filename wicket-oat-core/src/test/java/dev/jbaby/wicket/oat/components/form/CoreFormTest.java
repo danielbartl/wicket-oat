@@ -114,4 +114,55 @@ class CoreFormTest {
         tester.newFormTester("form").submit();
         assertThat(tester.getTagByWicketId("field").getAttribute("aria-invalid")).isEqualTo("true");
     }
+
+    @Test
+    void requiredFieldsAreMarkedWithoutTheNativeRequiredAttribute() {
+        OatTextField<String> field = new OatTextField<String>("id", "Label", Model.of("")).setRequired(true);
+        tester.startComponentInPage(field);
+
+        TagTester input = tester.getTagByWicketId("field");
+        assertThat(input.getAttribute("aria-required")).isEqualTo("true");
+        assertThat(input.getAttribute("required")).isNull();
+        assertThat(tester.getTagByWicketId("container").getAttribute("data-required")).isEmpty();
+    }
+
+    @Test
+    void optionalFieldsCarryNoRequiredMarkers() {
+        tester.startComponentInPage(new OatTextField<>("id", "Label", Model.of("")));
+
+        assertThat(tester.getTagByWicketId("field").getAttribute("aria-required")).isNull();
+        assertThat(tester.getTagByWicketId("container").getAttribute("data-required")).isNull();
+    }
+
+    @Test
+    void checkBoxMarkupIsValidHtml() {
+        tester.startComponentInPage(new OatCheckBox("id", "I agree", Model.of(false)));
+
+        // The text is a <span> inside the <label> that wraps the input: no "for" on it
+        TagTester text = tester.getTagByWicketId("label");
+        assertThat(text.getName()).isEqualTo("span");
+        assertThat(text.getAttribute("for")).isNull();
+        // The feedback <div> sits outside the <label>, in a <div> field container
+        TagTester container = tester.getTagByWicketId("container");
+        assertThat(container.getName()).isEqualTo("div");
+        assertThat(container.getChild("label").getValue()).doesNotContain("role=\"status\"");
+    }
+
+    @Test
+    void textFieldLabelsKeepTheirForAttribute() {
+        tester.startComponentInPage(new OatTextField<>("id", "Label", Model.of("")));
+        assertThat(tester.getTagByWicketId("label").getAttribute("for"))
+                .isEqualTo(tester.getTagByWicketId("field").getAttribute("id"));
+    }
+
+    @Test
+    void widgetTextsComeFromResources() {
+        tester.startComponentInPage(new OatTagInput("id", "Tags", Model.ofList(new java.util.ArrayList<>())));
+        assertThat(tester.getLastResponseAsString()).contains("placeholder=\"Add tags...\"");
+
+        tester.startComponentInPage(new OatFileDropzone("id", "Files", new org.apache.wicket.model.util.ListModel<>()));
+        assertThat(tester.getLastResponseAsString())
+                .contains("aria-label=\"Choose files\"")
+                .contains("Drop files here or click to choose");
+    }
 }

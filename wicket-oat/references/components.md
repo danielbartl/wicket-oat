@@ -37,6 +37,7 @@ Every one takes an optional trailing hint-text model — but only when `label` i
 The label and the model can also be left out, exactly like plain Wicket form components: `[type]Field(id)` / `new Oat[Type]Field(id)` inherits the model from a parent `CompoundPropertyModel` by id, and `[type]Field(id, model)` / `new Oat[Type]Field(id, model)` keeps an explicit model. A missing label is looked up in the `.properties` files with the id as the key (falling back to the id). `dropdownChoice` mirrors `DropDownChoice`: `(id, choices, renderer?)` and `(id, model, choices, renderer?)`.
 
 Behavior of the field panels:
+- Required fields get `aria-required="true"` and an asterisk after their label (via `data-required` on the field container). The native `required` attribute is deliberately not set, since the browser would block the submit with its own message before Wicket could show its inline error.
 - They render their own tag with a markup id, so `target.add(field)` (or `target.add(form)`) re-renders them, e.g. to show inline errors in an Ajax `onError`. Attributes on that tag in your markup (e.g. `class`) are kept.
 - `field.add(...)` sends validators and `AjaxFormComponentUpdatingBehavior`s to the wrapped input; other behaviors apply to the panel's own tag. `getField()` returns the wrapped `FormComponent`.
 - Fluent setters (`setRequired`, `setLabel`, `setPlaceholder`, `addValidator`, `add`, and `setMin`/`setMax` on number/range fields) return the concrete field type, so they chain freely.
@@ -47,6 +48,9 @@ Behavior of the field panels:
 - `numberField(id, label, model)`
 - `textArea(id, label, model)`
 - `dropdownChoice(id, label, model, choices, renderer?)`
+- `radioChoice(id, label, model, choices, renderer?)`: `OatRadioChoice`, radio buttons in a `<fieldset>` with a `<legend>`; stacked, or in a row with `setInline(true)`. Same constructor/factory shapes as `dropdownChoice`.
+- `checkBoxMultipleChoice(id, label, model, choices, renderer?)`: `OatCheckBoxMultipleChoice`, a checkbox group bound to an `IModel<? extends Collection<T>>` of the selected choices (updated in place); `setInline(true)` for a row.
+- `listMultipleChoice(id, label, model, choices, renderer?)`: `OatListMultipleChoice`, a `<select multiple>` bound to a collection of the selected choices; `setMaxRows(n)` sets its height.
 - `checkBox(id, label, model)`
 - `oatSwitch(id, label, model)`
 - `dateField(id, label, model)`

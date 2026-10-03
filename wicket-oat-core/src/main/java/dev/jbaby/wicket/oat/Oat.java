@@ -18,6 +18,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -572,6 +573,102 @@ public final class Oat {
 
         public static <T> OatDropdownChoice<T> dropdownChoice(String id, IModel<String> labelModel, IModel<T> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer, IModel<String> hintModel) {
             return new OatDropdownChoice<>(id, labelModel, model, choices, renderer, hintModel);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<? extends List<? extends T>> choices) {
+            return new OatRadioChoice<>(id, choices);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatRadioChoice<>(id, choices, renderer);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
+            return new OatRadioChoice<>(id, model, choices);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatRadioChoice<>(id, model, choices, renderer);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, String label, IModel<T> model, IModel<? extends List<? extends T>> choices) {
+            return new OatRadioChoice<>(id, label, model, choices);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<String> labelModel, IModel<T> model, IModel<? extends List<? extends T>> choices) {
+            return new OatRadioChoice<>(id, labelModel, model, choices);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<String> labelModel, IModel<T> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatRadioChoice<>(id, labelModel, model, choices, renderer);
+        }
+
+        public static <T> OatRadioChoice<T> radioChoice(String id, IModel<String> labelModel, IModel<T> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer, IModel<String> hintModel) {
+            return new OatRadioChoice<>(id, labelModel, model, choices, renderer, hintModel);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<? extends List<? extends T>> choices) {
+            return new OatCheckBoxMultipleChoice<>(id, choices);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatCheckBoxMultipleChoice<>(id, choices, renderer);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices) {
+            return new OatCheckBoxMultipleChoice<>(id, model, choices);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatCheckBoxMultipleChoice<>(id, model, choices, renderer);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, String label, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices) {
+            return new OatCheckBoxMultipleChoice<>(id, label, model, choices);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<String> labelModel, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices) {
+            return new OatCheckBoxMultipleChoice<>(id, labelModel, model, choices);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<String> labelModel, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatCheckBoxMultipleChoice<>(id, labelModel, model, choices, renderer);
+        }
+
+        public static <T> OatCheckBoxMultipleChoice<T> checkBoxMultipleChoice(String id, IModel<String> labelModel, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer, IModel<String> hintModel) {
+            return new OatCheckBoxMultipleChoice<>(id, labelModel, model, choices, renderer, hintModel);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<? extends List<? extends T>> choices) {
+            return new OatListMultipleChoice<>(id, choices);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatListMultipleChoice<>(id, choices, renderer);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices) {
+            return new OatListMultipleChoice<>(id, model, choices);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatListMultipleChoice<>(id, model, choices, renderer);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, String label, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices) {
+            return new OatListMultipleChoice<>(id, label, model, choices);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<String> labelModel, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices) {
+            return new OatListMultipleChoice<>(id, labelModel, model, choices);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<String> labelModel, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer) {
+            return new OatListMultipleChoice<>(id, labelModel, model, choices, renderer);
+        }
+
+        public static <T> OatListMultipleChoice<T> listMultipleChoice(String id, IModel<String> labelModel, IModel<? extends Collection<T>> model, IModel<? extends List<? extends T>> choices, org.apache.wicket.markup.html.form.IChoiceRenderer<? super T> renderer, IModel<String> hintModel) {
+            return new OatListMultipleChoice<>(id, labelModel, model, choices, renderer, hintModel);
         }
 
         public static OatCheckBox checkBox(String id) {

@@ -6,11 +6,11 @@
         <label wicket:id="label"></label>
         <ot-upload>
             <input wicket:id="field" hidden=""/>
-            <button type="button" class="ghost" aria-label="Choose files">
+            <button type="button" class="ghost" wicket:message="aria-label:OatFileDropzone.choose">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4-4 4"/><path d="M20 16v4H4v-4"/></svg>
             </button>
             <div data-files="">
-                <small data-hint="">Drop files here or click to choose</small>
+                <small data-hint=""><wicket:message key="OatFileDropzone.hint">Drop files here or click to choose</wicket:message></small>
             </div>
         </ot-upload>
         <div wicket:id="feedback" role="status"></div>

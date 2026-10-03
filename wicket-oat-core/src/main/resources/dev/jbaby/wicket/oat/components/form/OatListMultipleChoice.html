@@ -2,13 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <div wicket:id="container">
-        <label>
-            <input wicket:id="field" type="checkbox" />
-            <span wicket:id="label"></span>
-        </label>
+    <section wicket:id="container">
+        <label wicket:id="label"></label>
+        <select wicket:id="field" multiple="multiple"></select>
         <div wicket:id="feedback" role="status"></div>
-    </div>
+    </section>
 </wicket:panel>
 </body>
 </html>

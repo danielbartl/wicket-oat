@@ -66,3 +66,15 @@ dialog > div.oat-dialog-form > footer {
 .oat-theme-switcher a[aria-current="true"] {
     outline: 1px solid var(--border);
 }
+
+/* Required Oat form fields (BaseOatField sets data-required on the field container) */
+[data-required] > label::after,
+[data-required] > legend::after {
+    content: " *";
+    color: var(--danger);
+}
+
+/* Oat draws a dropdown arrow on every <select>; a multi-select (OatListMultipleChoice) has none */
+select[multiple] {
+    background-image: none;
+}

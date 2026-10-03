@@ -4,6 +4,24 @@
 <wicket:extend>
     <section>
         <h1>Oat Tabs Demo</h1>
+
+        <h3>Server-side tabs</h3>
+        <p><code>OatTabbedPanel</code> is Wicket's <code>AjaxTabbedPanel</code> with Oat styling. Tabs are <code>ITab</code>s, and only the selected tab's panel is created &mdash; switching replaces it over Ajax. Note the creation time changing as you switch.</p>
+
+        <div wicket:id="tabbedPanel"></div>
+
+        <wicket:fragment wicket:id="overviewTab"><p>Everything at a glance. Panel created at <strong wicket:id="createdAt"></strong>.</p></wicket:fragment>
+        <wicket:fragment wicket:id="activityTab"><p>Recent activity, loaded only when this tab is opened. Panel created at <strong wicket:id="createdAt"></strong>.</p></wicket:fragment>
+        <wicket:fragment wicket:id="settingsTab"><p>Preferences for this workspace. Panel created at <strong wicket:id="createdAt"></strong>.</p></wicket:fragment>
+
+        <pre class="mt-4"><code>// Java
+add(Oat.Components.tabbedPanel("tabs", List.of(
+        Oat.tab("Profile", ProfilePanel::new),      // panels are created on demand
+        Oat.tab("Settings", SettingsPanel::new))));</code></pre>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="tabs"&gt;&lt;/div&gt;</code></pre>
+
+        <h3 class="mt-6">Client-side tabs</h3>
         <p>A tabbed interface using the <code>ot-tabs</code> web component (JS vendored in <code>oat.min.js</code>). It wires <code>id</code>/<code>aria-controls</code> between tab buttons and panels automatically by DOM position.</p>
 
         <ot-tabs wicket:id="tabs">

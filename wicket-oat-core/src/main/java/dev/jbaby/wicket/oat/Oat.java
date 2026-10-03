@@ -5,8 +5,12 @@ import dev.jbaby.wicket.oat.components.*;
 import dev.jbaby.wicket.oat.components.form.*;
 import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
 import dev.jbaby.wicket.oat.util.SerializableConsumer;
+import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
+import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -270,6 +274,10 @@ public final class Oat {
 
         public static OatAjaxPagingNavigator ajaxPagingNavigator(String id, IPageable pageable) {
             return new OatAjaxPagingNavigator(id, pageable);
+        }
+
+        public static <T extends ITab> OatTabbedPanel<T> tabbedPanel(String id, List<T> tabs) {
+            return new OatTabbedPanel<>(id, tabs);
         }
 
         public static OatEmptyState emptyState(String id, String title) {
@@ -859,6 +867,25 @@ public final class Oat {
         public static OatTagInput tagInput(String id, IModel<String> labelModel, IModel<String> model, IModel<String> hintModel) {
             return new OatTagInput(id, labelModel, model, hintModel);
         }
+    }
+
+    // --- Tabs ---
+
+    /**
+     * A tab for {@link OatTabbedPanel}: {@code Oat.tab("Profile", ProfilePanel::new)}.
+     * The factory receives the panel id to use and is called only when the tab is shown.
+     */
+    public static ITab tab(String title, SerializableFunction<String, ? extends WebMarkupContainer> panel) {
+        return tab(Model.of(title), panel);
+    }
+
+    public static ITab tab(IModel<String> title, SerializableFunction<String, ? extends WebMarkupContainer> panel) {
+        return new AbstractTab(title) {
+            @Override
+            public WebMarkupContainer getPanel(String panelId) {
+                return panel.apply(panelId);
+            }
+        };
     }
 
     // --- Actions ---

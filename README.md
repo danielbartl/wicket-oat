@@ -82,7 +82,7 @@ is the more natural choice for it.
 
 - **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`, `OatFeedbackPanel`
 - **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
-- **Overlays:** `OatDialog`, `OatDropdown`, `OatTabs`
+- **Overlays:** `OatDialog`, `OatDropdown`, `OatTabbedPanel`, `OatTabs`
 - **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, and more specialized HTML5 fields.
 
@@ -214,6 +214,21 @@ also pick up session messages, so a `getSession().success(...)` before
 `setResponsePage(...)` appears on the next page. Both leave out the errors that
 Oat form fields already show inline; pass your own `IFeedbackMessageFilter` to
 change what they show.
+
+## Tabs
+
+`OatTabbedPanel` is Wicket's `AjaxTabbedPanel` with Oat styling: tabs are
+`ITab`s, only the selected tab's panel is created, and switching swaps it over
+Ajax. `Oat.tab(...)` builds a tab from a panel factory:
+
+```java
+add(new OatTabbedPanel<>("tabs", List.of(
+        Oat.tab("Profile", ProfilePanel::new),
+        Oat.tab("Settings", SettingsPanel::new))));
+```
+
+`OatTabs` instead renders every panel up front and switches between them in
+the browser, for small static content.
 
 ## Paging
 

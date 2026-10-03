@@ -20,7 +20,7 @@ Use `Oat.Components` for a "Fast Path" to build UI with encapsulated markup.
 - `pagination(id, model, populateItem)`: Creates an `OatPagination` control - hand-rolled page links for when there's no `IPageable`; you style the current page yourself.
 - `dropdown(id, triggerLabel, model, populateItem)`: Creates an `OatDropdown` popover menu.
 - `tabs(id, model, populateTab, populatePanel)`: Creates an `OatTabs` tab strip + panels.
-- `dialog(id, triggerLabel, header)`: Creates an `OatDialog` modal, opened via its trigger.
+- `dialog(id, header)` / `dialog(id, triggerLabel, header)`: Creates an `OatDialog` modal on the native `<dialog>` element. Open and close it from any Ajax handler with `dialog.open(target)` / `dialog.close(target)` (`open` re-renders it first); with a trigger label it also renders a button that opens it natively. Set the body with `setBody(component)` - the component must use the id `OatDialog.BODY_ID`. The body sits in the dialog's own form, so fields in it are validated when Confirm is clicked: on a validation error the dialog stays open and shows them inline; otherwise the overridable `onConfirm(target)` runs and the dialog closes unless an error was reported in it there (e.g. `field.getField().error("Taken")`). `setConfirmLabel`, `setCancelLabel` and `setConfirmVariant(ButtonBehavior.Variant.DANGER)` customize the buttons; the default labels come from the `OatDialog.confirm` / `OatDialog.cancel` resource keys.
 - `OatAppLayout`: (Base Page) Provides sidebar and topnav.
 
 ## Form Components

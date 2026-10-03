@@ -311,6 +311,14 @@ public final class Oat {
             };
         }
 
+        public static OatDialog dialog(String id, String header) {
+            return new OatDialog(id, header);
+        }
+
+        public static OatDialog dialog(String id, IModel<String> header) {
+            return new OatDialog(id, header);
+        }
+
         public static OatDialog dialog(String id, String triggerLabel, String header) {
             return new OatDialog(id, triggerLabel, header);
         }

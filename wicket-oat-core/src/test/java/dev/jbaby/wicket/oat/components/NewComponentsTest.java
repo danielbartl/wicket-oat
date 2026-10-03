@@ -101,12 +101,14 @@ class NewComponentsTest {
 
         TagTester cancel = tester.getTagByWicketId("cancel");
         assertThat(cancel.getAttribute("commandfor")).isEqualTo(dialogMarkupId);
+        assertThat(cancel.getAttribute("command")).isEqualTo("close");
 
+        // Confirm submits the dialog's form over Ajax; the server decides whether it closes
         TagTester confirm = tester.getTagByWicketId("confirm");
-        assertThat(confirm.getAttribute("commandfor")).isEqualTo(dialogMarkupId);
-        assertThat(confirm.getAttribute("command")).isEqualTo("close");
+        assertThat(confirm.getAttribute("type")).isEqualTo("submit");
+        assertThat(confirm.getAttribute("command")).isNull();
 
-        tester.assertLabel("dialog:dialog:header", "Title");
+        tester.assertLabel("dialog:dialog:form:header", "Title");
     }
 
     @Test
@@ -115,7 +117,7 @@ class NewComponentsTest {
         tester.startComponentInPage(dialog);
 
         tester.assertLabel("dialog:trigger:triggerLabel", "Open dialog");
-        tester.assertLabel("dialog:dialog:header", "Title");
+        tester.assertLabel("dialog:dialog:form:header", "Title");
     }
 
     @Test
@@ -124,7 +126,7 @@ class NewComponentsTest {
         tester.startComponentInPage(dialog);
 
         tester.assertLabel("dialog:trigger:triggerLabel", "Open dialog");
-        tester.assertLabel("dialog:dialog:header", "Title");
+        tester.assertLabel("dialog:dialog:form:header", "Title");
     }
 
     @Test

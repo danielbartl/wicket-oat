@@ -4,25 +4,60 @@
 <wicket:extend>
     <section>
         <h1>Oat Dialog Demo</h1>
-        <p>A fully native modal dialog using <code>&lt;dialog&gt;</code> and <code>command</code>/<code>commandfor</code> attributes. Opening and cancelling need no JavaScript beyond what Oat already vendors; confirming also fires a server-side Ajax callback.</p>
+        <p>A modal dialog built on the native <code>&lt;dialog&gt;</code> element. Cancel, the Escape key and a click on the backdrop close it natively; Confirm validates the fields in its body and calls <code>onConfirm</code> over Ajax.</p>
 
-        <div wicket:id="dialog"></div>
+        <h3 class="mt-6">Confirmation</h3>
+        <p>With a trigger label, the dialog renders its own button, which opens it without a server round trip.</p>
+        <div wicket:id="deleteDialog"></div>
 
-        <div class="mt-6">
-            <h3>How to use</h3>
-            <pre><code>// Java
-OatDialog dialog = new OatDialog("dialog", Model.of("Open dialog"), Model.of("Delete item")) {
+        <pre class="mt-4"><code>// Java
+add(new OatDialog("deleteDialog", Model.of("Delete item"), Model.of("Delete item?")) {
     @Override
     protected void onConfirm(AjaxRequestTarget target) {
-        Oat.toast(target, "Item deleted.", OatToastBehavior.Variant.DANGER);
+        success("Item deleted.");
+    }
+}.setBody(new Label(OatDialog.BODY_ID, "This action cannot be undone."))
+        .setConfirmLabel(Model.of("Delete"))
+        .setConfirmVariant(ButtonBehavior.Variant.DANGER));</code></pre>
+        <pre><code>&lt;!-- HTML --&gt;
+&lt;div wicket:id="deleteDialog"&gt;&lt;/div&gt;</code></pre>
+
+        <h3 class="mt-6">Editing from the server</h3>
+        <p>Open a dialog from any Ajax handler with <code>dialog.open(target)</code>, which re-renders it first. Its body sits in the dialog's own form: clear a field and click Save, and the dialog stays open with the error shown inline.</p>
+        <table wicket:id="people" class="w-100 align-left">
+            <thead><tr><th>Name</th><th>Email</th><th></th></tr></thead>
+            <tbody>
+            <tr wicket:id="rows">
+                <td wicket:id="name"></td>
+                <td wicket:id="email"></td>
+                <td><a wicket:id="edit">Edit</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <div wicket:id="editDialog"></div>
+
+        <wicket:fragment wicket:id="editFields">
+            <div class="vstack gap-4">
+                <div wicket:id="name"></div>
+                <div wicket:id="email"></div>
+            </div>
+        </wicket:fragment>
+
+        <pre class="mt-4"><code>// Java
+OatDialog editDialog = new OatDialog("editDialog", Model.of("Edit person")) {
+    @Override
+    protected void onConfirm(AjaxRequestTarget target) {
+        success("Saved.");   // the dialog closes unless an error is reported here
+        target.add(table);
     }
 };
-dialog.setBody(new Label("body", "This action cannot be undone."));
-add(dialog);</code></pre>
+Fragment fields = new Fragment(OatDialog.BODY_ID, "editFields", this, new CompoundPropertyModel&lt;&gt;(selected));
+fields.add(new OatTextField&lt;String&gt;("name").setRequired(true));
+editDialog.setBody(fields);
 
-            <pre><code>&lt;!-- HTML --&gt;
-&lt;div wicket:id="dialog"&gt;&lt;/div&gt;</code></pre>
-        </div>
+// in a row's AjaxLink
+selected.setObject(person);
+editDialog.open(target);</code></pre>
     </section>
 </wicket:extend>
 </body>

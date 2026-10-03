@@ -146,6 +146,24 @@ option: it has an overload that binds the variant to a reactive
 the constructor and the factory, so pick whichever shape matches what you
 already have on hand.
 
+`OatDialog` can be opened and closed from any Ajax handler with
+`dialog.open(target)` / `dialog.close(target)`, and validates the form fields in
+its body when Confirm is clicked, staying open to show any errors:
+
+```java
+OatDialog editDialog = new OatDialog("editDialog", Model.of("Edit person")) {
+    @Override
+    protected void onConfirm(AjaxRequestTarget target) {
+        success("Saved."); // closes afterwards, unless an error was reported here
+    }
+};
+editDialog.setBody(new PersonFieldsPanel(OatDialog.BODY_ID, selectedPerson));
+
+// e.g. in a table row's AjaxLink:
+selectedPerson.setObject(person);
+editDialog.open(target);
+```
+
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,
 `OatAlert`, etc., just like any other Wicket component:

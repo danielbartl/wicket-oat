@@ -61,7 +61,7 @@ Behavior of the field panels:
 - `rangeField(id, label, model)`
 - `fileUpload(id, label, model)`
 - `fileDropzone(id, label, model)`: Drag-and-drop alternative to `fileUpload`.
-- `tagInput(id, label, model)`: Comma-separated tag/chip input.
+- `tagInput(id, label, model)`: Tag/chip input bound to an `IModel<List<String>>`. Tags are trimmed and de-duplicated; no tags is an empty list (and fails `setRequired(true)`). As in Oat's widget, a comma separates tags, so a tag can't contain one.
 
 ## Data & Feedback
 - `feedbackPanel(id, filter?)`: `OatFeedbackPanel`, a Wicket `FeedbackPanel` rendering each `info()`/`success()`/`warn()`/`error()` message as an Oat alert of the matching variant. It adds itself to Ajax responses when it has messages to show or clear, so no `target.add(feedback)` is needed. By default it leaves out errors Oat form fields already show inline (`NotShownInlineFilter`); pass `null` to show everything.

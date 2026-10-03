@@ -200,7 +200,7 @@ class NewComponentsTest {
 
     @Test
     void testOatTagInput() {
-        OatTagInput tagInput = new OatTagInput("tagInput", "Tags", Model.of("apple,mango"));
+        OatTagInput tagInput = new OatTagInput("tagInput", "Tags", Model.ofList(List.of("apple", "mango")));
         tester.startComponentInPage(tagInput);
 
         TagTester field = tester.getTagByWicketId("field");

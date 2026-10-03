@@ -13,7 +13,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.Model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class FormPage extends BasePage {
 
@@ -123,7 +125,7 @@ public class FormPage extends BasePage {
 
         form.add(Oat.Components.telField("oatTel", "Oat Phone", Model.of("")));
 
-        form.add(Oat.Components.tagInput("oatTags", "Oat Tags", Model.of("apple, mango")));
+        form.add(Oat.Components.tagInput("oatTags", "Oat Tags", Model.ofList(new ArrayList<>(List.of("apple", "mango")))));
 
         // Feedback messages, shown by an OatFeedbackPanel that updates itself via Ajax
         add(new OatFeedbackPanel("feedback"));

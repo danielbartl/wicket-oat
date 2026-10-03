@@ -858,19 +858,19 @@ public final class Oat {
             return new OatTagInput(id);
         }
 
-        public static OatTagInput tagInput(String id, IModel<String> model) {
+        public static OatTagInput tagInput(String id, IModel<List<String>> model) {
             return new OatTagInput(id, model);
         }
 
-        public static OatTagInput tagInput(String id, String label, IModel<String> model) {
+        public static OatTagInput tagInput(String id, String label, IModel<List<String>> model) {
             return new OatTagInput(id, label, model);
         }
 
-        public static OatTagInput tagInput(String id, IModel<String> labelModel, IModel<String> model) {
+        public static OatTagInput tagInput(String id, IModel<String> labelModel, IModel<List<String>> model) {
             return new OatTagInput(id, labelModel, model);
         }
 
-        public static OatTagInput tagInput(String id, IModel<String> labelModel, IModel<String> model, IModel<String> hintModel) {
+        public static OatTagInput tagInput(String id, IModel<String> labelModel, IModel<List<String>> model, IModel<String> hintModel) {
             return new OatTagInput(id, labelModel, model, hintModel);
         }
     }

@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.components.form.NotShownInlineFilter;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -68,7 +69,7 @@ public class FeedbackToastsBehavior extends Behavior {
         for (FeedbackMessage message : new FeedbackCollector(component, true).collect(this::accept)) {
             message.markRendered();
             script.append(OatToastBehavior.script(String.valueOf(message.getMessage()),
-                    OatToastBehavior.Variant.forFeedback(message), null)).append(';');
+                    OatVariant.forFeedback(message), null)).append(';');
         }
         return script.toString();
     }

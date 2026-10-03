@@ -25,7 +25,7 @@ Use the `Oat` factory for the most common tasks:
 add(Oat.Components.button("id", "Label", target -> { ... }));
 
 // Add a behavior to an existing component
-myLabel.add(Oat.Behaviors.badge(Variant.SUCCESS));
+myLabel.add(Oat.Behaviors.badge(OatVariant.SUCCESS));
 ```
 
 ## Core Philosophy: Fast Path vs Power Path
@@ -57,5 +57,5 @@ success("Saved."); // in any event handler; no target.add(...) needed
 ```
 For a one-off toast with a title, call the `Oat` facade directly:
 ```java
-Oat.toast(target, "Message", OatToastBehavior.Variant.SUCCESS, "Title");
+Oat.toast(target, "Message", OatVariant.SUCCESS, "Title");
 ```

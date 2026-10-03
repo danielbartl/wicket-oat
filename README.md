@@ -54,14 +54,14 @@ Use the `Oat` factory class to create components in your pages:
 ```java
 // Create a button with an Ajax click handler via Components factory
 add(Oat.Components.button("myButton", "Click Me", target -> {
-    Oat.toast(target, "Hello from Wicket Oat!", OatToastBehavior.Variant.SUCCESS);
+    Oat.toast(target, "Hello from Wicket Oat!", OatVariant.SUCCESS);
 }));
 
 // Create an alert via Components factory
-add(Oat.Components.alert("myAlert", "Your changes were saved.", AlertBehavior.Variant.SUCCESS));
+add(Oat.Components.alert("myAlert", "Your changes were saved.", OatVariant.SUCCESS));
 
 // Create a badge via Components factory
-add(Oat.Components.badge("myBadge", "New", BadgeBehavior.Variant.SUCCESS));
+add(Oat.Components.badge("myBadge", "New", OatVariant.SUCCESS));
 ```
 
 Every Oat component is also a plain Wicket component, so for components that
@@ -70,8 +70,8 @@ well:
 
 ```java
 // The alert and badge above, built directly with their constructors
-add(new OatAlert("myAlert", "Your changes were saved.", AlertBehavior.Variant.SUCCESS));
-add(new OatBadge("myBadge", "New", BadgeBehavior.Variant.SUCCESS));
+add(new OatAlert("myAlert", "Your changes were saved.", OatVariant.SUCCESS));
+add(new OatBadge("myBadge", "New", OatVariant.SUCCESS));
 ```
 
 `OatButton` above is one of the components whose constructor requires
@@ -86,6 +86,14 @@ is the more natural choice for it.
 - **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, and more specialized HTML5 fields.
 
+### Variants
+
+Every component and behavior with a color variant takes the same
+`OatVariant` enum: `DEFAULT`, `SECONDARY`, `SUCCESS`, `WARNING`, `DANGER`.
+Oat's CSS styles them per component: buttons support `SECONDARY` and `DANGER`,
+badges all of them, and alerts and toasts `SUCCESS`, `WARNING` and `DANGER`;
+any other variant renders like `DEFAULT`.
+
 ## Architecture: Components vs. Behaviors
 
 Wicket Oat provides both **Components** and **Behaviors** for almost every UI element. This dual approach gives you maximum flexibility depending on your needs.
@@ -93,7 +101,7 @@ Wicket Oat provides both **Components** and **Behaviors** for almost every UI el
 ### When to use Components (`Oat.Components`)
 Use a component when you want a self-contained UI widget and don't want to worry about the underlying HTML structure.
 - **Pros:** Easiest to use; encapsulates markup logic; handles internal structure (like headers/footers in a Card).
-- **Example:** `add(Oat.Components.alert("id", "Saved!", Variant.SUCCESS))`
+- **Example:** `add(Oat.Components.alert("id", "Saved!", OatVariant.SUCCESS))`
 - **Markup Requirement:** Requires a simple tag like `<div wicket:id="id"></div>`.
 
 ### When to use Behaviors (`Oat.Behaviors`)
@@ -137,11 +145,11 @@ Every other component — `OatAlert`, `OatBadge`, `OatCard`, `OatDialog`,
 methods, so a plain constructor works just as well, and is the more familiar
 style if you're used to plain Wicket:
 ```java
-add(new OatAlert("id", "Saved!", AlertBehavior.Variant.SUCCESS));
+add(new OatAlert("id", "Saved!", OatVariant.SUCCESS));
 ```
 For `OatAlert`/`OatBadge` the constructor is actually the *more* capable
 option: it has an overload that binds the variant to a reactive
-`IModel<Variant>` which the factory doesn't expose. `OatDialog` and
+`IModel<OatVariant>` which the factory doesn't expose. `OatDialog` and
 `OatDropdown` accept either a plain `String` or an `IModel<String>` on both
 the constructor and the factory, so pick whichever shape matches what you
 already have on hand.
@@ -179,7 +187,7 @@ base class:
 public class MyComplexActionLink extends AjaxLink<Void> {
     public MyComplexActionLink(String id) {
         super(id);
-        add(Oat.Behaviors.button().setVariant(Variant.SECONDARY));
+        add(Oat.Behaviors.button().setVariant(OatVariant.SECONDARY));
     }
 }
 ```

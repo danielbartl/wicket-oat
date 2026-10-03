@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.components.OatDialog;
@@ -47,7 +48,7 @@ public class DialogPage extends BasePage {
             }
         }.setBody(new Label(OatDialog.BODY_ID, "This action cannot be undone."))
                 .setConfirmLabel(Model.of("Delete"))
-                .setConfirmVariant(ButtonBehavior.Variant.DANGER));
+                .setConfirmVariant(OatVariant.DANGER));
 
         // 2. An edit dialog opened from the server, with validated fields in its body
         WebMarkupContainer table = new WebMarkupContainer("people");

@@ -1,6 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
-import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.components.form.OatTextField;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -191,7 +191,7 @@ class OatDialogTest {
         dialog = new OatDialog("dialog", "Delete item")
                 .setCancelLabel(Model.of("Keep it"))
                 .setConfirmLabel(Model.of("Delete"))
-                .setConfirmVariant(ButtonBehavior.Variant.DANGER);
+                .setConfirmVariant(OatVariant.DANGER);
         tester.startComponentInPage(dialog);
         tester.assertLabel("dialog:dialog:form:cancel:cancelLabel", "Keep it");
         tester.assertLabel("dialog:dialog:form:confirm:confirmLabel", "Delete");

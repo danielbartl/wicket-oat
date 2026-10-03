@@ -39,7 +39,7 @@ class AlertPageTest {
         // Check error alert
         TagTester errorAlert = tester.getTagByWicketId("errorAlert");
         assertEquals("alert", errorAlert.getAttribute("role"));
-        assertEquals("error", errorAlert.getAttribute("data-variant"));
+        assertEquals("danger", errorAlert.getAttribute("data-variant"));
         
         // Check custom behavior alert
         TagTester customAlert = tester.getTagByWicketId("customBehaviorAlert");

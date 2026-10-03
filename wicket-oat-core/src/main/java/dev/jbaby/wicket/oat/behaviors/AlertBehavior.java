@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -15,43 +16,17 @@ import java.io.Serializable;
  */
 public class AlertBehavior extends Behavior {
 
-    public enum Variant implements Serializable {
-        DEFAULT(null),
-        SUCCESS("success"),
-        WARNING("warning"),
-        ERROR("error"),
-        DANGER("danger");
-
-        private final String value;
-
-        Variant(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        /** The alert variant for a feedback message's level: info and debug use the default style. */
-        public static Variant forFeedback(FeedbackMessage message) {
-            if (message.isError()) return ERROR;
-            if (message.isWarning()) return WARNING;
-            if (message.isSuccess()) return SUCCESS;
-            return DEFAULT;
-        }
-    }
-
-    private IModel<Variant> variantModel;
+    private IModel<OatVariant> variantModel;
 
     public AlertBehavior() {
-        this(Variant.DEFAULT);
+        this(OatVariant.DEFAULT);
     }
 
-    public AlertBehavior(Variant variant) {
+    public AlertBehavior(OatVariant variant) {
         this(Model.of(variant));
     }
 
-    public AlertBehavior(IModel<Variant> variantModel) {
+    public AlertBehavior(IModel<OatVariant> variantModel) {
         this.variantModel = variantModel;
     }
 
@@ -61,7 +36,7 @@ public class AlertBehavior extends Behavior {
 
         tag.put("role", "alert");
 
-        Variant variant = variantModel.getObject();
+        OatVariant variant = variantModel.getObject();
         if (variant != null && variant.getValue() != null) {
             tag.put("data-variant", variant.getValue());
         }

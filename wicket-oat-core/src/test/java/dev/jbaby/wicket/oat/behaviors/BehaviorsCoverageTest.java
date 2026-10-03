@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.OatSession;
 import dev.jbaby.wicket.oat.OatTheme;
 import org.apache.wicket.Session;
@@ -93,7 +94,7 @@ class BehaviorsCoverageTest {
     @Test
     void testOatToastBehavior() {
         IPartialPageRequestHandler handler = mock(IPartialPageRequestHandler.class);
-        OatToastBehavior.toast(handler, "Message", OatToastBehavior.Variant.SUCCESS, "Title");
+        OatToastBehavior.toast(handler, "Message", OatVariant.SUCCESS, "Title");
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(handler).appendJavaScript(captor.capture());
@@ -104,7 +105,7 @@ class BehaviorsCoverageTest {
     @Test
     void testOatToastBehaviorDanger() {
         IPartialPageRequestHandler handler = mock(IPartialPageRequestHandler.class);
-        OatToastBehavior.toast(handler, "Message", OatToastBehavior.Variant.DANGER);
+        OatToastBehavior.toast(handler, "Message", OatVariant.DANGER);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(handler).appendJavaScript(captor.capture());

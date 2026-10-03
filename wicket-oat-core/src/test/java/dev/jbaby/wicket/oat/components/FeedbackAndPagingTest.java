@@ -95,7 +95,7 @@ class FeedbackAndPagingTest {
                         "<span wicket:id=\"message\">Warning message</span>",
                         "<span wicket:id=\"message\">Error message</span>");
         assertThat(alerts).extracting(tag -> tag.getAttribute("data-variant"))
-                .containsExactly(null, "success", "warning", "error");
+                .containsExactly(null, "success", "warning", "danger");
     }
 
     @Test

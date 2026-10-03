@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,7 +23,7 @@ class BehaviorsTest {
     @Test
     void testAlertBehavior() {
         WebMarkupContainer container = new WebMarkupContainer("id");
-        container.add(new AlertBehavior(AlertBehavior.Variant.SUCCESS));
+        container.add(new AlertBehavior(OatVariant.SUCCESS));
         tester.startComponentInPage(container);
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("role")).isEqualTo("alert");
@@ -32,7 +33,7 @@ class BehaviorsTest {
     @Test
     void testBadgeBehavior() {
         Label label = new Label("id", "New");
-        label.add(new BadgeBehavior(BadgeBehavior.Variant.DANGER));
+        label.add(new BadgeBehavior(OatVariant.DANGER));
         tester.startComponentInPage(label);
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("badge");
@@ -42,7 +43,7 @@ class BehaviorsTest {
     @Test
     void testBadgeBehaviorOutline() {
         Label label = new Label("id", "New");
-        label.add(new BadgeBehavior(BadgeBehavior.Variant.SECONDARY).setOutline(true));
+        label.add(new BadgeBehavior(OatVariant.SECONDARY).setOutline(true));
         tester.startComponentInPage(label);
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("outline");
@@ -52,7 +53,7 @@ class BehaviorsTest {
     @Test
     void testButtonBehavior() {
         WebMarkupContainer link = new WebMarkupContainer("id");
-        link.add(new ButtonBehavior(ButtonBehavior.Variant.SECONDARY));
+        link.add(new ButtonBehavior(OatVariant.SECONDARY));
         tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\"></a>"));
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("button");
@@ -62,7 +63,7 @@ class BehaviorsTest {
     @Test
     void testButtonBehaviorFactoryVariant() {
         WebMarkupContainer link = new WebMarkupContainer("id");
-        link.add(Oat.Behaviors.button(ButtonBehavior.Variant.DANGER));
+        link.add(Oat.Behaviors.button(OatVariant.DANGER));
         tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\"></a>"));
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("data-variant")).isEqualTo("danger");

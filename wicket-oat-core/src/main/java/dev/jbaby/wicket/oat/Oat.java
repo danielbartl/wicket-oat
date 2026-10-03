@@ -46,7 +46,7 @@ public final class Oat {
             return new AlertBehavior();
         }
 
-        public static AlertBehavior alert(AlertBehavior.Variant variant) {
+        public static AlertBehavior alert(OatVariant variant) {
             return new AlertBehavior(variant);
         }
 
@@ -54,7 +54,7 @@ public final class Oat {
             return new BadgeBehavior();
         }
 
-        public static BadgeBehavior badge(BadgeBehavior.Variant variant) {
+        public static BadgeBehavior badge(OatVariant variant) {
             return new BadgeBehavior(variant);
         }
 
@@ -62,7 +62,7 @@ public final class Oat {
             return new ButtonBehavior();
         }
 
-        public static ButtonBehavior button(ButtonBehavior.Variant variant) {
+        public static ButtonBehavior button(OatVariant variant) {
             return new ButtonBehavior(variant);
         }
 
@@ -145,11 +145,11 @@ public final class Oat {
             return new OatAlert(id, message);
         }
 
-        public static OatAlert alert(String id, AlertBehavior.Variant variant) {
+        public static OatAlert alert(String id, OatVariant variant) {
             return new OatAlert(id, (String) null, variant);
         }
 
-        public static OatAlert alert(String id, String message, AlertBehavior.Variant variant) {
+        public static OatAlert alert(String id, String message, OatVariant variant) {
             return new OatAlert(id, message, variant);
         }
 
@@ -157,7 +157,7 @@ public final class Oat {
             return new OatAlert(id, model);
         }
 
-        public static OatAlert alert(String id, IModel<?> model, AlertBehavior.Variant variant) {
+        public static OatAlert alert(String id, IModel<?> model, OatVariant variant) {
             return new OatAlert(id, model, variant);
         }
 
@@ -165,7 +165,7 @@ public final class Oat {
             return new OatBadge(id, label);
         }
 
-        public static OatBadge badge(String id, String label, BadgeBehavior.Variant variant) {
+        public static OatBadge badge(String id, String label, OatVariant variant) {
             return new OatBadge(id, label, variant);
         }
 
@@ -173,7 +173,7 @@ public final class Oat {
             return new OatBadge(id, model);
         }
 
-        public static OatBadge badge(String id, IModel<?> model, BadgeBehavior.Variant variant) {
+        public static OatBadge badge(String id, IModel<?> model, OatVariant variant) {
             return new OatBadge(id, model, variant);
         }
 
@@ -836,11 +836,11 @@ public final class Oat {
         OatToastBehavior.toast(target, message);
     }
 
-    public static void toast(AjaxRequestTarget target, String message, OatToastBehavior.Variant variant) {
+    public static void toast(AjaxRequestTarget target, String message, OatVariant variant) {
         OatToastBehavior.toast(target, message, variant);
     }
 
-    public static void toast(AjaxRequestTarget target, String message, OatToastBehavior.Variant variant, String title) {
+    public static void toast(AjaxRequestTarget target, String message, OatVariant variant, String title) {
         OatToastBehavior.toast(target, message, variant, title);
     }
 }

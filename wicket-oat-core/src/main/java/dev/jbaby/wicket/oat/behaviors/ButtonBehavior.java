@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -13,22 +14,6 @@ import java.io.Serializable;
  * It adds data-variant for colors and classes for styles/sizes.
  */
 public class ButtonBehavior extends Behavior {
-
-    public enum Variant implements Serializable {
-        DEFAULT(null),
-        SECONDARY("secondary"),
-        DANGER("danger");
-
-        private final String value;
-
-        Variant(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
 
     public enum Style implements Serializable {
         DEFAULT(null),
@@ -62,15 +47,19 @@ public class ButtonBehavior extends Behavior {
         }
     }
 
-    private IModel<Variant> variantModel = Model.of(Variant.DEFAULT);
+    private IModel<OatVariant> variantModel = Model.of(OatVariant.DEFAULT);
     private IModel<Style> styleModel = Model.of(Style.DEFAULT);
     private IModel<Size> sizeModel = Model.of(Size.DEFAULT);
     private boolean icon = false;
 
     public ButtonBehavior() {}
 
-    public ButtonBehavior(Variant variant) {
-        this.variantModel = Model.of(variant);
+    public ButtonBehavior(OatVariant variant) {
+        this(Model.of(variant));
+    }
+
+    public ButtonBehavior(IModel<OatVariant> variantModel) {
+        this.variantModel = variantModel;
     }
 
     @Override
@@ -82,7 +71,7 @@ public class ButtonBehavior extends Behavior {
             tag.append("class", "button", " ");
         }
 
-        Variant variant = variantModel.getObject();
+        OatVariant variant = variantModel.getObject();
         if (variant != null && variant.getValue() != null) {
             tag.put("data-variant", variant.getValue());
         }
@@ -102,8 +91,8 @@ public class ButtonBehavior extends Behavior {
         }
     }
 
-    public ButtonBehavior setVariant(Variant variant) {
-        this.variantModel.setObject(variant);
+    public ButtonBehavior setVariant(OatVariant variant) {
+        this.variantModel = Model.of(variant);
         return this;
     }
 

@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -180,7 +181,7 @@ public class OatDialog extends Panel {
     }
 
     /** E.g. {@code DANGER} for a destructive action. */
-    public OatDialog setConfirmVariant(ButtonBehavior.Variant variant) {
+    public OatDialog setConfirmVariant(OatVariant variant) {
         confirmButton.setVariant(variant);
         return this;
     }

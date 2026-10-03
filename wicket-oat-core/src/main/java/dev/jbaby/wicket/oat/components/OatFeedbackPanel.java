@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.AlertBehavior;
 import dev.jbaby.wicket.oat.components.form.NotShownInlineFilter;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -44,7 +45,7 @@ public class OatFeedbackPanel extends FeedbackPanel {
     @Override
     protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel) {
         ListItem<FeedbackMessage> item = super.newMessageItem(index, itemModel);
-        item.add(new AlertBehavior(AlertBehavior.Variant.forFeedback(itemModel.getObject())));
+        item.add(new AlertBehavior(OatVariant.forFeedback(itemModel.getObject())));
         return item;
     }
 

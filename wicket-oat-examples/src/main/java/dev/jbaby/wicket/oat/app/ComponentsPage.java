@@ -1,8 +1,8 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
-import dev.jbaby.wicket.oat.behaviors.OatToastBehavior;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import dev.jbaby.wicket.oat.components.OatAvatar;
 import dev.jbaby.wicket.oat.components.OatAvatarGroup;
@@ -26,14 +26,14 @@ public class ComponentsPage extends BasePage {
         add(new AjaxLink<Void>("successToast") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                Oat.toast(target, "Operation successful!", OatToastBehavior.Variant.SUCCESS, "Great!");
+                Oat.toast(target, "Operation successful!", OatVariant.SUCCESS, "Great!");
             }
         }.add(Oat.Behaviors.button()));
 
         add(new AjaxLink<Void>("errorToast") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                Oat.toast(target, "Something went wrong.", OatToastBehavior.Variant.DANGER, "Error");
+                Oat.toast(target, "Something went wrong.", OatVariant.DANGER, "Error");
             }
         }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE)));
 

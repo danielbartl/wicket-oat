@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -14,30 +15,18 @@ import java.io.Serializable;
  */
 public class BadgeBehavior extends Behavior {
 
-    public enum Variant implements Serializable {
-        DEFAULT(null),
-        SECONDARY("secondary"),
-        SUCCESS("success"),
-        WARNING("warning"),
-        DANGER("danger");
-
-        private final String value;
-        Variant(String value) { this.value = value; }
-        public String getValue() { return value; }
-    }
-
-    private final IModel<Variant> variantModel;
+    private final IModel<OatVariant> variantModel;
     private boolean outline = false;
 
     public BadgeBehavior() {
-        this(Variant.DEFAULT);
+        this(OatVariant.DEFAULT);
     }
 
-    public BadgeBehavior(Variant variant) {
+    public BadgeBehavior(OatVariant variant) {
         this(Model.of(variant));
     }
 
-    public BadgeBehavior(IModel<Variant> variantModel) {
+    public BadgeBehavior(IModel<OatVariant> variantModel) {
         this.variantModel = variantModel;
     }
 
@@ -45,7 +34,7 @@ public class BadgeBehavior extends Behavior {
     public void onComponentTag(Component component, ComponentTag tag) {
         super.onComponentTag(component, tag);
         tag.append("class", "badge", " ");
-        Variant variant = variantModel.getObject();
+        OatVariant variant = variantModel.getObject();
         if (variant != null && variant.getValue() != null) {
             tag.put("data-variant", variant.getValue());
         }

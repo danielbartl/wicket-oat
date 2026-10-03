@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -36,7 +37,7 @@ public abstract class OatButton extends AjaxLink<Void> {
         return this;
     }
 
-    public OatButton setVariant(ButtonBehavior.Variant variant) {
+    public OatButton setVariant(OatVariant variant) {
         buttonBehavior.setVariant(variant);
         return this;
     }

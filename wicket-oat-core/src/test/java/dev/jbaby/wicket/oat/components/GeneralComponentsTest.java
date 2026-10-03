@@ -1,7 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
-import dev.jbaby.wicket.oat.behaviors.BadgeBehavior;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import dev.jbaby.wicket.oat.behaviors.SpinnerBehavior;
 import org.apache.wicket.markup.Markup;
@@ -27,7 +27,7 @@ class GeneralComponentsTest {
 
     @Test
     void testOatBadge() {
-        OatBadge badge = new OatBadge("badge", Model.of("New"), BadgeBehavior.Variant.SUCCESS);
+        OatBadge badge = new OatBadge("badge", Model.of("New"), OatVariant.SUCCESS);
         tester.startComponentInPage(badge);
         TagTester tag = tester.getTagByWicketId("badge");
         assertThat(tag.getAttribute("class")).contains("badge");
@@ -37,7 +37,7 @@ class GeneralComponentsTest {
 
     @Test
     void testOatBadgeOutline() {
-        OatBadge badge = new OatBadge("badge", Model.of("New"), BadgeBehavior.Variant.SECONDARY);
+        OatBadge badge = new OatBadge("badge", Model.of("New"), OatVariant.SECONDARY);
         badge.setOutline(true);
         tester.startComponentInPage(badge);
         TagTester tag = tester.getTagByWicketId("badge");

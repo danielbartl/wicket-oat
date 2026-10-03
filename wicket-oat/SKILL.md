@@ -33,6 +33,18 @@ myLabel.add(Oat.Behaviors.badge(OatVariant.SUCCESS));
 - **Fast Path (`Oat.Components`)**: Use for standard UI widgets with encapsulated markup. Great for rapid development.
 - **Power Path (`Oat.Behaviors`)**: Use for custom logic and deep customization. Add behaviors to *any* standard Wicket component.
 
+## Layout and Styling: Oat CSS Only
+
+Wicket Oat uses Oat's CSS and nothing else. Never add Tailwind, Bootstrap or other utility classes. Prefer plain semantic HTML (Oat styles `form`, `fieldset`, `header`, `footer`, `nav`, `table`, `dialog`, ... directly), and use only Oat's built-in utility classes for layout:
+
+- Stacks: `vstack`, `hstack`
+- Flexbox: `flex`, `flex-col`, `items-center`, `justify-center`, `justify-between`, `justify-end`
+- Spacing: `gap-1`, `gap-2`, `gap-4`, `gap-6`, `mt-2`/`4`/`6`/`8`, `mb-2`/`4`/`6`/`8`, `p-4`, `w-100`
+- Text: `align-left`, `align-center`, `align-right`, `text-light`, `text-lighter`
+- Lists and links: `unstyled`
+
+No other sizes exist (no `gap-3`, `mt-5`, `px-4`, ...). For anything else, write a small CSS rule in the application's own stylesheet using Oat's CSS variables (`var(--space-4)`, `var(--primary)`, ...).
+
 ## Reference Material
 
 - [COMPONENTS.md](references/components.md): Full list of available components and form fields.

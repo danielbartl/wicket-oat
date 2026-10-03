@@ -320,6 +320,40 @@ You can still pass a model and a label explicitly
 (`new OatTextField<>("name", "Full name", model)`), and `getField()` gives
 access to the wrapped `FormComponent` for anything else.
 
+## Layout Utilities
+
+Wicket Oat uses Oat's CSS and no other CSS library, so there is no Tailwind or
+Bootstrap to learn. For layout, Oat's semantic styling of plain HTML does most
+of the work. For the rest, Oat ships a small, fixed set of utility classes
+(in `oat.min.css`, added by `WicketOats.install(this)`):
+
+| Purpose | Classes |
+| :--- | :--- |
+| Stacks | `vstack` (column), `hstack` (row that wraps, items centered) - both with a default gap |
+| Flexbox | `flex`, `flex-col`, `items-center`, `justify-center`, `justify-between`, `justify-end` |
+| Gap | `gap-1`, `gap-2`, `gap-4`, `gap-6` |
+| Margin | `mt-2`, `mt-4`, `mt-6`, `mt-8`, `mb-2`, `mb-4`, `mb-6`, `mb-8` |
+| Padding / width | `p-4`, `w-100` |
+| Text | `align-left`, `align-center`, `align-right`, `text-light`, `text-lighter` |
+| Lists and links | `unstyled` on a `ul`/`ol` (no bullets) or an `a` (no link styling) |
+
+The numbers refer to Oat's spacing scale (`--space-1`, `--space-2`, ...), not
+to pixels, and only the classes listed exist: there is no `gap-3` or `mt-5`.
+A form with right-aligned actions, for example:
+
+```html
+<form wicket:id="form" class="vstack gap-4">
+    <div wicket:id="name"></div>
+    <div wicket:id="email"></div>
+    <footer class="hstack justify-end mt-2">
+        <button wicket:id="submit"></button>
+    </footer>
+</form>
+```
+
+Anything beyond that belongs in your own stylesheet, using Oat's CSS variables
+(`var(--space-4)`, `var(--primary)`, ...) so it follows the current theme.
+
 ## Theming
 
 Wicket Oat ships 17 themes, and `OatAppLayout` applies the current user's theme

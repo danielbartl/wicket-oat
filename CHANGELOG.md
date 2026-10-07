@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Oat UI 0.8.1. An `OatSubmitButton` on an `<input type="submit">` now renders as a button
+  rather than a full-width text field, also inside a `fieldset.group`, and `OatDialog`
+  content taller than the screen scrolls instead of being cut off.
+
 ## 0.1.0
 
 First public release, published to Maven Central as `dev.jbaby:wicket-oat-core`.

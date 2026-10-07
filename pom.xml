@@ -55,7 +55,7 @@
 		<!-- Version of the vendored Oat UI CSS/JS (https://github.com/knadh/oat) in
 		     wicket-oat-core/src/main/resources/.../components/{oat.min.css,oat.min.js}.
 		     Bump this whenever those files are refreshed from upstream. -->
-		<oat.version>0.8.0</oat.version>
+		<oat.version>0.8.1</oat.version>
 
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>

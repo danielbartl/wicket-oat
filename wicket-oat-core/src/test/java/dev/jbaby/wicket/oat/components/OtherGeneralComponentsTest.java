@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,6 +107,14 @@ class OtherGeneralComponentsTest {
     void testOatAppLayout() {
         tester.startPage(new MockAppLayout());
         tester.assertLabel("appTitle", "Wicket Oat Application");
+    }
+
+    @Test
+    void oatAppLayoutRendersItsTopnavAsAHeader() {
+        tester.startPage(new MockAppLayout());
+        TagTester topNav = tester.getTagByWicketId("topNav");
+        assertThat(topNav.getName()).isEqualTo("header");
+        assertThat(topNav.hasAttribute("data-topnav")).isTrue();
     }
 
     private OatDataTable<TestData, String> tableOf(List<TestData> list) {

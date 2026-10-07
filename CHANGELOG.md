@@ -5,6 +5,9 @@
 - Oat UI 0.8.1. An `OatSubmitButton` on an `<input type="submit">` now renders as a button
   rather than a full-width text field, also inside a `fieldset.group`, and `OatDialog`
   content taller than the screen scrolls instead of being cut off.
+- `OatAppLayout` renders its top bar as `<header data-topnav>` instead of `<nav data-topnav>`,
+  since it holds the app name and custom content, not just navigation. It looks the same;
+  update any CSS of your own that targets `nav[data-topnav]`.
 
 ## 0.1.0
 

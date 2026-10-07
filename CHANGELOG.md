@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1
 
 - Oat UI 0.8.1. An `OatSubmitButton` on an `<input type="submit">` now renders as a button
   rather than a full-width text field, also inside a `fieldset.group`, and `OatDialog`

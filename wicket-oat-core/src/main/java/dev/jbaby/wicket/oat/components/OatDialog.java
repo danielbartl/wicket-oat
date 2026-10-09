@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.OatVariant;
+import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -52,9 +53,11 @@ public class OatDialog extends Panel {
 
     private final WebMarkupContainer dialog;
     private final Form<Void> form;
+    private final Label headerLabel;
     private final Label cancelLabel;
     private final Label confirmLabel;
     private final ButtonBehavior confirmButton;
+    private final AjaxButton confirm;
 
     /**
      * A dialog without a trigger button; open it with {@link #open}.
@@ -97,7 +100,8 @@ public class OatDialog extends Panel {
         form.setOutputMarkupId(true);
         dialog.add(form);
 
-        form.add(new Label("header", header));
+        headerLabel = new Label("header", header);
+        form.add(headerLabel);
         form.add(new WebMarkupContainer(BODY_ID));
 
         WebMarkupContainer cancel = new WebMarkupContainer("cancel");
@@ -106,7 +110,7 @@ public class OatDialog extends Panel {
         cancel.add(AttributeModifier.replace("commandfor", (IModel<String>) dialog::getMarkupId));
         form.add(cancel);
 
-        AjaxButton confirm = new AjaxButton("confirm") {
+        confirm = new AjaxButton("confirm") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 onConfirm(target);
@@ -170,6 +174,12 @@ public class OatDialog extends Panel {
         return this;
     }
 
+    /** The dialog's title, e.g. to reuse one dialog for different records. */
+    public OatDialog setHeader(IModel<String> header) {
+        headerLabel.setDefaultModel(header);
+        return this;
+    }
+
     public OatDialog setCancelLabel(IModel<String> label) {
         cancelLabel.setDefaultModel(label);
         return this;
@@ -183,6 +193,20 @@ public class OatDialog extends Panel {
     /** E.g. {@code DANGER} for a destructive action. */
     public OatDialog setConfirmVariant(OatVariant variant) {
         confirmButton.setVariant(variant);
+        return this;
+    }
+
+    /**
+     * Whether the confirm button shows a spinner and ignores further clicks while
+     * {@link #onConfirm} runs (off by default; see {@link AjaxBusyBehavior}), e.g. for a
+     * slow save.
+     */
+    public OatDialog setBusyIndicator(boolean busyIndicator) {
+        if (busyIndicator && confirm.getBehaviors(AjaxBusyBehavior.class).isEmpty()) {
+            confirm.add(new AjaxBusyBehavior());
+        } else if (!busyIndicator) {
+            confirm.getBehaviors(AjaxBusyBehavior.class).forEach(confirm::remove);
+        }
         return this;
     }
 

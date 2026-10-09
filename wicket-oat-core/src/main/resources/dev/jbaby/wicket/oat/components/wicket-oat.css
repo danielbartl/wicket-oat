@@ -123,3 +123,28 @@ wicket\:border,
 wicket\:body {
     display: contents;
 }
+
+/*
+ * A button whose Ajax request is running (AjaxBusyBehavior sets aria-busy). Oat draws
+ * aria-busy as a 1.5rem spinner in the primary color, which would be too big for a
+ * button and invisible on a primary one: size it to the text and draw it in the
+ * text's color instead.
+ */
+:is(button, a.button, [type="submit"], [type="button"])[aria-busy="true"] {
+    cursor: progress;
+}
+
+:is(button, a.button)[aria-busy="true"]::before {
+    width: 1em;
+    height: 1em;
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+}
+
+/* A sidebar link's badge (MenuItem.withBadge), at the end of the link */
+aside[data-sidebar] nav a > .badge {
+    align-self: center;
+    margin-inline-start: auto;
+    padding-block: 0;
+    padding-inline: var(--space-2);
+}

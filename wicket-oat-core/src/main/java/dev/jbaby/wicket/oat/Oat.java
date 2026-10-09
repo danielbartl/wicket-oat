@@ -6,6 +6,7 @@ import dev.jbaby.wicket.oat.components.form.*;
 import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
 import dev.jbaby.wicket.oat.util.SerializableConsumer;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -83,6 +84,14 @@ public final class Oat {
 
         public static FieldBehavior field() {
             return new FieldBehavior();
+        }
+
+        /**
+         * Shows a spinner on an Ajax link or button while its request runs, and ignores
+         * further clicks meanwhile. Oat's own buttons turn it on with {@code setBusyIndicator(true)}.
+         */
+        public static AjaxBusyBehavior ajaxBusy() {
+            return new AjaxBusyBehavior();
         }
 
         /** Joins a {@code <fieldset>}'s inputs, buttons and label addons into one control. */
@@ -382,6 +391,24 @@ public final class Oat {
                 @Override
                 protected void populateItem(ListItem<T> item) {
                     populateItem.accept(item, item.getModelObject());
+                }
+            };
+        }
+
+        /** A dialog that asks to confirm an action before it runs; see {@link OatConfirmDialog#ask}. */
+        public static OatConfirmDialog confirmDialog(String id) {
+            return new OatConfirmDialog(id);
+        }
+
+        /**
+         * Loads slow content over Ajax right after the page is shown, with skeleton
+         * placeholders until then. The factory receives the id the content must use.
+         */
+        public static OatLazyLoadPanel<Component> lazyLoad(String id, SerializableFunction<String, ? extends Component> content) {
+            return new OatLazyLoadPanel<>(id) {
+                @Override
+                public Component getLazyLoadComponent(String markupId) {
+                    return content.apply(markupId);
                 }
             };
         }

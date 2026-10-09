@@ -2,6 +2,21 @@
 
 ## 0.2.0 (unreleased)
 
+- Sidebar sections and badges: `MenuItem.group(label, items...)` renders a collapsible group of
+  links in `OatAppLayout`'s sidebar, open while one of its pages is shown, and
+  `MenuItem.withBadge(...)` shows a count or text after a link's label (hidden while `null`, empty
+  or zero). The sidebar now has a markup id, so `target.add(sidebar)` updates its badges.
+  `MenuItem` gains `badge` and `items` components; its three-argument constructor still works.
+- Busy buttons, opt-in: `setBusyIndicator(true)` on `OatButton`, `OatSubmitButton` and `OatDialog`
+  (its confirm button) shows a spinner (`aria-busy`) while the Ajax request runs and ignores
+  further clicks, so a slow action can't run twice. `Oat.Behaviors.ajaxBusy()` adds the same to
+  any Ajax link or button (registered by `WicketOats.install`).
+- `OatConfirmDialog` asks before an action runs: `confirm.ask(target, header, message, action)`
+  from any Ajax handler, one dialog for any number of buttons, the action kept on the server and
+  run at most once. `OatDialog` gains `setHeader(...)`.
+- `OatLazyLoadPanel` (`Oat.Components.lazyLoad(...)`): Wicket's `AjaxLazyLoadPanel` with Oat
+  skeleton placeholders, loading right after the page.
+
 - Input addons: fields that render a single input (`OatTextField`, `OatNumberField`,
   `OatEmailField`, `OatDateField`, ...) take `setPrefix(...)`/`setSuffix(...)`, shown with Oat's
   input group (`fieldset.group`). Without an addon a field renders as before.

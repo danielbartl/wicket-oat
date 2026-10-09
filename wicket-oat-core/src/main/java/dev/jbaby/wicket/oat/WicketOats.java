@@ -1,6 +1,8 @@
 package dev.jbaby.wicket.oat;
 
 import dev.jbaby.wicket.oat.components.OatAppLayout;
+import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -50,6 +52,16 @@ public class WicketOats {
         // tick, radio dot, select arrow). Anything else, such as image hosts for your own
         // content, is up to the application to add.
         app.getCspSettings().blocking().add(CSPDirective.IMG_SRC, "data:");
+
+        // Busy state for Ajax buttons with an AjaxBusyBehavior (once, even if installed twice:
+        // a second listener would make every click look like a repeated one)
+        boolean busyListenerAdded = false;
+        for (AjaxRequestTarget.IListener listener : app.getAjaxRequestTargetListeners()) {
+            busyListenerAdded |= listener instanceof AjaxBusyBehavior.Listener;
+        }
+        if (!busyListenerAdded) {
+            app.getAjaxRequestTargetListeners().add(new AjaxBusyBehavior.Listener());
+        }
 
         return OatSettings.get(app);
     }

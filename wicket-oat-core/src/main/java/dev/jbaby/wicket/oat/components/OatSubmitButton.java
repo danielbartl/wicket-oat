@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.OatVariant;
+import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -13,6 +14,9 @@ import org.apache.wicket.model.Model;
  * isn't. Attach it to a {@code <button>} or an {@code <input type="submit">}; the
  * label becomes the button's text (or {@code value}), so
  * {@code <button wicket:id="save"></button>} is enough.
+ * <p>
+ * For a slow save, {@link #setBusyIndicator setBusyIndicator(true)} shows a spinner
+ * while the form is submitted and ignores further clicks, so it can't be submitted twice.
  */
 public class OatSubmitButton extends AjaxButton {
 
@@ -56,6 +60,19 @@ public class OatSubmitButton extends AjaxButton {
     /** Square button sized for a single icon. */
     public OatSubmitButton setIcon(boolean icon) {
         buttonBehavior.setIcon(icon);
+        return this;
+    }
+
+    /**
+     * Whether the button shows a spinner and ignores further clicks while its Ajax
+     * request runs (off by default; see {@link AjaxBusyBehavior}).
+     */
+    public OatSubmitButton setBusyIndicator(boolean busyIndicator) {
+        if (busyIndicator && getBehaviors(AjaxBusyBehavior.class).isEmpty()) {
+            add(new AjaxBusyBehavior());
+        } else if (!busyIndicator) {
+            getBehaviors(AjaxBusyBehavior.class).forEach(this::remove);
+        }
         return this;
     }
 }

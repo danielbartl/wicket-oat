@@ -18,7 +18,15 @@
     <nav>
         <ul>
             <li wicket:id="menuItems">
-                <a wicket:id="link"><span wicket:id="label">Label</span></a>
+                <a wicket:id="link"><span wicket:id="label">Label</span><span wicket:id="menuBadge" class="badge"></span></a>
+                <details wicket:id="menuGroup">
+                    <summary wicket:id="label">Group</summary>
+                    <ul>
+                        <li wicket:id="groupItems">
+                            <a wicket:id="link"><span wicket:id="label">Label</span><span wicket:id="menuBadge" class="badge"></span></a>
+                        </li>
+                    </ul>
+                </details>
             </li>
         </ul>
     </nav>

@@ -4,6 +4,7 @@ Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via
 
 ## Available Behaviors
 - `accordion(exclusive?)`: Turns a container into an accordion.
+- `ajaxBusy()`: While an Ajax link/button's request runs, sets `aria-busy="true"` (Oat's spinner) and drops further clicks, so it can't run twice. `OatButton`, `OatSubmitButton` and `OatDialog` (its confirm button) turn it on with `setBusyIndicator(true)`; it's off by default. Needs `WicketOats.install`.
 - `alert(variant?)`: Applies alert styling and `role="alert"`.
 - `badge(variant?)`: Applies badge styling.
 - `button()`: Styles any component (Link, Button, etc.) as an Oat button.

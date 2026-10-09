@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.OatVariant;
+import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -14,6 +15,9 @@ import org.apache.wicket.model.Model;
  * e.g. for an icon. Like any {@code AjaxLink}, a {@code <button>} is rendered with
  * {@code type="button"}, so it never submits a surrounding form; to submit a form,
  * use {@link OatSubmitButton}.
+ * <p>
+ * For a slow action, {@link #setBusyIndicator setBusyIndicator(true)} shows a spinner
+ * while {@code onClick} runs and ignores further clicks meanwhile.
  */
 public abstract class OatButton extends AjaxLink<Void> {
 
@@ -53,6 +57,19 @@ public abstract class OatButton extends AjaxLink<Void> {
     /** Square button sized for a single icon. */
     public OatButton setIcon(boolean icon) {
         buttonBehavior.setIcon(icon);
+        return this;
+    }
+
+    /**
+     * Whether the button shows a spinner and ignores further clicks while its Ajax
+     * request runs (off by default; see {@link AjaxBusyBehavior}).
+     */
+    public OatButton setBusyIndicator(boolean busyIndicator) {
+        if (busyIndicator && getBehaviors(AjaxBusyBehavior.class).isEmpty()) {
+            add(new AjaxBusyBehavior());
+        } else if (!busyIndicator) {
+            getBehaviors(AjaxBusyBehavior.class).forEach(this::remove);
+        }
         return this;
     }
 

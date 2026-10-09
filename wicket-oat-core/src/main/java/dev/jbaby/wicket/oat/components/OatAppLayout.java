@@ -88,6 +88,8 @@ public abstract class OatAppLayout extends WebPage {
 
     protected void sidebar() {
         sidebar = new WebMarkupContainer("sidebar");
+        // So an Ajax handler can re-render it with target.add(sidebar), e.g. to update badges
+        sidebar.setOutputMarkupId(true);
         add(sidebar);
 
         sidebarMenu();
@@ -102,28 +104,76 @@ public abstract class OatAppLayout extends WebPage {
             @Override
             protected void populateItem(ListItem<MenuItem> item) {
                 MenuItem mi = item.getModelObject();
-
-                BookmarkablePageLink<?> link = new BookmarkablePageLink<>("link", mi.pageClass(), mi.parameters());
-                link.add(new Label("label", mi.label()));
-                item.add(link);
-
-                // Leave out pages the current user may not open
-                item.setVisible(getApplication().getSecuritySettings().getAuthorizationStrategy()
-                        .isInstantiationAuthorized(mi.pageClass()));
-
-                if (isCurrentPage(mi)) {
-                    link.add(AttributeModifier.replace("aria-current", "page"));
-                    item.add(new AttributeAppender("class", Model.of("active"), " "));
+                if (mi.isGroup()) {
+                    item.add(new WebMarkupContainer("link").setVisible(false));
+                    item.add(newMenuGroup("menuGroup", mi));
+                    // Leave out a group whose pages the current user may not open
+                    item.setVisible(mi.items().stream().anyMatch(OatAppLayout.this::isAuthorized));
                 } else {
-                    link.add(AttributeModifier.remove("aria-current"));
+                    populateMenuLink(item);
+                    item.add(new WebMarkupContainer("menuGroup").setVisible(false));
                 }
             }
         });
     }
 
+    /** A collapsible section of links, open while one of its pages is shown. */
+    private WebMarkupContainer newMenuGroup(String id, MenuItem group) {
+        WebMarkupContainer details = new WebMarkupContainer(id);
+        details.add(new Label("label", group.label()));
+        details.add(new ListView<>("groupItems", Model.ofList(group.items())) {
+            @Override
+            protected void populateItem(ListItem<MenuItem> item) {
+                populateMenuLink(item);
+            }
+        });
+        details.add(AttributeModifier.replace("open",
+                (IModel<String>) () -> group.items().stream().anyMatch(this::isCurrentPage) ? "open" : null));
+        return details;
+    }
+
+    /** Adds a menu link with its label and badge to a list item, marked when it is the current page. */
+    private void populateMenuLink(ListItem<MenuItem> item) {
+        MenuItem mi = item.getModelObject();
+
+        BookmarkablePageLink<?> link = new BookmarkablePageLink<>("link", mi.pageClass(), mi.parameters());
+        link.add(new Label("label", mi.label()));
+        // An explicit model even without a badge, so it never inherits a page's CompoundPropertyModel
+        link.add(new Label("menuBadge", mi.badge() != null ? mi.badge() : new Model<>()) {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(isShownBadge(getDefaultModelObject()));
+            }
+        });
+        item.add(link);
+
+        // Leave out pages the current user may not open
+        item.setVisible(isAuthorized(mi));
+
+        if (isCurrentPage(mi)) {
+            link.add(AttributeModifier.replace("aria-current", "page"));
+            item.add(new AttributeAppender("class", Model.of("active"), " "));
+        } else {
+            link.add(AttributeModifier.remove("aria-current"));
+        }
+    }
+
+    private static boolean isShownBadge(Object badge) {
+        if (badge instanceof Number number) {
+            return number.doubleValue() != 0;
+        }
+        return badge != null && !badge.toString().isEmpty();
+    }
+
+    private boolean isAuthorized(MenuItem item) {
+        return getApplication().getSecuritySettings().getAuthorizationStrategy()
+                .isInstantiationAuthorized(item.pageClass());
+    }
+
     /**
-     * Whether a menu item points at this page: the same page class and, if the item
-     * has parameters, the same parameters.
+     * Whether a menu link points at this page: the same page class and, if the item
+     * has parameters, the same parameters. A group containing it is shown open.
      */
     protected boolean isCurrentPage(MenuItem item) {
         return getPage().getClass().equals(item.pageClass())
@@ -131,7 +181,8 @@ public abstract class OatAppLayout extends WebPage {
     }
 
     /**
-     * Override to supply menu items for the sidebar.
+     * Override to supply menu items for the sidebar: links ({@link MenuItem#of}) and
+     * collapsible groups of links ({@link MenuItem#group}), optionally with badges.
      */
     protected @NonNull IModel<List<MenuItem>> sidebarMenuItemsModel() {
         return Model.ofList(List.of());

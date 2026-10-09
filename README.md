@@ -83,8 +83,8 @@ is the more natural choice for it.
 
 - **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`, `OatFeedbackPanel`
 - **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
-- **Overlays:** `OatDialog`, `OatDropdown`, `OatTabbedPanel`, `OatTabs`
-- **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatTabbedPanel`, `OatTabs`
+- **Data Display:** `OatDataTable`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
@@ -195,6 +195,81 @@ public class MyComplexActionLink extends AjaxLink<Void> {
     }
 }
 ```
+
+## App Shell
+
+### Sidebar menu
+
+`OatAppLayout` builds its sidebar from `sidebarMenuItemsModel()`. Links can be
+grouped into collapsible sections, open while one of their pages is shown, and
+can carry a badge, such as a count:
+
+```java
+@Override
+protected IModel<List<MenuItem>> sidebarMenuItemsModel() {
+    return Model.ofList(List.of(
+            MenuItem.of("Dashboard", DashboardPage.class),
+            MenuItem.group("Sales",
+                    MenuItem.of("Orders", OrdersPage.class).withBadge(() -> orders.countOpen()),
+                    MenuItem.of("Invoices", InvoicesPage.class)),
+            MenuItem.of("Settings", SettingsPage.class)));
+}
+```
+
+A badge is read on every render and hidden while it is `null`, empty or zero.
+To update it without reloading the page, re-render the sidebar from an Ajax
+handler with `target.add(sidebar)`. Pages the user isn't authorized to open are
+left out, and so is a group left empty. Groups can't contain other groups.
+
+### Busy buttons
+
+For a slow action, a button can show that it's working: with
+`setBusyIndicator(true)`, an `OatButton` or `OatSubmitButton` shows a spinner
+(`aria-busy="true"`) while it waits for its Ajax request, and further clicks send
+nothing, so the action can't run twice. `OatDialog` has the same setter for its
+confirm button, and `Oat.Behaviors.ajaxBusy()` adds it to any other Ajax link or
+button:
+
+```java
+form.add(Oat.Components.submitButton("save", "Save", target -> ...).setBusyIndicator(true));
+add(new AjaxLink<Void>("refresh") { ... }.add(Oat.Behaviors.ajaxBusy()));
+```
+
+This needs `WicketOats.install(this)`, which hooks it into the requests.
+
+### Confirming an action
+
+`OatConfirmDialog` asks before an action runs. Add one to the page and `ask` it
+from any Ajax handler with the action to run; one dialog serves any number of
+buttons, e.g. a Delete button on every table row:
+
+```java
+OatConfirmDialog confirm = new OatConfirmDialog("confirm"); // <div wicket:id="confirm"></div>
+add(confirm);
+
+add(Oat.Components.button("delete", "Delete", target ->
+        confirm.ask(target, "Delete invoice?", "This can't be undone.", t -> {
+            invoices.delete(invoice);
+            t.add(table);
+        })));
+```
+
+The action stays on the server until the user answers, and runs at most once.
+The confirm button is a danger button by default; `setConfirmLabel(...)` and
+`setConfirmVariant(...)` change it.
+
+### Loading slow content
+
+`OatLazyLoadPanel` renders the page first and loads slow content over Ajax right
+after, showing Oat skeleton lines until it arrives:
+
+```java
+add(Oat.Components.lazyLoad("revenue", id -> new RevenuePanel(id, reports.revenueThisYear()))
+        .setPlaceholder(SkeletonBehavior.Shape.LINE, 2));
+```
+
+It extends Wicket's `AjaxLazyLoadPanel`, so it can also wait for background work:
+override `isContentReady()`.
 
 ## Feedback Messages
 

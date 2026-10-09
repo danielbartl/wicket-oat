@@ -1,0 +1,65 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section class="vstack gap-6">
+        <header>
+            <h1 class="mb-2">App Shell</h1>
+            <p class="text-light">Building blocks around your pages: the sidebar's sections and badges,
+                buttons that show they're busy, confirming an action, and loading slow content after the page.</p>
+        </header>
+
+        <article class="card">
+            <h3>Busy buttons</h3>
+            <p class="text-light">With <code>setBusyIndicator(true)</code>, an Oat button shows a spinner while its
+                Ajax request runs and ignores further clicks, so a slow save can't run twice.
+                <code>Oat.Behaviors.ajaxBusy()</code> does the same for any Wicket Ajax link or button.</p>
+            <button wicket:id="slowSave"></button>
+        </article>
+
+        <article class="card">
+            <h3>Confirm before an action</h3>
+            <p class="text-light">One <code>OatConfirmDialog</code> serves every row: <code>confirm.ask(target, question,
+                detail, action)</code>. The count next to "App Shell" in the sidebar is a <code>MenuItem</code> badge,
+                re-rendered with <code>target.add(sidebar)</code>.</p>
+            <div wicket:id="tasks">
+                <ul class="unstyled vstack gap-2">
+                    <li wicket:id="task" class="hstack justify-between">
+                        <span wicket:id="name"></span>
+                        <button wicket:id="delete"></button>
+                    </li>
+                </ul>
+                <div wicket:id="empty"></div>
+            </div>
+            <footer class="mt-4"><button wicket:id="restore"></button></footer>
+        </article>
+        <div wicket:id="confirm"></div>
+
+        <div class="row">
+            <article class="card col-6">
+                <h3>Revenue this month</h3>
+                <div wicket:id="revenue"></div>
+            </article>
+            <article class="card col-6">
+                <h3>Recent activity</h3>
+                <div wicket:id="activity"></div>
+            </article>
+        </div>
+    </section>
+
+    <wicket:fragment wicket:id="revenueFragment">
+        <p class="mb-2"><strong>€48,250</strong> <span class="badge" data-variant="success">+12%</span></p>
+        <p class="text-light">Loaded 1.5 seconds after the page, in place of two skeleton lines.</p>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="activityFragment">
+        <ul>
+            <li>Invoice #1042 paid</li>
+            <li>New customer: ACME GmbH</li>
+            <li>Quote #311 sent</li>
+        </ul>
+        <p class="text-light">Loaded 2.5 seconds after the page, in place of four skeleton lines.</p>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

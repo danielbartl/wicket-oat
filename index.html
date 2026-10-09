@@ -88,8 +88,8 @@
             <span class="badge" data-variant="secondary">Oat 0.8.1</span>
             <span class="badge" data-variant="success">MIT Licensed</span>
         </div>
-        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Data tables with bulk actions, page headers, KPI cards,
-            a wizard, autocomplete and more are <a href="#new">coming with the next release</a>.</p>
+        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Charts, data tables with bulk actions, page headers, KPI cards,
+            a wizard, autocomplete, context menus and more are <a href="#new">coming with the next release</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">View on GitHub</a>
@@ -397,13 +397,29 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
-                        <article class="card oat-stat" style="margin:0;width:100%">
-                            <span class="oat-stat-label">Revenue this year</span>
-                            <span class="oat-stat-value">&euro;128,400</span>
-                            <span class="hstack gap-2 oat-stat-footer"><span class="badge" data-variant="success">+12.5%</span><span class="text-light">vs. last year</span></span>
-                        </article>
+<article class="card oat-stat" style="margin:0;width:100%">
+    <span class="oat-stat-label">Orders</span>
+    <span class="oat-stat-value">6,054</span>
+    <span class="oat-stat-trend oat-sparkline" aria-hidden="true"><svg class="oat-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline class="oat-sparkline-line" points="0.00,27.38 9.09,29.00 18.18,22.41 27.27,20.56 36.36,16.98 45.45,18.60 54.55,15.25 63.64,19.64 72.73,11.67 81.82,9.01 90.91,6.81 100.00,3.00" vector-effect="non-scaling-stroke"/></svg><svg class="oat-sparkline-svg" width="100%" height="32"><circle class="oat-dot-1" cx="100.00%" cy="3.00" r="3"/></svg></span>
+    <span class="hstack gap-2 oat-stat-footer"><span class="badge" data-variant="success">+9.1%</span><span class="text-light">vs. last year</span></span>
+</article>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatStatCard</strong><code>new OatStatCard(id, "Revenue", value).setChange(percent)</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatStatCard</strong><code>new OatStatCard(id, "Orders", value).setChange(percent).setTrend(last12Months)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="hstack gap-4 demo-icons" style="font-size:1.5rem"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatIcon</strong><code>new OatIcon(id, "pencil") &middot; .setLabel("Edit") &middot; 64 Lucide icons</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <section class="oat-cookie-consent" aria-label="Cookie consent" style="position:static;margin:0;max-width:none">
+                            <p>We use cookies to make this site work and, with your consent, to improve it. <a href="#components">Privacy policy</a></p>
+                            <div class="hstack justify-end"><button type="button" class="outline small">Only necessary</button><button type="button" class="small">Accept</button></div>
+                        </section>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatCookieConsent</strong><code>cookieConsent(id).setPolicyLink(PrivacyPage.class) &middot; OatCookieConsent.isAccepted()</code></div>
                 </div>
             </div>
         </div>
@@ -518,6 +534,41 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         </div>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMasterDetail</strong><code>md.setMaster(id -&gt; list) &middot; md.setDetail((id, item) -&gt; panel) &middot; md.select(target, item)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <nav aria-label="Invoice">
+                            <ul class="unstyled hstack oat-menu-bar">
+                                <li><button type="button" class="ghost small">Save</button></li>
+                                <li><button type="button" class="ghost small">Send</button></li>
+                                <li><button type="button" class="ghost small">Export &#9662;</button></li>
+                                <li><a href="#components" class="button ghost small" aria-current="page">Invoices</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMenuBar</strong><code>menuBar(id).addAction("Save", t -&gt; ...) &middot; .addMenu("Export").addAction("CSV", ...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="oat-split" style="min-height:10rem;width:100%">
+                            <div class="oat-split-pane oat-split-first oat-pane-40"><strong>Inbox</strong><p class="text-light small">Order #1001 has shipped</p></div>
+                            <div class="oat-split-pane oat-split-second"><strong>Order #1001 has shipped</strong><p class="text-light small">Drag the corner of the list to resize it.</p></div>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatSplitLayout</strong><code>splitLayout(id, id -&gt; list, id -&gt; detail).setSplit(40)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div style="position:relative;min-height:9.5rem;width:100%">
+                            <p class="hstack gap-2" style="margin:0"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg> Quote Q-1003 approved</p>
+                            <menu class="oat-context-menu" role="menu" style="position:absolute;left:3rem;top:1.75rem">
+                                <button type="button" class="ghost" role="menuitem">Open</button>
+                                <button type="button" class="ghost" role="menuitem">Mark as unread</button>
+                                <button type="button" class="ghost" role="menuitem" data-variant="danger">Delete</button>
+                            </menu>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Context menu</strong><code>row.add(Oat.Behaviors.contextMenu().addAction("Open", t -&gt; ...))</code></div>
                 </div>
             </div>
         </div>
@@ -701,6 +752,125 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         <div role="status" class="skeleton line" style="width:60%"></div>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLazyLoadPanel</strong><code>Oat.Components.lazyLoad(id, id -&gt; new RevenuePanel(id))</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+<figure class="oat-chart oat-column-chart">
+        <figcaption class="oat-chart-title">Revenue per month</figcaption>
+        <ul class="unstyled hstack oat-chart-legend">
+        </ul>
+    <div class="oat-xy" role="img" aria-label="Revenue per month">
+        <div class="oat-xy-ticks"><span><span>150K</span></span><span><span>100K</span></span><span><span>50K</span></span><span><span>0</span></span></div>
+        <div class="oat-xy-plot"><svg class="oat-xy-svg" width="100%" height="192" aria-hidden="true"><line class="oat-chart-baseline" x1="0" x2="100%" y1="191.5" y2="191.5"/><line class="oat-chart-grid" x1="0" x2="100%" y1="128" y2="128"/><line class="oat-chart-grid" x1="0" x2="100%" y1="64" y2="64"/><line class="oat-chart-grid" x1="0" x2="100%" y1="0.5" y2="0.5"/><svg x="0%" width="16.67%" height="192" overflow="visible"><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="57.73" height="134.27" rx="4"/><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="188" height="4"/></svg><svg x="16.67%" width="16.67%" height="192" overflow="visible"><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="67.07" height="124.93" rx="4"/><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="188" height="4"/></svg><svg x="33.33%" width="16.67%" height="192" overflow="visible"><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="48.26" height="143.74" rx="4"/><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="188" height="4"/></svg><svg x="50%" width="16.67%" height="192" overflow="visible"><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="40.45" height="151.55" rx="4"/><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="188" height="4"/></svg><svg x="66.67%" width="16.67%" height="192" overflow="visible"><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="35.97" height="156.03" rx="4"/><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="188" height="4"/></svg><svg x="83.33%" width="16.67%" height="192" overflow="visible"><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="27.65" height="164.35" rx="4"/><rect class="oat-fill-1" x="50%" transform="translate(-12 0)" width="24" y="188" height="4"/><text class="oat-chart-value" x="50%" y="19.65" text-anchor="end" dx="12">128,400</text></svg><rect class="oat-chart-hit" x="0%" y="0" width="16.67%" height="192"><title>Jul: 104,900</title></rect><rect class="oat-chart-hit" x="16.67%" y="0" width="16.67%" height="192"><title>Aug: 97,600</title></rect><rect class="oat-chart-hit" x="33.33%" y="0" width="16.67%" height="192"><title>Sep: 112,300</title></rect><rect class="oat-chart-hit" x="50%" y="0" width="16.67%" height="192"><title>Oct: 118,400</title></rect><rect class="oat-chart-hit" x="66.67%" y="0" width="16.67%" height="192"><title>Nov: 121,900</title></rect><rect class="oat-chart-hit" x="83.33%" y="0" width="16.67%" height="192"><title>Dec: 128,400</title></rect></svg></div>
+        <div class="oat-xy-labels"><span><span>Jul</span></span><span><span>Aug</span></span><span><span>Sep</span></span><span><span>Oct</span></span><span><span>Nov</span></span><span><span>Dec</span></span></div>
+    </div>
+        <details class="oat-chart-data">
+            <summary>Data</summary>
+            <div class="table">
+                <table class="small">
+                    <thead><tr><th scope="col">Category</th><th scope="col" class="align-right"><span>Value</span></th></tr></thead>
+                    <tbody><tr><th scope="row">Jul</th><td class="align-right"><span>104,900</span></td></tr><tr><th scope="row">Aug</th><td class="align-right"><span>97,600</span></td></tr><tr><th scope="row">Sep</th><td class="align-right"><span>112,300</span></td></tr><tr><th scope="row">Oct</th><td class="align-right"><span>118,400</span></td></tr><tr><th scope="row">Nov</th><td class="align-right"><span>121,900</span></td></tr><tr><th scope="row">Dec</th><td class="align-right"><span>128,400</span></td></tr></tbody>
+                </table>
+            </div>
+        </details>
+    </figure>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatColumnChart</strong><code>columnChart(id, months, Month::label, Month::revenue)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+<figure class="oat-chart oat-line-chart">
+        <figcaption class="oat-chart-title">This year and last</figcaption>
+        <ul class="unstyled hstack oat-chart-legend">
+            <li><span class="oat-chart-key oat-key-1"></span><span>2026</span></li><li><span class="oat-chart-key oat-key-2"></span><span>2025</span></li>
+        </ul>
+    <div class="oat-xy" role="img" aria-label="This year and last">
+        <div class="oat-xy-ticks"><span><span>150K</span></span><span><span>100K</span></span><span><span>50K</span></span><span><span>0</span></span></div>
+        <div class="oat-xy-plot"><div class="oat-xy-layers"><svg class="oat-xy-svg" width="100%" height="192" aria-hidden="true"><line class="oat-chart-baseline" x1="0" x2="100%" y1="191.5" y2="191.5"/><line class="oat-chart-grid" x1="0" x2="100%" y1="128" y2="128"/><line class="oat-chart-grid" x1="0" x2="100%" y1="64" y2="64"/><line class="oat-chart-grid" x1="0" x2="100%" y1="0.5" y2="0.5"/></svg><svg class="oat-xy-svg" viewBox="0 0 1000 192" preserveAspectRatio="none" width="100%" height="192" aria-hidden="true"><polyline class="oat-stroke-2" points="83.33,78.46 250,84.1 416.67,69.63 583.33,65.15 750,58.62 916.67,48.9" vector-effect="non-scaling-stroke"/><polyline class="oat-stroke-1" points="83.33,57.73 250,67.07 416.67,48.26 583.33,40.45 750,35.97 916.67,27.65" vector-effect="non-scaling-stroke"/></svg><svg class="oat-xy-svg" width="100%" height="192" aria-hidden="true"><circle class="oat-dot-2" cx="91.67%" cy="48.9" r="4"/><circle class="oat-dot-1" cx="91.67%" cy="27.65" r="4"/><rect class="oat-chart-hit" x="0%" y="0" width="16.67%" height="192"><title>Jul
+2026: 104,900
+2025: 88,700</title></rect><rect class="oat-chart-hit" x="16.67%" y="0" width="16.67%" height="192"><title>Aug
+2026: 97,600
+2025: 84,300</title></rect><rect class="oat-chart-hit" x="33.33%" y="0" width="16.67%" height="192"><title>Sep
+2026: 112,300
+2025: 95,600</title></rect><rect class="oat-chart-hit" x="50%" y="0" width="16.67%" height="192"><title>Oct
+2026: 118,400
+2025: 99,100</title></rect><rect class="oat-chart-hit" x="66.67%" y="0" width="16.67%" height="192"><title>Nov
+2026: 121,900
+2025: 104,200</title></rect><rect class="oat-chart-hit" x="83.33%" y="0" width="16.67%" height="192"><title>Dec
+2026: 128,400
+2025: 111,800</title></rect></svg></div></div>
+        <div class="oat-xy-labels"><span><span>Jul</span></span><span><span>Aug</span></span><span><span>Sep</span></span><span><span>Oct</span></span><span><span>Nov</span></span><span><span>Dec</span></span></div>
+    </div>
+        <details class="oat-chart-data">
+            <summary>Data</summary>
+            <div class="table">
+                <table class="small">
+                    <thead><tr><th scope="col">Category</th><th scope="col" class="align-right"><span>2026</span></th><th scope="col" class="align-right"><span>2025</span></th></tr></thead>
+                    <tbody><tr><th scope="row">Jul</th><td class="align-right"><span>104,900</span></td><td class="align-right"><span>88,700</span></td></tr><tr><th scope="row">Aug</th><td class="align-right"><span>97,600</span></td><td class="align-right"><span>84,300</span></td></tr><tr><th scope="row">Sep</th><td class="align-right"><span>112,300</span></td><td class="align-right"><span>95,600</span></td></tr><tr><th scope="row">Oct</th><td class="align-right"><span>118,400</span></td><td class="align-right"><span>99,100</span></td></tr><tr><th scope="row">Nov</th><td class="align-right"><span>121,900</span></td><td class="align-right"><span>104,200</span></td></tr><tr><th scope="row">Dec</th><td class="align-right"><span>128,400</span></td><td class="align-right"><span>111,800</span></td></tr></tbody>
+                </table>
+            </div>
+        </details>
+    </figure>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLineChart</strong><code>lineChart(id, months, Month::label).addSeries("2026", Month::revenue)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+<figure class="oat-chart oat-donut-chart">
+        <figcaption class="oat-chart-title">Revenue by region</figcaption>
+        <ul class="unstyled hstack oat-chart-legend">
+        </ul>
+    <div class="oat-donut" role="img" aria-label="Revenue by region">
+        <div class="oat-donut-ring"><svg class="oat-donut-svg" viewBox="0 0 120 120" aria-hidden="true"><circle class="oat-donut-track" cx="60" cy="60" r="48" pathLength="100"/><circle class="oat-donut-segment oat-stroke-1" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="46.59 53.41" stroke-dashoffset="-0" transform="rotate(-90 60 60)"><title>DACH: 512 (47.2%)</title></circle><circle class="oat-donut-segment oat-stroke-2" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="21.7 78.3" stroke-dashoffset="-47.19" transform="rotate(-90 60 60)"><title>Benelux: 242 (22.3%)</title></circle><circle class="oat-donut-segment oat-stroke-3" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="17.65 82.35" stroke-dashoffset="-69.49" transform="rotate(-90 60 60)"><title>Nordics: 198 (18.2%)</title></circle><circle class="oat-donut-segment oat-stroke-4" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="11.66 88.34" stroke-dashoffset="-87.74" transform="rotate(-90 60 60)"><title>France: 133 (12.3%)</title></circle><text class="oat-donut-total" x="60" y="60" text-anchor="middle" dominant-baseline="central" font-size="18">1,085</text></svg></div>
+        <ul class="unstyled oat-donut-legend">
+            <li><span class="oat-chart-key oat-key-1"></span><span class="oat-donut-name">DACH</span><span class="oat-donut-value">512</span><span class="oat-donut-share text-light">47.2%</span></li><li><span class="oat-chart-key oat-key-2"></span><span class="oat-donut-name">Benelux</span><span class="oat-donut-value">242</span><span class="oat-donut-share text-light">22.3%</span></li><li><span class="oat-chart-key oat-key-3"></span><span class="oat-donut-name">Nordics</span><span class="oat-donut-value">198</span><span class="oat-donut-share text-light">18.2%</span></li><li><span class="oat-chart-key oat-key-4"></span><span class="oat-donut-name">France</span><span class="oat-donut-value">133</span><span class="oat-donut-share text-light">12.3%</span></li>
+        </ul>
+    </div>
+        <details class="oat-chart-data">
+            <summary>Data</summary>
+            <div class="table">
+                <table class="small">
+                    <thead><tr><th scope="col">Category</th><th scope="col" class="align-right"><span>Value</span></th></tr></thead>
+                    <tbody><tr><th scope="row">DACH</th><td class="align-right"><span>512</span></td></tr><tr><th scope="row">Benelux</th><td class="align-right"><span>242</span></td></tr><tr><th scope="row">Nordics</th><td class="align-right"><span>198</span></td></tr><tr><th scope="row">France</th><td class="align-right"><span>133</span></td></tr></tbody>
+                </table>
+            </div>
+        </details>
+    </figure>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDonutChart</strong><code>donutChart(id, regions, Region::name, Region::revenue)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+<figure class="oat-chart oat-bar-chart">
+        <figcaption class="oat-chart-title">Top customers</figcaption>
+        <ul class="unstyled hstack oat-chart-legend">
+        </ul>
+    <div class="oat-bars" role="img" aria-label="Top customers">
+        <div class="oat-bar-row"><span class="oat-bar-label">ACME GmbH</span><span class="oat-bar-track"><svg class="oat-bar-svg" width="100%" height="24" aria-hidden="true"><rect class="oat-fill-1" x="0" y="5" height="14" rx="4" width="100%"><title>ACME GmbH: 182,400</title></rect><rect class="oat-fill-1" x="0" y="5" height="14" width="4"><title>ACME GmbH: 182,400</title></rect></svg></span><span class="oat-bar-value">182,400</span></div><div class="oat-bar-row"><span class="oat-bar-label">Globex</span><span class="oat-bar-track"><svg class="oat-bar-svg" width="100%" height="24" aria-hidden="true"><rect class="oat-fill-1" x="0" y="5" height="14" rx="4" width="83.28%"><title>Globex: 151,900</title></rect><rect class="oat-fill-1" x="0" y="5" height="14" width="4"><title>Globex: 151,900</title></rect></svg></span><span class="oat-bar-value">151,900</span></div><div class="oat-bar-row"><span class="oat-bar-label">Initech</span><span class="oat-bar-track"><svg class="oat-bar-svg" width="100%" height="24" aria-hidden="true"><rect class="oat-fill-1" x="0" y="5" height="14" rx="4" width="64.86%"><title>Initech: 118,300</title></rect><rect class="oat-fill-1" x="0" y="5" height="14" width="4"><title>Initech: 118,300</title></rect></svg></span><span class="oat-bar-value">118,300</span></div>
+    </div>
+        <details class="oat-chart-data">
+            <summary>Data</summary>
+            <div class="table">
+                <table class="small">
+                    <thead><tr><th scope="col">Category</th><th scope="col" class="align-right"><span>Value</span></th></tr></thead>
+                    <tbody><tr><th scope="row">ACME GmbH</th><td class="align-right"><span>182,400</span></td></tr><tr><th scope="row">Globex</th><td class="align-right"><span>151,900</span></td></tr><tr><th scope="row">Initech</th><td class="align-right"><span>118,300</span></td></tr></tbody>
+                </table>
+            </div>
+        </details>
+    </figure>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatBarChart</strong><code>barChart(id, customers, Row::name, Row::revenue)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="oat-load-more-list" role="list" style="width:100%">
+                            <div role="listitem">Order #1001 has shipped</div>
+                            <div role="listitem">Meeting notes, week 1002</div>
+                            <div role="listitem">Quote Q-1003 approved</div>
+                        </div>
+                        <footer class="hstack justify-center oat-load-more"><button type="button" class="outline small">Load more (3 of 64)</button></footer>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLoadMoreList</strong><code>loadMoreList(id, provider, 20, (id, item) -&gt; row).setLoadOnScroll(true)</code></div>
                 </div>
             </div>
         </div>

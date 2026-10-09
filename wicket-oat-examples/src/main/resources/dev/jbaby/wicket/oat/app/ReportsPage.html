@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1 class="mb-2">Reports</h1>
+        <p class="text-light">Charts rendered as SVG on the server: no JavaScript, colors from a colorblind-safe palette
+            that follows the theme, values on hover, and every chart's numbers in a <em>Data</em> table for screen
+            readers. Stat cards take a sparkline with <code>setTrend</code>.</p>
+
+        <div class="row mt-6">
+            <div class="col-4"><article wicket:id="revenue"></article></div>
+            <div class="col-4"><article wicket:id="orders"></article></div>
+            <div class="col-4"><article wicket:id="average"></article></div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-6"><article class="card"><div wicket:id="monthly"></div></article></div>
+            <div class="col-6"><article class="card"><div wicket:id="trend"></div></article></div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-6"><article class="card"><div wicket:id="customers"></div></article></div>
+            <div class="col-6"><article class="card"><div wicket:id="regions"></div></article></div>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

@@ -24,6 +24,12 @@ public class WicketOats {
     public static final CssResourceReference OAT_CSS = new CssResourceReference(OatAppLayout.class, "oat.min.css");
     /** Oat's web components and {@code ot.toast()}. */
     public static final JavaScriptResourceReference OAT_JS = new JavaScriptResourceReference(OatAppLayout.class, "oat.min.js");
+
+    /**
+     * Wicket Oat's own script, for context menus and loading more items on scroll. The
+     * components that need it render it themselves; it isn't added to every page.
+     */
+    public static final JavaScriptResourceReference WICKET_OAT_JS = new JavaScriptResourceReference(OatAppLayout.class, "wicket-oat.js");
     /** The built-in themes beyond Oat's light/dark default. */
     public static final CssResourceReference THEMES_CSS = new CssResourceReference(OatAppLayout.class, "themes.css");
     /** Wicket Oat's own component rules. */

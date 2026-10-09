@@ -81,10 +81,11 @@ is the more natural choice for it.
 
 ## Available Components
 
-- **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`
-- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatWizard`, `OatMasterDetail`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`, `OatIcon`, `OatCookieConsent`
+- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
-- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
+- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
@@ -452,6 +453,72 @@ add(new OatMessageInput("addNote", (target, text) -> { save(customer, text); tar
 form.add(new OatCustomField<String>("phone", PhoneInput::new));   // (id, model) -> your input
 ```
 
+## Charts
+
+Simple charts are rendered as SVG on the server, with no JavaScript library. Each
+one is a `<figure>` with a title and a legend (from two series on). Hovering a mark
+shows its value, and a "Data" disclosure holds the numbers as a table, which is
+what screen readers use. The colors come from a colorblind-safe palette with
+separate steps for light and dark themes. Override `--oat-chart-1` to `--oat-chart-8`
+for your brand.
+
+```java
+add(Oat.Components.columnChart("monthly", () -> reports.monthly(), Month::label, Month::revenue)
+        .setTitle("Revenue per month")
+        .setValueFormat((value, locale) -> euros(value, locale)));
+add(Oat.Components.lineChart("trend", () -> reports.monthly(), Month::label)
+        .addSeries("2026", Month::revenue)
+        .addSeries("2025", Month::lastYear));
+add(Oat.Components.barChart("customers", () -> reports.topCustomers(), Row::name, Row::revenue));
+add(Oat.Components.donutChart("regions", () -> reports.byRegion(), Region::name, Region::revenue));
+add(new OatStatCard("revenue", "Revenue", revenue).setTrend(() -> reports.last12Months()));
+```
+
+- **Bar chart:** compares categories, especially with long names. Ranked lists work well.
+- **Column chart:** for a few ordered categories, such as months.
+- **Line chart:** change over time, with up to three series.
+- **Donut chart:** how a whole divides into at most six parts. The smallest beyond
+  that are combined into "Other".
+- **Sparkline:** a small trend line without axes.
+
+## Menus, Split Layouts and Long Lists
+
+```java
+// A row of commands
+OatMenuBar commands = Oat.Components.menuBar("commands")
+        .addAction("New", target -> create(target))
+        .addLink("Reports", ReportsPage.class);
+commands.addMenu("Export").addAction("CSV", target -> exportCsv(target));
+add(commands);
+
+// Right-click (or Shift+F10) on a row
+row.add(Oat.Behaviors.contextMenu()
+        .addAction("Open", target -> open(target, mail))
+        .addAction(Model.of("Delete"), OatVariant.DANGER, target -> delete(target, mail)));
+
+// Two panes; the first is resizable by dragging its corner, stacked on phones
+add(Oat.Components.splitLayout("inbox", id -> new MailList(id), id -> new MailView(id)).setSplit(40));
+
+// 20 items at a time, the next batch as the user scrolls
+add(Oat.Components.loadMoreList("mail", provider, 20, (id, mail) -> new MailRow(id, mail)).setLoadOnScroll(true));
+```
+
+`OatIcon` draws one of 64 Lucide icons (`OatIcon.names()`) inline, at the text's
+size and color. It's decorative unless you give it a label:
+
+```java
+add(new OatIcon("edit", "pencil"));                         // <svg wicket:id="edit"></svg>
+add(new OatIcon("remove", "trash-2").setLabel("Delete"));  // role="img" aria-label="Delete"
+```
+
+`OatCookieConsent` asks for consent to optional cookies, remembers the answer for a
+year, and hides itself once the user has answered. Check the answer with
+`OatCookieConsent.isAccepted()` before loading, for example, analytics:
+
+```java
+add(Oat.Components.cookieConsent("cookies").setPolicyLink(PrivacyPage.class));
+```
+
 ## Data Tables
 
 `OatDataTable` is a Wicket `DataTable` with Oat styling: sortable headers show
@@ -532,6 +599,10 @@ getCspSettings().blocking()
 
 Call `install()` after any `strict()`/`clear()` of your own, since those reset
 the directives it adds.
+
+The context menu and a load-on-scroll `OatLoadMoreList` use a small script of the
+library's own, `wicket-oat.js`. Wicket renders it with the page's nonce, and it
+only reads `data-` attributes, so they need nothing added to the policy.
 
 ## Translations
 

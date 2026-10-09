@@ -10,6 +10,7 @@ Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via
 - `button()`: Styles any component (Link, Button, etc.) as an Oat button.
 - `buttonGroup()`: Styles a container as a button group.
 - `card()`: Styles a container as a card.
+- `contextMenu()`: `ContextMenuBehavior`, a menu of actions opened by right-click, Shift+F10 or the Menu key on the component. `addAction(label, target -> ...)`, `addAction(IModel label, OatVariant.DANGER, ...)`. It's keyboard navigable and returns focus to the component when it closes. Uses `wicket-oat.js` (CSP-safe).
 - `field()`: Styles a form field container.
 - `hint()`: Styles a small text hint inside a field.
 - `inputGroup()`: Joins a `<fieldset>`'s inputs, buttons and `<label>`/`<legend>` addons into one control (`class="group"`). Oat fields have `setPrefix`/`setSuffix` for this.

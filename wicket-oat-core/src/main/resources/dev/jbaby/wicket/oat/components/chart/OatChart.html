@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <figure wicket:id="figure" class="oat-chart">
+        <figcaption wicket:id="title" class="oat-chart-title"></figcaption>
+        <ul wicket:id="legendList" class="unstyled hstack oat-chart-legend">
+            <li wicket:id="legend"><span wicket:id="key"></span><span wicket:id="name"></span></li>
+        </ul>
+        <wicket:child/>
+        <details wicket:id="data" class="oat-chart-data">
+            <summary wicket:id="summary"></summary>
+            <div class="table">
+                <table class="small">
+                    <thead><tr><th wicket:id="categoryHeader" scope="col"></th><th wicket:id="seriesHeader" scope="col" class="align-right"><span wicket:id="name"></span></th></tr></thead>
+                    <tbody><tr wicket:id="row"><th wicket:id="category" scope="row"></th><td wicket:id="value" class="align-right"><span wicket:id="text"></span></td></tr></tbody>
+                </table>
+            </div>
+        </details>
+    </figure>
+</wicket:panel>
+</html>

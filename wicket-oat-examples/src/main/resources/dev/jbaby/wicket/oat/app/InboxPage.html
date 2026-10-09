@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1 class="mb-2">Inbox</h1>
+        <p class="text-light">An <code>OatMenuBar</code> of commands above an <code>OatSplitLayout</code>: drag the corner
+            of the list to resize it. The list is an <code>OatLoadMoreList</code> that loads the next 20 messages as you
+            scroll. Right-click a message (or press Shift+F10 on it) for its <code>contextMenu()</code>. The icons are
+            <code>OatIcon</code>s, and the banner at the bottom is an <code>OatCookieConsent</code>
+            (<a wicket:id="askAgain">show it again</a>).</p>
+
+        <nav wicket:id="commands" aria-label="Inbox" class="mt-6 mb-2"></nav>
+        <div wicket:id="inbox"></div>
+        <div wicket:id="cookies"></div>
+    </section>
+
+    <wicket:fragment wicket:id="rowFragment">
+        <a wicket:id="open" class="inbox-row">
+            <svg wicket:id="icon"></svg>
+            <span><strong wicket:id="subject"></strong><small wicket:id="from"></small></span>
+        </a>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="detailFragment">
+        <article wicket:id="message">
+            <h2 wicket:id="subject" class="mb-1"></h2>
+            <p class="text-light">From <span wicket:id="from"></span></p>
+            <p wicket:id="body" class="inbox-body"></p>
+        </article>
+        <p wicket:id="empty" class="text-light">Choose a message to read it.</p>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

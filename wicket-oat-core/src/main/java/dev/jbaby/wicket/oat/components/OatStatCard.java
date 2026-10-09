@@ -8,7 +8,10 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import dev.jbaby.wicket.oat.components.chart.OatSparkline;
+
 import java.text.NumberFormat;
+import java.util.List;
 
 /**
  * A dashboard tile for one key figure: a label, the value in large type, and
@@ -28,6 +31,7 @@ import java.text.NumberFormat;
 public class OatStatCard extends Border {
 
     private IModel<? extends Number> change;
+    private IModel<? extends List<? extends Number>> trend;
     private boolean higherIsBetter = true;
     private final Label hint;
 
@@ -39,6 +43,13 @@ public class OatStatCard extends Border {
         super(id);
         addToBorder(new Label("label", label));
         addToBorder(new ValueLabel("value", value));
+        addToBorder(new OatSparkline("trend", (IModel<List<? extends Number>>) () -> trend != null ? trend.getObject() : null) {
+            @Override
+            protected void onConfigure() {
+                super.onConfigure();
+                setVisible(trend != null && trend.getObject() != null && trend.getObject().size() > 1);
+            }
+        });
 
         WebMarkupContainer footer = new WebMarkupContainer("footer") {
             @Override
@@ -86,6 +97,15 @@ public class OatStatCard extends Border {
         return this;
     }
 
+    /**
+     * The value's recent history, oldest first, drawn as a sparkline under it - e.g. the
+     * last 12 months. The latest point is marked; {@code null} hides it.
+     */
+    public OatStatCard setTrend(IModel<? extends List<? extends Number>> trend) {
+        this.trend = trend;
+        return this;
+    }
+
     /** A note next to the change, e.g. "vs. last month"; {@code null} hides it. */
     public OatStatCard setHint(IModel<String> hint) {
         this.hint.setDefaultModel(hint != null ? hint : new Model<String>());
@@ -121,6 +141,9 @@ public class OatStatCard extends Border {
     protected void onDetach() {
         if (change != null) {
             change.detach();
+        }
+        if (trend != null) {
+            trend.detach();
         }
         super.onDetach();
     }

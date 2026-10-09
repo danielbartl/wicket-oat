@@ -2,6 +2,27 @@
 
 ## 0.2.0 (unreleased)
 
+- Charts in `dev.jbaby.wicket.oat.components.chart`: `OatBarChart`, `OatColumnChart`,
+  `OatLineChart` (up to three series), `OatDonutChart` (up to six parts, the rest as "Other")
+  and `OatSparkline`, rendered as SVG on the server. No JavaScript; a colorblind-safe palette
+  stepped for light and dark themes (`--oat-chart-1` to `--oat-chart-8`); values on hover;
+  and every chart's numbers in a "Data" table for screen readers. `OatStatCard.setTrend(...)`
+  draws a sparkline under the figure.
+- `contextMenu()` (`ContextMenuBehavior`): a menu of actions on right-click, Shift+F10 or the
+  Menu key, navigable with the arrow keys.
+- `OatMenuBar`: a row of commands, made of buttons, links and menus.
+- `OatSplitLayout`: two panes side by side or stacked, the first resizable by dragging its corner.
+- `OatLoadMoreList`: a long list that appends a batch at a time with "Load more", optionally
+  as the user scrolls.
+- `OatIcon`: 64 inline-SVG icons from Lucide (ISC license), plus your own with `register`.
+- `OatCookieConsent`: a banner asking for consent to optional cookies, remembered for a year.
+- `wicket-oat.js`: a small script of the library's own, rendered only by the context menu
+  and a load-on-scroll list. It reads `data-` attributes, so the strict CSP still holds.
+- Fix: a hidden component's Ajax placeholder no longer shows as an empty button. Oat's
+  display rules had overridden the browser's `[hidden]`.
+- Fix: `OatStatCard` shows its figure with proportional digits, so large numbers keep their
+  natural spacing.
+
 - `OatLoginForm`: a sign-in form with password-manager hints, an optional remember-me
   checkbox and forgot-password link, a failure message that doesn't say which part was wrong,
   and a new session id after signing in. Sign-in is a callback, so it works with any session

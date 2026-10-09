@@ -95,6 +95,11 @@ public final class Oat {
             return new AjaxBusyBehavior();
         }
 
+        /** A menu of actions opened by right-click (or Shift+F10) on the component; add them with {@code addAction}. */
+        public static ContextMenuBehavior contextMenu() {
+            return new ContextMenuBehavior();
+        }
+
         /** Joins a {@code <fieldset>}'s inputs, buttons and label addons into one control. */
         public static InputGroupBehavior inputGroup() {
             return new InputGroupBehavior();
@@ -485,6 +490,62 @@ public final class Oat {
         /** A box for writing a message, with a Send button; {@code onSend} gets the text. */
         public static OatMessageInput messageInput(String id, SerializableBiConsumer<AjaxRequestTarget, String> onSend) {
             return new OatMessageInput(id, onSend);
+        }
+
+        /** A long list that appends a batch of items at a time ("Load more"). */
+        public static <T> OatLoadMoreList<T> loadMoreList(String id, org.apache.wicket.markup.repeater.data.IDataProvider<T> provider, long batchSize,
+                                                         SerializableBiFunction<String, IModel<T>, ? extends Component> item) {
+            return new OatLoadMoreList<>(id, provider, batchSize, item);
+        }
+
+        /** A row of commands: buttons, links and menus; add them with {@code addAction}/{@code addLink}/{@code addMenu}. */
+        public static OatMenuBar menuBar(String id) {
+            return new OatMenuBar(id);
+        }
+
+        /** Two panes side by side, the first resizable by dragging its corner. */
+        public static OatSplitLayout splitLayout(String id, SerializableFunction<String, ? extends Component> first,
+                                                 SerializableFunction<String, ? extends Component> second) {
+            return new OatSplitLayout(id, first, second);
+        }
+
+        /** A banner asking for consent to optional cookies; check it with {@link OatCookieConsent#isAccepted()}. */
+        public static OatCookieConsent cookieConsent(String id) {
+            return new OatCookieConsent(id);
+        }
+
+        /** An icon by name, e.g. {@code "pencil"}; see {@link OatIcon#names()}. */
+        public static OatIcon icon(String id, String name) {
+            return new OatIcon(id, name);
+        }
+
+        /** Horizontal bars comparing a value across categories. */
+        public static <T> dev.jbaby.wicket.oat.components.chart.OatBarChart<T> barChart(String id, IModel<? extends List<T>> data,
+                SerializableFunction<T, String> category, SerializableFunction<T, ? extends Number> value) {
+            return new dev.jbaby.wicket.oat.components.chart.OatBarChart<>(id, data, category, value);
+        }
+
+        /** Columns comparing a value across ordered categories, e.g. months. */
+        public static <T> dev.jbaby.wicket.oat.components.chart.OatColumnChart<T> columnChart(String id, IModel<? extends List<T>> data,
+                SerializableFunction<T, String> category, SerializableFunction<T, ? extends Number> value) {
+            return new dev.jbaby.wicket.oat.components.chart.OatColumnChart<>(id, data, category, value);
+        }
+
+        /** Lines over time; add up to three with {@code addSeries}. */
+        public static <T> dev.jbaby.wicket.oat.components.chart.OatLineChart<T> lineChart(String id, IModel<? extends List<T>> data,
+                SerializableFunction<T, String> category) {
+            return new dev.jbaby.wicket.oat.components.chart.OatLineChart<>(id, data, category);
+        }
+
+        /** A whole divided into a few parts, as a ring with a legend of values and shares. */
+        public static <T> dev.jbaby.wicket.oat.components.chart.OatDonutChart<T> donutChart(String id, IModel<? extends List<T>> data,
+                SerializableFunction<T, String> category, SerializableFunction<T, ? extends Number> value) {
+            return new dev.jbaby.wicket.oat.components.chart.OatDonutChart<>(id, data, category, value);
+        }
+
+        /** A small trend line without axes. */
+        public static dev.jbaby.wicket.oat.components.chart.OatSparkline sparkline(String id, IModel<? extends List<? extends Number>> values) {
+            return new dev.jbaby.wicket.oat.components.chart.OatSparkline(id, values);
         }
 
         /** A dialog that asks to confirm an action before it runs; see {@link OatConfirmDialog#ask}. */

@@ -105,7 +105,9 @@ class TranslationsTest {
         Path root = Path.of("src/main/resources/dev/jbaby/wicket/oat");
         List<Path> bundles;
         try (Stream<Path> files = Files.walk(root)) {
-            bundles = files.filter(f -> f.getFileName().toString().matches("[A-Za-z]+\\.properties")).toList();
+            // Icons are drawing data, not texts
+            bundles = files.filter(f -> f.getFileName().toString().matches("[A-Za-z]+\\.properties"))
+                    .filter(f -> !f.getParent().endsWith("icons")).toList();
         }
         assertThat(bundles).isNotEmpty();
 

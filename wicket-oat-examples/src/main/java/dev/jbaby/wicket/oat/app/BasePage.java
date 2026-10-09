@@ -45,6 +45,8 @@ public class BasePage extends OatAppLayout {
                         MenuItem.of("Customers (Master-Detail)", CustomersPage.class),
                         MenuItem.of("Sign In", SignInPage.class),
                         MenuItem.of("New Order (Wizard)", OrderWizardPage.class),
+                        MenuItem.of("Reports (Charts)", ReportsPage.class),
+                        MenuItem.of("Inbox", InboxPage.class),
                         // A badge that follows the data: AppShellPage re-renders the sidebar after a delete
                         MenuItem.of("App Shell", AppShellPage.class).withBadge(() -> DemoTasks.get().size())),
                 MenuItem.group("Components",

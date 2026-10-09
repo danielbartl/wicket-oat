@@ -73,3 +73,35 @@
 fieldset.group > select.phone-code {
     flex: 0 0 6.5rem;
 }
+
+/* The inbox demo: a fixed height, so the list scrolls inside its pane */
+.oat-split.inbox {
+    height: 30rem;
+}
+
+.inbox-row {
+    display: flex;
+    gap: var(--space-3);
+    align-items: baseline;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-small);
+    color: var(--foreground);
+}
+
+.inbox-row:hover,
+.inbox-row:focus-visible {
+    background-color: var(--accent);
+}
+
+.inbox-row[data-read] strong {
+    font-weight: var(--font-normal);
+}
+
+.inbox-row small {
+    display: block;
+    color: var(--muted-foreground);
+}
+
+.inbox-body {
+    white-space: pre-line;
+}

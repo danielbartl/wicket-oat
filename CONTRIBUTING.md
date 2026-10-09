@@ -20,6 +20,10 @@ See the "Running the Examples" section of the [README](README.md#running-the-exa
   `WicketTester` in `wicket-oat-core/src/test/java`; follow the style of the
   existing tests in the same package.
 - Make sure `./mvnw test` passes before opening a PR.
+- Texts a component renders itself are resources in a `.properties` file next to
+  it, with a `_<lang>.utf8.properties` translation for each supported language
+  (`de`, `es`, `fr`, `it`, `ja`, `nl`, `pt`). `TranslationsTest` fails if a key
+  or a file is missing, so add a translation with every new text.
 
 ## Releasing
 

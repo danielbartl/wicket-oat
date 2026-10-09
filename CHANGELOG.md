@@ -14,6 +14,9 @@
   id) and an optional description.
 - Grid and stack behaviors for Oat's layout classes: `Oat.Behaviors.row()`, `col(span)`,
   `col(span, offset)`, `container()`, `hstack()` and `vstack()`.
+- The library's own texts are translated into German, Spanish, French, Italian, Japanese, Dutch
+  and Portuguese (`*_<lang>.utf8.properties`), following the component's locale. Apps can still
+  override any key in their own properties.
 - Single-input fields now extend the new `BaseOatInputField` (itself a `BaseOatField`); component
   paths such as `container:field` are unchanged.
 

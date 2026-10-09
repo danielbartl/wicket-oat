@@ -16,6 +16,7 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 - **Comprehensive Component Set:** Includes everything from basic buttons to complex data tables.
 - **Accessible Forms by Default:** Every form field automatically wires `aria-describedby` (linking the field to its feedback/hint message) and toggles `aria-invalid` when validation fails — no extra markup or wiring required.
 - **Wicket-Style Forms:** Form fields work with `CompoundPropertyModel`, take their labels from `.properties` files, and re-render via Ajax like any Wicket component (see [Forms](#forms)).
+- **Translated:** The library's own texts (dialog buttons, menu toggle, upload hints, validation messages, ...) come in English, German, Spanish, French, Italian, Japanese, Dutch and Portuguese, following the component's locale like Wicket's own messages (see [Translations](#translations)).
 
 ## Quick Start
 
@@ -266,6 +267,39 @@ getCspSettings().blocking()
 
 Call `install()` after any `strict()`/`clear()` of your own, since those reset
 the directives it adds.
+
+## Translations
+
+The few texts Wicket Oat renders itself are Wicket resources, translated into
+German (`de`), Spanish (`es`), French (`fr`), Italian (`it`), Japanese (`ja`),
+Dutch (`nl`) and Portuguese (`pt`), with English as the fallback. They follow
+the component's locale (usually the session's), just like Wicket's own
+validation messages. To change one, or to add a language, define its key in
+the properties of the page, or of a base page all your pages extend, e.g.
+`BasePage_de.properties`:
+
+```properties
+OatDialog.confirm=Speichern
+OatTagInput.placeholder=Schlagwörter hinzufügen...
+```
+
+A component's own properties are found before the application's, so to use
+`MyApplication_de.properties` instead, have Wicket search it first:
+
+```java
+getResourceSettings().getStringResourceLoaders()
+        .add(0, new ClassStringResourceLoader(MyApplication.class));
+```
+
+| Key | English |
+| :--- | :--- |
+| `OatDialog.cancel` / `OatDialog.confirm` | Cancel / Confirm |
+| `OatAppLayout.toggleMenu` | Toggle menu |
+| `OatAppLayout.title` / `OatAppLayout.name` | Wicket Oat Application (not translated: meant to be overridden) |
+| `OatPagingNavigator.label` | Pagination |
+| `OatFileDropzone.choose` / `OatFileDropzone.hint` | Choose files / Drop files here or click to choose |
+| `OatTagInput.placeholder` | Add tags... |
+| `IConverter.BigDecimal` on `OatMoneyField` / `OatPercentField` | The value of '${label}' is not a valid amount / percentage. |
 
 ## Resources
 

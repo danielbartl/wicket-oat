@@ -5,10 +5,12 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 
 import java.text.NumberFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -18,7 +20,8 @@ import java.util.Locale;
 /**
  * A label showing numbers and dates as people read them in their locale: numbers with
  * grouping ({@code 48,250}, {@code 48.250}), dates in the medium style
- * ({@code Mar 1, 2019}, {@code 01.03.2019}) - Wicket's own converters leave whole
+ * ({@code Mar 1, 2019}, {@code 01.03.2019}; an {@code Instant} in the server's time
+ * zone) - Wicket's own converters leave whole
  * numbers ungrouped and use the short date style ({@code 3/1/19}). Anything else uses
  * Wicket's converters as usual.
  */
@@ -35,7 +38,7 @@ class ValueLabel extends Label {
         }
         if (LocalDate.class.isAssignableFrom(type) || LocalDateTime.class.isAssignableFrom(type)
                 || ZonedDateTime.class.isAssignableFrom(type) || OffsetDateTime.class.isAssignableFrom(type)
-                || LocalTime.class.isAssignableFrom(type)) {
+                || LocalTime.class.isAssignableFrom(type) || Instant.class.isAssignableFrom(type)) {
             return Converter.DATE;
         }
         return super.createConverter(type);
@@ -53,6 +56,9 @@ class ValueLabel extends Label {
             public String convertToString(Object value, Locale locale) {
                 if (value == null) {
                     return null;
+                }
+                if (value instanceof Instant instant) {
+                    value = instant.atZone(ZoneId.systemDefault()); // shown in the server's zone
                 }
                 DateTimeFormatter formatter = value instanceof LocalDate ? DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
                         : value instanceof LocalTime ? DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)

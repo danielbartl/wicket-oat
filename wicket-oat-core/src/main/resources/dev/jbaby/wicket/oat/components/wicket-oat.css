@@ -332,3 +332,166 @@ ot-dropdown > .oat-popover {
     min-width: 16rem;
     max-width: min(28rem, 100vw - 2rem);
 }
+
+/*
+ * OatDateRangeField: its label is a <legend> (it names two inputs), so its fieldset
+ * drops Oat's fieldset frame and the legend looks like any field's label.
+ */
+fieldset.oat-range-field {
+    border: 0;
+    padding: 0;
+}
+
+fieldset.oat-range-field > legend {
+    padding: 0;
+}
+
+fieldset.oat-range-field fieldset.group {
+    margin-block: var(--space-1) 0;
+}
+
+/* OatAutoCompleteField: Wicket's suggestion list, looking like Oat's dropdown menu */
+.wicket-aa-container.oat-autocomplete {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-small);
+}
+
+.oat-autocomplete ul {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-1) 0;
+}
+
+.oat-autocomplete li {
+    padding: var(--space-2) var(--space-3);
+    cursor: pointer;
+}
+
+.oat-autocomplete li.selected {
+    background-color: var(--accent);
+}
+
+/* OatTimeline: events along a line, each with a marker colored by its variant */
+.oat-timeline {
+    margin: 0;
+}
+
+.oat-timeline-event {
+    position: relative;
+    padding-inline-start: var(--space-6);
+    padding-block-end: var(--space-5);
+}
+
+.oat-timeline-event::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(.375rem - 1px);
+    inset-block: .5rem 0;
+    border-inline-start: 2px solid var(--border);
+}
+
+.oat-timeline-event:last-child::before {
+    display: none;
+}
+
+.oat-timeline-event::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: .3rem;
+    width: .75rem;
+    height: .75rem;
+    border-radius: var(--radius-full);
+    background-color: var(--_variant-color, var(--muted-foreground));
+    box-shadow: 0 0 0 3px var(--background);
+}
+
+.oat-timeline-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0 var(--space-3);
+}
+
+.oat-timeline-heading time {
+    font-size: var(--text-7);
+}
+
+.oat-timeline-event > p {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-7);
+}
+
+/* OatWizard: numbered steps - done, current, upcoming - joined by a line */
+.oat-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-7);
+}
+
+.oat-steps > li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.oat-steps > li:not(:last-child)::after {
+    content: "";
+    width: var(--space-6);
+    border-top: 1px solid var(--border);
+}
+
+.oat-steps a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--muted-foreground);
+}
+
+.oat-steps a:not([href]) {
+    cursor: default;
+}
+
+.oat-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-variant-numeric: tabular-nums;
+}
+
+.oat-steps [data-state="current"] a {
+    color: var(--foreground);
+    font-weight: var(--font-medium);
+}
+
+.oat-steps [data-state="current"] .oat-step-number {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.oat-steps [data-state="done"] a {
+    color: var(--foreground);
+}
+
+.oat-steps [data-state="done"] .oat-step-number {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.oat-wizard-form > footer {
+    margin-block-start: var(--space-6);
+}
+
+.oat-wizard-spacer {
+    flex: 1;
+}

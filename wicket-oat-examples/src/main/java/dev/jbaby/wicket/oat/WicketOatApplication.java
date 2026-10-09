@@ -43,6 +43,7 @@ public class WicketOatApplication {
                 mountPage("/invoice", InvoicePage.class);
                 mountPage("/app-shell", AppShellPage.class);
                 mountPage("/customer", CustomerPage.class);
+                mountPage("/order", OrderWizardPage.class);
                 mountPage("/table", TablePage.class);
                 mountPage("/data-table", DataTablePage.class);
                 mountPage("/components", ComponentsPage.class);

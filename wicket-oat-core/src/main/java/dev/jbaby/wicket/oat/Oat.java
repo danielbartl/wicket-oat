@@ -440,6 +440,22 @@ public final class Oat {
             return new OatPopover(id, triggerLabel, content);
         }
 
+        /** Events in order - a history, an audit trail - each with a title and its time. */
+        public static <T> OatTimeline<T> timeline(String id, IModel<? extends List<T>> events, SerializableFunction<T, ?> title,
+                                                  SerializableFunction<T, ? extends java.time.temporal.TemporalAccessor> time) {
+            return new OatTimeline<>(id, events, title, time);
+        }
+
+        /** A form filled in over several steps; add them with {@code addStep}. {@code onFinish} runs after the last. */
+        public static OatWizard wizard(String id, SerializableConsumer<AjaxRequestTarget> onFinish) {
+            return new OatWizard(id) {
+                @Override
+                protected void onFinish(AjaxRequestTarget target) {
+                    onFinish.accept(target);
+                }
+            };
+        }
+
         /** A dialog that asks to confirm an action before it runs; see {@link OatConfirmDialog#ask}. */
         public static OatConfirmDialog confirmDialog(String id) {
             return new OatConfirmDialog(id);
@@ -1104,6 +1120,48 @@ public final class Oat {
 
         public static OatFileDropzone fileDropzone(String id, IModel<String> labelModel, IModel<List<org.apache.wicket.markup.html.form.upload.FileUpload>> model, IModel<String> hintModel) {
             return new OatFileDropzone(id, labelModel, model, hintModel);
+        }
+
+        /** A range of days (from/to) bound to a {@link DateRange}. */
+        public static OatDateRangeField dateRangeField(String id) {
+            return new OatDateRangeField(id);
+        }
+
+        public static OatDateRangeField dateRangeField(String id, IModel<DateRange> model) {
+            return new OatDateRangeField(id, model);
+        }
+
+        public static OatDateRangeField dateRangeField(String id, String label, IModel<DateRange> model) {
+            return new OatDateRangeField(id, label, model);
+        }
+
+        public static OatDateRangeField dateRangeField(String id, IModel<String> labelModel, IModel<DateRange> model) {
+            return new OatDateRangeField(id, labelModel, model);
+        }
+
+        public static OatDateRangeField dateRangeField(String id, IModel<String> labelModel, IModel<DateRange> model, IModel<String> hintModel) {
+            return new OatDateRangeField(id, labelModel, model, hintModel);
+        }
+
+        /** A field looking up its value on the server as the user types; set its {@code setChoices(...)}. */
+        public static <T> OatAutoCompleteField<T> autoCompleteField(String id) {
+            return new OatAutoCompleteField<>(id);
+        }
+
+        public static <T> OatAutoCompleteField<T> autoCompleteField(String id, IModel<T> model) {
+            return new OatAutoCompleteField<>(id, model);
+        }
+
+        public static <T> OatAutoCompleteField<T> autoCompleteField(String id, String label, IModel<T> model) {
+            return new OatAutoCompleteField<>(id, label, model);
+        }
+
+        public static <T> OatAutoCompleteField<T> autoCompleteField(String id, IModel<String> labelModel, IModel<T> model) {
+            return new OatAutoCompleteField<>(id, labelModel, model);
+        }
+
+        public static <T> OatAutoCompleteField<T> autoCompleteField(String id, IModel<String> labelModel, IModel<T> model, IModel<String> hintModel) {
+            return new OatAutoCompleteField<>(id, labelModel, model, hintModel);
         }
 
         public static OatTagInput tagInput(String id) {

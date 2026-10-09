@@ -19,6 +19,7 @@ import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -105,5 +106,18 @@ public class CustomerPage extends BasePage {
                 .addItem(Model.of("Status"), id -> new OatBadge(id, "Active", OatVariant.SUCCESS))
                 .addProperty("notes");
         add(details);
+
+        // Recent activity, newest first
+        add(Oat.Components.timeline("activity", Model.ofList(List.of(
+                        new Activity("Payment received", LocalDateTime.of(2026, 10, 9, 14, 5), "INV-1019 · €2,612.50", OatVariant.SUCCESS),
+                        new Activity("Invoice sent", LocalDateTime.of(2026, 10, 2, 9, 30), "INV-1019, by Jordan Lee", null),
+                        new Activity("Reminder sent", LocalDateTime.of(2026, 9, 28, 8, 0), "INV-1005 is 12 days overdue", OatVariant.WARNING),
+                        new Activity("Customer created", LocalDateTime.of(2019, 3, 1, 11, 15), null, null))),
+                Activity::title, Activity::at)
+                .setDescription(Activity::details)
+                .setVariant(Activity::variant));
+    }
+
+    public record Activity(String title, LocalDateTime at, String details, OatVariant variant) implements Serializable {
     }
 }

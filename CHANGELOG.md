@@ -2,6 +2,14 @@
 
 ## 0.2.0 (unreleased)
 
+- `OatWizard`: a form over several steps, with numbered steps, Next validating the current step,
+  Back and finished steps' numbers going back, and `onNext`/`onFinish` hooks.
+- `OatAutoCompleteField`: Wicket's `AutoCompleteTextField` with an Oat-styled suggestion list,
+  looking up objects on the server and storing the chosen one (or free text, if allowed).
+- `OatDateRangeField` with `DateRange`: two date inputs, open ends allowed, the order checked.
+- `OatTimeline`: events in order with a colored marker, title, localized time and description.
+- `OatDescriptionList` and `OatStatCard` show `Instant`s in the server's zone.
+
 - Page building blocks: `OatPageHeader` (a `<header>` border with breadcrumb, title, subtitle and
   your actions), `OatStatCard` (a key figure with its change as a colored badge), `OatDescriptionList`
   (a record's fields as label/value pairs on a `<dl>`), `OatSplitButton` (the usual action plus a

@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1 class="mb-2">New Order</h1>
+        <p class="text-light">An <code>OatWizard</code> in three steps. Next validates the step's fields; the numbers of
+            finished steps take you back. The customer is looked up on the server as you type
+            (<code>OatAutoCompleteField</code>), and the delivery window is an <code>OatDateRangeField</code>.</p>
+
+        <article class="card mt-6">
+            <div wicket:id="wizard"></div>
+        </article>
+    </section>
+
+    <wicket:fragment wicket:id="customerStep">
+        <div wicket:id="customer"></div>
+        <div wicket:id="delivery"></div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="reviewStep">
+        <dl wicket:id="review"></dl>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="itemsStep">
+        <div class="row">
+            <div wicket:id="quantity" class="col-6"></div>
+            <div wicket:id="unitPrice" class="col-6"></div>
+        </div>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

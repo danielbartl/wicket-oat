@@ -82,10 +82,10 @@ is the more natural choice for it.
 ## Available Components
 
 - **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`
-- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatWizard`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
-- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
-- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatFieldset`, and more specialized HTML5 fields.
+- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
 
@@ -354,6 +354,56 @@ locale (`1,234`, `Mar 1, 2019`), and an empty value shows as "—".
 
 Fields that render a single input can also suggest values as the user types,
 from a native `<datalist>`: `field.setSuggestions(List.of("Call", "Meeting", "Email"))`.
+
+## Multi-Step Forms, Lookups and Histories
+
+`OatWizard` fills a form in over several steps, with numbered steps showing
+where the user is. Next validates the current step; Back and the numbers of
+finished steps go back without validating. Each step is a component, created
+when shown, so keep the data in an object all steps share:
+
+```java
+OatWizard wizard = new OatWizard("wizard") {
+    @Override
+    protected void onFinish(AjaxRequestTarget target) {
+        orders.place(order);
+        setResponsePage(OrderPlacedPage.class);
+    }
+};
+wizard.addStep("Customer", id -> new CustomerStep(id, order));
+wizard.addStep("Items", id -> new ItemsStep(id, order));
+wizard.addStep("Review", id -> new ReviewStep(id, order));
+```
+
+`onNext(step, target)` can check a step further and keep the user on it by
+reporting an error.
+
+`OatAutoCompleteField` looks its value up on the server as the user types,
+for choices too many for a dropdown. On submit the text must be one of the
+suggestions, and the field's value is that object:
+
+```java
+form.add(new OatAutoCompleteField<Customer>("customer")
+        .setChoices(text -> customers.search(text))
+        .setDisplay(Customer::name));
+```
+
+`setFreeText(text -> ...)` accepts other text too. For a fixed list of
+suggestions, `setSuggestions(...)` on any text field is simpler.
+
+`OatDateRangeField` edits a `DateRange(from, to)` as two date inputs; either
+end may be left open, `setRequired(true)` asks for both, and an end before the
+start is rejected.
+
+`OatTimeline` lists events in order, such as an order's history or an audit
+trail, each with a title, its time (`java.time`, in the user's locale) and an
+optional description and color:
+
+```java
+add(new OatTimeline<>("history", () -> orders.history(order), Event::title, Event::at)
+        .setDescription(Event::details)
+        .setVariant(event -> event.isPayment() ? OatVariant.SUCCESS : OatVariant.DEFAULT));
+```
 
 ## Data Tables
 

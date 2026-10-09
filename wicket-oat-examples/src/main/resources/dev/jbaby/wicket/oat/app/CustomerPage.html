@@ -14,14 +14,21 @@
         <article wicket:id="orders" class="col-3"></article>
     </div>
 
-    <article class="card mt-6">
-        <h3>Details</h3>
-        <dl wicket:id="details"></dl>
-    </article>
+    <div class="row mt-6">
+        <article class="card col-7">
+            <h3>Details</h3>
+            <dl wicket:id="details"></dl>
+        </article>
+        <article class="card col-5">
+            <h3>Recent activity</h3>
+            <div wicket:id="activity"></div>
+        </article>
+    </div>
 
     <p class="text-light mt-6 small">A detail page built from <code>OatPageHeader</code> (breadcrumb, title, actions),
         <code>OatStatCard</code>s, an <code>OatDescriptionList</code>, an <code>OatSplitButton</code> and an
-        <code>OatPopover</code> with a form whose "Type" field suggests values from a <code>&lt;datalist&gt;</code>.</p>
+        <code>OatPopover</code> with a form whose "Type" field suggests values from a <code>&lt;datalist&gt;</code>,
+        and an <code>OatTimeline</code>.</p>
     <div wicket:id="confirm"></div>
 
     <wicket:fragment wicket:id="noteFragment">

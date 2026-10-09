@@ -128,6 +128,14 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
         return (helperText != null) ? helperText.getObject() : "";
     }
 
+    /**
+     * The markup id of the feedback/hint message, for a subclass whose field holds several
+     * inputs, so each can point {@code aria-describedby} at it.
+     */
+    protected final String getFeedbackMarkupId() {
+        return feedback.getMarkupId();
+    }
+
     /** The label model, as given or looked up by id. */
     @SuppressWarnings("unchecked")
     public IModel<String> getLabel() {

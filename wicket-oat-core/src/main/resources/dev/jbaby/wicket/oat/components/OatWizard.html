@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <ol class="unstyled oat-steps" wicket:message="aria-label:OatWizard.steps">
+        <li wicket:id="steps"><a wicket:id="link" class="unstyled"><span wicket:id="number" class="oat-step-number"></span><span wicket:id="title"></span></a></li>
+    </ol>
+    <form wicket:id="form" class="oat-wizard-form">
+        <div wicket:id="body"></div>
+        <footer class="hstack justify-between">
+            <button wicket:id="back" type="button" class="outline"></button>
+            <span class="oat-wizard-spacer"></span>
+            <button wicket:id="next" type="submit"></button>
+            <button wicket:id="finish" type="submit"></button>
+        </footer>
+    </form>
+</wicket:panel>
+</html>

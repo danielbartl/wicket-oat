@@ -9,7 +9,7 @@ import org.apache.wicket.model.Model;
  * An Oat-styled form field wrapping a native {@code <input type="url">}
  * ({@link UrlTextField}).
  */
-public class OatUrlField extends BaseOatField<String, UrlTextField, OatUrlField> {
+public class OatUrlField extends BaseOatInputField<String, UrlTextField, OatUrlField> {
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited

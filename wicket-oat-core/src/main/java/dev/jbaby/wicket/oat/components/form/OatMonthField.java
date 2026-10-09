@@ -6,7 +6,7 @@ import org.apache.wicket.model.Model;
 /**
  * An Oat-styled form field wrapping a native {@code <input type="month">}.
  */
-public class OatMonthField extends BaseOatField<String, Html5TextField<String>, OatMonthField> {
+public class OatMonthField extends BaseOatInputField<String, Html5TextField<String>, OatMonthField> {
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited

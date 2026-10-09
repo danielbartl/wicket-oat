@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <header class="mb-6">
+            <h1 class="mb-2">Invoice</h1>
+            <p class="text-light">A business form: sections with <code>OatFieldset</code>, a two-column
+                layout with <code>Oat.Behaviors.row()</code>/<code>col(6)</code>, and fields with addons.
+                <code>OatMoneyField</code> follows the currency (decimals, symbol) and the number format
+                (grouping, where the symbol goes); <code>OatPercentField</code> adds a % suffix.</p>
+        </header>
+
+        <form wicket:id="invoiceForm">
+            <div class="row">
+                <div wicket:id="formLocale" class="col-4"></div>
+            </div>
+
+            <fieldset wicket:id="customerSection">
+                <div wicket:id="customer"></div>
+                <div wicket:id="email"></div>
+                <div wicket:id="website"></div>
+                <div wicket:id="dueDate"></div>
+            </fieldset>
+
+            <fieldset wicket:id="amountsSection">
+                <div wicket:id="currency"></div>
+                <div wicket:id="netAmount"></div>
+                <div wicket:id="discount"></div>
+                <div wicket:id="taxRate"></div>
+                <div wicket:id="weight"></div>
+            </fieldset>
+
+            <footer class="hstack justify-between">
+                <span>Total incl. tax: <strong wicket:id="total"></strong></span>
+                <button wicket:id="submit" type="submit">Save invoice</button>
+            </footer>
+        </form>
+    </section>
+</wicket:extend>
+</body>
+</html>

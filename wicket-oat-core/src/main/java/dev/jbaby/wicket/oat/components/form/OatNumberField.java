@@ -11,7 +11,7 @@ import org.apache.wicket.model.Model;
  *
  * @param <N> the numeric model type
  */
-public class OatNumberField<N extends Number & Comparable<N>> extends BaseOatField<N, NumberTextField<N>, OatNumberField<N>> {
+public class OatNumberField<N extends Number & Comparable<N>> extends BaseOatInputField<N, NumberTextField<N>, OatNumberField<N>> {
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited

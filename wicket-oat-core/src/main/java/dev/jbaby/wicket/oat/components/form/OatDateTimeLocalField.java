@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * An Oat-styled form field wrapping a native {@code <input type="datetime-local">},
  * bound to a {@link LocalDateTime} model.
  */
-public class OatDateTimeLocalField extends BaseOatField<LocalDateTime, Html5TextField<LocalDateTime>, OatDateTimeLocalField> {
+public class OatDateTimeLocalField extends BaseOatInputField<LocalDateTime, Html5TextField<LocalDateTime>, OatDateTimeLocalField> {
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited

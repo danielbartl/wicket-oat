@@ -11,6 +11,9 @@ Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via
 - `card()`: Styles a container as a card.
 - `field()`: Styles a form field container.
 - `hint()`: Styles a small text hint inside a field.
+- `inputGroup()`: Joins a `<fieldset>`'s inputs, buttons and `<label>`/`<legend>` addons into one control (`class="group"`). Oat fields have `setPrefix`/`setSuffix` for this.
+- `row()`, `col(span)`, `col(span, offset)`, `container()`: Oat's 12-column grid (`row`, `col-1`...`col-12`, `offset-1`...`offset-6`, `container`); it drops to one column on narrow screens. On an Oat form field they apply to the field's own tag.
+- `hstack()` / `vstack()`: A wrapping row or a column with Oat's standard gap.
 - `oatSwitch()`: Turns a `CheckBox` into a visual toggle switch.
 - `tooltip(text)`: Adds a styled tooltip.
 - `spinner(size?)`: Adds a spinner overlay/logic.

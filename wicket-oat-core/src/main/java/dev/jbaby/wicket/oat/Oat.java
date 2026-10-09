@@ -85,6 +85,41 @@ public final class Oat {
             return new FieldBehavior();
         }
 
+        /** Joins a {@code <fieldset>}'s inputs, buttons and label addons into one control. */
+        public static InputGroupBehavior inputGroup() {
+            return new InputGroupBehavior();
+        }
+
+        /** A row of Oat's 12-column grid; give its children a {@link #col(int)}. */
+        public static GridBehavior row() {
+            return GridBehavior.row();
+        }
+
+        /** A grid column spanning {@code span} of 12 columns. */
+        public static GridBehavior col(int span) {
+            return GridBehavior.col(span);
+        }
+
+        /** A grid column spanning {@code span} of 12 columns, shifted right by {@code offset} columns. */
+        public static GridBehavior col(int span, int offset) {
+            return GridBehavior.col(span, offset);
+        }
+
+        /** Centers content at Oat's maximum page width. */
+        public static GridBehavior container() {
+            return GridBehavior.container();
+        }
+
+        /** Lays out children in a wrapping row with a gap. */
+        public static StackBehavior hstack() {
+            return new StackBehavior(StackBehavior.Direction.HORIZONTAL);
+        }
+
+        /** Lays out children in a column with a gap. */
+        public static StackBehavior vstack() {
+            return new StackBehavior(StackBehavior.Direction.VERTICAL);
+        }
+
         public static HintBehavior hint() {
             return new HintBehavior();
         }
@@ -202,6 +237,19 @@ public final class Oat {
 
         public static OatCard card(String id) {
             return new OatCard(id);
+        }
+
+        /** A titled form section on a {@code <fieldset>}; the legend is looked up by {@code id}. */
+        public static OatFieldset fieldset(String id) {
+            return new OatFieldset(id);
+        }
+
+        public static OatFieldset fieldset(String id, String legend) {
+            return new OatFieldset(id, legend);
+        }
+
+        public static OatFieldset fieldset(String id, IModel<String> legend) {
+            return new OatFieldset(id, legend);
         }
 
         public static OatAvatar avatar(String id, IModel<String> imageUrl) {
@@ -1004,6 +1052,47 @@ public final class Oat {
 
         public static OatTagInput tagInput(String id, IModel<String> labelModel, IModel<List<String>> model, IModel<String> hintModel) {
             return new OatTagInput(id, labelModel, model, hintModel);
+        }
+
+        /** An amount of money; set its currency with {@link OatMoneyField#setCurrency}. */
+        public static OatMoneyField moneyField(String id) {
+            return new OatMoneyField(id);
+        }
+
+        public static OatMoneyField moneyField(String id, IModel<java.math.BigDecimal> model) {
+            return new OatMoneyField(id, model);
+        }
+
+        public static OatMoneyField moneyField(String id, String label, IModel<java.math.BigDecimal> model) {
+            return new OatMoneyField(id, label, model);
+        }
+
+        public static OatMoneyField moneyField(String id, IModel<String> labelModel, IModel<java.math.BigDecimal> model) {
+            return new OatMoneyField(id, labelModel, model);
+        }
+
+        public static OatMoneyField moneyField(String id, IModel<String> labelModel, IModel<java.math.BigDecimal> model, IModel<String> hintModel) {
+            return new OatMoneyField(id, labelModel, model, hintModel);
+        }
+
+        public static OatPercentField percentField(String id) {
+            return new OatPercentField(id);
+        }
+
+        public static OatPercentField percentField(String id, IModel<java.math.BigDecimal> model) {
+            return new OatPercentField(id, model);
+        }
+
+        public static OatPercentField percentField(String id, String label, IModel<java.math.BigDecimal> model) {
+            return new OatPercentField(id, label, model);
+        }
+
+        public static OatPercentField percentField(String id, IModel<String> labelModel, IModel<java.math.BigDecimal> model) {
+            return new OatPercentField(id, labelModel, model);
+        }
+
+        public static OatPercentField percentField(String id, IModel<String> labelModel, IModel<java.math.BigDecimal> model, IModel<String> hintModel) {
+            return new OatPercentField(id, labelModel, model, hintModel);
         }
     }
 

@@ -11,7 +11,7 @@ import org.apache.wicket.model.Model;
  *
  * @param <T> the model object type
  */
-public class OatTextField<T> extends BaseOatField<T, TextField<T>, OatTextField<T>> {
+public class OatTextField<T> extends BaseOatInputField<T, TextField<T>, OatTextField<T>> {
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited

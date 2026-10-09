@@ -39,6 +39,7 @@ public class BasePage extends OatAppLayout {
                 MenuItem.of("Home", HomePage.class),
                 MenuItem.of("Getting Started", GettingStartedPage.class),
                 MenuItem.of("Event Registration (Form Demo)", EventRegistrationPage.class),
+                MenuItem.of("Invoice (Business Form Demo)", InvoicePage.class),
                 MenuItem.of("Accordion", AccordionPage.class),
                 MenuItem.of("Alert", AlertPage.class),
                 MenuItem.of("Badge", BadgePage.class),

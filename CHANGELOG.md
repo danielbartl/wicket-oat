@@ -2,6 +2,21 @@
 
 ## 0.2.0 (unreleased)
 
+- Input addons: fields that render a single input (`OatTextField`, `OatNumberField`,
+  `OatEmailField`, `OatDateField`, ...) take `setPrefix(...)`/`setSuffix(...)`, shown with Oat's
+  input group (`fieldset.group`). Without an addon a field renders as before.
+  `Oat.Behaviors.inputGroup()` applies the group to your own `<fieldset>`.
+- `OatMoneyField` and `OatPercentField` edit a `BigDecimal` in the user's locale (`1.234,50` /
+  `1,234.50`). The money field takes its decimals and symbol from a `Currency` (or an
+  `IModel<Currency>`), with the symbol before or after the amount as the locale puts it, and
+  both take `setMin`/`setMax`.
+- `OatFieldset`, a titled form section: a `Border` on a `<fieldset>` with a legend (looked up by
+  id) and an optional description.
+- Grid and stack behaviors for Oat's layout classes: `Oat.Behaviors.row()`, `col(span)`,
+  `col(span, offset)`, `container()`, `hstack()` and `vstack()`.
+- Single-input fields now extend the new `BaseOatInputField` (itself a `BaseOatField`); component
+  paths such as `container:field` are unchanged.
+
 - Two new built-in themes for line-of-business apps, `OatTheme.BUSINESS` and
   `OatTheme.BUSINESS_DARK`: neutral surfaces, a corporate-blue primary, status colors that
   meet WCAG AA contrast, tighter corner radii and tabular figures in tables.

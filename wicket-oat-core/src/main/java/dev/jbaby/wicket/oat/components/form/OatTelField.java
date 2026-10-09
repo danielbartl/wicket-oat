@@ -6,7 +6,7 @@ import org.apache.wicket.model.Model;
 /**
  * An Oat-styled form field wrapping a native {@code <input type="tel">}.
  */
-public class OatTelField extends BaseOatField<String, Html5TextField<String>, OatTelField> {
+public class OatTelField extends BaseOatInputField<String, Html5TextField<String>, OatTelField> {
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited

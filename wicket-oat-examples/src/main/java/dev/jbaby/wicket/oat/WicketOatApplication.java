@@ -40,6 +40,7 @@ public class WicketOatApplication {
                 mountPage("/button-group", ButtonGroupPage.class);
                 mountPage("/card", CardPage.class);
                 mountPage("/form", FormPage.class);
+                mountPage("/invoice", InvoicePage.class);
                 mountPage("/table", TablePage.class);
                 mountPage("/data-table", DataTablePage.class);
                 mountPage("/components", ComponentsPage.class);

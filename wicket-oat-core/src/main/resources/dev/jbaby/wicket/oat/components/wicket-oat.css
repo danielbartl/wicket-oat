@@ -92,3 +92,34 @@ select[multiple] {
     --space-6: 1rem;
     --text-regular: var(--text-7);
 }
+
+/*
+ * A form field with a prefix or suffix (BaseOatInputField) wraps its input in Oat's
+ * fieldset.group. Give the group the spacing a plain input has - Oat drops the input's
+ * top margin inside a group and gives every fieldset a bottom margin - and draw the
+ * addons' border red with the input's when the field is invalid.
+ */
+[data-field] > fieldset.group {
+    margin-block: var(--space-1) 0;
+}
+
+fieldset.group:has(> [aria-invalid="true"]) > :is(label, legend) {
+    border-color: var(--danger);
+}
+
+/* OatFieldset's optional description, right under its legend (a full row of a grid) */
+.oat-fieldset-description {
+    grid-column: 1 / -1;
+    margin-block: 0 var(--space-4);
+    font-size: var(--text-7);
+}
+
+/*
+ * In development mode Wicket keeps a Border's <wicket:border> and <wicket:body> tags in
+ * the page. Lay out their content as if they weren't there, as in production, so e.g. an
+ * OatFieldset with Oat.Behaviors.row() puts its fields in the grid either way.
+ */
+wicket\:border,
+wicket\:body {
+    display: contents;
+}

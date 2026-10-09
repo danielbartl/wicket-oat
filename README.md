@@ -84,7 +84,7 @@ is the more natural choice for it.
 - **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatDropdown`, `OatTabbedPanel`, `OatTabs`
 - **Data Display:** `OatDataTable`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
-- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, and more specialized HTML5 fields.
+- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
 
@@ -320,6 +320,46 @@ You can still pass a model and a label explicitly
 (`new OatTextField<>("name", "Full name", model)`), and `getField()` gives
 access to the wrapped `FormComponent` for anything else.
 
+### Addons, money and sections
+
+Fields that render a single input (text, number, email, URL, date, ...) can show
+text before or after it, using Oat's input group:
+
+```java
+form.add(new OatTextField<String>("website").setPrefix("https://"));
+form.add(new OatNumberField<Integer>("weight").setSuffix("kg"));
+```
+
+`OatMoneyField` and `OatPercentField` edit a `BigDecimal` in the user's locale:
+`1.234,50` in German, `1,234.50` in English. The money field takes the number of
+decimals from its currency and shows the currency symbol where the locale puts it
+(`$ 12.50`, `12,50 €`). Input with more decimals is rounded half-even.
+
+```java
+form.add(new OatMoneyField("price")
+        .setCurrency(Currency.getInstance("EUR")) // or an IModel<Currency>, e.g. from the record
+        .setMin(BigDecimal.ZERO));
+form.add(new OatPercentField("taxRate")); // 19 means 19%, shown with a % suffix
+```
+
+`OatFieldset` splits a long form into titled sections. It is a Wicket `Border`
+on a `<fieldset>` tag, so the fields inside still inherit their models from the
+form's `CompoundPropertyModel`, and its legend comes from the `.properties` file
+by id:
+
+```html
+<fieldset wicket:id="billing">
+    <div wicket:id="street"></div>
+    <div wicket:id="city"></div>
+</fieldset>
+```
+
+```java
+OatFieldset billing = new OatFieldset("billing").setDescription("Where the invoice goes.");
+billing.add(new OatTextField<String>("street"), new OatTextField<String>("city"));
+form.add(billing);
+```
+
 ## Layout Utilities
 
 Wicket Oat uses Oat's CSS and no other CSS library, so there is no Tailwind or
@@ -336,6 +376,7 @@ of the work. For the rest, Oat ships a small, fixed set of utility classes
 | Padding / width | `p-4`, `w-100` |
 | Text | `align-left`, `align-center`, `align-right`, `text-light`, `text-lighter` |
 | Lists and links | `unstyled` on a `ul`/`ol` (no bullets) or an `a` (no link styling) |
+| Grid | `container`, `row`, `col-1` ... `col-12`, `offset-1` ... `offset-6` |
 
 The numbers refer to Oat's spacing scale (`--space-1`, `--space-2`, ...), not
 to pixels, and only the classes listed exist: there is no `gap-3` or `mt-5`.
@@ -350,6 +391,20 @@ A form with right-aligned actions, for example:
     </footer>
 </form>
 ```
+
+The 12-column grid drops to a single column on narrow screens, so it lays out
+forms well. `Oat.Behaviors` adds its classes from Java, including to Oat form
+fields, whose own tag takes them:
+
+```java
+OatFieldset customer = new OatFieldset("customer");
+customer.add(Oat.Behaviors.row());
+customer.add(new OatTextField<String>("name").add(Oat.Behaviors.col(6)));
+customer.add(new OatEmailField("email").add(Oat.Behaviors.col(6)));
+```
+
+`Oat.Behaviors.container()`, `col(span, offset)`, `hstack()` and `vstack()` work
+the same way.
 
 Anything beyond that belongs in your own stylesheet, using Oat's CSS variables
 (`var(--space-4)`, `var(--primary)`, ...) so it follows the current theme.

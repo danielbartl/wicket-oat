@@ -41,6 +41,7 @@ Behavior of the field panels:
 - Required fields get `aria-required="true"` and an asterisk after their label (via `data-required` on the field container). The native `required` attribute is deliberately not set, since the browser would block the submit with its own message before Wicket could show its inline error.
 - They render their own tag with a markup id, so `target.add(field)` (or `target.add(form)`) re-renders them, e.g. to show inline errors in an Ajax `onError`. Attributes on that tag in your markup (e.g. `class`) are kept.
 - `field.add(...)` sends validators and `AjaxFormComponentUpdatingBehavior`s to the wrapped input; other behaviors apply to the panel's own tag. `getField()` returns the wrapped `FormComponent`.
+- Single-input fields (text, password, email, number, URL, search, tel, date, date-time, time, month, week, money, percent) take `setPrefix(text)`/`setSuffix(text)` (a `String` or `IModel<String>`; `null` hides it): text addons such as `https://`, `kg` or `€` in Oat's input group. Without one the field renders as usual.
 - Fluent setters (`setRequired`, `setLabel`, `setPlaceholder`, `addValidator`, `add`, and `setMin`/`setMax` on number/range fields) return the concrete field type, so they chain freely.
 
 - `textField(id, label, model)`
@@ -66,7 +67,11 @@ Behavior of the field panels:
 - `rangeField(id, label, model)`
 - `fileUpload(id, label, model)`
 - `fileDropzone(id, label, model)`: Drag-and-drop alternative to `fileUpload`.
+- `moneyField(id, label, model)`: `OatMoneyField`, an amount bound to a `BigDecimal`, shown and parsed in the user's locale (`1.234,50` / `1,234.50`, `inputmode="decimal"`). `setCurrency(Currency | IModel<Currency>)` sets the decimals (2 for EUR, 0 for JPY; input is rounded half-even) and the symbol, shown before or after the amount as the locale puts it; the user may type the symbol too. `setMin`/`setMax` take `BigDecimal`s.
+- `percentField(id, label, model)`: `OatPercentField`, a `BigDecimal` holding the number as shown (19 means 19%), with a `%` suffix; `setFractionDigits(n)` (default 2), `setMin`/`setMax`.
 - `tagInput(id, label, model)`: Tag/chip input bound to an `IModel<List<String>>`. Tags are trimmed and de-duplicated; no tags is an empty list (and fails `setRequired(true)`). As in Oat's widget, a comma separates tags, so a tag can't contain one.
+
+- `fieldset(id, legend?)`: `OatFieldset`, a titled form section. A `Border`, so it goes on a `<fieldset wicket:id="...">` whose content it wraps; `add(...)` puts components inside it, and fields there still inherit a parent `CompoundPropertyModel`. The legend is looked up by id when left out; `setDescription(text)` adds a line under it. Add `Oat.Behaviors.row()` to lay out its fields on the grid.
 
 ## Data & Feedback
 - `feedbackPanel(id, filter?)`: `OatFeedbackPanel`, a Wicket `FeedbackPanel` rendering each `info()`/`success()`/`warn()`/`error()` message as an Oat alert of the matching variant. It adds itself to Ajax responses when it has messages to show or clear, so no `target.add(feedback)` is needed. By default it leaves out errors Oat form fields already show inline (`NotShownInlineFilter`); pass `null` to show everything.

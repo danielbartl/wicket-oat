@@ -81,10 +81,10 @@ is the more natural choice for it.
 
 ## Available Components
 
-- **General:** `OatButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatEmptyState`, `OatFeedbackPanel`
-- **Navigation/Layout:** `OatAppLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
-- **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatTabbedPanel`, `OatTabs`
-- **Data Display:** `OatDataTable`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`
+- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
+- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
@@ -305,6 +305,55 @@ add(new OatTabbedPanel<>("tabs", List.of(
 
 `OatTabs` instead renders every panel up front and switches between them in
 the browser, for small static content.
+
+## Page Building Blocks
+
+The parts most business pages are made of: a header, key figures, the record's
+details, and actions.
+
+```html
+<header wicket:id="pageHeader">          <!-- the content becomes the actions -->
+    <div wicket:id="quickNote"></div>
+    <div wicket:id="newInvoice"></div>
+</header>
+<div class="row">
+    <article wicket:id="revenue" class="col-3"></article>
+</div>
+<dl wicket:id="details"></dl>
+```
+
+```java
+OatPageHeader header = new OatPageHeader("pageHeader", Model.of(customer.getName()))
+        .setSubtitle("Customer since 2019")
+        .setBreadcrumb(List.of(MenuItem.of("Home", HomePage.class), MenuItem.of("Customers", CustomersPage.class)));
+add(header);
+
+// A button opening a panel with any content, e.g. a small form
+header.add(new OatPopover("quickNote", "Quick note", id -> new QuickNotePanel(id, customer)));
+
+// The usual action, with related ones in a menu
+OatSplitButton newInvoice = new OatSplitButton("newInvoice", "New invoice", target -> ...);
+newInvoice.addAction("New quote", target -> ...);
+newInvoice.addAction("Archive customer", target -> confirm.ask(...)).setVariant(OatVariant.DANGER);
+header.add(newInvoice);
+
+// A key figure and how it changed: +12.5% on a green badge
+add(new OatStatCard("revenue", Model.of("Revenue"), () -> reports.revenue())
+        .setChange(() -> reports.revenueChange())          // setChange(model, false) where lower is better
+        .setHint(Model.of("vs. last year")));
+
+// The record's fields as labels and values; labels from the .properties file
+add(new OatDescriptionList("details", new CompoundPropertyModel<>(customer))
+        .addProperty("vatId")
+        .addProperty("email")
+        .addItem(Model.of("Status"), id -> new OatBadge(id, "Active", OatVariant.SUCCESS)));
+```
+
+Numbers and dates in stat cards and description lists follow the user's
+locale (`1,234`, `Mar 1, 2019`), and an empty value shows as "—".
+
+Fields that render a single input can also suggest values as the user types,
+from a native `<datalist>`: `field.setSuggestions(List.of("Call", "Meeting", "Email"))`.
 
 ## Data Tables
 

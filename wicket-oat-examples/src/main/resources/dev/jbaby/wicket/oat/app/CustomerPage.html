@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <header wicket:id="pageHeader">
+        <div wicket:id="quickNote"></div>
+        <div wicket:id="newInvoice"></div>
+    </header>
+
+    <div class="row">
+        <article wicket:id="revenue" class="col-3"></article>
+        <article wicket:id="openInvoices" class="col-3"></article>
+        <article wicket:id="daysToPay" class="col-3"></article>
+        <article wicket:id="orders" class="col-3"></article>
+    </div>
+
+    <article class="card mt-6">
+        <h3>Details</h3>
+        <dl wicket:id="details"></dl>
+    </article>
+
+    <p class="text-light mt-6 small">A detail page built from <code>OatPageHeader</code> (breadcrumb, title, actions),
+        <code>OatStatCard</code>s, an <code>OatDescriptionList</code>, an <code>OatSplitButton</code> and an
+        <code>OatPopover</code> with a form whose "Type" field suggests values from a <code>&lt;datalist&gt;</code>.</p>
+    <div wicket:id="confirm"></div>
+
+    <wicket:fragment wicket:id="noteFragment">
+        <form wicket:id="noteForm" class="vstack gap-2">
+            <div wicket:id="type"></div>
+            <div wicket:id="text"></div>
+            <footer class="hstack justify-end"><button wicket:id="saveNote"></button></footer>
+        </form>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

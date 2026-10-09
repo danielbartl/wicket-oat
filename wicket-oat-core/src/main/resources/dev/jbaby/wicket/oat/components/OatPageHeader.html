@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:border>
+    <nav wicket:id="breadcrumb" wicket:message="aria-label:OatPageHeader.breadcrumb">
+        <ol class="unstyled hstack oat-breadcrumb">
+            <li wicket:id="crumbs"><a wicket:id="link" class="unstyled"><span wicket:id="label"></span></a><span class="oat-crumb-separator" aria-hidden="true">/</span></li>
+            <li><span wicket:id="current" aria-current="page"></span></li>
+        </ol>
+    </nav>
+    <div class="oat-page-header-main">
+        <div class="oat-page-header-title">
+            <h1 wicket:id="title"></h1>
+            <p wicket:id="subtitle" class="text-light"></p>
+        </div>
+        <div class="hstack oat-page-header-actions"><wicket:body/></div>
+    </div>
+</wicket:border>
+</html>

@@ -91,7 +91,7 @@ public class OatActionsColumn<T, S> extends AbstractColumn<T, S> implements ISty
                 RowAction<T> action = menuItem.getModelObject();
                 menuItem.add(new Label("label", action.label));
                 if (action.variant != null && action.variant != OatVariant.DEFAULT) {
-                    menuItem.add(AttributeModifier.replace("data-variant", action.variant.name().toLowerCase()));
+                    menuItem.add(AttributeModifier.replace("data-variant", action.variant.getValue()));
                 }
                 menuItem.add(AjaxEventBehavior.onEvent("click", target -> {
                     action.onClick.accept(target, rowModel.getObject());

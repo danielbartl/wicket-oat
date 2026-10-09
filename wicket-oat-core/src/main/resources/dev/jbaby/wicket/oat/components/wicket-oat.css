@@ -115,12 +115,17 @@ fieldset.group:has(> [aria-invalid="true"]) > :is(label, legend) {
 }
 
 /*
- * In development mode Wicket keeps a Border's <wicket:border> and <wicket:body> tags in
- * the page. Lay out their content as if they weren't there, as in production, so e.g. an
- * OatFieldset with Oat.Behaviors.row() puts its fields in the grid either way.
+ * In development mode Wicket keeps its own tags (<wicket:panel>, <wicket:border>, ...)
+ * in the page. Lay out their content as if they weren't there, as in production, so e.g.
+ * an OatFieldset with Oat.Behaviors.row() puts its fields in the grid either way.
  */
+wicket\:panel,
 wicket\:border,
-wicket\:body {
+wicket\:body,
+wicket\:container,
+wicket\:extend,
+wicket\:fragment,
+wicket\:enclosure {
     display: contents;
 }
 
@@ -207,4 +212,123 @@ input[type="checkbox"].oat-readonly:disabled {
 /* A destructive entry in a dropdown menu (OatActionsColumn's setVariant(DANGER)) */
 [role="menuitem"][data-variant="danger"] {
     color: var(--danger);
+}
+
+/* OatPageHeader: breadcrumb, then the title on one side and the actions on the other */
+.oat-page-header {
+    margin-block-end: var(--space-6);
+}
+
+.oat-page-header nav ol {
+    gap: var(--space-2);
+    margin: 0 0 var(--space-2);
+    color: var(--muted-foreground);
+}
+
+.oat-crumb-separator {
+    margin-inline-start: var(--space-2);
+    color: var(--faint-foreground);
+}
+
+.oat-page-header-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.oat-page-header-title > h1 {
+    margin: 0;
+}
+
+.oat-page-header-title > p {
+    margin: var(--space-1) 0 0;
+}
+
+/* OatStatCard: a label, a large figure and how it changed */
+.oat-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.oat-stat-label {
+    font-size: var(--text-7);
+    font-weight: var(--font-medium);
+    color: var(--muted-foreground);
+}
+
+.oat-stat-value {
+    font-size: var(--text-2);
+    font-weight: var(--font-semibold);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.oat-stat-footer {
+    font-size: var(--text-8);
+}
+
+/* OatDescriptionList: labels next to their values, or above them on narrow screens */
+dl.oat-dl {
+    display: grid;
+    grid-template-columns: minmax(8rem, max-content) 1fr;
+    align-items: baseline;
+    gap: var(--space-3) var(--space-6);
+    margin: 0;
+}
+
+.oat-dl-item {
+    display: contents;
+}
+
+dl.oat-dl dt {
+    font-size: var(--text-7);
+    font-weight: var(--font-medium);
+    color: var(--muted-foreground);
+}
+
+dl.oat-dl dd {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    dl.oat-dl {
+        grid-template-columns: 1fr;
+        row-gap: var(--space-1);
+    }
+
+    dl.oat-dl dd {
+        margin-block-end: var(--space-3);
+    }
+}
+
+/*
+ * OatSplitButton: Oat's button group (menu.buttons) rounds the outer corners of each
+ * item's button; the menu's button sits inside <ot-dropdown>, so round it here.
+ */
+menu.buttons.oat-split-button {
+    margin: 0;
+}
+
+menu.buttons li ot-dropdown > button {
+    border-radius: 0;
+}
+
+menu.buttons > li:last-child ot-dropdown > button {
+    border-start-end-radius: var(--radius-medium);
+    border-end-end-radius: var(--radius-medium);
+}
+
+menu.buttons > li:first-child ot-dropdown > button {
+    border-start-start-radius: var(--radius-medium);
+    border-end-start-radius: var(--radius-medium);
+}
+
+/* OatPopover: room around its content */
+ot-dropdown > .oat-popover {
+    padding: var(--space-4);
+    min-width: 16rem;
+    max-width: min(28rem, 100vw - 2rem);
 }

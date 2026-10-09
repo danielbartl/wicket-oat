@@ -2,6 +2,17 @@
 
 ## 0.2.0 (unreleased)
 
+- Page building blocks: `OatPageHeader` (a `<header>` border with breadcrumb, title, subtitle and
+  your actions), `OatStatCard` (a key figure with its change as a colored badge), `OatDescriptionList`
+  (a record's fields as label/value pairs on a `<dl>`), `OatSplitButton` (the usual action plus a
+  menu of related ones) and `OatPopover` (a button opening a panel with any content).
+- Single-input fields take `setSuggestions(...)`, offering values from a native `<datalist>`.
+- `wicket-oat.css` lays out all of Wicket's own tags in development mode (`<wicket:panel>`,
+  `<wicket:container>`, ...) as if absent, as in production, so grid and flex layouts match.
+
+- Fix: `OatAppLayout` pages now have a viewport meta tag. Without it, phones rendered them at
+  desktop width and Oat's responsive layout (the collapsing sidebar) never applied.
+
 - Data table columns in `dev.jbaby.wicket.oat.components.table`: `OatLinkColumn` (to a page or an
   Ajax action), `OatBadgeColumn` (e.g. a status, colored per row), `OatNumberColumn` (locale
   formatted, right-aligned, optionally an amount in a fixed or per-row currency), `OatDateColumn`

@@ -59,6 +59,14 @@ class LayoutAndNavigationTest {
     }
 
     @Test
+    void layoutIsSizedForPhones() {
+        tester.startPage(ParamLayoutPage.class, new PageParameters().add("id", 1));
+
+        // Without it, phones render the page at desktop width and Oat's layout never collapses the sidebar
+        assertThat(tester.getLastResponseAsString()).contains("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>");
+    }
+
+    @Test
     void layoutTextsComeFromResources() {
         tester.startPage(ParamLayoutPage.class, new PageParameters().add("id", 1));
 

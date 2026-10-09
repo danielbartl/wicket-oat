@@ -395,6 +395,51 @@ public final class Oat {
             };
         }
 
+        /** The top of a page, on a {@code <header>}: title, subtitle, breadcrumb, and the tag's content as actions. */
+        public static OatPageHeader pageHeader(String id, String title) {
+            return new OatPageHeader(id, title);
+        }
+
+        public static OatPageHeader pageHeader(String id, IModel<String> title) {
+            return new OatPageHeader(id, title);
+        }
+
+        /** A dashboard tile for one key figure; add {@code setChange(...)} for how it changed. */
+        public static OatStatCard statCard(String id, String label, IModel<?> value) {
+            return new OatStatCard(id, label, value);
+        }
+
+        public static OatStatCard statCard(String id, IModel<String> label, IModel<?> value) {
+            return new OatStatCard(id, label, value);
+        }
+
+        /** A read-only view of a record's fields, on a {@code <dl>}; add items with {@code addItem}/{@code addProperty}. */
+        public static OatDescriptionList descriptionList(String id) {
+            return new OatDescriptionList(id);
+        }
+
+        public static OatDescriptionList descriptionList(String id, IModel<?> model) {
+            return new OatDescriptionList(id, model);
+        }
+
+        /** A button for the usual action joined to a menu of related ones; add them with {@code addAction}. */
+        public static OatSplitButton splitButton(String id, String label, SerializableConsumer<AjaxRequestTarget> onClick) {
+            return new OatSplitButton(id, label, onClick);
+        }
+
+        public static OatSplitButton splitButton(String id, IModel<String> label, SerializableConsumer<AjaxRequestTarget> onClick) {
+            return new OatSplitButton(id, label, onClick);
+        }
+
+        /** A button opening a panel with any content; the factory receives the id the content must use. */
+        public static OatPopover popover(String id, String triggerLabel, SerializableFunction<String, ? extends Component> content) {
+            return new OatPopover(id, triggerLabel, content);
+        }
+
+        public static OatPopover popover(String id, IModel<String> triggerLabel, SerializableFunction<String, ? extends Component> content) {
+            return new OatPopover(id, triggerLabel, content);
+        }
+
         /** A dialog that asks to confirm an action before it runs; see {@link OatConfirmDialog#ask}. */
         public static OatConfirmDialog confirmDialog(String id) {
             return new OatConfirmDialog(id);

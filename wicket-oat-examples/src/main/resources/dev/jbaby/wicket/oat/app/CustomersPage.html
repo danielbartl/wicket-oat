@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1 class="mb-2">Customers</h1>
+        <p class="text-light">An <code>OatMasterDetail</code>: choose a customer to see the details and notes. On a phone
+            the list and the details take turns, with a Back button. The notes are an <code>OatMessageList</code> and an
+            <code>OatMessageInput</code>.</p>
+        <div wicket:id="customers" class="mt-6"></div>
+    </section>
+
+    <wicket:fragment wicket:id="listFragment">
+        <nav aria-label="Customers" class="card customer-list">
+            <ul class="unstyled vstack gap-1">
+                <li wicket:id="customer"><a wicket:id="link"><span wicket:id="name"></span><small wicket:id="city"></small></a></li>
+            </ul>
+        </nav>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="detailFragment">
+        <article class="card">
+            <h2 wicket:id="name" class="mb-4"></h2>
+            <dl wicket:id="details"></dl>
+            <h3 class="mt-6">Notes</h3>
+            <div wicket:id="notes"></div>
+            <div wicket:id="addNote" class="mt-4"></div>
+        </article>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

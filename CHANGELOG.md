@@ -2,6 +2,16 @@
 
 ## 0.2.0 (unreleased)
 
+- `OatLoginForm`: a sign-in form with password-manager hints, an optional remember-me
+  checkbox and forgot-password link, a failure message that doesn't say which part was wrong,
+  and a new session id after signing in. Sign-in is a callback, so it works with any session
+  class or security framework.
+- `OatMasterDetail`: a list beside the selected item's details, one at a time on phones.
+- `OatMessageList` and `OatMessageInput`: comments or notes with avatar, author, time and
+  text, and a box to add one.
+- `OatCustomField`: an Oat label, hint, inline errors and aria wiring for an input of your
+  own made of several inputs.
+
 - `OatWizard`: a form over several steps, with numbered steps, Next validating the current step,
   Back and finished steps' numbers going back, and `onNext`/`onFinish` hooks.
 - `OatAutoCompleteField`: Wicket's `AutoCompleteTextField` with an Oat-styled suggestion list,

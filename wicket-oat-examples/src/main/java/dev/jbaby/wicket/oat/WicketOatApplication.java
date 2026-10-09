@@ -44,6 +44,8 @@ public class WicketOatApplication {
                 mountPage("/app-shell", AppShellPage.class);
                 mountPage("/customer", CustomerPage.class);
                 mountPage("/order", OrderWizardPage.class);
+                mountPage("/customers", CustomersPage.class);
+                mountPage("/sign-in", SignInPage.class);
                 mountPage("/table", TablePage.class);
                 mountPage("/data-table", DataTablePage.class);
                 mountPage("/components", ComponentsPage.class);

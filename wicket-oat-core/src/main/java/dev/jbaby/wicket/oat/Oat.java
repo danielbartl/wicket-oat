@@ -4,6 +4,7 @@ import dev.jbaby.wicket.oat.behaviors.*;
 import dev.jbaby.wicket.oat.components.*;
 import dev.jbaby.wicket.oat.components.form.*;
 import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import dev.jbaby.wicket.oat.util.SerializableBiFunction;
 import dev.jbaby.wicket.oat.util.SerializableConsumer;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.Component;
@@ -454,6 +455,36 @@ public final class Oat {
                     onFinish.accept(target);
                 }
             };
+        }
+
+        /**
+         * A sign-in form; {@code signIn} checks the username and password and signs the user
+         * in. Subclass {@link OatLoginForm} to use the remember-me value or change what happens after.
+         */
+        public static OatLoginForm loginForm(String id, SerializableBiFunction<String, String, Boolean> signIn) {
+            return new OatLoginForm(id) {
+                @Override
+                protected boolean signIn(String username, String password, boolean rememberMe) {
+                    return Boolean.TRUE.equals(signIn.apply(username, password));
+                }
+            };
+        }
+
+        /** A list beside the selected item's details; set them with {@code setMaster}/{@code setDetail}. */
+        public static <T> OatMasterDetail<T> masterDetail(String id, IModel<T> selection) {
+            return new OatMasterDetail<>(id, selection);
+        }
+
+        /** Messages with author, time and text, e.g. comments or notes. */
+        public static <T> OatMessageList<T> messageList(String id, IModel<? extends List<T>> messages, SerializableFunction<T, String> author,
+                                                        SerializableFunction<T, ?> text,
+                                                        SerializableFunction<T, ? extends java.time.temporal.TemporalAccessor> time) {
+            return new OatMessageList<>(id, messages, author, text, time);
+        }
+
+        /** A box for writing a message, with a Send button; {@code onSend} gets the text. */
+        public static OatMessageInput messageInput(String id, SerializableBiConsumer<AjaxRequestTarget, String> onSend) {
+            return new OatMessageInput(id, onSend);
         }
 
         /** A dialog that asks to confirm an action before it runs; see {@link OatConfirmDialog#ask}. */
@@ -1162,6 +1193,21 @@ public final class Oat {
 
         public static <T> OatAutoCompleteField<T> autoCompleteField(String id, IModel<String> labelModel, IModel<T> model, IModel<String> hintModel) {
             return new OatAutoCompleteField<>(id, labelModel, model, hintModel);
+        }
+
+        /** An Oat field around an input of your own made of several inputs, e.g. a {@code FormComponentPanel}. */
+        public static <T> OatCustomField<T> customField(String id, SerializableBiFunction<String, IModel<T>, ? extends org.apache.wicket.markup.html.form.FormComponent<T>> input) {
+            return new OatCustomField<>(id, input);
+        }
+
+        public static <T> OatCustomField<T> customField(String id, String label, IModel<T> model,
+                                                       SerializableBiFunction<String, IModel<T>, ? extends org.apache.wicket.markup.html.form.FormComponent<T>> input) {
+            return new OatCustomField<>(id, label, model, input);
+        }
+
+        public static <T> OatCustomField<T> customField(String id, IModel<String> labelModel, IModel<T> model, IModel<String> hintModel,
+                                                       SerializableBiFunction<String, IModel<T>, ? extends org.apache.wicket.markup.html.form.FormComponent<T>> input) {
+            return new OatCustomField<>(id, labelModel, model, hintModel, input);
         }
 
         public static OatTagInput tagInput(String id) {

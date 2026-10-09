@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.app;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.OatFieldset;
 import dev.jbaby.wicket.oat.components.OatSubmitButton;
+import dev.jbaby.wicket.oat.components.form.OatCustomField;
 import dev.jbaby.wicket.oat.components.form.OatDateField;
 import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatEmailField;
@@ -41,6 +42,7 @@ public class InvoicePage extends BasePage {
         public String customer;
         public String email;
         public String website;
+        public String phone;
         public LocalDate dueDate = LocalDate.now().plusDays(30);
         public Currency currency = Currency.getInstance("EUR");
         public BigDecimal netAmount = new BigDecimal("1250");
@@ -106,6 +108,8 @@ public class InvoicePage extends BasePage {
                 .setPlaceholder(Model.of("example.com"))
                 .add(Oat.Behaviors.col(6)));
         customer.add(new OatDateField("dueDate").setRequired(true).add(Oat.Behaviors.col(6)));
+        // An input of the application's own (two inputs), with an Oat label, hint and errors
+        customer.add(new OatCustomField<String>("phone", PhoneInput::new).add(Oat.Behaviors.col(6)));
 
         // Amounts: the currency sets the money field's symbol and decimals, and the
         // locale where the symbol goes

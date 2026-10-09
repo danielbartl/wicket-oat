@@ -44,3 +44,32 @@
     --input: #1c3d5c;
     --ring: #2fb3c9;
 }
+
+/* Sign-in demo: a narrow card in the middle */
+.oat-signin-demo {
+    max-width: 26rem;
+    margin: var(--space-8) auto;
+}
+
+/* Customers demo: the list of customers as plain links, the selected one marked */
+.customer-list a {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-small);
+    color: var(--foreground);
+}
+
+.customer-list a:hover,
+.customer-list a[aria-current] {
+    background-color: var(--accent);
+}
+
+.customer-list small {
+    display: block;
+    color: var(--muted-foreground);
+}
+
+/* The phone field's country code: as wide as the code, the number takes the rest */
+fieldset.group > select.phone-code {
+    flex: 0 0 6.5rem;
+}

@@ -82,10 +82,10 @@ is the more natural choice for it.
 ## Available Components
 
 - **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`
-- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatWizard`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatWizard`, `OatMasterDetail`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
-- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
-- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatFieldset`, and more specialized HTML5 fields.
+- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
 
@@ -403,6 +403,53 @@ optional description and color:
 add(new OatTimeline<>("history", () -> orders.history(order), Event::title, Event::at)
         .setDescription(Event::details)
         .setVariant(event -> event.isPayment() ? OatVariant.SUCCESS : OatVariant.DEFAULT));
+```
+
+## Sign-in, Master-Detail and Messages
+
+`OatLoginForm` is a sign-in form; implement `signIn` with your session or
+security framework:
+
+```java
+add(new OatLoginForm("login") {
+    @Override
+    protected boolean signIn(String username, String password, boolean rememberMe) {
+        return AuthenticatedWebSession.get().signIn(username, password);   // wicket-auth-roles
+    }
+}.setRememberMe(true).setForgotPasswordLink(ResetPasswordPage.class));
+```
+
+A failed attempt shows "Wrong username or password." without saying which was
+wrong, and clears the password. After a successful one the session gets a new
+id (against session fixation) and the user continues to the page they were
+going to. The fields carry `autocomplete` hints for password managers.
+
+`OatMasterDetail` shows a list next to the selected item's details, and one at a
+time on phones, with a Back button. The master is any component that calls
+`select(target, item)`:
+
+```java
+OatMasterDetail<Customer> customers = new OatMasterDetail<>("customers", new Model<>());
+customers.setMaster(id -> new CustomerList(id, customers));   // its links call customers.select(target, c)
+customers.setDetail((id, customer) -> new CustomerPanel(id, customer));
+```
+
+`OatMessageList` and `OatMessageInput` show and add comments or notes, with the
+author's avatar (initials by default), the time, and the text with its line
+breaks:
+
+```java
+OatMessageList<Note> notes = new OatMessageList<>("notes", () -> notesOf(customer), Note::author, Note::text, Note::at);
+add(notes);
+add(new OatMessageInput("addNote", (target, text) -> { save(customer, text); target.add(notes); }));
+```
+
+`OatCustomField` gives an input of your own, made of several inputs (usually a
+`FormComponentPanel`), an Oat label, hint and inline errors, and points the
+`aria-describedby`/`aria-invalid` of every input inside at them:
+
+```java
+form.add(new OatCustomField<String>("phone", PhoneInput::new));   // (id, model) -> your input
 ```
 
 ## Data Tables

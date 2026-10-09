@@ -4,32 +4,47 @@
 <wicket:extend>
     <section>
         <h1>Oat Data Table Demo</h1>
-        <p>A styled Wicket <code>DataTable</code> with built-in toolbars and empty state support.</p>
+        <p class="text-light">A Wicket <code>DataTable</code> with Oat columns for links, status badges, amounts, dates
+            and yes/no values, a menu of actions on each row, row selection with bulk actions, and a toolbar.</p>
 
-        <h3 class="mt-6">Standard Data Table</h3>
-        <p>This table uses a <code>SortableDataProvider</code> and supports pagination and sorting.</p>
+        <h3 class="mt-6">Invoices</h3>
+        <p class="text-light">Select rows to mark them as paid or delete them, open a row's "⋯" menu, sort by a
+            column, or search. Deleting asks first, with an <code>OatConfirmDialog</code>.</p>
         <div wicket:id="dataTable" class="mt-4"></div>
+        <div wicket:id="confirm"></div>
 
         <h3 class="mt-6">Empty Table with Placeholder</h3>
-        <p>If the data provider is empty, the component created by <code>setEmptyState</code> is displayed.</p>
+        <p class="text-light">If the data provider is empty, the component created by <code>setEmptyState</code> is displayed.</p>
         <div wicket:id="emptyDataTable" class="mt-4"></div>
 
         <div class="mt-6">
             <h3>How to use</h3>
-            <p>Use the <code>OatDataTable</code> component via the <code>Oat</code> factory. It s a standard Wicket <code>DataTable</code> and provides convenient methods for common patterns.</p>
-            
-            <pre><code>// Java - Basic Table
-OatDataTable&lt;User, String&gt; table = Oat.Components.dataTable("id", columns, dataProvider, 10);
-add(table);
+            <pre><code>List&lt;IColumn&lt;Invoice, String&gt;&gt; columns = new ArrayList&lt;&gt;();
+columns.add(new OatSelectionColumn&lt;&gt;(selected));                      // checkboxes
+columns.add(OatLinkColumn.toPage(Model.of("Number"), "number", Invoice::number,
+        InvoicePage.class, invoice -&gt; new PageParameters().add("id", invoice.id())));
+columns.add(new OatBadgeColumn&lt;&gt;(Model.of("Status"), "status", Invoice::status,
+        invoice -&gt; invoice.status() == Status.PAID ? OatVariant.SUCCESS : OatVariant.DEFAULT));
+columns.add(new OatNumberColumn&lt;Invoice, String&gt;(Model.of("Total"), "total", Invoice::total)
+        .setCurrency(Invoice::currency));
+columns.add(new OatDateColumn&lt;&gt;(Model.of("Due"), "due", Invoice::due));
 
-// With custom empty state - the factory receives the component id to use
-table.setEmptyState(id -&gt; Oat.Components.emptyState(id, "No results found", "Try a different search."));</code></pre>
+OatActionsColumn&lt;Invoice, String&gt; actions = new OatActionsColumn&lt;&gt;();
+actions.addAction("Delete", (target, invoice) -&gt; confirm.ask(...)).setVariant(OatVariant.DANGER);
+columns.add(actions);
 
-            <pre><code>&lt;!-- HTML --&gt;
-&lt;div wicket:id="id"&gt;&lt;/div&gt;</code></pre>
+OatDataTable&lt;Invoice, String&gt; table = new OatDataTable&lt;&gt;("table", columns, provider, 10);
+table.addBulkAction("Mark as paid", (target, rows) -&gt; { invoices.markPaid(rows); table.clearSelection(target); });
+table.setToolbar(id -&gt; new SearchToolbar(id, search));
+table.setEmptyState(id -&gt; Oat.Components.emptyState(id, "No invoices found"));</code></pre>
         </div>
-
     </section>
+
+    <wicket:fragment wicket:id="toolbarFragment">
+        <form wicket:id="searchForm">
+            <div wicket:id="search"></div>
+        </form>
+    </wicket:fragment>
 </wicket:extend>
 </body>
 </html>

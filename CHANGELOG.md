@@ -2,6 +2,18 @@
 
 ## 0.2.0 (unreleased)
 
+- Data table columns in `dev.jbaby.wicket.oat.components.table`: `OatLinkColumn` (to a page or an
+  Ajax action), `OatBadgeColumn` (e.g. a status, colored per row), `OatNumberColumn` (locale
+  formatted, right-aligned, optionally an amount in a fixed or per-row currency), `OatDateColumn`
+  (any `java.time` value in the locale's style), `OatBooleanColumn` (a read-only checkbox) and
+  `OatActionsColumn` (a "⋯" menu of actions per row, with danger actions and per-row visibility).
+- Row selection: `OatSelectionColumn` adds checkboxes and a "select all on this page" box, keeping
+  the selection in your model across pages and sorting. `OatDataTable` then shows a bar with the
+  count and its bulk actions (`addBulkAction(...)`), and `clearSelection(target)`.
+- `OatDataTable`: a toolbar slot above the table (`setToolbar(...)`, e.g. for search), sort arrows
+  and `aria-sort` on sortable headers, and a markup id so `target.add(table)` re-renders it.
+  `OatDropdown` gains `getTrigger()`. The new texts are translated like the others.
+
 - Sidebar sections and badges: `MenuItem.group(label, items...)` renders a collapsible group of
   links in `OatAppLayout`'s sidebar, open while one of its pages is shown, and
   `MenuItem.withBadge(...)` shows a count or text after a link's label (hidden while `null`, empty

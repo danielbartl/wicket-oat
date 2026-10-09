@@ -22,6 +22,7 @@ import java.util.List;
 public abstract class OatDropdown<T> extends Panel {
 
     private final WebMarkupContainer menu;
+    private final WebMarkupContainer trigger;
 
     public OatDropdown(String id, String triggerLabel, IModel<List<T>> model) {
         this(id, Model.of(triggerLabel), model);
@@ -35,7 +36,7 @@ public abstract class OatDropdown<T> extends Panel {
         menu.setOutputMarkupId(true);
         add(menu);
 
-        WebMarkupContainer trigger = new WebMarkupContainer("trigger");
+        trigger = new WebMarkupContainer("trigger");
         trigger.add(new Label("triggerLabel", triggerLabel));
         trigger.add(AttributeModifier.replace("popovertarget", (IModel<String>) menu::getMarkupId));
         add(trigger);
@@ -50,6 +51,11 @@ public abstract class OatDropdown<T> extends Panel {
 
     /** Populate a menu item; the item's root tag should carry {@code role="menuitem"}. */
     protected abstract void populateItem(ListItem<T> item);
+
+    /** The button that opens the menu, e.g. to add an {@code aria-label} or change its style. */
+    public WebMarkupContainer getTrigger() {
+        return trigger;
+    }
 
     /** Closes the menu, e.g. after handling a click on one of its items. */
     public OatDropdown<T> close(IPartialPageRequestHandler target) {

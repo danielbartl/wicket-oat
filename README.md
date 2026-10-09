@@ -306,6 +306,50 @@ add(new OatTabbedPanel<>("tabs", List.of(
 `OatTabs` instead renders every panel up front and switches between them in
 the browser, for small static content.
 
+## Data Tables
+
+`OatDataTable` is a Wicket `DataTable` with Oat styling: sortable headers show
+the sort order (and set `aria-sort`), and it pages with `OatPagingNavigator`.
+Columns for common cells are in `dev.jbaby.wicket.oat.components.table`:
+
+```java
+List<IColumn<Invoice, String>> columns = new ArrayList<>();
+columns.add(new OatSelectionColumn<>(selected));               // checkboxes; selected is an IModel<Set<Invoice>>
+columns.add(OatLinkColumn.toPage(Model.of("Number"), "number", Invoice::number,
+        InvoicePage.class, invoice -> new PageParameters().add("id", invoice.id())));
+columns.add(new OatBadgeColumn<>(Model.of("Status"), "status", Invoice::status,
+        invoice -> invoice.status() == Status.PAID ? OatVariant.SUCCESS : OatVariant.SECONDARY));
+columns.add(new OatNumberColumn<Invoice, String>(Model.of("Total"), "total", Invoice::total)
+        .setCurrency(Invoice::currency));                       // €1,234.50, right-aligned
+columns.add(new OatDateColumn<>(Model.of("Due"), "due", Invoice::due));
+columns.add(new OatBooleanColumn<>(Model.of("Exported"), Invoice::exported));
+
+OatActionsColumn<Invoice, String> actions = new OatActionsColumn<>();   // a "⋯" menu per row
+actions.addAction("Mark as paid", (target, invoice) -> ...)
+        .setVisibleWhen(invoice -> invoice.status() != Status.PAID);
+actions.addAction("Delete", (target, invoice) -> confirm.ask(...)).setVariant(OatVariant.DANGER);
+columns.add(actions);
+
+OatDataTable<Invoice, String> table = new OatDataTable<>("invoices", columns, provider, 10);
+table.addBulkAction("Export", (target, rows) -> { exports.export(rows); table.clearSelection(target); });
+table.setToolbar(id -> new InvoiceSearchPanel(id, search));
+table.setEmptyState(id -> Oat.Components.emptyState(id, "No invoices found"));
+```
+
+- Numbers and dates are formatted in the user's locale; `OatNumberColumn` takes
+  `setFractionDigits(...)` and a fixed or per-row currency, `OatDateColumn`
+  `setStyle(...)`, `setPattern(...)` and a zone for `Instant`s.
+- With an `OatSelectionColumn`, a bar above the table shows how many rows are
+  selected, with the bulk actions and "Clear selection". The selection lasts
+  across pages and sorting, and rows are compared with `equals`, so give the row
+  type a meaningful one (a record, or an entity comparing ids). Bulk actions
+  receive a copy of the selected rows; call `clearSelection(target)` when done.
+  Each change also sends an `OatSelectionColumn.SelectionChanged` event.
+- The table has a markup id: `target.add(table)` re-renders it after an action.
+  To filter, have the data provider read a search model, and in the search
+  field's Ajax handler call `table.getTable().setCurrentPage(0)` and
+  `target.add(table.getTable())`.
+
 ## Paging
 
 `OatPagingNavigator` and `OatAjaxPagingNavigator` are Wicket's `PagingNavigator`

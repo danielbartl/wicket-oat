@@ -148,3 +148,63 @@ aside[data-sidebar] nav a > .badge {
     padding-block: 0;
     padding-inline: var(--space-2);
 }
+
+/*
+ * OatDataTable. Sortable headers keep the header color and show the sort order with an
+ * arrow (screen readers get aria-sort instead: the "/ ''" hides the arrow from them).
+ */
+th:is(.wicket_orderNone, .wicket_orderUp, .wicket_orderDown) a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: inherit;
+    text-decoration: none;
+}
+
+th.wicket_orderNone a::after {
+    content: "↕";
+    content: "↕" / "";
+    opacity: .35;
+}
+
+th.wicket_orderUp a::after {
+    content: "↑";
+    content: "↑" / "";
+}
+
+th.wicket_orderDown a::after {
+    content: "↓";
+    content: "↓" / "";
+}
+
+/* The toolbar and the bar shown while rows are selected, above the table */
+.oat-table-toolbar {
+    margin-block-end: var(--space-3);
+}
+
+.oat-bulk-actions {
+    margin-block-end: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--muted);
+    border-radius: var(--radius-medium);
+}
+
+/* OatSelectionColumn: as narrow as its checkboxes, and selected rows highlighted */
+:is(th, td).oat-select {
+    width: 1%;
+}
+
+tbody tr:has(> td.oat-select input:checked) {
+    background-color: var(--accent);
+}
+
+/* OatBooleanColumn's read-only checkbox: disabled, but not faded like an unavailable control */
+input[type="checkbox"].oat-readonly:disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+/* A destructive entry in a dropdown menu (OatActionsColumn's setVariant(DANGER)) */
+[role="menuitem"][data-variant="danger"] {
+    color: var(--danger);
+}

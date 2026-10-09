@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
+    <div wicket:id="toolbar" class="oat-table-toolbar"></div>
+    <div wicket:id="bulkActions" class="hstack oat-bulk-actions">
+        <span wicket:id="count" role="status"></span>
+        <wicket:container wicket:id="actions"><button wicket:id="action"></button></wicket:container>
+        <button wicket:id="clear"></button>
+    </div>
     <div class="table">
         <table wicket:id="table" class="w-100 align-left small">
             <!-- Table content is rendered by Wicket DataTable -->

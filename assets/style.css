@@ -436,3 +436,22 @@ a.unstyled, .site-nav a {
     position: static;
     margin-block-start: var(--space-1);
 }
+
+/* Master-detail showcase: the list of customers as plain links */
+.demo-master a {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-small);
+    color: var(--foreground);
+    font-size: var(--text-7);
+}
+
+.demo-master a[aria-current],
+.demo-master a:hover {
+    background-color: var(--accent);
+}
+
+.demo-master small {
+    display: block;
+    color: var(--muted-foreground);
+}

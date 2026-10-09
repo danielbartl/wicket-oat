@@ -150,8 +150,9 @@
             <article class="card">
                 <h3>Built for business apps <span class="badge new-badge" data-variant="success">New in 0.2.0</span></h3>
                 <p>Data tables with row actions and bulk operations, page headers, KPI cards, detail
-                    views, a wizard, server-side autocomplete, money and date-range fields &mdash; the
-                    screens line-of-business applications are made of.</p>
+                    views, master-detail screens, a wizard, a sign-in form, comments, server-side
+                    autocomplete, money and date-range fields &mdash; the screens line-of-business
+                    applications are made of.</p>
             </article>
             <article class="card">
                 <h3>Speaks your users' language <span class="badge new-badge" data-variant="success">New in 0.2.0</span></h3>
@@ -499,6 +500,25 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatWizard</strong><code>wizard.addStep("Items", id -&gt; new ItemsStep(id, order))</code></div>
                 </div>
+                <div class="showcase-card wide">
+                    <div class="showcase-preview block">
+                        <div class="oat-master-detail" data-showing="detail" style="grid-template-columns:minmax(10rem,1fr) minmax(0,2fr)">
+                            <nav class="oat-master demo-master" aria-label="Customers">
+                                <a href="#components" aria-current="true">ACME GmbH<small>Vienna</small></a>
+                                <a href="#components">Globex<small>Berlin</small></a>
+                                <a href="#components">Initech<small>Munich</small></a>
+                            </nav>
+                            <div class="oat-detail">
+                                <h4 style="margin-top:0">ACME GmbH</h4>
+                                <dl class="oat-dl">
+                                    <div class="oat-dl-item"><dt>Billing email</dt><dd>billing@acme.example</dd></div>
+                                    <div class="oat-dl-item"><dt>Status</dt><dd><span class="badge" data-variant="success">Active</span></dd></div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMasterDetail</strong><code>md.setMaster(id -&gt; list) &middot; md.setDetail((id, item) -&gt; panel) &middot; md.select(target, item)</code></div>
+                </div>
             </div>
         </div>
 
@@ -663,6 +683,19 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
+                        <ol class="unstyled oat-messages">
+                            <li class="oat-message"><figure data-variant="avatar" class="small"><abbr title="JL">JL</abbr></figure><div class="oat-message-body"><div class="oat-message-heading"><strong>Jordan Lee</strong><time class="text-light" datetime="2026-10-02T09:30">Oct 2, 9:30 AM</time></div><p>Asked for the Q3 invoices as one PDF.</p></div></li>
+                            <li class="oat-message"><figure data-variant="avatar" class="small"><abbr title="AK">AK</abbr></figure><div class="oat-message-body"><div class="oat-message-heading"><strong>Alex Kim</strong><time class="text-light" datetime="2026-10-09T14:05">Oct 9, 2:05 PM</time></div><p>Paid INV-1019.</p></div></li>
+                        </ol>
+                        <form class="vstack gap-2 oat-message-input mt-4" onsubmit="return false">
+                            <textarea rows="2" aria-label="Message" placeholder="Write a message&hellip;"></textarea>
+                            <footer class="hstack justify-end"><button type="submit" class="small">Send</button></footer>
+                        </form>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMessageList / OatMessageInput</strong><code>new OatMessageInput(id, (target, text) -&gt; ...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
                         <div role="status" class="skeleton line"></div>
                         <div role="status" class="skeleton line"></div>
                         <div role="status" class="skeleton line" style="width:60%"></div>
@@ -757,6 +790,33 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         </section>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatAutoCompleteField</strong><code>.setChoices(text -&gt; customers.search(text)).setDisplay(Customer::name)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <form class="vstack oat-login-form" onsubmit="return false">
+                            <div role="alert" data-variant="danger">Wrong username or password.</div>
+                            <section data-field data-required><label for="demo-user">Username</label><input id="demo-user" type="text" autocomplete="username" value="demo"></section>
+                            <section data-field data-required><label for="demo-pass">Password</label><input id="demo-pass" type="password" autocomplete="current-password"></section>
+                            <div class="hstack justify-between oat-login-options">
+                                <label><input type="checkbox"> Remember me</label>
+                                <a href="#components">Forgot your password?</a>
+                            </div>
+                            <button type="submit">Sign in</button>
+                        </form>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLoginForm</strong><code>protected boolean signIn(String user, String password, boolean rememberMe)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <fieldset data-field class="oat-range-field oat-custom-field" style="margin:0">
+                            <legend>Phone</legend>
+                            <fieldset class="group">
+                                <select aria-label="Country code" style="flex:0 0 6rem"><option>+43</option><option>+49</option><option>+41</option></select>
+                                <input type="tel" aria-label="Number" placeholder="1 234 5678">
+                            </fieldset>
+                        </fieldset>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatCustomField</strong><code>new OatCustomField&lt;&gt;("phone", PhoneInput::new)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">

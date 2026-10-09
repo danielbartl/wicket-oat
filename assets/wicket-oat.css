@@ -356,6 +356,8 @@ fieldset.oat-range-field {
     padding: 0;
 }
 
+/* OatCustomField uses the same fieldset (class oat-range-field) for its inputs */
+
 fieldset.oat-range-field > legend {
     padding: 0;
 }
@@ -509,4 +511,81 @@ fieldset.oat-range-field fieldset.group {
 
 .oat-wizard-spacer {
     flex: 1;
+}
+
+/* OatLoginForm: the remember-me checkbox and the forgot-password link on one line */
+.oat-login-form {
+    gap: var(--space-2);
+}
+
+.oat-login-options {
+    font-size: var(--text-7);
+}
+
+.oat-login-options [data-field] {
+    margin: 0;
+}
+
+/* OatMasterDetail: the list beside the selected item's details, one at a time on phones */
+.oat-master-detail {
+    display: grid;
+    grid-template-columns: minmax(14rem, 1fr) minmax(0, 2fr);
+    align-items: start;
+    gap: var(--space-6);
+}
+
+.oat-detail-back {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .oat-master-detail {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .oat-master-detail[data-showing="detail"] .oat-master,
+    .oat-master-detail:not([data-showing="detail"]) .oat-detail {
+        display: none;
+    }
+
+    .oat-detail-back {
+        display: inline-flex;
+        margin-block-end: var(--space-4);
+    }
+}
+
+/* OatMessageList: avatar beside author, time and text */
+.oat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin: 0;
+}
+
+.oat-message {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+}
+
+.oat-message-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.oat-message-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-3);
+}
+
+.oat-message-heading time {
+    font-size: var(--text-7);
+}
+
+.oat-message-body > p {
+    margin: var(--space-1) 0 0;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
 }

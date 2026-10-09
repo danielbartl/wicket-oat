@@ -11,6 +11,7 @@
             <div class="hstack gap-2">
                 <a wicket:id="useOcean">Use the custom Ocean theme</a>
                 <a wicket:id="useMidnight">Use Midnight</a>
+                <a wicket:id="useBusiness">Use Business</a>
                 <a wicket:id="useDefault">Back to the default</a>
             </div>
             <p class="mt-4">Or pick any registered theme with the switcher in the sidebar footer.</p>
@@ -20,6 +21,36 @@
             <header><h3>Pinned to Light</h3></header>
             <p>This card carries <code>Oat.Behaviors.theme(OatTheme.LIGHT)</code>, so it stays light whatever theme the page uses.</p>
         </article>
+
+        <div class="row mt-4">
+            <article class="card col-6">
+                <header><h3>Default density</h3></header>
+                <table>
+                    <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th></tr></thead>
+                    <tbody>
+                    <tr><td>INV-1041</td><td>Acme Corp</td><td>1,180.00</td></tr>
+                    <tr><td>INV-1042</td><td>Globex</td><td>94.50</td></tr>
+                    <tr><td>INV-1043</td><td>Initech</td><td>12,007.25</td></tr>
+                    </tbody>
+                </table>
+                <label>Reference <input type="text" placeholder="PO number"></label>
+                <button type="button" class="mt-2">Approve</button>
+            </article>
+            <article class="card col-6" wicket:id="compactTable">
+                <header><h3>Compact density</h3></header>
+                <p>Pinned with <code>Oat.Behaviors.density(OatDensity.COMPACT)</code>. For a whole app, use <code>WicketOats.install(this).setDensity(OatDensity.COMPACT)</code>; it works with every theme.</p>
+                <table>
+                    <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th></tr></thead>
+                    <tbody>
+                    <tr><td>INV-1041</td><td>Acme Corp</td><td>1,180.00</td></tr>
+                    <tr><td>INV-1042</td><td>Globex</td><td>94.50</td></tr>
+                    <tr><td>INV-1043</td><td>Initech</td><td>12,007.25</td></tr>
+                    </tbody>
+                </table>
+                <label>Reference <input type="text" placeholder="PO number"></label>
+                <button type="button" class="mt-2">Approve</button>
+            </article>
+        </div>
 
         <div class="mt-6">
             <h3>How to use Themes</h3>

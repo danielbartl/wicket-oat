@@ -3,7 +3,7 @@
 Theming is controlled by the `data-theme` attribute, which `OatAppLayout` sets on `<html>` from the current user's theme. There is no special session class: the choice is kept by an `OatThemeStore` - by default `CookieThemeStore` (an `oat-theme` cookie kept for a year, cached in the session).
 
 ## Built-in Themes
-`OatTheme` constants: `LIGHT`, `DARK`, `MIDNIGHT`, `NORD`, `EVERFOREST`, `TOKYO_NIGHT`, `ROSE_PINE_DAWN`, `ROYAL`, `CLAY`, `CATPPUCCIN_MOCHA`, `CATPPUCCIN_LATTE`, `MATERIAL`, `DAISY`, `ULTRAVIOLET`, `HALLOWEEN`, `XMAS`, `WIREFRAME`. `OatTheme` is a record (`value`, `label`, `icon`); `OatTheme.builtIns()` lists them.
+`OatTheme` constants: `LIGHT`, `DARK`, `MIDNIGHT`, `NORD`, `EVERFOREST`, `TOKYO_NIGHT`, `ROSE_PINE_DAWN`, `ROYAL`, `CLAY`, `CATPPUCCIN_MOCHA`, `CATPPUCCIN_LATTE`, `MATERIAL`, `DAISY`, `ULTRAVIOLET`, `HALLOWEEN`, `XMAS`, `WIREFRAME`, `BUSINESS`, `BUSINESS_DARK` (a sober light/dark pair for business apps). `OatTheme` is a record (`value`, `label`, `icon`); `OatTheme.builtIns()` lists them.
 
 ## Configuring
 `WicketOats.install(app)` returns the application's `OatSettings`:
@@ -29,6 +29,9 @@ OatTheme theme = OatTheme.current();  // the stored choice if registered, else t
 - `OatAppLayout` applies the current theme to `<html>` automatically.
 - With your own base page: `TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html"); html.add(Oat.Behaviors.theme());` on `<html wicket:id="html">`.
 - `Oat.Behaviors.theme(OatTheme.LIGHT)` pins one component to a theme, whatever the user chose.
+
+## Density
+Independent of the theme: `OatSettings.setDensity(OatDensity.COMPACT)` tightens spacing and body text app-wide (`DEFAULT` otherwise). `OatAppLayout` sets it as `data-density` on `<html>`; with your own base page add `Oat.Behaviors.density()` to the `<html>` container. `Oat.Behaviors.density(OatDensity.COMPACT)` makes one component compact, e.g. a large table.
 
 ## Custom Themes
 Define the CSS variables, then register the theme so it can be chosen:

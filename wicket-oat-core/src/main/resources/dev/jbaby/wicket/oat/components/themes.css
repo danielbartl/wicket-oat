@@ -14,6 +14,54 @@
     color-scheme: dark;
 }
 
+/**
+ * A component pinned to Light or Dark (Oat.Behaviors.theme(...)) inside a page using
+ * another theme would otherwise inherit that theme's variables, since Oat defines its
+ * own palette only on :root. Re-declare Oat 0.8.1's defaults (keep them in sync with
+ * oat.min.css when updating Oat), including the shape tokens the Business themes change.
+ **/
+[data-theme="light"],
+[data-theme="dark"] {
+    --background: light-dark(#fff, #09090b);
+    --foreground: light-dark(#09090b, #fafafa);
+    --card: light-dark(#fff, #18181b);
+    --card-foreground: light-dark(#09090b, #fafafa);
+    --primary: light-dark(#574747, #fafafa);
+    --primary-foreground: light-dark(#fafafa, #18181b);
+    --secondary: light-dark(#f4f4f5, #27272a);
+    --secondary-foreground: light-dark(#574747, #fafafa);
+    --muted: light-dark(#f4f4f5, #27272a);
+    --muted-foreground: light-dark(#71717a, #a1a1aa);
+    --faint: light-dark(#fafafa, #1e1e21);
+    --faint-foreground: light-dark(#a1a1aa, #71717a);
+    --accent: light-dark(#f4f4f5, #27272a);
+    --danger: light-dark(#d32f2f, #f4807b);
+    --danger-foreground: light-dark(#fafafa, #18181b);
+    --success: light-dark(#008032, #6cc070);
+    --success-foreground: light-dark(#fafafa, #18181b);
+    --warning: light-dark(#a65b00, #f0a030);
+    --warning-foreground: #09090b;
+    --border: light-dark(#d4d4d8, #52525b);
+    --input: light-dark(#d4d4d8, #52525b);
+    --ring: light-dark(#574747, #d4d4d8);
+    --radius-small: .125rem;
+    --radius-medium: .375rem;
+    --radius-large: .75rem;
+    --shadow-small: 0 1px 2px 0 rgb(0 0 0 / .05);
+    --shadow-medium: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
+    --shadow-large: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+}
+
+/*
+ * Text in a pinned component follows its own theme, not the page's (body sets the page's).
+ * In Oat's lowest layer, so components that set their own color (cards, buttons) still win.
+ */
+@layer theme {
+    [data-theme]:not(html) {
+        color: var(--foreground);
+    }
+}
+
 /** Custom Midnight Theme **/
 [data-theme="midnight"] {
     color-scheme: dark;
@@ -305,4 +353,76 @@
     --border: #059669;
     --input: #059669;
     --ring: #dc2626;
+}
+
+/**
+ * Business Themes (Light and Dark): a sober look for line-of-business apps. Unlike the
+ * themes above they also set the status colors (every text/background pair meets WCAG AA),
+ * tighter corner radii and lighter shadows. Combine them with data-density="compact"
+ * (wicket-oat.css) for denser forms and tables.
+ **/
+[data-theme="business"] {
+    color-scheme: light;
+    --background: #f5f7fa;
+    --foreground: #1f2937;
+    --card: #ffffff;
+    --card-foreground: #1f2937;
+    --primary: #1d4ed8;
+    --primary-foreground: #ffffff;
+    --secondary: #e8ecf1;
+    --secondary-foreground: #1f2937;
+    --muted: #eef1f5;
+    --muted-foreground: #5b6675;
+    --faint: #f9fafb;
+    --faint-foreground: #8a94a3;
+    --accent: #e8eef8;
+    --danger: #b42318;
+    --danger-foreground: #ffffff;
+    --success: #067647;
+    --success-foreground: #ffffff;
+    --warning: #b54708;
+    --warning-foreground: #ffffff;
+    --border: #d0d6de;
+    --input: #c3cad4;
+    --ring: #2563eb;
+    --shadow-small: 0 1px 2px 0 rgb(16 24 40 / .05);
+    --shadow-medium: 0 1px 3px 0 rgb(16 24 40 / .08), 0 1px 2px -1px rgb(16 24 40 / .04);
+    --shadow-large: 0 4px 8px -2px rgb(16 24 40 / .08), 0 2px 4px -2px rgb(16 24 40 / .04);
+}
+
+[data-theme="business-dark"] {
+    color-scheme: dark;
+    --background: #0f141a;
+    --foreground: #e5e9ef;
+    --card: #171d24;
+    --card-foreground: #e5e9ef;
+    --primary: #5b93ff;
+    --primary-foreground: #0b1220;
+    --secondary: #252d37;
+    --secondary-foreground: #e5e9ef;
+    --muted: #202832;
+    --muted-foreground: #9aa5b4;
+    --faint: #141a21;
+    --faint-foreground: #6b7685;
+    --accent: #222b36;
+    --danger: #f97066;
+    --danger-foreground: #0f141a;
+    --success: #47cd89;
+    --success-foreground: #0f141a;
+    --warning: #fdb022;
+    --warning-foreground: #0f141a;
+    --border: #2c3540;
+    --input: #3a4452;
+    --ring: #5b93ff;
+}
+
+:is([data-theme="business"], [data-theme="business-dark"]) {
+    --radius-small: .125rem;
+    --radius-medium: .25rem;
+    --radius-large: .375rem;
+}
+
+/* Figures line up in table columns */
+:is([data-theme="business"], [data-theme="business-dark"]) table {
+    font-variant-numeric: tabular-nums;
 }

@@ -55,6 +55,7 @@ public class WicketOatApplication {
                         new SpringComponentInjector(this, ctx));
 
                 // Built-in themes plus a custom one, whose CSS is in examples.css
+                // (.setDensity(OatDensity.COMPACT) would make every page denser)
                 WicketOats.install(this)
                         .addTheme(new OatTheme("ocean", "Ocean", "🌊"));
 

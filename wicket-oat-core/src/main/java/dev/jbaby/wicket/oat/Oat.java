@@ -135,6 +135,16 @@ public final class Oat {
             return new OatThemeBehavior(theme);
         }
 
+        /** Applies the configured density ({@code data-density}); put it on the {@code <html>} tag. */
+        public static OatDensityBehavior density() {
+            return new OatDensityBehavior();
+        }
+
+        /** Pins a component to the given density, e.g. a compact table on a default page. */
+        public static OatDensityBehavior density(OatDensity density) {
+            return new OatDensityBehavior(density);
+        }
+
         public static FeedbackToastsBehavior feedbackToasts() {
             return new FeedbackToastsBehavior();
         }

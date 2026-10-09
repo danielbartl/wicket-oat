@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.behaviors.OatDensityBehavior;
 import dev.jbaby.wicket.oat.behaviors.OatThemeBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -46,6 +47,7 @@ public abstract class OatAppLayout extends WebPage {
     private void addThemedHtml() {
         TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
         html.add(new OatThemeBehavior());
+        html.add(new OatDensityBehavior());
         add(html);
     }
 

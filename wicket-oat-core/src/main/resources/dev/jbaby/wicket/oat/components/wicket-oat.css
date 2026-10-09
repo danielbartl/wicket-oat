@@ -78,3 +78,17 @@ dialog > div.oat-dialog-form > footer {
 select[multiple] {
     background-image: none;
 }
+
+/*
+ * Compact density (OatDensity.COMPACT sets data-density="compact"): a tighter spacing
+ * scale and smaller body text, for forms and tables in data-heavy apps. Oat sizes its
+ * buttons, fields and table cells from these tokens, so it works with every theme.
+ */
+[data-density="compact"] {
+    --space-2: .3125rem;
+    --space-3: .5rem;
+    --space-4: .75rem;
+    --space-5: 1rem;
+    --space-6: 1rem;
+    --text-regular: var(--text-7);
+}

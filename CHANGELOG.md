@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 (unreleased)
+
+- Two new built-in themes for line-of-business apps, `OatTheme.BUSINESS` and
+  `OatTheme.BUSINESS_DARK`: neutral surfaces, a corporate-blue primary, status colors that
+  meet WCAG AA contrast, tighter corner radii and tabular figures in tables.
+- Compact density, independent of the theme: `OatSettings.setDensity(OatDensity.COMPACT)`
+  tightens the spacing scale and body text app-wide (`OatAppLayout` sets `data-density` on
+  `<html>`), and `Oat.Behaviors.density(OatDensity.COMPACT)` applies it to one component.
+- A component pinned to `OatTheme.LIGHT` or `OatTheme.DARK` now really uses that theme inside
+  a page with another theme (before, it kept the page's colors).
+
 ## 0.1.1
 
 - Oat UI 0.8.1. An `OatSubmitButton` on an `<input type="submit">` now renders as a button

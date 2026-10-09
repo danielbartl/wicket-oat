@@ -43,10 +43,12 @@ public record OatTheme(String value, String label, String icon) implements Seria
     public static final OatTheme HALLOWEEN = new OatTheme("halloween", "Halloween", "🎃");
     public static final OatTheme XMAS = new OatTheme("xmas", "Christmas", "🎄");
     public static final OatTheme WIREFRAME = new OatTheme("wireframe", "Wireframe", "📐");
+    public static final OatTheme BUSINESS = new OatTheme("business", "Business", "💼");
+    public static final OatTheme BUSINESS_DARK = new OatTheme("business-dark", "Business Dark", "🗂️");
 
     private static final List<OatTheme> BUILT_INS = List.of(DARK, LIGHT, MIDNIGHT, NORD, EVERFOREST,
             TOKYO_NIGHT, ROSE_PINE_DAWN, ROYAL, CLAY, CATPPUCCIN_MOCHA, CATPPUCCIN_LATTE, MATERIAL, DAISY,
-            ULTRAVIOLET, HALLOWEEN, XMAS, WIREFRAME);
+            ULTRAVIOLET, HALLOWEEN, XMAS, WIREFRAME, BUSINESS, BUSINESS_DARK);
 
     public OatTheme {
         if (value == null || !VALUE.matcher(value).matches()) {

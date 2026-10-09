@@ -356,7 +356,7 @@ Anything beyond that belongs in your own stylesheet, using Oat's CSS variables
 
 ## Theming
 
-Wicket Oat ships 17 themes, and `OatAppLayout` applies the current user's theme
+Wicket Oat ships 19 themes, and `OatAppLayout` applies the current user's theme
 as the `data-theme` attribute on `<html>`. The choice is kept in a cookie
 (cached in the session), so it survives the session and works with any session
 class:
@@ -384,7 +384,29 @@ add `Oat.Behaviors.theme()` to a `TransparentWebMarkupContainer` on your
 `<html wicket:id="html">` tag.
 
 ### Built-in Themes:
-`DARK`, `LIGHT`, `MIDNIGHT`, `NORD`, `EVERFOREST`, `TOKYO_NIGHT`, `ROSE_PINE_DAWN`, `ROYAL`, `CLAY`, `CATPPUCCIN_MOCHA`, `CATPPUCCIN_LATTE`, `MATERIAL`, `DAISY`, `ULTRAVIOLET`, `HALLOWEEN`, `XMAS`, `WIREFRAME`.
+`DARK`, `LIGHT`, `MIDNIGHT`, `NORD`, `EVERFOREST`, `TOKYO_NIGHT`, `ROSE_PINE_DAWN`, `ROYAL`, `CLAY`, `CATPPUCCIN_MOCHA`, `CATPPUCCIN_LATTE`, `MATERIAL`, `DAISY`, `ULTRAVIOLET`, `HALLOWEEN`, `XMAS`, `WIREFRAME`, `BUSINESS`, `BUSINESS_DARK`.
+
+`BUSINESS` and `BUSINESS_DARK` are a sober light/dark pair for line-of-business
+apps: neutral surfaces, a corporate-blue primary, status colors that meet WCAG AA
+contrast, tighter corner radii, and tabular figures in tables.
+
+### Density
+
+Independent of the theme, `OatDensity.COMPACT` tightens Oat's spacing scale and
+uses smaller body text, for data-heavy apps with many forms and tables.
+`OatAppLayout` applies it as `data-density` on `<html>`:
+
+```java
+WicketOats.install(this)
+        .setDefaultTheme(OatTheme.BUSINESS)
+        .setDensity(OatDensity.COMPACT);
+
+// Or only for one component, e.g. a large table on an otherwise default page
+table.add(Oat.Behaviors.density(OatDensity.COMPACT));
+```
+
+Without `OatAppLayout`, add `Oat.Behaviors.density()` next to
+`Oat.Behaviors.theme()` on your `<html>` container.
 
 ## Running the Examples
 

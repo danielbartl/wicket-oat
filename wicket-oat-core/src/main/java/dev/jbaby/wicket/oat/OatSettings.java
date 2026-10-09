@@ -25,6 +25,7 @@ public class OatSettings implements Serializable {
     private OatTheme defaultTheme = OatTheme.DARK;
     private final List<OatTheme> themes = new ArrayList<>(OatTheme.builtIns());
     private OatThemeStore themeStore = new CookieThemeStore();
+    private OatDensity density = OatDensity.DEFAULT;
     private boolean addResources = true;
 
     /** The settings of the current application. */
@@ -76,6 +77,19 @@ public class OatSettings implements Serializable {
     /** The selectable theme with the given {@code data-theme} value, or {@code null}. */
     public OatTheme findTheme(String value) {
         return value == null ? null : themes.stream().filter(t -> t.value().equals(value)).findFirst().orElse(null);
+    }
+
+    public OatDensity getDensity() {
+        return density;
+    }
+
+    /**
+     * How tightly components are laid out, for every user and theme; {@code DEFAULT} by
+     * default. {@code COMPACT} suits data-heavy apps with many forms and tables.
+     */
+    public OatSettings setDensity(OatDensity density) {
+        this.density = Objects.requireNonNull(density);
+        return this;
     }
 
     public boolean isAddResources() {

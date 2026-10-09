@@ -89,6 +89,14 @@ class OatThemeTest {
     }
 
     @Test
+    void theBusinessThemesAreBuiltIn() {
+        assertThat(OatTheme.builtIns()).endsWith(OatTheme.BUSINESS, OatTheme.BUSINESS_DARK);
+        OatSettings settings = OatSettings.get(tester.getApplication());
+        assertThat(settings.findTheme("business")).isEqualTo(OatTheme.BUSINESS);
+        assertThat(settings.findTheme("business-dark")).isEqualTo(OatTheme.BUSINESS_DARK);
+    }
+
+    @Test
     void themeValuesAreRestrictedToSafeNames() {
         assertThatIllegalArgumentException().isThrownBy(() -> new OatTheme("Brand Theme", "Brand"));
         assertThatIllegalArgumentException().isThrownBy(() -> new OatTheme("x\" onclick=\"y", "X"));

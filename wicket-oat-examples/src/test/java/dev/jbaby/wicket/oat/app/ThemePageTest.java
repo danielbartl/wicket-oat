@@ -38,6 +38,16 @@ class ThemePageTest {
         assertEquals("dark", htmlTheme());
         tester.assertLabel("currentTheme", "Dark (dark)");
         assertEquals("light", tester.getTagByWicketId("pinnedCard").getAttribute("data-theme"));
+        assertEquals("compact", tester.getTagByWicketId("compactTable").getAttribute("data-density"));
+    }
+
+    @Test
+    void theBusinessThemeCanBeChosen() {
+        tester.startPage(ThemePage.class);
+
+        tester.clickLink("useBusiness");
+        assertEquals("business", htmlTheme());
+        tester.assertLabel("currentTheme", "Business (business)");
     }
 
     @Test

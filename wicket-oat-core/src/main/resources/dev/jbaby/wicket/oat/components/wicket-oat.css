@@ -103,6 +103,20 @@ select[multiple] {
     margin-block: var(--space-1) 0;
 }
 
+/*
+ * Let an input group shrink in a narrow column: browsers keep a fieldset at least as
+ * wide as its content, and its inputs, as flex items, at their natural width (wide for
+ * date inputs), so it would overflow the column.
+ */
+fieldset.group,
+fieldset.oat-range-field {
+    min-inline-size: 0;
+}
+
+fieldset.group > :is(input, select, textarea) {
+    min-width: 0;
+}
+
 fieldset.group:has(> [aria-invalid="true"]) > :is(label, legend) {
     border-color: var(--danger);
 }
@@ -366,6 +380,7 @@ fieldset.oat-range-field fieldset.group {
 
 .oat-autocomplete li {
     padding: var(--space-2) var(--space-3);
+    font-size: var(--text-7); /* as in Oat's inputs */
     cursor: pointer;
 }
 

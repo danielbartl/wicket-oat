@@ -77,30 +77,102 @@ button.add(new ClientSideClickBehavior("ot.toast('Operation successful!', null, 
             <p>Wicket Oat follows two main patterns for implementing UI components:</p>
             <ul>
                 <li><strong>Behaviors:</strong> Lightweight classes like <code>ButtonBehavior</code>, <code>BadgeBehavior</code>, or <code>SpinnerBehavior</code> that can be added to any Wicket component to apply Oat styling.</li>
-                <li><strong>Components:</strong> Specialized classes like <code>Alert</code>, <code>Badge</code>, <code>Progress</code>, or <code>Meter</code> that encapsulate both behavior and markup logic.</li>
+                <li><strong>Components:</strong> Specialized classes like <code>OatAlert</code>, <code>OatDataTable</code>, <code>OatWizard</code> or <code>OatMoneyField</code> that encapsulate both behavior and markup logic.</li>
             </ul>
         </div>
 
         <div class="mt-6">
+            <h3>Business demos</h3>
+            <p class="text-light">Whole screens built from the components, as a business application would use them:</p>
+            <wicket:link>
+                <div class="row mt-4">
+                    <article class="card col-4">
+                        <h4 class="mb-2"><a href="DataTablePage.html">Invoices table</a></h4>
+                        <p class="small text-light">Status badges, amounts, row actions, selection with bulk actions, search.</p>
+                    </article>
+                    <article class="card col-4">
+                        <h4 class="mb-2"><a href="CustomerPage.html">Customer detail</a></h4>
+                        <p class="small text-light">Page header, KPI cards, description list, timeline, split button, popover.</p>
+                    </article>
+                    <article class="card col-4">
+                        <h4 class="mb-2"><a href="OrderWizardPage.html">New order wizard</a></h4>
+                        <p class="small text-light">Steps with validation, autocomplete, a date range, money fields.</p>
+                    </article>
+                    <article class="card col-4">
+                        <h4 class="mb-2"><a href="InvoicePage.html">Invoice form</a></h4>
+                        <p class="small text-light">Fieldsets on the grid, money and percent fields, input addons, number formats.</p>
+                    </article>
+                    <article class="card col-4">
+                        <h4 class="mb-2"><a href="AppShellPage.html">App shell</a></h4>
+                        <p class="small text-light">Sidebar sections and badges, busy buttons, confirming an action, lazy loading.</p>
+                    </article>
+                    <article class="card col-4">
+                        <h4 class="mb-2"><a href="EventRegistrationPage.html">Event registration</a></h4>
+                        <p class="small text-light">A plain Wicket form with Oat fields and inline validation.</p>
+                    </article>
+                </div>
+            </wicket:link>
+        </div>
+
+        <div class="mt-6">
             <h3>Implemented Components</h3>
-            <div class="hstack gap-2  mt-2">
-                <span class="badge">Typography</span>
+            <p class="small text-light mb-2">General and navigation</p>
+            <div class="hstack gap-2">
+                <span class="badge">App Layout</span>
+                <span class="badge">Page Header</span>
                 <span class="badge">Accordion</span>
                 <span class="badge">Alert</span>
+                <span class="badge">Avatar</span>
                 <span class="badge">Badge</span>
+                <span class="badge">Breadcrumb</span>
                 <span class="badge">Button</span>
                 <span class="badge">Button Group</span>
+                <span class="badge">Split Button</span>
                 <span class="badge">Card</span>
-                <span class="badge">Dialog</span>
-                <span class="badge">Forms</span>
-                <span class="badge">Meter</span>
-                <span class="badge">Progress</span>
-                <span class="badge">Spinner</span>
-                <span class="badge">Skeleton</span>
-                <span class="badge">Table</span>
+                <span class="badge">Stat Card</span>
+                <span class="badge">Pagination</span>
                 <span class="badge">Tabs</span>
+                <span class="badge">Wizard</span>
+            </div>
+            <p class="small text-light mt-4 mb-2">Overlays and feedback</p>
+            <div class="hstack gap-2">
+                <span class="badge">Dialog</span>
+                <span class="badge">Confirm Dialog</span>
+                <span class="badge">Dropdown</span>
+                <span class="badge">Popover</span>
                 <span class="badge">Toast</span>
                 <span class="badge">Tooltip</span>
+                <span class="badge">Feedback Panel</span>
+                <span class="badge">Busy Buttons</span>
+            </div>
+            <p class="small text-light mt-4 mb-2">Data display</p>
+            <div class="hstack gap-2">
+                <span class="badge">Data Table</span>
+                <span class="badge">Table Columns</span>
+                <span class="badge">Row Selection</span>
+                <span class="badge">Description List</span>
+                <span class="badge">Timeline</span>
+                <span class="badge">Lazy Loading</span>
+                <span class="badge">Empty State</span>
+                <span class="badge">Progress</span>
+                <span class="badge">Meter</span>
+                <span class="badge">Spinner</span>
+                <span class="badge">Skeleton</span>
+            </div>
+            <p class="small text-light mt-4 mb-2">Forms</p>
+            <div class="hstack gap-2">
+                <span class="badge">Text &amp; HTML5 Fields</span>
+                <span class="badge">Money</span>
+                <span class="badge">Percent</span>
+                <span class="badge">Date Range</span>
+                <span class="badge">Autocomplete</span>
+                <span class="badge">Suggestions</span>
+                <span class="badge">Input Addons</span>
+                <span class="badge">Fieldset</span>
+                <span class="badge">Choices</span>
+                <span class="badge">Switch</span>
+                <span class="badge">Tag Input</span>
+                <span class="badge">File Upload</span>
             </div>
         </div>
 

@@ -9,6 +9,8 @@
 - `OatDateRangeField` with `DateRange`: two date inputs, open ends allowed, the order checked.
 - `OatTimeline`: events in order with a colored marker, title, localized time and description.
 - `OatDescriptionList` and `OatStatCard` show `Instant`s in the server's zone.
+- Input groups (field addons, `OatDateRangeField`) shrink with a narrow column instead of
+  overflowing it.
 
 - Page building blocks: `OatPageHeader` (a `<header>` border with breadcrumb, title, subtitle and
   your actions), `OatStatCard` (a key figure with its change as a colored badge), `OatDescriptionList`

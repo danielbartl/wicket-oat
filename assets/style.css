@@ -201,7 +201,8 @@ a.unstyled, .site-nav a {
 
 .step {
     display: grid;
-    grid-template-columns: auto 1fr;
+    /* minmax(0, ...): a long code line scrolls in its <pre> instead of widening the page */
+    grid-template-columns: auto minmax(0, 1fr);
     gap: var(--space-4);
 }
 
@@ -230,7 +231,8 @@ a.unstyled, .site-nav a {
 
 .applayout-intro {
     display: grid;
-    grid-template-columns: 1fr;
+    /* minmax(0, ...): a long code line scrolls in its <pre> instead of widening the page */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-8);
 }
 
@@ -391,4 +393,46 @@ a.unstyled, .site-nav a {
     justify-content: center;
     gap: var(--space-4);
     margin-block-end: var(--space-3);
+}
+
+/* ---------- New in 0.2.0 ---------- */
+
+.hero .announce {
+    margin-block-start: var(--space-4);
+    font-size: var(--text-7);
+}
+
+.new-badge {
+    vertical-align: middle;
+    font-size: var(--text-8);
+}
+
+.showcase-card .showcase-footer .new-badge {
+    float: inline-end;
+    margin-inline-start: var(--space-2);
+}
+
+.release-note {
+    margin-block: var(--space-4) 0;
+    font-size: var(--text-7);
+}
+
+.showcase-card.wide {
+    grid-column: span 2;
+}
+
+@media (max-width: 640px) {
+    .showcase-card.wide {
+        grid-column: auto;
+    }
+}
+
+/* Previews that hold a little layout of their own (page header, wizard, tables) */
+.showcase-card .showcase-preview.block {
+    display: block;
+}
+
+.showcase-preview .demo-autocomplete {
+    position: static;
+    margin-block-start: var(--space-1);
 }

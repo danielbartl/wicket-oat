@@ -58,6 +58,7 @@
         <a href="#features">Features</a>
         <a href="#applayout">AppLayout</a>
         <a href="#components">Components</a>
+        <a href="#new">New in 0.2.0</a>
         <a href="#theming">Theming</a>
         <a href="#ai-skill">AI Skill</a>
         <a href="#quick-start">Get Started</a>
@@ -87,6 +88,8 @@
             <span class="badge" data-variant="secondary">Oat 0.8.1</span>
             <span class="badge" data-variant="success">MIT Licensed</span>
         </div>
+        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Data tables with bulk actions, page headers, KPI cards,
+            a wizard, autocomplete and more are <a href="#new">coming with the next release</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">View on GitHub</a>
@@ -143,6 +146,18 @@
                 <h3>Strict CSP out of the box</h3>
                 <p>Works under Wicket's default nonce-based Content Security Policy: no inline
                     scripts or styles, no <code>'unsafe-inline'</code>, no <code>'unsafe-eval'</code>.</p>
+            </article>
+            <article class="card">
+                <h3>Built for business apps <span class="badge new-badge" data-variant="success">New in 0.2.0</span></h3>
+                <p>Data tables with row actions and bulk operations, page headers, KPI cards, detail
+                    views, a wizard, server-side autocomplete, money and date-range fields &mdash; the
+                    screens line-of-business applications are made of.</p>
+            </article>
+            <article class="card">
+                <h3>Speaks your users' language <span class="badge new-badge" data-variant="success">New in 0.2.0</span></h3>
+                <p>The few texts the library renders itself come in English, German, Spanish,
+                    French, Italian, Japanese, Dutch and Portuguese, following each user's locale
+                    like Wicket's own validation messages.</p>
             </article>
         </div>
     </div>
@@ -233,7 +248,12 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
     protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {
         return Model.ofList(List.of(
             MenuItem.of("Dashboard", DashboardPage.class),
-            MenuItem.of("Customers", CustomersPage.class)
+            MenuItem.of("Customers", CustomersPage.class),
+            MenuItem.of("Invoices", InvoicesPage.class)
+                .withBadge(() -&gt; invoices.countOpen()), // 0.2.0
+            MenuItem.group("Settings",                    // 0.2.0
+                MenuItem.of("General", GeneralPage.class),
+                MenuItem.of("Billing", BillingPage.class))
         ));
     }
 
@@ -249,6 +269,9 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     <code>PageParameters</code> to <code>super(...)</code>; menu items can carry
                     parameters and translatable labels, and items for pages the user isn't
                     authorized to open are left out.</p>
+                <p><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Menu items can be grouped into collapsible sections, open while
+                    one of their pages is shown, and carry a badge such as a count, which
+                    <code>target.add(sidebar)</code> updates over Ajax.</p>
             </div>
 
             <div class="applayout-demo-wrap">
@@ -266,7 +289,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                                 <ul>
                                     <li><a href="#applayout" aria-current="page">Dashboard</a></li>
                                     <li><a href="#applayout">Customers</a></li>
-                                    <li><a href="#applayout">Invoices</a></li>
+                                    <li><a href="#applayout">Invoices <span class="badge">3</span></a></li>
                                     <li>
                                         <details open>
                                             <summary>Settings</summary>
@@ -304,6 +327,11 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
             <h2>Everything below is real, live Oat markup</h2>
             <p>Not screenshots &mdash; this page loads the same Oat 0.8.1 build the library
                 vendors, so what you see here is exactly what renders in your app.</p>
+            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Cards with this label show components
+                coming with the next release, 0.2.0; the current release is 0.1.1. Their source is
+                on <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already,
+                and the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
+                lists everything new.</p>
         </div>
 
         <div class="showcase-group">
@@ -349,6 +377,32 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         </article>
                     </div>
                     <div class="showcase-footer"><strong>OatCard</strong><code>Oat.Components.card(id)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <menu class="buttons oat-split-button">
+                            <li><button>New invoice</button></li>
+                            <li><ot-dropdown>
+                                <button popovertarget="demo-split" aria-label="More actions">&#9662;</button>
+                                <menu popover id="demo-split">
+                                    <button role="menuitem" class="ghost">New quote</button>
+                                    <button role="menuitem" class="ghost">New credit note</button>
+                                    <button role="menuitem" class="ghost" data-variant="danger">Archive customer</button>
+                                </menu>
+                            </ot-dropdown></li>
+                        </menu>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatSplitButton</strong><code>save.addAction("Save as draft", target -&gt; ...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <article class="card oat-stat" style="margin:0;width:100%">
+                            <span class="oat-stat-label">Revenue this year</span>
+                            <span class="oat-stat-value">&euro;128,400</span>
+                            <span class="hstack gap-2 oat-stat-footer"><span class="badge" data-variant="success">+12.5%</span><span class="text-light">vs. last year</span></span>
+                        </article>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatStatCard</strong><code>new OatStatCard(id, "Revenue", value).setChange(percent)</code></div>
                 </div>
             </div>
         </div>
@@ -403,6 +457,48 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><strong>OatPagingNavigator</strong><code>new OatAjaxPagingNavigator(id, dataView)</code></div>
                 </div>
+                <div class="showcase-card wide">
+                    <div class="showcase-preview block">
+                        <header class="oat-page-header" style="margin:0">
+                            <nav aria-label="Breadcrumb">
+                                <ol class="unstyled hstack oat-breadcrumb">
+                                    <li><a href="#components" class="unstyled">Home</a><span class="oat-crumb-separator" aria-hidden="true">/</span></li>
+                                    <li><a href="#components" class="unstyled">Customers</a><span class="oat-crumb-separator" aria-hidden="true">/</span></li>
+                                    <li><span aria-current="page">ACME GmbH</span></li>
+                                </ol>
+                            </nav>
+                            <div class="oat-page-header-main">
+                                <div class="oat-page-header-title">
+                                    <h1 style="font-size:var(--text-2)">ACME GmbH</h1>
+                                    <p class="text-light">Customer since 2019 &middot; Vienna</p>
+                                </div>
+                                <div class="hstack oat-page-header-actions">
+                                    <button class="outline">Quick note</button>
+                                    <button>New invoice</button>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatPageHeader</strong><code>&lt;header wicket:id="pageHeader"&gt;your actions&lt;/header&gt; &middot; setBreadcrumb(...)</code></div>
+                </div>
+                <div class="showcase-card wide">
+                    <div class="showcase-preview block">
+                        <ol class="unstyled oat-steps" aria-label="Steps">
+                            <li data-state="done"><a href="#components" class="unstyled"><span class="oat-step-number">1</span><span>Customer</span></a></li>
+                            <li data-state="current" aria-current="step"><a class="unstyled"><span class="oat-step-number">2</span><span>Items</span></a></li>
+                            <li data-state="upcoming"><a class="unstyled"><span class="oat-step-number">3</span><span>Review</span></a></li>
+                        </ol>
+                        <section data-field data-required>
+                            <label for="demo-quantity">Quantity</label>
+                            <input id="demo-quantity" type="number" value="3" aria-required="true">
+                        </section>
+                        <footer class="hstack justify-between">
+                            <button class="outline">Back</button>
+                            <button>Next</button>
+                        </footer>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatWizard</strong><code>wizard.addStep("Items", id -&gt; new ItemsStep(id, order))</code></div>
+                </div>
             </div>
         </div>
 
@@ -455,6 +551,39 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><strong>OatTabbedPanel / OatTabs</strong><code>Oat.tab("Account", AccountPanel::new)</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button commandfor="demo-confirm" command="show-modal" class="outline small" data-variant="danger">Delete INV-1042</button>
+                        <dialog id="demo-confirm" closedby="any">
+                            <form method="dialog">
+                                <header><h3>Delete INV-1042?</h3></header>
+                                <div>This can't be undone.</div>
+                                <footer>
+                                    <button type="button" commandfor="demo-confirm" command="close" class="outline">Cancel</button>
+                                    <button type="button" commandfor="demo-confirm" command="close" data-variant="danger">Confirm</button>
+                                </footer>
+                            </form>
+                        </dialog>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatConfirmDialog</strong><code>confirm.ask(target, "Delete invoice?", detail, t -&gt; ...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <ot-dropdown>
+                            <button popovertarget="demo-popover" class="outline">Quick note</button>
+                            <div popover id="demo-popover" class="oat-popover">
+                                <section data-field style="margin:0">
+                                    <label for="demo-note">Note</label>
+                                    <textarea id="demo-note" rows="3"></textarea>
+                                </section>
+                                <footer class="hstack justify-end mt-2">
+                                    <button type="button" popovertarget="demo-popover" popovertargetaction="hide">Save note</button>
+                                </footer>
+                            </div>
+                        </ot-dropdown>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatPopover</strong><code>new OatPopover(id, "Quick note", id -&gt; new NotePanel(id))</code></div>
+                </div>
             </div>
         </div>
 
@@ -489,6 +618,56 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         <div role="status" class="skeleton line" style="width:6rem"></div>
                     </div>
                     <div class="showcase-footer"><strong>OatSpinner / OatSkeleton</strong><code>Oat.Components.spinner(id)</code></div>
+                </div>
+                <div class="showcase-card wide">
+                    <div class="showcase-preview block">
+                        <div class="hstack oat-bulk-actions" data-demo-bulk>
+                            <span role="status" data-demo-count>2 selected</span>
+                            <button class="small">Mark as paid</button>
+                            <button class="small" data-variant="danger">Delete</button>
+                            <button class="small ghost" data-demo-clear>Clear selection</button>
+                        </div>
+                        <div class="table">
+                            <table class="w-100 align-left small" data-demo-selection>
+                                <thead><tr><th class="oat-select"><input type="checkbox" aria-label="Select all rows on this page"></th><th class="wicket_orderUp" aria-sort="ascending"><a href="#components">Number</a></th><th class="wicket_orderNone"><a href="#components">Customer</a></th><th>Status</th><th class="align-right">Total</th><th>Due</th><th></th></tr></thead>
+                                <tbody>
+                                    <tr><td class="oat-select"><input type="checkbox" aria-label="Select row" checked></td><td><a href="#components">INV-1001</a></td><td>Globex</td><td><span class="badge" data-variant="secondary">Open</span></td><td class="align-right">$137.50</td><td>Oct 4, 2026</td><td class="align-right"><ot-dropdown><button popovertarget="demo-row-0" class="ghost small icon" aria-label="Actions">&#8943;</button><menu popover id="demo-row-0"><button role="menuitem" class="ghost">Mark as paid</button><button role="menuitem" class="ghost" data-variant="danger">Delete</button></menu></ot-dropdown></td></tr>
+                                    <tr><td class="oat-select"><input type="checkbox" aria-label="Select row"></td><td><a href="#components">INV-1002</a></td><td>Initech</td><td><span class="badge" data-variant="success">Paid</span></td><td class="align-right">&pound;275.00</td><td>Oct 7, 2026</td><td class="align-right"><ot-dropdown><button popovertarget="demo-row-1" class="ghost small icon" aria-label="Actions">&#8943;</button><menu popover id="demo-row-1"><button role="menuitem" class="ghost">Mark as paid</button><button role="menuitem" class="ghost" data-variant="danger">Delete</button></menu></ot-dropdown></td></tr>
+                                    <tr><td class="oat-select"><input type="checkbox" aria-label="Select row" checked></td><td><a href="#components">INV-1005</a></td><td>Wayne Enterprises</td><td><span class="badge" data-variant="danger">Overdue</span></td><td class="align-right">&pound;687.50</td><td>Oct 16, 2026</td><td class="align-right"><ot-dropdown><button popovertarget="demo-row-2" class="ghost small icon" aria-label="Actions">&#8943;</button><menu popover id="demo-row-2"><button role="menuitem" class="ghost">Mark as paid</button><button role="menuitem" class="ghost" data-variant="danger">Delete</button></menu></ot-dropdown></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDataTable: selection, bulk and row actions, Oat columns</strong><code>OatSelectionColumn &middot; OatBadgeColumn &middot; OatNumberColumn &middot; OatActionsColumn &middot; table.addBulkAction(label, (target, rows) -&gt; ...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <dl class="oat-dl">
+                            <div class="oat-dl-item"><dt>VAT ID</dt><dd>ATU12345678</dd></div>
+                            <div class="oat-dl-item"><dt>Customer since</dt><dd>Mar 1, 2019</dd></div>
+                            <div class="oat-dl-item"><dt>Status</dt><dd><span class="badge" data-variant="success">Active</span></dd></div>
+                            <div class="oat-dl-item"><dt>Notes</dt><dd>&mdash;</dd></div>
+                        </dl>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDescriptionList</strong><code>new OatDescriptionList(id, model).addProperty("vatId")</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <ol class="unstyled oat-timeline">
+                            <li class="oat-timeline-event" data-variant="success"><div class="oat-timeline-heading"><strong>Payment received</strong><time class="text-light" datetime="2026-10-09T14:05">Oct 9, 2:05 PM</time></div><p class="text-light">INV-1019 &middot; &euro;2,612.50</p></li>
+                            <li class="oat-timeline-event"><div class="oat-timeline-heading"><strong>Invoice sent</strong><time class="text-light" datetime="2026-10-02T09:30">Oct 2, 9:30 AM</time></div></li>
+                            <li class="oat-timeline-event" data-variant="warning"><div class="oat-timeline-heading"><strong>Reminder sent</strong><time class="text-light" datetime="2026-09-28T08:00">Sep 28, 8:00 AM</time></div></li>
+                        </ol>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatTimeline</strong><code>new OatTimeline&lt;&gt;(id, events, Event::title, Event::at)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div role="status" class="skeleton line"></div>
+                        <div role="status" class="skeleton line"></div>
+                        <div role="status" class="skeleton line" style="width:60%"></div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLazyLoadPanel</strong><code>Oat.Components.lazyLoad(id, id -&gt; new RevenuePanel(id))</code></div>
                 </div>
             </div>
         </div>
@@ -547,6 +726,58 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><strong>OatFileDropzone</strong><code>Oat.Components.fileDropzone(id, label, model)</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <section data-field>
+                            <label for="demo-price">Price</label>
+                            <fieldset class="group"><input id="demo-price" type="text" inputmode="decimal" value="1.234,50"><label for="demo-price">&euro;</label></fieldset>
+                        </section>
+                        <section data-field style="margin:0">
+                            <label for="demo-site">Website</label>
+                            <fieldset class="group"><label for="demo-site">https://</label><input id="demo-site" type="text" placeholder="example.com"></fieldset>
+                        </section>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMoneyField / OatPercentField / addons</strong><code>new OatMoneyField(id).setCurrency(EUR) &middot; field.setPrefix("https://")</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <fieldset data-field class="oat-range-field" style="margin:0">
+                            <legend>Delivery window</legend>
+                            <fieldset class="group"><input type="date" aria-label="From" value="2026-11-02"><label aria-hidden="true">&ndash;</label><input type="date" aria-label="To" value="2026-11-06"></fieldset>
+                        </fieldset>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDateRangeField</strong><code>new OatDateRangeField(id, label, rangeModel).setRequired(true)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <section data-field style="margin:0">
+                            <label for="demo-customer">Customer</label>
+                            <input id="demo-customer" type="text" value="ac" role="combobox" aria-expanded="true" aria-controls="demo-aa" autocomplete="off">
+                            <div id="demo-aa" class="wicket-aa-container oat-autocomplete demo-autocomplete"><div class="wicket-aa"><ul><li class="selected">ACME GmbH</li><li>Acme Logistics</li></ul></div></div>
+                        </section>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatAutoCompleteField</strong><code>.setChoices(text -&gt; customers.search(text)).setDisplay(Customer::name)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <section data-field style="margin:0">
+                            <label for="demo-type">Type</label>
+                            <input id="demo-type" list="demo-types" placeholder="Start typing&hellip;">
+                            <datalist id="demo-types"><option value="Call"><option value="Meeting"><option value="Email"><option value="Complaint"></datalist>
+                        </section>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Suggestions</strong><code>field.setSuggestions(List.of("Call", "Meeting", "Email"))</code></div>
+                </div>
+                <div class="showcase-card wide">
+                    <div class="showcase-preview block">
+                        <fieldset class="row" style="margin:0">
+                            <legend>Billing address</legend>
+                            <section data-field class="col-8"><label for="demo-street">Street</label><input id="demo-street" type="text" value="Main Street 1"></section>
+                            <section data-field class="col-4"><label for="demo-city">City</label><input id="demo-city" type="text" value="Vienna"></section>
+                        </fieldset>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatFieldset + grid behaviors</strong><code>new OatFieldset("billing") &middot; field.add(Oat.Behaviors.col(8))</code></div>
+                </div>
             </div>
         </div>
 
@@ -576,6 +807,12 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><strong>TooltipBehavior</strong><code>Oat.Behaviors.tooltip(text)</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button data-demo-busy>Save (takes 2 seconds)</button>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Busy buttons</strong><code>button.setBusyIndicator(true) &middot; Oat.Behaviors.ajaxBusy()</code></div>
+                </div>
             </div>
         </div>
     </div>
@@ -590,6 +827,9 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                 <code>data-theme</code> mechanism <code>OatThemeSwitcher</code> uses in your app,
                 where the user's choice is remembered in a cookie (and works with any session
                 class).</p>
+            <p><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Business and Business Dark, two sober themes for line-of-business
+                apps with status colors that meet WCAG AA, and a compact density for data-heavy
+                screens.</p>
         </div>
         <div class="theme-switcher">
             <button class="theme-swatch outline" data-set-theme=""><span class="dot"></span>System</button>
@@ -610,6 +850,8 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
             <button class="theme-swatch outline" data-set-theme="halloween"><span class="dot"></span>Halloween</button>
             <button class="theme-swatch outline" data-set-theme="xmas"><span class="dot"></span>Xmas</button>
             <button class="theme-swatch outline" data-set-theme="wireframe"><span class="dot"></span>Wireframe</button>
+            <button class="theme-swatch outline" data-set-theme="business"><span class="dot"></span>Business <small class="text-light">0.2.0</small></button>
+            <button class="theme-swatch outline" data-set-theme="business-dark"><span class="dot"></span>Business Dark <small class="text-light">0.2.0</small></button>
         </div>
         <pre style="margin-top:var(--space-6)"><code>// Switch the current user's theme (kept in a cookie)
 OatTheme.setCurrent(OatTheme.NORD);
@@ -617,7 +859,8 @@ OatTheme.setCurrent(OatTheme.NORD);
 // In init(): the default theme, and your own themes defined in CSS
 WicketOats.install(this)
         .setDefaultTheme(OatTheme.LIGHT)   // or null to follow the browser
-        .addTheme(new OatTheme("brand", "Brand", "🏷️"));
+        .addTheme(new OatTheme("brand", "Brand", "🏷️"))
+        .setDensity(OatDensity.COMPACT);   // new in 0.2.0: tighter spacing app-wide
 
 // Pin one component to a theme, whatever the user chose
 card.add(Oat.Behaviors.theme(OatTheme.LIGHT));</code></pre>
@@ -722,6 +965,38 @@ card.add(Oat.Behaviors.theme(OatTheme.LIGHT));</code></pre>
       window.__wicketOatSetTheme(isDark() ? 'light' : 'dark');
     });
   }
+
+  // Showcase: the selectable table's bar, and a button busy for a while
+  document.querySelectorAll('[data-demo-selection]').forEach(function (table) {
+    var bar = table.closest('.showcase-preview').querySelector('[data-demo-bulk]');
+    var count = bar.querySelector('[data-demo-count]');
+    var all = table.querySelector('thead input');
+    var rows = Array.prototype.slice.call(table.querySelectorAll('tbody input'));
+    function update() {
+      var n = rows.filter(function (row) { return row.checked; }).length;
+      count.textContent = n + ' selected';
+      bar.style.display = n ? '' : 'none';
+      all.checked = n === rows.length;
+    }
+    rows.forEach(function (row) { row.addEventListener('change', update); });
+    all.addEventListener('change', function () {
+      rows.forEach(function (row) { row.checked = all.checked; });
+      update();
+    });
+    bar.querySelector('[data-demo-clear]').addEventListener('click', function () {
+      rows.forEach(function (row) { row.checked = false; });
+      update();
+    });
+    update();
+  });
+
+  document.querySelectorAll('[data-demo-busy]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      if (button.getAttribute('aria-busy') === 'true') return;
+      button.setAttribute('aria-busy', 'true');
+      setTimeout(function () { button.removeAttribute('aria-busy'); }, 2000);
+    });
+  });
 
   document.querySelectorAll('[data-set-theme]').forEach(function (el) {
     el.addEventListener('click', function () {

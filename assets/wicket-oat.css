@@ -78,3 +78,435 @@ dialog > div.oat-dialog-form > footer {
 select[multiple] {
     background-image: none;
 }
+
+/*
+ * Compact density (OatDensity.COMPACT sets data-density="compact"): a tighter spacing
+ * scale and smaller body text, for forms and tables in data-heavy apps. Oat sizes its
+ * buttons, fields and table cells from these tokens, so it works with every theme.
+ */
+[data-density="compact"] {
+    --space-2: .3125rem;
+    --space-3: .5rem;
+    --space-4: .75rem;
+    --space-5: 1rem;
+    --space-6: 1rem;
+    --text-regular: var(--text-7);
+}
+
+/*
+ * A form field with a prefix or suffix (BaseOatInputField) wraps its input in Oat's
+ * fieldset.group. Give the group the spacing a plain input has - Oat drops the input's
+ * top margin inside a group and gives every fieldset a bottom margin - and draw the
+ * addons' border red with the input's when the field is invalid.
+ */
+[data-field] > fieldset.group {
+    margin-block: var(--space-1) 0;
+}
+
+/*
+ * Let an input group shrink in a narrow column: browsers keep a fieldset at least as
+ * wide as its content, and its inputs, as flex items, at their natural width (wide for
+ * date inputs), so it would overflow the column.
+ */
+fieldset.group,
+fieldset.oat-range-field {
+    min-inline-size: 0;
+}
+
+fieldset.group > :is(input, select, textarea) {
+    min-width: 0;
+}
+
+fieldset.group:has(> [aria-invalid="true"]) > :is(label, legend) {
+    border-color: var(--danger);
+}
+
+/* OatFieldset's optional description, right under its legend (a full row of a grid) */
+.oat-fieldset-description {
+    grid-column: 1 / -1;
+    margin-block: 0 var(--space-4);
+    font-size: var(--text-7);
+}
+
+/*
+ * In development mode Wicket keeps its own tags (<wicket:panel>, <wicket:border>, ...)
+ * in the page. Lay out their content as if they weren't there, as in production, so e.g.
+ * an OatFieldset with Oat.Behaviors.row() puts its fields in the grid either way.
+ */
+wicket\:panel,
+wicket\:border,
+wicket\:body,
+wicket\:container,
+wicket\:extend,
+wicket\:fragment,
+wicket\:enclosure {
+    display: contents;
+}
+
+/*
+ * A button whose Ajax request is running (AjaxBusyBehavior sets aria-busy). Oat draws
+ * aria-busy as a 1.5rem spinner in the primary color, which would be too big for a
+ * button and invisible on a primary one: size it to the text and draw it in the
+ * text's color instead.
+ */
+:is(button, a.button, [type="submit"], [type="button"])[aria-busy="true"] {
+    cursor: progress;
+}
+
+:is(button, a.button)[aria-busy="true"]::before {
+    width: 1em;
+    height: 1em;
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+}
+
+/* A sidebar link's badge (MenuItem.withBadge), at the end of the link */
+aside[data-sidebar] nav a > .badge {
+    align-self: center;
+    margin-inline-start: auto;
+    padding-block: 0;
+    padding-inline: var(--space-2);
+}
+
+/*
+ * OatDataTable. Sortable headers keep the header color and show the sort order with an
+ * arrow (screen readers get aria-sort instead: the "/ ''" hides the arrow from them).
+ */
+th:is(.wicket_orderNone, .wicket_orderUp, .wicket_orderDown) a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: inherit;
+    text-decoration: none;
+}
+
+th.wicket_orderNone a::after {
+    content: "↕";
+    content: "↕" / "";
+    opacity: .35;
+}
+
+th.wicket_orderUp a::after {
+    content: "↑";
+    content: "↑" / "";
+}
+
+th.wicket_orderDown a::after {
+    content: "↓";
+    content: "↓" / "";
+}
+
+/* The toolbar and the bar shown while rows are selected, above the table */
+.oat-table-toolbar {
+    margin-block-end: var(--space-3);
+}
+
+.oat-bulk-actions {
+    margin-block-end: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--muted);
+    border-radius: var(--radius-medium);
+}
+
+/* OatSelectionColumn: as narrow as its checkboxes, and selected rows highlighted */
+:is(th, td).oat-select {
+    width: 1%;
+}
+
+tbody tr:has(> td.oat-select input:checked) {
+    background-color: var(--accent);
+}
+
+/* OatBooleanColumn's read-only checkbox: disabled, but not faded like an unavailable control */
+input[type="checkbox"].oat-readonly:disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+/* A destructive entry in a dropdown menu (OatActionsColumn's setVariant(DANGER)) */
+[role="menuitem"][data-variant="danger"] {
+    color: var(--danger);
+}
+
+/* OatPageHeader: breadcrumb, then the title on one side and the actions on the other */
+.oat-page-header {
+    margin-block-end: var(--space-6);
+}
+
+.oat-page-header nav ol {
+    gap: var(--space-2);
+    margin: 0 0 var(--space-2);
+    color: var(--muted-foreground);
+}
+
+.oat-crumb-separator {
+    margin-inline-start: var(--space-2);
+    color: var(--faint-foreground);
+}
+
+.oat-page-header-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+
+.oat-page-header-title > h1 {
+    margin: 0;
+}
+
+.oat-page-header-title > p {
+    margin: var(--space-1) 0 0;
+}
+
+/* OatStatCard: a label, a large figure and how it changed */
+.oat-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.oat-stat-label {
+    font-size: var(--text-7);
+    font-weight: var(--font-medium);
+    color: var(--muted-foreground);
+}
+
+.oat-stat-value {
+    font-size: var(--text-2);
+    font-weight: var(--font-semibold);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.oat-stat-footer {
+    font-size: var(--text-8);
+}
+
+/* OatDescriptionList: labels next to their values, or above them on narrow screens */
+dl.oat-dl {
+    display: grid;
+    grid-template-columns: minmax(8rem, max-content) 1fr;
+    align-items: baseline;
+    gap: var(--space-3) var(--space-6);
+    margin: 0;
+}
+
+.oat-dl-item {
+    display: contents;
+}
+
+dl.oat-dl dt {
+    font-size: var(--text-7);
+    font-weight: var(--font-medium);
+    color: var(--muted-foreground);
+}
+
+dl.oat-dl dd {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    dl.oat-dl {
+        grid-template-columns: 1fr;
+        row-gap: var(--space-1);
+    }
+
+    dl.oat-dl dd {
+        margin-block-end: var(--space-3);
+    }
+}
+
+/*
+ * OatSplitButton: Oat's button group (menu.buttons) rounds the outer corners of each
+ * item's button; the menu's button sits inside <ot-dropdown>, so round it here.
+ */
+menu.buttons.oat-split-button {
+    margin: 0;
+}
+
+menu.buttons li ot-dropdown > button {
+    border-radius: 0;
+}
+
+menu.buttons > li:last-child ot-dropdown > button {
+    border-start-end-radius: var(--radius-medium);
+    border-end-end-radius: var(--radius-medium);
+}
+
+menu.buttons > li:first-child ot-dropdown > button {
+    border-start-start-radius: var(--radius-medium);
+    border-end-start-radius: var(--radius-medium);
+}
+
+/* OatPopover: room around its content */
+ot-dropdown > .oat-popover {
+    padding: var(--space-4);
+    min-width: 16rem;
+    max-width: min(28rem, 100vw - 2rem);
+}
+
+/*
+ * OatDateRangeField: its label is a <legend> (it names two inputs), so its fieldset
+ * drops Oat's fieldset frame and the legend looks like any field's label.
+ */
+fieldset.oat-range-field {
+    border: 0;
+    padding: 0;
+}
+
+fieldset.oat-range-field > legend {
+    padding: 0;
+}
+
+fieldset.oat-range-field fieldset.group {
+    margin-block: var(--space-1) 0;
+}
+
+/* OatAutoCompleteField: Wicket's suggestion list, looking like Oat's dropdown menu */
+.wicket-aa-container.oat-autocomplete {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    box-shadow: var(--shadow-small);
+}
+
+.oat-autocomplete ul {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-1) 0;
+}
+
+.oat-autocomplete li {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-7); /* as in Oat's inputs */
+    cursor: pointer;
+}
+
+.oat-autocomplete li.selected {
+    background-color: var(--accent);
+}
+
+/* OatTimeline: events along a line, each with a marker colored by its variant */
+.oat-timeline {
+    margin: 0;
+}
+
+.oat-timeline-event {
+    position: relative;
+    padding-inline-start: var(--space-6);
+    padding-block-end: var(--space-5);
+}
+
+.oat-timeline-event::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(.375rem - 1px);
+    inset-block: .5rem 0;
+    border-inline-start: 2px solid var(--border);
+}
+
+.oat-timeline-event:last-child::before {
+    display: none;
+}
+
+.oat-timeline-event::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: .3rem;
+    width: .75rem;
+    height: .75rem;
+    border-radius: var(--radius-full);
+    background-color: var(--_variant-color, var(--muted-foreground));
+    box-shadow: 0 0 0 3px var(--background);
+}
+
+.oat-timeline-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0 var(--space-3);
+}
+
+.oat-timeline-heading time {
+    font-size: var(--text-7);
+}
+
+.oat-timeline-event > p {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-7);
+}
+
+/* OatWizard: numbered steps - done, current, upcoming - joined by a line */
+.oat-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-7);
+}
+
+.oat-steps > li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.oat-steps > li:not(:last-child)::after {
+    content: "";
+    width: var(--space-6);
+    border-top: 1px solid var(--border);
+}
+
+.oat-steps a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--muted-foreground);
+}
+
+.oat-steps a:not([href]) {
+    cursor: default;
+}
+
+.oat-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-variant-numeric: tabular-nums;
+}
+
+.oat-steps [data-state="current"] a {
+    color: var(--foreground);
+    font-weight: var(--font-medium);
+}
+
+.oat-steps [data-state="current"] .oat-step-number {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.oat-steps [data-state="done"] a {
+    color: var(--foreground);
+}
+
+.oat-steps [data-state="done"] .oat-step-number {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.oat-wizard-form > footer {
+    margin-block-start: var(--space-6);
+}
+
+.oat-wizard-spacer {
+    flex: 1;
+}

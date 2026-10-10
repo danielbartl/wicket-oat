@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
 ## 0.2.0 (2026-10-10)
 
 A large release for business applications: CRUD, trees, data table selection, row actions

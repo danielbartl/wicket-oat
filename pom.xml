@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dev.jbaby</groupId>
 	<artifactId>wicket-oat-parent</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>wicket-oat-parent</name>
 	<description>Parent for Wicket Oat, a themeable Apache Wicket component library built on Oat UI</description>

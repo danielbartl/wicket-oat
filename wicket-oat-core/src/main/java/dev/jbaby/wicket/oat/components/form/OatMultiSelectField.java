@@ -129,7 +129,8 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
                     .setPreselect(true)
                     .setAdjustInputWidth(true)
                     .setMaxHeightInPx(320);
-            search = new AutoCompleteTextField<>("search", Model.of(""), String.class, new AbstractAutoCompleteTextRenderer<>() {
+            // Explicit type arguments: JDK 17's javac can't infer a diamond for this anonymous class
+            search = new AutoCompleteTextField<String>("search", Model.of(""), String.class, new AbstractAutoCompleteTextRenderer<String>() {
                 @Override
                 protected String getTextValue(String text) {
                     return text;

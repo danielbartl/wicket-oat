@@ -197,7 +197,8 @@ class LaterRoadmapTest {
         assertThat(times).hasSize(2);
         assertThat(times.get(0).getName()).isEqualTo("time");
         assertThat(times.get(0).getAttribute("datetime")).isEqualTo("2026-10-01T09:30");
-        assertThat(times.get(0).getValue()).isEqualTo("Oct 1, 2026, 9:30 AM");
+        // JDK 20+ formats "9:30\u202FAM" with a narrow no-break space, JDK 17 with a space
+        assertThat(times.get(0).getValue().replace('\u202F', ' ')).isEqualTo("Oct 1, 2026, 9:30 AM");
         assertThat(tags("wicket:id", "description")).extracting(TagTester::getValue).containsExactly("By Jordan");
         assertThat(tags("wicket:id", "events")).extracting(e -> e.getAttribute("data-variant")).containsExactly(null, "success", null);
     }

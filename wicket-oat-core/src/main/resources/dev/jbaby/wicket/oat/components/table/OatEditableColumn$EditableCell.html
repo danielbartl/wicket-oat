@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel><div wicket:id="content"></div></wicket:panel>
+
+<wicket:fragment wicket:id="viewFragment">
+    <button wicket:id="edit" type="button" class="ghost small oat-editable"><span wicket:id="value"></span></button>
+</wicket:fragment>
+
+<wicket:fragment wicket:id="editFragment">
+    <form wicket:id="form" class="oat-editing">
+        <div class="hstack gap-1">
+            <input wicket:id="input" type="text" class="small"/>
+            <button wicket:id="save" type="submit" class="small icon"><svg wicket:id="icon"></svg></button>
+            <button wicket:id="cancel" type="button" class="ghost small icon"><svg wicket:id="icon"></svg></button>
+        </div>
+        <small wicket:id="error" class="oat-editing-error"></small>
+    </form>
+</wicket:fragment>
+</html>

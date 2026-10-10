@@ -30,6 +30,9 @@ import java.util.Objects;
  * message asks the user to choose one. {@link #setFreeText} accepts other text too,
  * e.g. {@code setFreeText(text -> text)} for a {@code String} field where the
  * suggestions only help typing.
+ * <p>
+ * Not inside a modal {@code OatDialog}: Wicket adds the suggestion list to the page's
+ * {@code <body>}, and a modal dialog covers everything outside it.
  *
  * @param <T> the model object type
  */

@@ -7,7 +7,8 @@ import org.apache.wicket.feedback.IFeedbackMessageFilter;
 /**
  * Accepts the feedback messages that Oat form fields don't already show inline. Each
  * {@link BaseOatField} shows the first error reported by its wrapped form component, so
- * a page-level feedback panel or toast would only repeat it. Used by default by
+ * a page-level feedback panel or toast would only repeat it; so does any container that
+ * implements {@link ShowsErrorsInline}. Used by default by
  * {@code OatFeedbackPanel} and {@code FeedbackToastsBehavior}.
  */
 public class NotShownInlineFilter implements IFeedbackMessageFilter {
@@ -18,9 +19,18 @@ public class NotShownInlineFilter implements IFeedbackMessageFilter {
         if (reporter == null || !message.isError()) {
             return true;
         }
+        if (reporter.getFeedbackMessages().first(FeedbackMessage.ERROR) != message) {
+            return true;
+        }
         BaseOatField<?, ?, ?> field = reporter.findParent(BaseOatField.class);
-        return field == null
-                || field.getField() != reporter
-                || reporter.getFeedbackMessages().first(FeedbackMessage.ERROR) != message;
+        if (field != null && field.getField() == reporter) {
+            return false;
+        }
+        for (Component parent = reporter.getParent(); parent != null; parent = parent.getParent()) {
+            if (parent instanceof ShowsErrorsInline inline && inline.showsErrorsOf(reporter)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

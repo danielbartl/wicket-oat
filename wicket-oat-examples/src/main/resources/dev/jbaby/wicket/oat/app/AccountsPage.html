@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1 class="mb-2">Accounts</h1>
+        <p class="text-light">Trees built on Wicket's <code>NestedTree</code> and <code>TableTree</code>: children load
+            when their parent is expanded, the expand buttons work with the keyboard and tell screen readers whether
+            they are open, and the styling uses Oat's tokens instead of Wicket's image themes.</p>
+
+        <div class="row mt-6">
+            <div class="col-4">
+                <article class="card">
+                    <h3 class="mb-4">Documents</h3>
+                    <nav aria-label="Folders"><div wicket:id="folders"></div></nav>
+                    <p class="text-light small mt-4">Open: <strong wicket:id="selectedFolder"></strong></p>
+                </article>
+            </div>
+            <div class="col-8">
+                <article class="card">
+                    <h3 class="mb-4">Chart of accounts</h3>
+                    <div wicket:id="accounts"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+</wicket:extend>
+</body>
+</html>

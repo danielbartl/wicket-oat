@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <section>
+        <h1 class="mb-2">Products</h1>
+        <p class="text-light">An <code>OatCrud</code>: <em>New</em>, and <em>Edit</em> and <em>Delete</em> in each row's
+            "&ctdot;" menu, with an edit dialog and a confirmation before deleting. The table shows the data table
+            extras: the arrow opens a row's details (<code>OatRowDetailsColumn</code>), <em>Stock</em> is edited in
+            place (<code>OatEditableColumn</code>; Enter saves, Escape cancels), <em>Columns</em> hides columns and
+            <em>Export CSV</em> downloads every product.</p>
+        <div wicket:id="products" class="mt-6"></div>
+    </section>
+
+    <wicket:fragment wicket:id="detailsFragment">
+        <dl wicket:id="list"></dl>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="searchFragment">
+        <form wicket:id="form"><div wicket:id="search"></div></form>
+    </wicket:fragment>
+</wicket:extend>
+</body>
+</html>

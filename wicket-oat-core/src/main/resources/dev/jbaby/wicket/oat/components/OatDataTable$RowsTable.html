@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<!-- DataTable's markup, with a <tbody> per row holding the row and its details row -->
+<wicket:panel>
+<caption wicket:id="caption"></caption>
+<colgroup wicket:id="colGroup"></colgroup>
+<thead wicket:id="topToolbars">
+    <wicket:container wicket:id="toolbars"></wicket:container>
+</thead>
+<wicket:container wicket:id="body">
+    <tbody wicket:id="rows" class="oat-row">
+        <tr>
+            <td wicket:id="cells"><div wicket:id="cell">[cell]</div></td>
+        </tr>
+        <tr wicket:id="details" class="oat-row-details">
+            <td wicket:id="cell"><div wicket:id="details"></div></td>
+        </tr>
+    </tbody>
+</wicket:container>
+<tfoot wicket:id="bottomToolbars">
+    <wicket:container wicket:id="toolbars"></wicket:container>
+</tfoot>
+</wicket:panel>
+</html>

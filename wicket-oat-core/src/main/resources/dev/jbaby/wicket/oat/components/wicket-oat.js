@@ -1,6 +1,7 @@
 /*
  * Wicket Oat's own script, for the few components that need one: context menus
- * (ContextMenuBehavior) and loading more list items on scroll (OatLoadMoreList).
+ * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn) and loading more
+ * list items on scroll (OatLoadMoreList).
  * It only reads data- attributes, so pages keep Wicket's strict, nonce-based CSP:
  * no inline scripts or event handlers.
  */
@@ -154,6 +155,20 @@
             y = box.bottom;
         }
         openMenu(target, x, y);
+    });
+
+    // ---- Escape in a [data-oat-escape="cancel"] form clicks its [data-oat-cancel] button ----
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape' || !event.target.closest) {
+            return;
+        }
+        var form = event.target.closest('[data-oat-escape="cancel"]');
+        var cancel = form && form.querySelector('[data-oat-cancel]');
+        if (cancel) {
+            event.preventDefault();
+            cancel.click();
+        }
     });
 
     // ---- Load more on scroll: clicks [data-oat-load-on-scroll] when it comes into view ----

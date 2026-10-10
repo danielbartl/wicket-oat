@@ -2,6 +2,23 @@
 
 ## 0.2.0 (unreleased)
 
+- `OatCrud`: a table of records with New, Edit and Delete, an edit dialog whose fields
+  bind through a `CompoundPropertyModel` and change the record only on a valid save, and
+  a confirmation before deleting.
+- `OatTree` and `OatTableTree`: Wicket's nested tree and tree grid with Oat styling instead
+  of the image themes, keyboard-accessible expand buttons (`aria-expanded`, named per node),
+  icons and selection.
+- Data table extras: `OatRowDetailsColumn` (a full-width details panel under a row),
+  `OatEditableColumn` (a cell edited in place, converted and validated, Enter to save,
+  Escape to cancel), `setColumnChooser(true)` and `setCsvExport("file.csv")`
+  (`OatCsvExport`: every row in the current sort order, machine-readable values, formula
+  injection defused). `OatDataTable` now renders each row in a `<tbody>` of its own.
+- `OatMultiSelectField`: several values chosen from server-side suggestions, shown as chips.
+- `ShowsErrorsInline`: containers that show a component's error themselves are skipped by
+  `NotShownInlineFilter`, so a toast doesn't repeat it.
+- `SerializableSupplier` and `ObjectModel` (a model for objects that aren't `Serializable`
+  by type) in `dev.jbaby.wicket.oat.util`.
+
 - Charts in `dev.jbaby.wicket.oat.components.chart`: `OatBarChart`, `OatColumnChart`,
   `OatLineChart` (up to three series), `OatDonutChart` (up to six parts, the rest as "Other")
   and `OatSparkline`, rendered as SVG on the server. No JavaScript; a colorblind-safe palette

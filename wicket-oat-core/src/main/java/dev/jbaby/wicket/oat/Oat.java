@@ -338,6 +338,23 @@ public final class Oat {
             return new OatSpinner(id, sizeModel);
         }
 
+        /** A table of records with New, Edit and Delete, an edit dialog and a delete confirmation. */
+        public static <T, S> OatCrud<T, S> crud(String id, List<? extends IColumn<T, S>> columns, ISortableDataProvider<T, S> provider, long rowsPerPage) {
+            return new OatCrud<>(id, columns, provider, rowsPerPage);
+        }
+
+        /** A tree whose nodes load their children when expanded. */
+        public static <T> dev.jbaby.wicket.oat.components.tree.OatTree<T> tree(String id,
+                org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider<T> provider) {
+            return new dev.jbaby.wicket.oat.components.tree.OatTree<>(id, provider);
+        }
+
+        /** A tree grid: table rows that are tree nodes; put a {@code TreeColumn} among the columns. */
+        public static <T, S> dev.jbaby.wicket.oat.components.tree.OatTableTree<T, S> tableTree(String id, List<? extends IColumn<T, S>> columns,
+                org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider<T> provider, long rowsPerPage) {
+            return new dev.jbaby.wicket.oat.components.tree.OatTableTree<>(id, columns, provider, rowsPerPage);
+        }
+
         public static <T, S> OatDataTable<T, S> dataTable(String id, List<? extends IColumn<T, S>> columns, ISortableDataProvider<T, S> dataProvider, long rowsPerPage) {
             return new OatDataTable<>(id, columns, dataProvider, rowsPerPage);
         }
@@ -1233,6 +1250,11 @@ public final class Oat {
 
         public static OatDateRangeField dateRangeField(String id, IModel<String> labelModel, IModel<DateRange> model, IModel<String> hintModel) {
             return new OatDateRangeField(id, labelModel, model, hintModel);
+        }
+
+        /** Chooses several values, looked up on the server as the user types; shown as chips. */
+        public static <T> dev.jbaby.wicket.oat.components.form.OatMultiSelectField<T> multiSelectField(String id, String label, IModel<List<T>> model) {
+            return new dev.jbaby.wicket.oat.components.form.OatMultiSelectField<>(id, label, model);
         }
 
         /** A field looking up its value on the server as the user types; set its {@code setChoices(...)}. */

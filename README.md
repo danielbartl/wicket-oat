@@ -86,7 +86,8 @@ is the more natural choice for it.
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
 - **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
-- **Forms:** `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
+- **Records & Trees:** `OatCrud`, `OatTree`, `OatTableTree`; data table columns `OatRowDetailsColumn`, `OatEditableColumn`
+- **Forms:** `OatMultiSelectField`, `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
 
@@ -503,6 +504,17 @@ add(Oat.Components.splitLayout("inbox", id -> new MailList(id), id -> new MailVi
 add(Oat.Components.loadMoreList("mail", provider, 20, (id, mail) -> new MailRow(id, mail)).setLoadOnScroll(true));
 ```
 
+`OatMultiSelectField` chooses several values, looked up on the server as the
+user types, and shows them as chips with a remove button. Like `OatAutoCompleteField`,
+it can't be used inside a modal `OatDialog`, because Wicket adds the suggestion
+list to the page body, which the dialog covers.
+
+```java
+form.add(new OatMultiSelectField<User>("members", "Members", membersModel)
+        .setChoices(text -> users.search(text))
+        .setDisplay(User::name));
+```
+
 `OatIcon` draws one of 64 Lucide icons (`OatIcon.names()`) inline, at the text's
 size and color. It's decorative unless you give it a label:
 
@@ -562,6 +574,75 @@ table.setEmptyState(id -> Oat.Components.emptyState(id, "No invoices found"));
   To filter, have the data provider read a search model, and in the search
   field's Ajax handler call `table.getTable().setCurrentPage(0)` and
   `target.add(table.getTable())`.
+
+### Row details, editing in place, columns and CSV
+
+```java
+columns.add(0, new OatRowDetailsColumn<>((id, order) -> new OrderLinesPanel(id, order)));   // expands a row
+columns.add(new OatEditableColumn<Line, String, Integer>(Model.of("Quantity"), "quantity",
+                Line::quantity, Line::setQuantity)
+        .setType(Integer.class).setRequired(true).addValidator(RangeValidator.minimum(1))
+        .onSave((target, line) -> lines.save(line)));
+
+table.setColumnChooser(true);          // a "Columns" popover to hide and show columns
+table.setCsvExport("invoices.csv");    // "Export CSV": every row, in the current sort order
+```
+
+- **Row details:** the arrow opens a full-width panel under the row. It's created the
+  first time the row is opened, and stays open across pages and sorting.
+- **Editing in place:** a cell shows its value as a button. Clicking it, or pressing
+  Enter, turns it into a field with Save and Cancel; Enter saves and Escape cancels.
+  The value is converted and validated, an error shows under the field, and focus
+  goes back to the cell afterwards.
+- **CSV:** the file has the columns with a header text and a value (any
+  `IExportableColumn`, which includes the Oat value columns). Numbers and dates stay
+  machine-readable, and text that a spreadsheet would run as a formula is defused.
+
+## CRUD
+
+`OatCrud` is a table of records with everything to manage them: "New" above it,
+Edit and Delete on every row, a dialog to edit a record in, and a confirmation
+before deleting one.
+
+```java
+OatCrud<Customer, String> customers = new OatCrud<>("customers", columns, provider, 20)
+        .setEditor((id, customer) -> new CustomerFields(id, customer))
+        .setNewItem(Customer::new)
+        .setTitle(Customer::name)
+        .onSave((target, customer) -> repository.save(customer))
+        .onDelete((target, customer) -> repository.delete(customer));
+```
+
+The editor is a panel of form fields. It gets a `CompoundPropertyModel` over the
+record, so Oat fields named after a property (`new OatTextField<>("name")`) find
+their value and label by themselves. Save writes the fields to the record only
+when they are all valid; Cancel leaves it as it was. Records to edit are loaded
+through the provider's `model(...)`, so a `LoadableDetachableModel` gives a fresh
+entity to save. `setSearch(id -> ...)` puts a search field beside "New", and
+`getDataTable()` gives the table for selection, the column chooser or CSV export.
+
+## Trees
+
+`OatTree` (a nested tree) and `OatTableTree` (a tree grid) are Wicket's
+`NestedTree` and `TableTree`, styled with Oat's tokens instead of Wicket's image
+themes. Children load only when their parent is expanded, through an
+`ITreeProvider`.
+
+```java
+add(new OatTree<>("folders", new FolderProvider())
+        .setLabel(Folder::name)
+        .setIcon(folder -> "folder")
+        .onSelect((target, folder) -> show(target, folder)));
+
+List<IColumn<Account, String>> columns = List.of(
+        new TreeColumn<>(Model.of("Account")),
+        new OatNumberColumn<>(Model.of("Balance"), Account::balance).setCurrency(EUR));
+add(new OatTableTree<>("accounts", columns, new AccountProvider(), 50).setLabel(Account::name));
+```
+
+The expand buttons are real buttons, with `aria-expanded` and "Expand/Collapse
+{name}" labels, so they work with the keyboard and screen readers. After a toggle,
+focus stays on the button. A selected node is marked with `aria-current`.
 
 ## Paging
 

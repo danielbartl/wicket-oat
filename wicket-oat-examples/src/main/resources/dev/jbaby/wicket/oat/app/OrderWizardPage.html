@@ -6,7 +6,7 @@
         <h1 class="mb-2">New Order</h1>
         <p class="text-light">An <code>OatWizard</code> in three steps. Next validates the step's fields; the numbers of
             finished steps take you back. The customer is looked up on the server as you type
-            (<code>OatAutoCompleteField</code>), and the delivery window is an <code>OatDateRangeField</code>.</p>
+            (<code>OatAutoCompleteField</code>), colleagues to notify are chosen as chips (<code>OatMultiSelectField</code>), and the delivery window is an <code>OatDateRangeField</code>.</p>
 
         <article class="card mt-6">
             <div wicket:id="wizard"></div>
@@ -15,6 +15,7 @@
 
     <wicket:fragment wicket:id="customerStep">
         <div wicket:id="customer"></div>
+        <div wicket:id="notify"></div>
         <div wicket:id="delivery"></div>
     </wicket:fragment>
 

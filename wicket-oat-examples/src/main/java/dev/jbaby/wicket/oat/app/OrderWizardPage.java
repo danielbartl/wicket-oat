@@ -7,6 +7,7 @@ import dev.jbaby.wicket.oat.components.form.DateRange;
 import dev.jbaby.wicket.oat.components.form.OatAutoCompleteField;
 import dev.jbaby.wicket.oat.components.form.OatDateRangeField;
 import dev.jbaby.wicket.oat.components.form.OatMoneyField;
+import dev.jbaby.wicket.oat.components.form.OatMultiSelectField;
 import dev.jbaby.wicket.oat.components.form.OatNumberField;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
@@ -24,7 +25,7 @@ import java.util.Locale;
 
 /**
  * An order placed in three steps with an OatWizard: the customer (found with an
- * OatAutoCompleteField) and delivery window (an OatDateRangeField), the items, and a
+ * OatAutoCompleteField), colleagues to notify (an OatMultiSelectField) and delivery window (an OatDateRangeField), the items, and a
  * review.
  */
 public class OrderWizardPage extends BasePage {
@@ -35,6 +36,7 @@ public class OrderWizardPage extends BasePage {
     public static class Order implements Serializable {
         public Customer customer;
         public DateRange delivery;
+        public List<String> notify = new java.util.ArrayList<>();
         public Integer quantity = 1;
         public BigDecimal unitPrice;
 
@@ -48,6 +50,9 @@ public class OrderWizardPage extends BasePage {
             new Customer(3, "Globex", "Berlin"), new Customer(4, "Initech", "Munich"),
             new Customer(5, "Umbrella", "Zurich"), new Customer(6, "Stark Industries", "Linz"),
             new Customer(7, "Wayne Enterprises", "Salzburg"));
+
+    private static final List<String> COLLEAGUES = List.of("Jordan Lee", "Sam Rivera", "Alex Kim", "Taylor Morgan",
+            "Robin Chen", "Casey Novak", "Jamie Fischer");
 
     private static final Currency EUR = Currency.getInstance("EUR");
 
@@ -74,6 +79,11 @@ public class OrderWizardPage extends BasePage {
                     .setChoices(OrderWizardPage::search)
                     .setDisplay(Customer::name)
                     .setRequired(true));
+            step.add(new OatMultiSelectField<String>("notify", Model.of("Notify"), new PropertyModel<>(this, "order.notify"),
+                    Model.of("Colleagues to keep informed; type e.g. \"a\"."))
+                    .setChoices(text -> COLLEAGUES.stream()
+                            .filter(name -> name.toLowerCase(java.util.Locale.ROOT).contains(text.toLowerCase(java.util.Locale.ROOT)))
+                            .toList()));
             step.add(new OatDateRangeField("delivery", Model.of("Delivery window"), new PropertyModel<>(this, "order.delivery"))
                     .setRequired(true));
             return step;
@@ -91,6 +101,7 @@ public class OrderWizardPage extends BasePage {
             Fragment step = new Fragment(id, "reviewStep", this);
             step.add(new OatDescriptionList("review")
                     .addItem("Customer", (IModel<String>) () -> order.customer.name() + ", " + order.customer.city())
+                    .addItem("Notify", (IModel<String>) () -> order.notify.isEmpty() ? null : String.join(", ", order.notify))
                     .addItem("Delivery", (IModel<String>) () -> dates.format(order.delivery.from()) + " – " + dates.format(order.delivery.to()))
                     .addItem("Quantity", (IModel<Integer>) () -> order.quantity)
                     .addItem("Total", (IModel<String>) () -> {

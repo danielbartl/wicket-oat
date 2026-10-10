@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <div wicket:id="toolbar" class="oat-table-toolbar"></div>
+    <div class="oat-table-bar">
+        <div wicket:id="toolbar" class="oat-table-toolbar"></div>
+        <div wicket:id="tools" class="hstack oat-table-tools">
+            <div wicket:id="columns"></div>
+            <a wicket:id="export"></a>
+        </div>
+    </div>
     <div wicket:id="bulkActions" class="hstack oat-bulk-actions">
         <span wicket:id="count" role="status"></span>
         <wicket:container wicket:id="actions"><button wicket:id="action"></button></wicket:container>
@@ -13,4 +19,10 @@
         </table>
     </div>
 </wicket:panel>
+
+<wicket:fragment wicket:id="columnsFragment">
+    <ul class="unstyled vstack gap-2 oat-column-chooser">
+        <li wicket:id="column"><label><input type="checkbox" wicket:id="check"/> <span wicket:id="name"></span></label></li>
+    </ul>
+</wicket:fragment>
 </html>

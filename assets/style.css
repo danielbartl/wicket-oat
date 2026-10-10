@@ -455,3 +455,208 @@ a.unstyled, .site-nav a {
     display: block;
     color: var(--muted-foreground);
 }
+
+/* ---------- User guide ---------- */
+
+.guide-hero {
+    padding-block: var(--space-10) var(--space-8);
+}
+
+.guide-layout {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: var(--space-10);
+    align-items: start;
+    padding-block-end: var(--space-16);
+}
+
+.guide-toc {
+    position: sticky;
+    top: 4.5rem;
+    max-height: calc(100vh - 5.5rem);
+    overflow-y: auto;
+    font-size: var(--text-7);
+}
+
+.guide-toc details {
+    border: 0;
+}
+
+.guide-toc summary {
+    padding: 0 0 var(--space-2);
+    font-weight: var(--font-semibold);
+    pointer-events: none;
+}
+
+.guide-toc summary::after {
+    display: none;
+}
+
+.guide-toc details > :not(summary) {
+    margin: 0;
+}
+
+.guide-toc-list,
+.guide-toc-list ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.guide-toc-list ol {
+    margin-block: var(--space-1) var(--space-2);
+    padding-inline-start: var(--space-3);
+    border-inline-start: 1px solid var(--border);
+}
+
+.guide-toc-list a {
+    display: block;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-small);
+    color: var(--muted-foreground);
+    text-decoration: none;
+}
+
+.guide-toc-list > li > a {
+    color: var(--foreground);
+    font-weight: var(--font-medium);
+}
+
+.guide-toc-list a:hover {
+    background-color: var(--accent);
+}
+
+.guide-toc-list a[aria-current] {
+    color: var(--primary);
+    background-color: var(--accent);
+}
+
+.guide-content {
+    min-width: 0;
+    max-width: 52rem;
+}
+
+.guide-section + .guide-section {
+    margin-block-start: var(--space-12);
+    padding-block-start: var(--space-8);
+    border-top: 1px solid var(--border);
+}
+
+.guide-content h2 {
+    margin-block-start: 0;
+}
+
+.guide-content h3 {
+    margin-block: var(--space-8) var(--space-3);
+}
+
+.guide-content h2 .new-badge,
+.guide-content h3 .new-badge {
+    vertical-align: middle;
+    margin-inline-start: var(--space-2);
+}
+
+.guide-anchor {
+    margin-inline-start: var(--space-1);
+    color: var(--muted-foreground);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+:is(h2, h3):hover > .guide-anchor,
+.guide-anchor:focus-visible {
+    opacity: 1;
+}
+
+.guide-content p,
+.guide-content li {
+    line-height: 1.7;
+}
+
+.guide-content ul {
+    padding-inline-start: var(--space-6);
+}
+
+.guide-content li + li {
+    margin-block-start: var(--space-1);
+}
+
+/* No ligatures: "->" and "<>" stay as typed */
+.guide-content code {
+    font-variant-ligatures: none;
+}
+
+.guide-code {
+    position: relative;
+    margin-block: var(--space-4);
+    font-size: var(--text-7);
+}
+
+.guide-code[data-lang]::before {
+    content: attr(data-lang);
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-8);
+    color: var(--muted-foreground);
+}
+
+.guide-table {
+    font-size: var(--text-7);
+}
+
+.guide-table td:first-child {
+    white-space: normal;
+}
+
+.guide-content .table {
+    margin-block: var(--space-4);
+}
+
+.guide-note {
+    margin-block: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-inline-start: 3px solid var(--primary);
+    border-radius: var(--radius-small);
+    background-color: var(--faint);
+}
+
+.guide-note p {
+    margin: 0;
+}
+
+.guide-end {
+    margin-block-start: var(--space-12);
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 960px) {
+    .guide-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-6);
+    }
+
+    .guide-toc {
+        position: static;
+        max-height: none;
+        padding: var(--space-3) var(--space-4);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-medium);
+    }
+
+    .guide-toc summary {
+        padding: 0;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
+    .guide-toc summary::after {
+        display: inline-block;
+    }
+
+    .guide-toc details[open] summary {
+        padding-block-end: var(--space-3);
+    }
+}

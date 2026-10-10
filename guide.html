@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wicket Oat User Guide</title>
+<meta name="description" content="The complete guide to Wicket Oat: installing it, its concepts, forms, data tables, CRUD, trees, page building blocks, charts, theming, translations, security, accessibility and testing.">
+<link rel="canonical" href="https://danielbartl.github.io/wicket-oat/guide.html">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://danielbartl.github.io/wicket-oat/guide.html">
+<meta property="og:title" content="Wicket Oat User Guide">
+<meta property="og:description" content="The complete guide to Wicket Oat: installing it, its concepts, forms, data tables, CRUD, trees, page building blocks, charts, theming, translations, security, accessibility and testing.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wicket Oat User Guide">
+<meta name="twitter:description" content="The complete guide to Wicket Oat: installing it, its concepts, forms, data tables, CRUD, trees, page building blocks, charts, theming, translations, security, accessibility and testing.">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.1/oat.min.css"
+      integrity="sha384-GA4lhq4gQgQSPwiL1ryJc3No2ZWvW6c54sYd6f9bP7FF8GoIy06qLzaYZVau3C+t" crossorigin="anonymous">
+<link rel="stylesheet" href="assets/themes.css">
+<link rel="stylesheet" href="assets/wicket-oat.css">
+<link rel="stylesheet" href="assets/style.css">
+
+<script>
+(function () {
+  var STORAGE_KEY = 'wicket-oat-site-theme';
+  var root = document.documentElement;
+
+  function apply(theme) {
+    if (theme) { root.setAttribute('data-theme', theme); }
+    else { root.removeAttribute('data-theme'); }
+  }
+
+  function stored() {
+    try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+  }
+
+  window.__wicketOatSetTheme = function (theme) {
+    apply(theme);
+    try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
+    if (window.__wicketOatUpdateToggle) window.__wicketOatUpdateToggle();
+  };
+
+  var initial = stored();
+  if (initial) apply(initial);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-nav">
+    <a class="brand" href="index.html">
+        <img src="assets/favicon.svg" alt="" width="24" height="24">
+        Wicket Oat
+    </a>
+    <nav id="site-nav-links" class="site-nav-links" hidden>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#applayout">AppLayout</a>
+        <a href="index.html#components">Components</a>
+        <a href="index.html#theming">Theming</a>
+        <a href="index.html#ai-skill">AI Skill</a>
+        <a href="index.html#quick-start">Get Started</a>
+        <a href="guide.html" aria-current="page">Guide</a>
+        <a href="tutorial.html">Tutorial</a>
+    </nav>
+    <button id="theme-toggle" class="ghost icon small" aria-label="Toggle light/dark theme" title="Toggle light/dark theme">🌙</button>
+    <a class="button outline small" href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener" aria-label="View on GitHub">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+    </a>
+    <button id="nav-toggle" class="ghost icon small" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="site-nav-links">☰</button>
+</header>
+
+<main>
+
+<section class="hero guide-hero">
+    <div class="container">
+        <p class="eyebrow">User Guide</p>
+        <h1>Wicket Oat User Guide</h1>
+        <p class="tagline">Everything you need to build a Wicket application with Wicket Oat:
+            from installing it to forms, data tables, CRUD, charts, theming and testing.</p>
+    </div>
+</section>
+
+<div class="container guide-layout">
+    <nav class="guide-toc" aria-label="Contents">
+        <details id="guide-toc" open>
+            <summary>Contents</summary>
+<ol class="guide-toc-list">
+<li><a href="#getting-started">Getting started</a>
+<ol><li><a href="#requirements">Requirements</a></li><li><a href="#dependency">Add the dependency</a></li><li><a href="#install">Install it in your application</a></li><li><a href="#first-page">Your first page</a></li></ol>
+</li>
+<li><a href="#concepts">Core concepts</a>
+<ol><li><a href="#components-behaviors">Components and behaviors</a></li><li><a href="#factories">Factories or constructors</a></li><li><a href="#ids">Ids passed to factories</a></li><li><a href="#models-labels">Models and labels</a></li><li><a href="#variants">Variants</a></li><li><a href="#ajax">Ajax and markup ids</a></li></ol>
+</li>
+<li><a href="#app-shell">App shell</a>
+<ol><li><a href="#app-layout">The layout</a></li><li><a href="#menu">The sidebar menu</a></li><li><a href="#feedback">Feedback messages</a></li><li><a href="#busy">Busy buttons</a></li><li><a href="#confirm">Confirming an action</a></li><li><a href="#lazy">Loading slow content</a></li><li><a href="#cookies">Cookie consent</a></li></ol>
+</li>
+<li><a href="#forms">Forms</a>
+<ol><li><a href="#fields">How fields work</a></li><li><a href="#field-types">The fields</a></li><li><a href="#addons">Addons and suggestions</a></li><li><a href="#money">Amounts and percentages</a></li><li><a href="#dates">Dates and date ranges</a></li><li><a href="#autocomplete">Looking values up on the server</a></li><li><a href="#multi-select">Choosing several values</a></li><li><a href="#custom-field">Your own inputs</a></li><li><a href="#fieldsets">Sections and layout</a></li><li><a href="#login">Signing in</a></li><li><a href="#dialog-forms">Forms in dialogs</a></li></ol>
+</li>
+<li><a href="#tables">Data tables</a>
+<ol><li><a href="#data-table">OatDataTable</a></li><li><a href="#columns">Columns</a></li><li><a href="#row-actions">Row actions</a></li><li><a href="#selection">Selection and bulk actions</a></li><li><a href="#search">Searching</a></li><li><a href="#row-details">Row details</a></li><li><a href="#editable">Editing in place</a></li><li><a href="#columns-csv">Choosing columns and exporting</a></li><li><a href="#paging">Paging other lists</a></li></ol>
+</li>
+<li><a href="#crud">CRUD</a>
+</li>
+<li><a href="#trees">Trees</a>
+<ol><li><a href="#tree">A tree</a></li><li><a href="#table-tree">A tree grid</a></li></ol>
+</li>
+<li><a href="#page-blocks">Page building blocks</a>
+<ol><li><a href="#page-header">Page header</a></li><li><a href="#stat-cards">Key figures</a></li><li><a href="#description-list">Record details</a></li><li><a href="#buttons">Buttons and menus</a></li><li><a href="#tabs">Tabs and accordions</a></li><li><a href="#wizard">Steps</a></li><li><a href="#master-detail">List and details</a></li><li><a href="#timeline">Histories and notes</a></li><li><a href="#small-pieces">Smaller pieces</a></li></ol>
+</li>
+<li><a href="#navigation">Navigation and lists</a>
+<ol><li><a href="#menu-bar">Menu bar</a></li><li><a href="#context-menu">Context menu</a></li><li><a href="#split-layout">Split layout</a></li><li><a href="#load-more">Long lists</a></li></ol>
+</li>
+<li><a href="#charts">Charts</a>
+</li>
+<li><a href="#icons">Icons</a>
+</li>
+<li><a href="#layout">Layout</a>
+</li>
+<li><a href="#theming">Theming</a>
+<ol><li><a href="#themes">Themes</a></li><li><a href="#density">Density</a></li></ol>
+</li>
+<li><a href="#translations">Translations</a>
+</li>
+<li><a href="#security">Security and resources</a>
+<ol><li><a href="#csp">Content Security Policy</a></li><li><a href="#resources">Resources</a></li><li><a href="#safeguards">Other safeguards</a></li></ol>
+</li>
+<li><a href="#accessibility">Accessibility</a>
+</li>
+<li><a href="#testing">Testing</a>
+</li>
+<li><a href="#ai-skill">AI skill</a>
+</li>
+<li><a href="#whats-new">What's new in 0.2.0</a>
+</li>
+</ol>
+        </details>
+    </nav>
+    <article class="guide-content">
+<section class="guide-section" aria-labelledby="getting-started">
+<h2 id="getting-started">Getting started <a class="guide-anchor" href="#getting-started" aria-label="Link to this section">#</a></h2>
+<p>Wicket Oat is a UI component library for Apache Wicket, built on the <a href="https://oat.ink" target="_blank" rel="noopener">Oat UI</a> design system. It gives you styled, accessible, translated components that you use exactly like Wicket's own: plain Java classes, models, <code>.properties</code> files and Ajax, with no JavaScript framework and no CSS framework to learn.</p>
+<h3 id="requirements">Requirements <a class="guide-anchor" href="#requirements" aria-label="Link to this section">#</a></h3>
+<ul><li>Java 17 or newer</li><li>Apache Wicket 10.8 or newer (<code>wicket-core</code> and <code>wicket-extensions</code>)</li><li>Maven or Gradle</li></ul>
+<h3 id="dependency">Add the dependency <a class="guide-anchor" href="#dependency" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Maven"><code>&lt;dependency&gt;
+    &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
+    &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
+    &lt;version&gt;0.1.1&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+<aside class="guide-note" role="note"><p>Sections marked <span class="badge new-badge" data-variant="success">New in 0.2.0</span> describe components in the upcoming release. They are on the <code>master</code> branch now; build it with <code>./mvnw install</code> to try them.</p></aside>
+<h3 id="install">Install it in your application <a class="guide-anchor" href="#install" aria-label="Link to this section">#</a></h3>
+<p>Call <code>WicketOats.install(this)</code> in your application's <code>init()</code>. It adds Oat's CSS and JavaScript to every page, registers the themes, hooks the busy indicator into Ajax requests, and adds the one CSP source Oat needs.</p>
+<pre class="guide-code" data-lang="Java"><code>public class MyApplication extends WebApplication {
+    @Override
+    protected void init() {
+        super.init();
+        WicketOats.install(this)
+                .setDefaultTheme(OatTheme.BUSINESS)    // optional; null follows the browser
+                .setDensity(OatDensity.COMPACT);       // optional; tighter spacing
+    }
+}</code></pre>
+<p><code>install</code> returns the settings, so the options chain. Call it after any <code>getCspSettings().blocking().strict()</code> or <code>clear()</code> of your own, since those reset the CSP directives it adds.</p>
+<h3 id="first-page">Your first page <a class="guide-anchor" href="#first-page" aria-label="Link to this section">#</a></h3>
+<p>Extend <code>OatAppLayout</code> for a page with a top bar and a sidebar, and put the page content in <code>&lt;wicket:extend&gt;</code>:</p>
+<pre class="guide-code" data-lang="Java"><code>public class DashboardPage extends OatAppLayout {
+
+    public DashboardPage() {
+        add(Oat.Components.button("hello", "Say hello", target -&gt;
+                Oat.toast(target, "Hello from Wicket Oat!", OatVariant.SUCCESS)));
+        add(new OatAlert("note", "Your changes were saved.", OatVariant.SUCCESS));
+    }
+
+    @Override
+    protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {
+        return Model.ofList(List.of(
+                MenuItem.of("Dashboard", DashboardPage.class),
+                MenuItem.of("Customers", CustomersPage.class)));
+    }
+}</code></pre>
+<pre class="guide-code" data-lang="HTML"><code>&lt;!-- DashboardPage.html --&gt;
+&lt;html xmlns:wicket="http://wicket.apache.org"&gt;
+&lt;body&gt;
+&lt;wicket:extend&gt;
+    &lt;h1&gt;Dashboard&lt;/h1&gt;
+    &lt;a wicket:id="hello"&gt;&lt;/a&gt;
+    &lt;div wicket:id="note"&gt;&lt;/div&gt;
+&lt;/wicket:extend&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Most apps put the menu in a <code>BasePage extends OatAppLayout</code> that every page extends. You don't have to use <code>OatAppLayout</code>: every component also works on an ordinary <code>WebPage</code>.</p>
+</section>
+<section class="guide-section" aria-labelledby="concepts">
+<h2 id="concepts">Core concepts <a class="guide-anchor" href="#concepts" aria-label="Link to this section">#</a></h2>
+<h3 id="components-behaviors">Components and behaviors <a class="guide-anchor" href="#components-behaviors" aria-label="Link to this section">#</a></h3>
+<p>Almost everything comes in two forms:</p>
+<ul><li>A <strong>component</strong> renders its own markup. <code>new OatAlert("id", ...)</code> on a <code>&lt;div wicket:id="id"&gt;</code> gives you a complete alert.</li><li>A <strong>behavior</strong> styles a component you already have. <code>link.add(Oat.Behaviors.button())</code> turns any Wicket <code>Link</code> into an Oat button, keeping your own class and markup.</li></ul>
+<pre class="guide-code" data-lang="Java"><code>// A component: Oat renders the markup
+add(Oat.Components.alert("saved", "Saved!", OatVariant.SUCCESS));
+
+// A behavior: your AjaxLink, Oat's look
+add(new AjaxLink&lt;Void&gt;("refresh") {
+    @Override
+    public void onClick(AjaxRequestTarget target) { ... }
+}.add(Oat.Behaviors.button().setVariant(OatVariant.SECONDARY)));</code></pre>
+<p>Use behaviors when a component already has its own base class, or when you need markup Oat's component doesn't render.</p>
+<h3 id="factories">Factories or constructors <a class="guide-anchor" href="#factories" aria-label="Link to this section">#</a></h3>
+<p>Every component is a plain Wicket component you can create with <code>new</code>. The <code>Oat.Components</code> and <code>Oat.Behaviors</code> factories add nothing magic; they turn lambdas into the anonymous subclasses some components need:</p>
+<pre class="guide-code" data-lang="Java"><code>// OatButton is abstract (onClick), so the factory is the natural choice
+add(Oat.Components.button("save", "Save", target -&gt; save(target)));
+
+// The equivalent constructor needs a subclass
+add(new OatButton("save", Model.of("Save")) {
+    @Override
+    public void onClick(AjaxRequestTarget target) { save(target); }
+});
+
+// Components without abstract methods: a constructor is just as short
+add(new OatBadge("status", "Paid", OatVariant.SUCCESS));</code></pre>
+<p>Components that take a callback or a list of items (buttons, tabs, accordions, dropdowns, breadcrumbs, pagination) are the ones where the factory saves you a subclass.</p>
+<h3 id="ids">Ids passed to factories <a class="guide-anchor" href="#ids" aria-label="Link to this section">#</a></h3>
+<p>Many components ask you for a part of themselves: a dialog's body, a table's toolbar, a popover's content, a master-detail's detail. They pass you the id to use, and check that you used it:</p>
+<pre class="guide-code" data-lang="Java"><code>table.setToolbar(id -&gt; new SearchPanel(id, search));          // "toolbar"
+dialog.setBody(new PersonFields(OatDialog.BODY_ID, person));  // "body"
+popover = new OatPopover("note", "Quick note", id -&gt; new NotePanel(id));</code></pre>
+<p>A wrong id fails at once with a message naming the expected one, instead of a puzzling markup error later.</p>
+<h3 id="models-labels">Models and labels <a class="guide-anchor" href="#models-labels" aria-label="Link to this section">#</a></h3>
+<p>Oat's form fields follow Wicket's conventions:</p>
+<ul><li>Leave out the model and a field takes it from a parent <code>CompoundPropertyModel</code> by its id (<code>"name"</code> &rarr; <code>person.name</code>).</li><li>Leave out the label and it is looked up in the <code>.properties</code> files by the same id (<code>name=Full name</code>), falling back to the id.</li><li>Pass either explicitly when you need to: <code>new OatTextField&lt;&gt;("name", "Full name", model)</code>.</li></ul>
+<pre class="guide-code" data-lang="Java"><code>Form&lt;Person&gt; form = new Form&lt;&gt;("form", new CompoundPropertyModel&lt;&gt;(person));
+form.add(new OatTextField&lt;String&gt;("name").setRequired(true));   // label from name=..., value person.name
+form.add(new OatEmailField("email"));</code></pre>
+<p>Labels and texts can be any <code>IModel&lt;String&gt;</code>, so a <code>ResourceModel</code> or a lambda model translates or updates them.</p>
+<h3 id="variants">Variants <a class="guide-anchor" href="#variants" aria-label="Link to this section">#</a></h3>
+<p>Colors are one enum everywhere: <code>OatVariant.DEFAULT</code>, <code>SECONDARY</code>, <code>SUCCESS</code>, <code>WARNING</code> and <code>DANGER</code>. Oat styles them per component: buttons support <code>SECONDARY</code> and <code>DANGER</code>, badges all of them, alerts and toasts <code>SUCCESS</code>, <code>WARNING</code> and <code>DANGER</code>. Other variants render like <code>DEFAULT</code>.</p>
+<h3 id="ajax">Ajax and markup ids <a class="guide-anchor" href="#ajax" aria-label="Link to this section">#</a></h3>
+<p>Components that you typically update render their own tag with a markup id: form fields, data tables, dialogs, lists. So <code>target.add(component)</code> re-renders them, for example a form after a failed submit to show inline errors:</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(Oat.Components.submitButton("save", "Save",
+        target -&gt; save(target),           // the form is valid
+        target -&gt; target.add(form)));     // it isn't: show the errors</code></pre>
+<p>Fluent setters return the concrete type, so <code>new OatNumberField&lt;Integer&gt;("age").setMin(0).setRequired(true)</code> chains without casts.</p>
+</section>
+<section class="guide-section" aria-labelledby="app-shell">
+<h2 id="app-shell">App shell <a class="guide-anchor" href="#app-shell" aria-label="Link to this section">#</a></h2>
+<h3 id="app-layout">The layout <a class="guide-anchor" href="#app-layout" aria-label="Link to this section">#</a></h3>
+<p><code>OatAppLayout</code> is an abstract <code>WebPage</code> with a top bar, a collapsible sidebar (a menu button on phones) and your page in the main area. It applies the current theme and density to <code>&lt;html&gt;</code>. Override these to fill it:</p>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Method</th><th scope="col">What it gives</th></tr></thead><tbody><tr><td><code>sidebarMenuItemsModel()</code></td><td>The sidebar's <code>MenuItem</code>s</td></tr><tr><td><code>appTitleModel()</code> / <code>appNameModel()</code></td><td>The browser title and the name in the top bar (or <code>OatAppLayout.title</code> / <code>.name</code> in your <code>.properties</code>)</td></tr><tr><td><code>createTopNavExtra(id)</code></td><td>Anything on the right of the top bar, such as a user menu</td></tr><tr><td><code>createFooter(id)</code></td><td>A footer under the sidebar, such as a theme switcher</td></tr></tbody></table></div>
+<p>The constructors take nothing, <code>PageParameters</code> or a model, like any page.</p>
+<h3 id="menu">The sidebar menu <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#menu" aria-label="Link to this section">#</a></h3>
+<p>Links can be grouped into collapsible sections, open while one of their pages is shown, and carry a badge such as a count:</p>
+<pre class="guide-code" data-lang="Java"><code>@Override
+protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {
+    return Model.ofList(List.of(
+            MenuItem.of("Dashboard", DashboardPage.class),
+            MenuItem.group("Sales",
+                    MenuItem.of("Orders", OrdersPage.class).withBadge(() -&gt; orders.countOpen()),
+                    MenuItem.of("Invoices", InvoicesPage.class)),
+            MenuItem.of("Settings", SettingsPage.class)));
+}</code></pre>
+<ul><li>A badge is read on every render and hidden while it is <code>null</code>, empty or zero.</li><li>Pages the user isn't authorized to open are left out, and so is a group left empty.</li><li>Groups can't contain groups. Labels can be <code>IModel&lt;String&gt;</code>s, such as a <code>ResourceModel</code>.</li></ul>
+<h3 id="feedback">Feedback messages <a class="guide-anchor" href="#feedback" aria-label="Link to this section">#</a></h3>
+<p>Wicket's <code>info()</code>, <code>success()</code>, <code>warn()</code> and <code>error()</code> become Oat toasts or alerts:</p>
+<pre class="guide-code" data-lang="Java"><code>// In your base page: every message as a toast, also during Ajax requests
+add(Oat.Behaviors.feedbackToasts());
+
+// Or as alerts in one place
+add(new OatFeedbackPanel("feedback"));
+
+// Then, anywhere:
+success("Invoice sent.");</code></pre>
+<p>Both update themselves in Ajax requests, so a handler just calls <code>success(...)</code>, with no <code>target.add(...)</code>. Toasts also show session messages, so <code>getSession().success(...)</code> before <code>setResponsePage(...)</code> appears on the next page. Both leave out errors that a form field already shows next to itself (<code>NotShownInlineFilter</code>); pass your own <code>IFeedbackMessageFilter</code> to change that. To show a toast directly: <code>Oat.toast(target, "Copied", OatVariant.SUCCESS)</code>.</p>
+<h3 id="busy">Busy buttons <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#busy" aria-label="Link to this section">#</a></h3>
+<p>For slow actions, <code>setBusyIndicator(true)</code> on an <code>OatButton</code>, <code>OatSubmitButton</code> or <code>OatDialog</code> shows a spinner while the Ajax request runs and ignores further clicks, so the action can't run twice. <code>Oat.Behaviors.ajaxBusy()</code> does the same for any other Ajax link or button. It's off by default.</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(Oat.Components.submitButton("pay", "Pay now", target -&gt; pay(target)).setBusyIndicator(true));</code></pre>
+<h3 id="confirm">Confirming an action <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#confirm" aria-label="Link to this section">#</a></h3>
+<p>One <code>OatConfirmDialog</code> per page can ask before any number of actions:</p>
+<pre class="guide-code" data-lang="Java"><code>OatConfirmDialog confirm = new OatConfirmDialog("confirm");   // &lt;div wicket:id="confirm"&gt;&lt;/div&gt;
+add(confirm);
+
+add(Oat.Components.button("delete", "Delete", target -&gt;
+        confirm.ask(target, "Delete invoice?", "This can't be undone.", t -&gt; {
+            invoices.delete(invoice);
+            t.add(table);
+        })));</code></pre>
+<p>The action stays on the server until the user answers and runs at most once; Cancel or Escape closes the dialog without running it. The confirm button is a danger button by default (<code>setConfirmVariant</code>, <code>setConfirmLabel</code>).</p>
+<h3 id="lazy">Loading slow content <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#lazy" aria-label="Link to this section">#</a></h3>
+<p><code>OatLazyLoadPanel</code> renders the page first and loads slow content right after, showing skeleton lines meanwhile:</p>
+<pre class="guide-code" data-lang="Java"><code>add(Oat.Components.lazyLoad("revenue", id -&gt; new RevenuePanel(id, reports.revenueThisYear()))
+        .setPlaceholder(SkeletonBehavior.Shape.LINE, 2));</code></pre>
+<p>It extends Wicket's <code>AjaxLazyLoadPanel</code>; override <code>isContentReady()</code> to wait for background work.</p>
+<h3 id="cookies">Cookie consent <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#cookies" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>add(Oat.Components.cookieConsent("cookies")
+        .setPolicyLink(PrivacyPage.class)
+        .onAnswer(accepted -&gt; audit.log(accepted)));
+
+// Before loading optional scripts, such as analytics:
+if (OatCookieConsent.isAccepted()) { ... }</code></pre>
+<p>A card at the bottom asks once, with "Accept" and "Only necessary". The answer is stored for a year in the <code>oat-cookie-consent</code> cookie (HttpOnly, SameSite Lax, Secure on HTTPS), and the banner stays hidden once the user has answered.</p>
+</section>
+<section class="guide-section" aria-labelledby="forms">
+<h2 id="forms">Forms <a class="guide-anchor" href="#forms" aria-label="Link to this section">#</a></h2>
+<h3 id="fields">How fields work <a class="guide-anchor" href="#fields" aria-label="Link to this section">#</a></h3>
+<p>An Oat field is a panel around a Wicket form component: a label, the input, a hint and the inline error. You use it like the component it wraps:</p>
+<pre class="guide-code" data-lang="Java"><code>Form&lt;Person&gt; form = new Form&lt;&gt;("form", new CompoundPropertyModel&lt;&gt;(person));
+form.setOutputMarkupId(true);
+add(form);
+
+OatTextField&lt;String&gt; name = new OatTextField&lt;String&gt;("name").setRequired(true);
+name.add(StringValidator.maximumLength(50));     // validators go to the wrapped input
+form.add(name);
+form.add(new OatNumberField&lt;Integer&gt;("age").setMin(0));
+form.add(new OatDropdownChoice&lt;String&gt;("country", Model.ofList(countries)));
+form.add(Oat.Components.submitButton("save", "Save", target -&gt; save(target), target -&gt; target.add(form)));</code></pre>
+<pre class="guide-code" data-lang="HTML"><code>&lt;form wicket:id="form" class="vstack gap-4"&gt;
+    &lt;div wicket:id="name"&gt;&lt;/div&gt;
+    &lt;div wicket:id="age"&gt;&lt;/div&gt;
+    &lt;div wicket:id="country"&gt;&lt;/div&gt;
+    &lt;footer class="hstack justify-end"&gt;&lt;button wicket:id="save"&gt;&lt;/button&gt;&lt;/footer&gt;
+&lt;/form&gt;</code></pre>
+<ul><li><strong>Required</strong> fields get an asterisk and <code>aria-required</code>. The browser's own <code>required</code> check is left off, so Wicket can show its translated message inline.</li><li><strong>Errors</strong> show under the field, which gets <code>aria-invalid</code> and <code>aria-describedby</code> pointing at the message; a hint shows there while there's no error.</li><li><strong>Behaviors:</strong> validators and <code>AjaxFormComponentUpdatingBehavior</code>s you <code>add(...)</code> go to the wrapped input; other behaviors go to the field's own tag. <code>getField()</code> returns the wrapped <code>FormComponent</code>.</li><li><strong>Hints:</strong> pass an <code>IModel&lt;String&gt;</code> label and a hint model: <code>new OatTextField&lt;&gt;("iban", Model.of("IBAN"), model, Model.of("Starts with your country code."))</code>.</li></ul>
+<h3 id="field-types">The fields <a class="guide-anchor" href="#field-types" aria-label="Link to this section">#</a></h3>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Notes</th></tr></thead><tbody><tr><td><code>OatTextField</code>, <code>OatPasswordField</code>, <code>OatEmailField</code>, <code>OatUrlField</code>, <code>OatSearchField</code>, <code>OatTelField</code></td><td><code>String</code></td><td>HTML5 input types</td></tr><tr><td><code>OatNumberField&lt;N&gt;</code>, <code>OatRangeField</code></td><td>a <code>Number</code></td><td><code>setMin</code>, <code>setMax</code></td></tr><tr><td><code>OatMoneyField</code>, <code>OatPercentField</code></td><td><code>BigDecimal</code></td><td>in the user's locale, see below</td></tr><tr><td><code>OatDateField</code>, <code>OatDateTimeLocalField</code>, <code>OatTimeField</code></td><td><code>LocalDate</code>, <code>LocalDateTime</code>, <code>LocalTime</code></td><td>native pickers</td></tr><tr><td><code>OatMonthField</code>, <code>OatWeekField</code></td><td><code>String</code></td><td>as the browser sends it: <code>2026-10</code>, <code>2026-W41</code></td></tr><tr><td><code>OatDateRangeField</code></td><td><code>DateRange</code></td><td>two dates, either end open</td></tr><tr><td><code>OatTextArea</code></td><td><code>String</code></td><td></td></tr><tr><td><code>OatCheckBox</code>, <code>OatSwitch</code></td><td><code>Boolean</code></td><td>a switch is a toggle-styled checkbox</td></tr><tr><td><code>OatDropdownChoice</code>, <code>OatRadioChoice</code></td><td>one choice</td><td><code>setInline(true)</code> for a row of radios</td></tr><tr><td><code>OatCheckBoxMultipleChoice</code>, <code>OatListMultipleChoice</code></td><td>a <code>Collection</code></td><td></td></tr><tr><td><code>OatTagInput</code></td><td><code>List&lt;String&gt;</code></td><td>free-form tags as chips</td></tr><tr><td><code>OatAutoCompleteField&lt;T&gt;</code></td><td><code>T</code></td><td>looked up on the server as you type</td></tr><tr><td><code>OatMultiSelectField&lt;T&gt;</code> <span class="badge new-badge" data-variant="success">New in 0.2.0</span></td><td><code>List&lt;T&gt;</code></td><td>several values, chips</td></tr><tr><td><code>OatFileUpload</code>, <code>OatFileDropzone</code></td><td><code>List&lt;FileUpload&gt;</code></td><td>a dropzone accepts dragged files</td></tr><tr><td><code>OatColorField</code></td><td><code>String</code></td><td></td></tr><tr><td><code>OatCustomField&lt;T&gt;</code></td><td><code>T</code></td><td>your own input made of several inputs</td></tr></tbody></table></div>
+<p>Each has a factory too, e.g. <code>Oat.Components.textField(...)</code>; a few don't follow the <code>...Field</code> naming: <code>textArea</code>, <code>dropdownChoice</code>, <code>checkBox</code>, <code>oatSwitch</code>, <code>fileUpload</code>, <code>fileDropzone</code>, <code>tagInput</code>.</p>
+<h3 id="addons">Addons and suggestions <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#addons" aria-label="Link to this section">#</a></h3>
+<p>Single-input fields can show text before or after the input, and suggest values from a native <code>&lt;datalist&gt;</code> (anything else can still be typed):</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatTextField&lt;String&gt;("website").setPrefix("https://"));
+form.add(new OatNumberField&lt;Integer&gt;("weight").setSuffix("kg"));
+form.add(new OatTextField&lt;String&gt;("type").setSuggestions(List.of("Call", "Meeting", "Email")));</code></pre>
+<h3 id="money">Amounts and percentages <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#money" aria-label="Link to this section">#</a></h3>
+<p><code>OatMoneyField</code> and <code>OatPercentField</code> edit a <code>BigDecimal</code> in the user's locale: <code>1.234,50</code> in German, <code>1,234.50</code> in English. The money field takes its decimals from the currency (2 for EUR, 0 for JPY), shows the symbol where the locale puts it, and rounds longer input half-even. A percentage of 19 means 19%.</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatMoneyField("price").setCurrency(Currency.getInstance("EUR")).setMin(BigDecimal.ZERO));
+form.add(new OatPercentField("taxRate"));</code></pre>
+<h3 id="dates">Dates and date ranges <a class="guide-anchor" href="#dates" aria-label="Link to this section">#</a></h3>
+<p>Date and time fields use the browser's pickers and bind to <code>LocalDate</code>, <code>LocalDateTime</code> and <code>LocalTime</code>. <code>OatDateRangeField</code> edits a <code>DateRange(from, to)</code>: either end may be left open, <code>setRequired(true)</code> asks for both, and an end before the start is rejected.</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatDateRangeField("delivery", Model.of("Delivery window"), deliveryModel).setRequired(true));</code></pre>
+<h3 id="autocomplete">Looking values up on the server <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#autocomplete" aria-label="Link to this section">#</a></h3>
+<p>For choices too many for a dropdown, <code>OatAutoCompleteField</code> asks the server as the user types. On submit, the text must be one of the suggestions, and the field's value is that object:</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatAutoCompleteField&lt;Customer&gt;("customer")
+        .setChoices(text -&gt; customers.search(text))   // at most 10 shown; setMaxChoices(n)
+        .setDisplay(Customer::name));</code></pre>
+<p><code>setFreeText(text -&gt; value)</code> accepts other text too. For a short fixed list, <code>setSuggestions(...)</code> on a text field is simpler.</p>
+<h3 id="multi-select">Choosing several values <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#multi-select" aria-label="Link to this section">#</a></h3>
+<p><code>OatMultiSelectField</code> shows the chosen values as chips with a remove button, and a search box under them that looks up more:</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatMultiSelectField&lt;User&gt;("members", "Members", membersModel)
+        .setChoices(text -&gt; users.search(text))
+        .setDisplay(User::name));</code></pre>
+<p>Choosing a suggestion adds it and empties the box, ready for the next one; chosen values aren't suggested again. Required means at least one.</p>
+<aside class="guide-note" role="note"><p>Both autocomplete fields work inside an <code>OatDialog</code> or <code>OatPopover</code>. Wicket adds the suggestion list to the page body, which a modal dialog would cover; <code>wicket-oat.js</code> shows it above the dialog instead. Escape closes the list first, then the dialog.</p></aside>
+<h3 id="custom-field">Your own inputs <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#custom-field" aria-label="Link to this section">#</a></h3>
+<p><code>OatCustomField</code> gives an input made of several inputs (usually a <code>FormComponentPanel</code>) the Oat label, hint and inline errors, and points the <code>aria-describedby</code> and <code>aria-invalid</code> of every input inside at them:</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatCustomField&lt;Phone&gt;("phone", "Phone", phoneModel, PhoneInput::new));   // (id, model) -&gt; your input</code></pre>
+<p>Give each inner input its own <code>aria-label</code>, such as "Country code" and "Number".</p>
+<h3 id="fieldsets">Sections and layout <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#fieldsets" aria-label="Link to this section">#</a></h3>
+<p><code>OatFieldset</code> is a titled section of a long form. It's a Wicket <code>Border</code> on a <code>&lt;fieldset&gt;</code>, so fields inside still inherit the form's <code>CompoundPropertyModel</code>, and its legend comes from the <code>.properties</code> file by id:</p>
+<pre class="guide-code" data-lang="HTML"><code>&lt;fieldset wicket:id="billing"&gt;
+    &lt;div wicket:id="street"&gt;&lt;/div&gt;
+    &lt;div wicket:id="city"&gt;&lt;/div&gt;
+&lt;/fieldset&gt;</code></pre>
+<pre class="guide-code" data-lang="Java"><code>OatFieldset billing = new OatFieldset("billing").setDescription("Where the invoice goes.");
+billing.add(Oat.Behaviors.row());
+billing.add(new OatTextField&lt;String&gt;("street").add(Oat.Behaviors.col(8)),
+        new OatTextField&lt;String&gt;("city").add(Oat.Behaviors.col(4)));
+form.add(billing);</code></pre>
+<p>The grid behaviors put Oat's 12-column grid on any component, including Oat fields; it drops to one column on narrow screens. See <a href="#layout">Layout</a>.</p>
+<h3 id="login">Signing in <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#login" aria-label="Link to this section">#</a></h3>
+<p><code>OatLoginForm</code> is a complete sign-in form. Implement <code>signIn</code> with your session or security framework:</p>
+<pre class="guide-code" data-lang="Java"><code>add(new OatLoginForm("login") {
+    @Override
+    protected boolean signIn(String username, String password, boolean rememberMe) {
+        return AuthenticatedWebSession.get().signIn(username, password);   // wicket-auth-roles
+    }
+}.setRememberMe(true).setForgotPasswordLink(ResetPasswordPage.class));</code></pre>
+<p>A failed attempt says "Wrong username or password." without telling which was wrong, and clears the password. After a successful one the session gets a new id (against session fixation) and the user continues where they were going (<code>onSignedIn(target)</code> to change that). The fields carry <code>autocomplete</code> hints for password managers.</p>
+<h3 id="dialog-forms">Forms in dialogs <a class="guide-anchor" href="#dialog-forms" aria-label="Link to this section">#</a></h3>
+<p><code>OatDialog</code> is a modal on the native <code>&lt;dialog&gt;</code> element with its own form. Put fields in its body, and Confirm validates them; the dialog stays open to show errors, or closes after <code>onConfirm</code>:</p>
+<pre class="guide-code" data-lang="Java"><code>OatDialog edit = new OatDialog("edit", Model.of("Edit person")) {
+    @Override
+    protected void onConfirm(AjaxRequestTarget target) {
+        people.save(person.getObject());
+        success("Saved.");                 // report an error on a field to stay open
+    }
+};
+edit.setBody(new PersonFields(OatDialog.BODY_ID, person));
+add(edit);
+
+// From any Ajax handler:
+edit.open(target);</code></pre>
+<p>Cancel, Escape and a click on the backdrop close it. <code>setConfirmLabel</code>, <code>setConfirmVariant</code> and <code>setBusyIndicator</code> adjust the confirm button. For a whole create/edit/delete screen, see <a href="#crud">CRUD</a>.</p>
+</section>
+<section class="guide-section" aria-labelledby="tables">
+<h2 id="tables">Data tables <a class="guide-anchor" href="#tables" aria-label="Link to this section">#</a></h2>
+<h3 id="data-table">OatDataTable <a class="guide-anchor" href="#data-table" aria-label="Link to this section">#</a></h3>
+<p><code>OatDataTable</code> is Wicket's <code>DataTable</code> with Oat styling, sortable headers that show the order (and set <code>aria-sort</code>) and paging with <code>OatPagingNavigator</code>. You give it columns and an <code>ISortableDataProvider</code>, as usual:</p>
+<pre class="guide-code" data-lang="Java"><code>OatDataTable&lt;Invoice, String&gt; table = new OatDataTable&lt;&gt;("invoices", columns, provider, 10);
+table.setToolbar(id -&gt; new InvoiceSearchPanel(id, search));
+table.setEmptyState(id -&gt; Oat.Components.emptyState(id, "No invoices found"));
+add(table);</code></pre>
+<p>The table has a markup id, so <code>target.add(table)</code> re-renders it after an action. <code>getTable()</code> returns the inner <code>DataTable</code>.</p>
+<h3 id="columns">Columns <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#columns" aria-label="Link to this section">#</a></h3>
+<p>The columns in <code>dev.jbaby.wicket.oat.components.table</code> cover the common cells. Each takes a header model, an optional sort property and a lambda for the value:</p>
+<pre class="guide-code" data-lang="Java"><code>List&lt;IColumn&lt;Invoice, String&gt;&gt; columns = new ArrayList&lt;&gt;();
+columns.add(OatLinkColumn.toPage(Model.of("Number"), "number", Invoice::number,
+        InvoicePage.class, invoice -&gt; new PageParameters().add("id", invoice.id())));
+columns.add(OatLinkColumn.onClick(Model.of("Customer"), "customer", Invoice::customer,
+        (target, invoice) -&gt; showCustomer(target, invoice)));
+columns.add(new OatBadgeColumn&lt;&gt;(Model.of("Status"), "status", Invoice::status,
+        invoice -&gt; invoice.status() == Status.PAID ? OatVariant.SUCCESS : OatVariant.SECONDARY));
+columns.add(new OatNumberColumn&lt;Invoice, String&gt;(Model.of("Total"), "total", Invoice::total)
+        .setCurrency(Invoice::currency));                    // €1,234.50, right-aligned
+columns.add(new OatDateColumn&lt;&gt;(Model.of("Due"), "due", Invoice::due));
+columns.add(new OatBooleanColumn&lt;&gt;(Model.of("Exported"), Invoice::exported));</code></pre>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Column</th><th scope="col">Shows</th></tr></thead><tbody><tr><td><code>OatLinkColumn</code></td><td>a link to a page (<code>toPage</code>) or an Ajax action (<code>onClick</code>)</td></tr><tr><td><code>OatBadgeColumn</code></td><td>the value as a badge, colored per row</td></tr><tr><td><code>OatNumberColumn</code></td><td>locale-formatted, right-aligned; <code>setFractionDigits</code>, a fixed or per-row <code>setCurrency</code></td></tr><tr><td><code>OatDateColumn</code></td><td>any <code>java.time</code> value in the locale's style; <code>setStyle</code>, <code>setPattern</code>, <code>setZone</code> for <code>Instant</code>s</td></tr><tr><td><code>OatBooleanColumn</code></td><td>a read-only checkbox</td></tr><tr><td><code>OatActionsColumn</code></td><td>a "&ctdot;" menu of actions per row</td></tr><tr><td><code>OatSelectionColumn</code></td><td>row checkboxes, see below</td></tr><tr><td><code>OatRowDetailsColumn</code></td><td>a button that expands the row</td></tr><tr><td><code>OatEditableColumn</code></td><td>a cell edited in place</td></tr></tbody></table></div>
+<p>Wicket's own <code>PropertyColumn</code> and <code>LambdaColumn</code> work alongside them.</p>
+<h3 id="row-actions">Row actions <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#row-actions" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>OatActionsColumn&lt;Invoice, String&gt; actions = new OatActionsColumn&lt;&gt;();
+actions.addAction("Mark as paid", (target, invoice) -&gt; { invoices.markPaid(invoice); target.add(table); })
+        .setVisibleWhen(invoice -&gt; invoice.status() != Status.PAID);
+actions.addAction("Delete", (target, invoice) -&gt; confirm.ask(target, "Delete invoice?", null, t -&gt; ...))
+        .setVariant(OatVariant.DANGER);
+columns.add(actions);</code></pre>
+<p>Actions can show only for some rows, and a row without any shows no button.</p>
+<h3 id="selection">Selection and bulk actions <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#selection" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>IModel&lt;Set&lt;Invoice&gt;&gt; selected = new SetModel&lt;&gt;(new HashSet&lt;&gt;());
+columns.add(0, new OatSelectionColumn&lt;&gt;(selected));
+
+table.addBulkAction("Export", (target, rows) -&gt; { exports.export(rows); table.clearSelection(target); });
+table.addBulkAction(Model.of("Delete"), OatVariant.DANGER, (target, rows) -&gt; confirm.ask(...));</code></pre>
+<p>While rows are selected, a bar above the table shows how many, the bulk actions and "Clear selection". The selection lasts across pages and sorting. Rows are compared with <code>equals</code>, so give the row type a meaningful one: a record, or an entity that compares ids.</p>
+<h3 id="search">Searching <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#search" aria-label="Link to this section">#</a></h3>
+<p>Have the provider read a search model, and in the search field's Ajax handler go back to the first page:</p>
+<pre class="guide-code" data-lang="Java"><code>search.add(new AjaxFormComponentUpdatingBehavior("input") {
+    @Override
+    protected void onUpdate(AjaxRequestTarget target) {
+        table.getTable().setCurrentPage(0);
+        target.add(table);
+    }
+});</code></pre>
+<h3 id="row-details">Row details <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#row-details" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>columns.add(0, new OatRowDetailsColumn&lt;&gt;((id, order) -&gt; new OrderLinesPanel(id, order)));</code></pre>
+<p>The arrow opens a full-width panel under the row, created the first time it's opened; open rows stay open across pages and sorting. The panel is rendered on a <code>&lt;div&gt;</code>, so wrap components that need another tag (an <code>OatDescriptionList</code> needs a <code>&lt;dl&gt;</code>) in a panel or fragment.</p>
+<h3 id="editable">Editing in place <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#editable" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>columns.add(new OatEditableColumn&lt;Line, String, Integer&gt;(Model.of("Quantity"), "quantity",
+                Line::quantity, Line::setQuantity)
+        .setType(Integer.class)
+        .setRequired(true)
+        .addValidator(RangeValidator.minimum(1))
+        .onSave((target, line) -&gt; { lines.save(line); target.add(totals); }));</code></pre>
+<p>The cell shows its value as a button. Clicking it or pressing Enter turns it into a field with Save and Cancel; Enter saves, Escape cancels. The text is converted to the column's type and validated; an invalid value shows its error under the field and isn't set. Focus goes back to the cell afterwards.</p>
+<h3 id="columns-csv">Choosing columns and exporting <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#columns-csv" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>table.setColumnChooser(true);          // a "Columns" popover to hide and show columns
+table.setCsvExport("invoices.csv");    // "Export CSV"</code></pre>
+<ul><li>The <strong>column chooser</strong> lists the columns with a header text. Hidden columns are hidden with a class, so sorting and paging are unaffected; <code>setColumnVisible(index, false)</code> hides one from code.</li><li>The <strong>CSV export</strong> writes every row, on every page, in the current sort order. It has the columns with a header and a value (any <code>IExportableColumn</code>, which includes the Oat value columns), in UTF-8 with a byte order mark so spreadsheet apps read it correctly. Numbers stay plain (<code>1234.5</code>), dates are ISO 8601, and text a spreadsheet would run as a formula (<code>=</code>, <code>+</code>, <code>-</code>, <code>@</code>) is prefixed with <code>'</code>. <code>OatCsvExport.write(...)</code> gives you the same file elsewhere.</li></ul>
+<aside class="guide-note" role="note"><p>In 0.2.0, <code>OatDataTable</code> renders each row in a <code>&lt;tbody&gt;</code> of its own, so a row and its details stay together. Component paths are unchanged, but CSS written for the old structure may need a look.</p></aside>
+<h3 id="paging">Paging other lists <a class="guide-anchor" href="#paging" aria-label="Link to this section">#</a></h3>
+<p><code>OatPagingNavigator</code> and <code>OatAjaxPagingNavigator</code> render Wicket's navigators as Oat pagination, for any <code>IPageable</code> (<code>DataView</code>, <code>PageableListView</code>, <code>DataTable</code>):</p>
+<pre class="guide-code" data-lang="Java"><code>add(new OatAjaxPagingNavigator("navigator", dataView));   // the view or a parent needs a markup id</code></pre>
+</section>
+<section class="guide-section" aria-labelledby="crud">
+<h2 id="crud">CRUD <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#crud" aria-label="Link to this section">#</a></h2>
+<p><code>OatCrud</code> is a table of records with everything to manage them: "New" above it, Edit and Delete in every row's menu, an edit dialog, and a confirmation before deleting.</p>
+<pre class="guide-code" data-lang="Java"><code>OatCrud&lt;Customer, String&gt; customers = new OatCrud&lt;&gt;("customers", columns, provider, 20)
+        .setEditor((id, customer) -&gt; new CustomerFields(id, customer))
+        .setNewItem(Customer::new)
+        .setTitle(Customer::getName)
+        .onSave((target, customer) -&gt; repository.save(customer))
+        .onDelete((target, customer) -&gt; repository.delete(customer));
+add(customers);</code></pre>
+<p>The editor is a panel of fields. It gets a <code>CompoundPropertyModel</code> over the record; pass it on to the panel, and fields named after properties bind by themselves:</p>
+<pre class="guide-code" data-lang="Java"><code>public class CustomerFields extends Panel {
+    public CustomerFields(String id, IModel&lt;Customer&gt; customer) {
+        super(id, customer);
+        add(new OatTextField&lt;String&gt;("name").setRequired(true));
+        add(new OatEmailField("email"));
+        add(new OatDropdownChoice&lt;String&gt;("country", Model.ofList(COUNTRIES)));
+    }
+}</code></pre>
+<ul><li><strong>Saving:</strong> Save writes the fields to the record only when they are all valid, then calls <code>onSave</code>; Cancel leaves the record as it was. Report an error on a field in <code>onSave</code> (<code>nameField.error("Already taken")</code>) to keep the dialog open.</li><li><strong>Loading:</strong> a record to edit is loaded through the provider's <code>model(...)</code>, so a <code>LoadableDetachableModel</code> gives <code>onSave</code> a fresh entity.</li><li><strong>Options:</strong> "New" shows only with <code>setNewItem</code>, Edit only with an editor, and Delete only with <code>onDelete</code>. <code>setSearch(id -&gt; ...)</code> puts a search field beside "New", and <code>getDataTable()</code> gives the table for selection, the column chooser or CSV export.</li></ul>
+</section>
+<section class="guide-section" aria-labelledby="trees">
+<h2 id="trees">Trees <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#trees" aria-label="Link to this section">#</a></h2>
+<p><code>OatTree</code> and <code>OatTableTree</code> are Wicket's <code>NestedTree</code> and <code>TableTree</code>, styled with Oat instead of Wicket's image themes. Children load only when their parent is expanded, through an <code>ITreeProvider</code>:</p>
+<pre class="guide-code" data-lang="Java"><code>public class FolderProvider implements ITreeProvider&lt;Folder&gt; {
+    public Iterator&lt;? extends Folder&gt; getRoots() { return folders.roots().iterator(); }
+    public boolean hasChildren(Folder folder) { return folders.hasChildren(folder); }
+    public Iterator&lt;? extends Folder&gt; getChildren(Folder folder) { return folders.children(folder).iterator(); }
+    public IModel&lt;Folder&gt; model(Folder folder) { return new FolderModel(folder); }
+    public void detach() { }
+}</code></pre>
+<h3 id="tree">A tree <a class="guide-anchor" href="#tree" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>add(new OatTree&lt;&gt;("folders", new FolderProvider())
+        .setLabel(Folder::name)
+        .setIcon(folder -&gt; folder.isEmpty() ? "file" : "folder")
+        .onSelect((target, folder) -&gt; { files.show(folder); target.add(files); }));</code></pre>
+<p>With <code>onSelect</code>, labels become links and the selected node is marked with <code>aria-current</code>. Nodes are compared by the provider's models, so they need a meaningful <code>equals</code>.</p>
+<h3 id="table-tree">A tree grid <a class="guide-anchor" href="#table-tree" aria-label="Link to this section">#</a></h3>
+<p>Put a <code>TreeColumn</code> among ordinary data table columns:</p>
+<pre class="guide-code" data-lang="Java"><code>List&lt;IColumn&lt;Account, String&gt;&gt; columns = List.of(
+        new TreeColumn&lt;&gt;(Model.of("Account")),
+        new LambdaColumn&lt;&gt;(Model.of("Number"), Account::number),
+        new OatNumberColumn&lt;Account, String&gt;(Model.of("Balance"), Account::balance).setCurrency(EUR));
+add(new OatTableTree&lt;&gt;("accounts", columns, new AccountProvider(), 50).setLabel(Account::name));</code></pre>
+<p>Rows are paged, headers sort with an <code>ISortableTreeProvider</code>, and an empty tree shows "Nothing to show". In both trees the expand buttons are real buttons with <code>aria-expanded</code> and an "Expand {name}" / "Collapse {name}" label, and focus stays on the button after a toggle. <code>tree.expand(node)</code> opens a node from code.</p>
+</section>
+<section class="guide-section" aria-labelledby="page-blocks">
+<h2 id="page-blocks">Page building blocks <a class="guide-anchor" href="#page-blocks" aria-label="Link to this section">#</a></h2>
+<h3 id="page-header">Page header <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#page-header" aria-label="Link to this section">#</a></h3>
+<p><code>OatPageHeader</code> is a <code>Border</code> on a <code>&lt;header&gt;</code>: breadcrumb, title and subtitle on one side, and the tag's own content as the actions on the other.</p>
+<pre class="guide-code" data-lang="HTML"><code>&lt;header wicket:id="pageHeader"&gt;
+    &lt;div wicket:id="quickNote"&gt;&lt;/div&gt;
+    &lt;div wicket:id="newInvoice"&gt;&lt;/div&gt;
+&lt;/header&gt;</code></pre>
+<pre class="guide-code" data-lang="Java"><code>OatPageHeader header = new OatPageHeader("pageHeader", Model.of(customer.getName()))
+        .setSubtitle("Customer since 2019")
+        .setBreadcrumb(List.of(MenuItem.of("Home", HomePage.class), MenuItem.of("Customers", CustomersPage.class)));
+add(header);
+header.add(new OatPopover("quickNote", "Quick note", id -&gt; new QuickNotePanel(id, customer)));
+header.add(newInvoiceButton);</code></pre>
+<h3 id="stat-cards">Key figures <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#stat-cards" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>add(new OatStatCard("revenue", Model.of("Revenue"), () -&gt; reports.revenue())
+        .setChange(() -&gt; reports.revenueChange())       // +12.5% on a green badge
+        .setTrend(() -&gt; reports.last12Months())         // a sparkline under the figure
+        .setHint(Model.of("vs. last year")));</code></pre>
+<p><code>setChange(model, false)</code> is for figures where lower is better, so a fall shows green. Numbers follow the user's locale; pass a <code>String</code> model for amounts you format yourself.</p>
+<h3 id="description-list">Record details <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#description-list" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>add(new OatDescriptionList("details", new CompoundPropertyModel&lt;&gt;(customer))   // on a &lt;dl&gt;
+        .addProperty("vatId")                                     // label from the .properties file
+        .addItem("Billing email", Model.of(customer.getEmail()))
+        .addItem(Model.of("Status"), id -&gt; new OatBadge(id, "Active", OatVariant.SUCCESS)));</code></pre>
+<p>Labels sit beside values, stacked on narrow screens. Numbers and dates follow the locale, and an empty value shows as "&mdash;".</p>
+<h3 id="buttons">Buttons and menus <a class="guide-anchor" href="#buttons" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>// A button for the usual action, joined to a menu of related ones
+OatSplitButton newInvoice = new OatSplitButton("newInvoice", "New invoice", target -&gt; ...);
+newInvoice.addAction("New quote", target -&gt; ...);
+newInvoice.addAction("Archive customer", target -&gt; ...).setVariant(OatVariant.DANGER);
+
+// A button that opens a menu
+add(Oat.Components.dropdown("export", "Export", Model.ofList(formats), Format::label,
+        (target, format) -&gt; export(target, format)));
+
+// A button that opens a panel with any content, e.g. a small form
+add(new OatPopover("filter", "Filter", id -&gt; new FilterPanel(id, filter)));</code></pre>
+<p><code>OatButtonGroup</code> joins buttons into one control. Buttons take <code>setVariant</code>, <code>setStyle</code> (outline, ghost) and <code>setSize</code>.</p>
+<h3 id="tabs">Tabs and accordions <a class="guide-anchor" href="#tabs" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>// Only the selected tab's panel is created; switching swaps it over Ajax
+add(new OatTabbedPanel&lt;&gt;("tabs", List.of(
+        Oat.tab("Profile", ProfilePanel::new),
+        Oat.tab("Settings", SettingsPanel::new))));</code></pre>
+<p><code>OatTabs</code> renders every panel up front and switches in the browser, for small static content. <code>OatAccordion</code> (or <code>Oat.Behaviors.accordion()</code> on your own <code>&lt;details&gt;</code> elements) shows sections that open one or several at a time.</p>
+<h3 id="wizard">Steps <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#wizard" aria-label="Link to this section">#</a></h3>
+<p><code>OatWizard</code> fills a form in over several steps. Next validates the current step; Back and the numbers of finished steps go back without validating:</p>
+<pre class="guide-code" data-lang="Java"><code>OatWizard wizard = new OatWizard("wizard") {
+    @Override
+    protected void onFinish(AjaxRequestTarget target) {
+        orders.place(order);
+        setResponsePage(OrderPlacedPage.class);
+    }
+};
+wizard.addStep("Customer", id -&gt; new CustomerStep(id, order));
+wizard.addStep("Items", id -&gt; new ItemsStep(id, order));
+wizard.addStep("Review", id -&gt; new ReviewStep(id, order));</code></pre>
+<p>Each step is created when shown, so keep the data in an object all steps share. <code>onNext(step, target)</code> can check a step further and keep the user on it.</p>
+<h3 id="master-detail">List and details <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#master-detail" aria-label="Link to this section">#</a></h3>
+<p><code>OatMasterDetail</code> shows a list next to the selected item's details, one at a time on phones with a Back button:</p>
+<pre class="guide-code" data-lang="Java"><code>OatMasterDetail&lt;Customer&gt; customers = new OatMasterDetail&lt;&gt;("customers", new Model&lt;&gt;());
+customers.setMaster(id -&gt; new CustomerList(id, customers));   // its links call customers.select(target, c)
+customers.setDetail((id, customer) -&gt; new CustomerPanel(id, customer));</code></pre>
+<h3 id="timeline">Histories and notes <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#timeline" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>add(new OatTimeline&lt;&gt;("history", () -&gt; orders.history(order), Event::title, Event::at)
+        .setDescription(Event::details)
+        .setVariant(event -&gt; event.isPayment() ? OatVariant.SUCCESS : OatVariant.DEFAULT));
+
+OatMessageList&lt;Note&gt; notes = new OatMessageList&lt;&gt;("notes", () -&gt; notesOf(customer), Note::author, Note::text, Note::at);
+add(notes);
+add(new OatMessageInput("addNote", (target, text) -&gt; { save(customer, text); target.add(notes); }));</code></pre>
+<p>Messages show the author's avatar (initials by default), the time in the user's locale and the text with its line breaks.</p>
+<h3 id="small-pieces">Smaller pieces <a class="guide-anchor" href="#small-pieces" aria-label="Link to this section">#</a></h3>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Component</th><th scope="col">Use</th></tr></thead><tbody><tr><td><code>OatAlert</code></td><td>a message in the page, colored by variant</td></tr><tr><td><code>OatBadge</code></td><td>a short label or count</td></tr><tr><td><code>OatCard</code></td><td>a container with Oat's card styling</td></tr><tr><td><code>OatAvatar</code>, <code>OatAvatarGroup</code></td><td>a picture or initials, singly or overlapping</td></tr><tr><td><code>OatEmptyState</code></td><td>a placeholder for an empty list or search</td></tr><tr><td><code>OatProgress</code>, <code>OatMeter</code></td><td><code>&lt;progress&gt;</code> and <code>&lt;meter&gt;</code></td></tr><tr><td><code>OatSpinner</code>, <code>OatSkeleton</code></td><td>loading indicators</td></tr><tr><td><code>OatBreadcrumb</code></td><td>a trail of links</td></tr></tbody></table></div>
+<p>Behaviors such as <code>Oat.Behaviors.tooltip(text)</code>, <code>card()</code>, <code>badge()</code> and <code>alert()</code> give your own components the same looks.</p>
+</section>
+<section class="guide-section" aria-labelledby="navigation">
+<h2 id="navigation">Navigation and lists <a class="guide-anchor" href="#navigation" aria-label="Link to this section">#</a></h2>
+<h3 id="menu-bar">Menu bar <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#menu-bar" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>OatMenuBar commands = Oat.Components.menuBar("commands")    // on &lt;nav wicket:id="commands" aria-label="Invoice"&gt;
+        .addAction("Save", target -&gt; save(target))
+        .addLink("Reports", ReportsPage.class);              // aria-current while on that page
+commands.addMenu("Export")
+        .addAction("CSV", target -&gt; exportCsv(target))
+        .addAction(Model.of("Delete all"), OatVariant.DANGER, target -&gt; confirm.ask(...));
+add(commands);</code></pre>
+<h3 id="context-menu">Context menu <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#context-menu" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>row.add(Oat.Behaviors.contextMenu()
+        .addAction("Open", target -&gt; open(target, mail))
+        .addAction(Model.of("Delete"), OatVariant.DANGER, target -&gt; delete(target, mail)));</code></pre>
+<p>Right-click, Shift+F10 or the Menu key opens it at the pointer or under the element. Arrow keys move through it, Escape closes it, and focus returns to the element. Give the element a <code>tabindex</code> if it isn't focusable already.</p>
+<h3 id="split-layout">Split layout <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#split-layout" aria-label="Link to this section">#</a></h3>
+<pre class="guide-code" data-lang="Java"><code>add(Oat.Components.splitLayout("inbox", id -&gt; new MailList(id), id -&gt; new MailView(id))
+        .setSplit(40));                                     // the first pane's starting share, 20-80</code></pre>
+<p>The first pane is resizable by dragging its corner (the browser's own resize handle, no script). <code>setOrientation(VERTICAL)</code> stacks the panes; below 768px they are always stacked. Each pane scrolls on its own.</p>
+<h3 id="load-more">Long lists <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#load-more" aria-label="Link to this section">#</a></h3>
+<p><code>OatLoadMoreList</code> shows a batch of items and appends the next one with "Load more", without re-rendering the rest:</p>
+<pre class="guide-code" data-lang="Java"><code>add(Oat.Components.loadMoreList("mail", provider, 20, (id, mail) -&gt; new MailRow(id, mail))
+        .setLoadOnScroll(true));                            // load as the button comes into view</code></pre>
+<p>It keeps loaded rows in the page, so it suits hundreds of items rather than tens of thousands. Call <code>reset(target)</code> after the data changed.</p>
+</section>
+<section class="guide-section" aria-labelledby="charts">
+<h2 id="charts">Charts <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#charts" aria-label="Link to this section">#</a></h2>
+<p>Charts are rendered as SVG on the server, with no JavaScript library. Each is a <code>&lt;figure&gt;</code> with a title, a legend from two series on, values on hover, and a "Data" disclosure with the numbers as a table, for screen readers and anyone who wants the exact values.</p>
+<pre class="guide-code" data-lang="Java"><code>add(Oat.Components.columnChart("monthly", () -&gt; reports.monthly(), Month::label, Month::revenue)
+        .setTitle("Revenue per month")
+        .setCategoryHeader(Model.of("Month"))
+        .setValueFormat((value, locale) -&gt; euros(value, locale)));
+
+add(Oat.Components.lineChart("trend", () -&gt; reports.monthly(), Month::label)
+        .addSeries("2026", Month::revenue)
+        .addSeries("2025", Month::lastYear));
+
+add(Oat.Components.barChart("customers", () -&gt; reports.topCustomers(), Row::name, Row::revenue));
+add(Oat.Components.donutChart("regions", () -&gt; reports.byRegion(), Region::name, Region::revenue));
+add(Oat.Components.sparkline("orders", () -&gt; reports.dailyOrders()));   // on a &lt;span&gt;</code></pre>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Chart</th><th scope="col">For</th></tr></thead><tbody><tr><td><code>OatBarChart</code></td><td>comparing categories, especially with long names; rankings</td></tr><tr><td><code>OatColumnChart</code></td><td>a few ordered categories, such as months</td></tr><tr><td><code>OatLineChart</code></td><td>change over time, up to three series</td></tr><tr><td><code>OatDonutChart</code></td><td>a whole in at most six parts; the smallest beyond that become "Other"</td></tr><tr><td><code>OatSparkline</code></td><td>a small trend without axes, e.g. in a stat card or table</td></tr></tbody></table></div>
+<p>The colors come from a colorblind-safe palette with separate steps for light and dark themes. Override <code>--oat-chart-1</code> to <code>--oat-chart-8</code> in your CSS for your brand.</p>
+</section>
+<section class="guide-section" aria-labelledby="icons">
+<h2 id="icons">Icons <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#icons" aria-label="Link to this section">#</a></h2>
+<p><code>OatIcon</code> draws one of 64 <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a> icons inline, at the text's size and color:</p>
+<pre class="guide-code" data-lang="Java"><code>add(new OatIcon("edit", "pencil"));                          // &lt;svg wicket:id="edit"&gt;&lt;/svg&gt;
+add(new OatIcon("remove", "trash-2").setLabel("Delete"));   // role="img" aria-label="Delete"
+OatIcon.register("brand", "&lt;path d=\"...\"/&gt;");              // your own, 24x24</code></pre>
+<p>Without a label an icon is decorative and hidden from screen readers. <code>OatIcon.names()</code> lists them: arrows and chevrons, <code>pencil</code>, <code>trash-2</code>, <code>plus</code>, <code>search</code>, <code>mail</code>, <code>bell</code>, <code>calendar</code>, <code>user</code>, <code>users</code>, <code>settings</code>, <code>download</code>, <code>upload</code>, <code>file</code>, <code>folder</code>, <code>chart-line</code> and more.</p>
+</section>
+<section class="guide-section" aria-labelledby="layout">
+<h2 id="layout">Layout <a class="guide-anchor" href="#layout" aria-label="Link to this section">#</a></h2>
+<p>Wicket Oat uses Oat's CSS and no other CSS library. Oat styles plain HTML (<code>&lt;button&gt;</code>, <code>&lt;table&gt;</code>, <code>&lt;fieldset&gt;</code>, <code>&lt;details&gt;</code>, ...) by itself, and adds a small, fixed set of utility classes:</p>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Purpose</th><th scope="col">Classes</th></tr></thead><tbody><tr><td>Stacks</td><td><code>vstack</code> (a column), <code>hstack</code> (a wrapping row, items centered), both with a gap</td></tr><tr><td>Flexbox</td><td><code>flex</code>, <code>flex-col</code>, <code>items-center</code>, <code>justify-center</code>, <code>justify-between</code>, <code>justify-end</code></td></tr><tr><td>Gap</td><td><code>gap-1</code>, <code>gap-2</code>, <code>gap-4</code>, <code>gap-6</code></td></tr><tr><td>Margin</td><td><code>mt-2</code>, <code>mt-4</code>, <code>mt-6</code>, <code>mt-8</code>, <code>mb-2</code>, <code>mb-4</code>, <code>mb-6</code>, <code>mb-8</code></td></tr><tr><td>Padding, width</td><td><code>p-4</code>, <code>w-100</code></td></tr><tr><td>Text</td><td><code>align-left</code>, <code>align-center</code>, <code>align-right</code>, <code>text-light</code>, <code>text-lighter</code></td></tr><tr><td>Lists and links</td><td><code>unstyled</code> on a <code>ul</code>/<code>ol</code> (no bullets) or an <code>a</code> (no link styling)</td></tr><tr><td>Grid</td><td><code>container</code>, <code>row</code>, <code>col-1</code> ... <code>col-12</code>, <code>offset-1</code> ... <code>offset-6</code></td></tr></tbody></table></div>
+<p>The numbers are steps of Oat's spacing scale, and only these exist: there is no <code>gap-3</code> or <code>mt-5</code>. The grid drops to one column on narrow screens. From Java, <code>Oat.Behaviors.row()</code>, <code>col(span)</code>, <code>col(span, offset)</code>, <code>container()</code>, <code>hstack()</code> and <code>vstack()</code> add the same classes, also to Oat fields.</p>
+<pre class="guide-code" data-lang="HTML"><code>&lt;div class="row"&gt;
+    &lt;article wicket:id="revenue" class="col-4"&gt;&lt;/article&gt;
+    &lt;article wicket:id="orders" class="col-4"&gt;&lt;/article&gt;
+    &lt;article wicket:id="average" class="col-4"&gt;&lt;/article&gt;
+&lt;/div&gt;</code></pre>
+<p>For anything else, write your own CSS with Oat's variables (<code>var(--space-4)</code>, <code>var(--primary)</code>, <code>var(--border)</code>, ...), so it follows the theme.</p>
+</section>
+<section class="guide-section" aria-labelledby="theming">
+<h2 id="theming">Theming <a class="guide-anchor" href="#theming" aria-label="Link to this section">#</a></h2>
+<h3 id="themes">Themes <a class="guide-anchor" href="#themes" aria-label="Link to this section">#</a></h3>
+<p>Wicket Oat ships 19 themes: <code>LIGHT</code>, <code>DARK</code>, <code>MIDNIGHT</code>, <code>NORD</code>, <code>EVERFOREST</code>, <code>TOKYO_NIGHT</code>, <code>ROSE_PINE_DAWN</code>, <code>ROYAL</code>, <code>CLAY</code>, <code>CATPPUCCIN_MOCHA</code>, <code>CATPPUCCIN_LATTE</code>, <code>MATERIAL</code>, <code>DAISY</code>, <code>ULTRAVIOLET</code>, <code>HALLOWEEN</code>, <code>XMAS</code>, <code>WIREFRAME</code>, and <code>BUSINESS</code> / <code>BUSINESS_DARK</code> (new in 0.2.0), a sober pair for line-of-business apps. <code>OatAppLayout</code> applies the user's theme as <code>data-theme</code> on <code>&lt;html&gt;</code>; the choice is kept in a cookie, so it outlives the session.</p>
+<pre class="guide-code" data-lang="Java"><code>WicketOats.install(this)
+        .setDefaultTheme(OatTheme.LIGHT)                    // null follows the browser
+        .addTheme(new OatTheme("brand", "Brand", "🏷️"));   // defined in your CSS
+
+OatTheme.setCurrent(OatTheme.NORD);                         // during any request
+add(new OatThemeSwitcher("themes"));                        // a picker for all themes
+card.add(Oat.Behaviors.theme(OatTheme.LIGHT));              // one component pinned to a theme</code></pre>
+<p>A custom theme is a CSS block that overrides Oat's variables:</p>
+<pre class="guide-code" data-lang="CSS"><code>[data-theme="brand"] {
+    color-scheme: light;
+    --background: #fbfaf7;
+    --primary: #0b6e4f;
+    --primary-foreground: #ffffff;
+}</code></pre>
+<p>To keep the choice elsewhere, such as in a user profile, pass an <code>OatThemeStore</code> to <code>setThemeStore(...)</code> (<code>SessionThemeStore</code> is built in). Without <code>OatAppLayout</code>, add <code>Oat.Behaviors.theme()</code> to a <code>TransparentWebMarkupContainer</code> on your <code>&lt;html wicket:id="html"&gt;</code> tag.</p>
+<h3 id="density">Density <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#density" aria-label="Link to this section">#</a></h3>
+<p><code>OatDensity.COMPACT</code> tightens the spacing and uses smaller body text, for data-heavy apps:</p>
+<pre class="guide-code" data-lang="Java"><code>WicketOats.install(this).setDensity(OatDensity.COMPACT);   // the whole app
+table.add(Oat.Behaviors.density(OatDensity.COMPACT));      // or one component</code></pre>
+</section>
+<section class="guide-section" aria-labelledby="translations">
+<h2 id="translations">Translations <span class="badge new-badge" data-variant="success">New in 0.2.0</span> <a class="guide-anchor" href="#translations" aria-label="Link to this section">#</a></h2>
+<p>The texts Wicket Oat renders itself (button labels, "Load more", validation messages, screen reader labels, ...) are Wicket resources in English, German, Spanish, French, Italian, Japanese, Dutch and Portuguese. They follow the component's locale, like Wicket's own messages.</p>
+<p>To change a text or add a language, define its key in the properties of your page or of a base page, e.g. <code>BasePage_de.properties</code>:</p>
+<pre class="guide-code" data-lang="Properties"><code>OatDialog.confirm=Speichern
+OatCrud.new=Neuer Kunde</code></pre>
+<p>A component's own properties are found before the application's, so to use <code>MyApplication_de.properties</code> instead, have Wicket search it first:</p>
+<pre class="guide-code" data-lang="Java"><code>getResourceSettings().getStringResourceLoaders()
+        .add(0, new ClassStringResourceLoader(MyApplication.class));</code></pre>
+<p>Every key is in the library's <code>.properties</code> files next to its component; the key names start with the component's name, such as <code>OatDataTable.selected</code>.</p>
+</section>
+<section class="guide-section" aria-labelledby="security">
+<h2 id="security">Security and resources <a class="guide-anchor" href="#security" aria-label="Link to this section">#</a></h2>
+<h3 id="csp">Content Security Policy <a class="guide-anchor" href="#csp" aria-label="Link to this section">#</a></h3>
+<p>Wicket Oat works under Wicket's default strict, nonce-based CSP. It renders no inline scripts or <code>style</code> attributes, and <code>install</code> adds just <code>img-src data:</code> (for icons in Oat's CSS). Add sources for your own content yourself:</p>
+<pre class="guide-code" data-lang="Java"><code>getCspSettings().blocking().add(CSPDirective.IMG_SRC, "https://images.example.com");</code></pre>
+<p>The few components that need a script of their own (the context menu, inline editing, autocomplete lists in dialogs, loading on scroll) share <code>wicket-oat.js</code>, which Wicket renders with the page's nonce and which only reads <code>data-</code> attributes. They need nothing added to the policy.</p>
+<h3 id="resources">Resources <a class="guide-anchor" href="#resources" aria-label="Link to this section">#</a></h3>
+<p><code>install</code> adds Oat's CSS and JavaScript to every page. The references are public (<code>WicketOats.OAT_CSS</code>, <code>OAT_JS</code>, <code>THEMES_CSS</code>, <code>WICKET_OAT_CSS</code>, <code>WICKET_OAT_JS</code>), so Wicket's resource replacement can swap them, e.g. for a CDN:</p>
+<pre class="guide-code" data-lang="Java"><code>addResourceReplacement(WicketOats.OAT_JS,
+        new UrlResourceReference(Url.parse("https://cdn.example.com/oat.min.js")));
+
+// Or add them only to the pages that use Oat:
+WicketOats.install(this).setAddResources(false);
+// in those pages' renderHead(IHeaderResponse response):
+WicketOats.renderResources(response);</code></pre>
+<h3 id="safeguards">Other safeguards <a class="guide-anchor" href="#safeguards" aria-label="Link to this section">#</a></h3>
+<ul><li>Text is escaped everywhere; models never reach the page as raw HTML.</li><li><code>OatConfirmDialog</code> keeps the confirmed action on the server, so the browser can only run the action that was asked about, once.</li><li><code>OatLoginForm</code> replaces the session after signing in, against session fixation, and its error doesn't reveal whether the username exists.</li><li>The CSV export defuses spreadsheet formulas, and the cookie consent cookie is HttpOnly and SameSite.</li></ul>
+</section>
+<section class="guide-section" aria-labelledby="accessibility">
+<h2 id="accessibility">Accessibility <a class="guide-anchor" href="#accessibility" aria-label="Link to this section">#</a></h2>
+<p>The components are built to work with a keyboard and screen readers without extra work:</p>
+<ul><li><strong>Forms:</strong> labels are real <code>&lt;label&gt;</code>s or <code>&lt;legend&gt;</code>s; errors and hints are tied to their inputs with <code>aria-describedby</code> and <code>aria-invalid</code>; required fields say so with <code>aria-required</code>.</li><li><strong>Tables:</strong> sortable headers set <code>aria-sort</code>; checkboxes, row actions and detail toggles have names such as "Select row", "Actions" or "Show details".</li><li><strong>Menus and dialogs:</strong> dialogs use the native <code>&lt;dialog&gt;</code>, which traps focus; menus work with the arrow keys and Escape and give focus back to what opened them.</li><li><strong>Trees:</strong> expand buttons are <code>&lt;button&gt;</code>s with <code>aria-expanded</code>; the selected node has <code>aria-current</code>.</li><li><strong>Charts:</strong> every chart has its numbers in a table; the plot is one image with the chart's title as its name.</li><li><strong>Icons</strong> are hidden from screen readers unless they have a label; status colors always come with text.</li></ul>
+</section>
+<section class="guide-section" aria-labelledby="testing">
+<h2 id="testing">Testing <a class="guide-anchor" href="#testing" aria-label="Link to this section">#</a></h2>
+<p>Oat components are Wicket components, so <code>WicketTester</code> tests them. A few paths help:</p>
+<pre class="guide-code" data-lang="Java"><code>// A field's input is at "&lt;field&gt;:container:field"
+FormTester form = tester.newFormTester("form");
+form.setValue("name:container:field", "Ada");
+form.submit();
+
+// An OatDialog's form: "&lt;dialog&gt;:dialog:form", its confirm button ":confirm"
+tester.executeAjaxEvent("edit:dialog:form:confirm", "click");
+
+// Table rows are recreated on every render; find their components by type
+List&lt;AjaxCheckBox&gt; rowChecks = new ArrayList&lt;&gt;();
+page.visitChildren(AjaxCheckBox.class, (box, visit) -&gt; rowChecks.add((AjaxCheckBox) box));
+
+// Check a box as the browser would: a POST parameter, then its Ajax behavior
+AjaxCheckBox first = rowChecks.get(1);                  // 0 is "select all"
+tester.getRequest().getPostParameters().setParameterValue(first.getInputName(), "on");
+tester.executeBehavior(first.getBehaviors(AjaxFormComponentUpdatingBehavior.class).get(0));</code></pre>
+<p>Install Wicket Oat in the tester's application as in your own, e.g. a <code>MockApplication</code> whose <code>init()</code> calls <code>WicketOats.install(this)</code>; the busy indicator and the page resources depend on it.</p>
+</section>
+<section class="guide-section" aria-labelledby="ai-skill">
+<h2 id="ai-skill">AI skill <a class="guide-anchor" href="#ai-skill" aria-label="Link to this section">#</a></h2>
+<p>Wicket Oat ships an Agent Skill in the repository's <code>wicket-oat/</code> folder: a <code>SKILL.md</code> and reference files describing every component and behavior. Copy it into your agent's skills folder, for example for Claude Code:</p>
+<pre class="guide-code" data-lang="Shell"><code>cp -r wicket-oat .claude/skills/wicket-oat</code></pre>
+<p>The agent then understands requests like "add an Oat data table of invoices with a search toolbar and a delete action".</p>
+</section>
+<section class="guide-section" aria-labelledby="whats-new">
+<h2 id="whats-new">What's new in 0.2.0 <a class="guide-anchor" href="#whats-new" aria-label="Link to this section">#</a></h2>
+<p>The upcoming release adds, in short:</p>
+<ul><li><strong>Business apps:</strong> CRUD, trees and tree grids, data table selection, bulk and row actions, Oat columns, row details, editing in place, a column chooser and CSV export.</li><li><strong>Pages:</strong> page header, stat cards with trends, description lists, split buttons, popovers, a wizard, master-detail, timelines, messages, a login form.</li><li><strong>Fields:</strong> money and percent fields, input addons, suggestions, date ranges, autocomplete, multi-select, custom fields and fieldsets.</li><li><strong>Charts, icons, menus:</strong> server-rendered SVG charts, 64 icons, a menu bar, context menus, a split layout, a load-more list and cookie consent.</li><li><strong>App shell:</strong> sidebar groups and badges, busy buttons, confirm dialogs, lazy loading, the Business themes and compact density.</li><li><strong>Translations</strong> of every text into seven languages.</li></ul>
+<p>See the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a> for the details, and the <a href="https://github.com/danielbartl/wicket-oat/tree/master/wicket-oat-examples" target="_blank" rel="noopener">live examples</a> for every component in use.</p>
+</section>
+        <p class="guide-end">Something missing or unclear? <a href="https://github.com/danielbartl/wicket-oat/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>.</p>
+    </article>
+</div>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-links">
+        <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/danielbartl/wicket-oat/blob/master/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        <a href="https://oat.ink" target="_blank" rel="noopener">Built on Oat</a>
+    </div>
+    <p>Wicket Oat is an independent project and is not affiliated with the Apache Software Foundation.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.1/oat.min.js"
+        integrity="sha384-eJVbbdVUAZ/FEhLkv5jBwfngbELmd929nOOAH6CbbJpNb6MZga0aYEEd+VgaJV+O" crossorigin="anonymous"></script>
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+  var navToggle = document.getElementById('nav-toggle');
+  var navLinks = document.getElementById('site-nav-links');
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function () {
+      var isOpen = !navLinks.hidden;
+      navLinks.hidden = isOpen;
+      navToggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    navLinks.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        navLinks.hidden = true;
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  function isDark() {
+    var current = root.getAttribute('data-theme');
+    if (current === 'light') return false;
+    if (current === 'dark') return true;
+    if (current) {
+      var scheme = getComputedStyle(root).colorScheme || '';
+      return scheme.indexOf('dark') !== -1 && scheme.indexOf('light') === -1;
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  function updateToggle() {
+    if (toggle) toggle.textContent = isDark() ? '☀️' : '🌙';
+  }
+
+  window.__wicketOatUpdateToggle = updateToggle;
+  updateToggle();
+
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      window.__wicketOatSetTheme(isDark() ? 'light' : 'dark');
+    });
+  }
+
+  document.querySelectorAll('[data-set-theme]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      window.__wicketOatSetTheme(el.getAttribute('data-set-theme'));
+    });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  // On narrow screens, start with the contents closed
+  var toc = document.getElementById('guide-toc');
+  if (toc && window.matchMedia && window.matchMedia('(max-width: 960px)').matches) {
+    toc.removeAttribute('open');
+    toc.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { toc.removeAttribute('open'); });
+    });
+  }
+  // Mark the section being read in the contents
+  if (!('IntersectionObserver' in window) || !toc) return;
+  var links = {};
+  toc.querySelectorAll('a[href^="#"]').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  var current = null;
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting && links[entry.target.id]) {
+        if (current) current.removeAttribute('aria-current');
+        current = links[entry.target.id];
+        current.setAttribute('aria-current', 'true');
+        // Keep it in view in the scrolling contents (wide screens)
+        var nav = toc.parentNode;
+        if (nav.scrollHeight > nav.clientHeight) {
+          var r = current.getBoundingClientRect(), n = nav.getBoundingClientRect();
+          if (r.top < n.top + 32 || r.bottom > n.bottom - 32) {
+            nav.scrollTop += r.top - n.top - n.height / 3;
+          }
+        }
+      }
+    });
+  }, { rootMargin: '-80px 0px -70% 0px' });
+  document.querySelectorAll('.guide-content h2[id], .guide-content h3[id]').forEach(function (h) { observer.observe(h); });
+})();
+</script>
+</body>
+</html>

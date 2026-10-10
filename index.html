@@ -88,8 +88,8 @@
             <span class="badge" data-variant="secondary">Oat 0.8.1</span>
             <span class="badge" data-variant="success">MIT Licensed</span>
         </div>
-        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Charts, data tables with bulk actions, page headers, KPI cards,
-            a wizard, autocomplete, context menus and more are <a href="#new">coming with the next release</a>.</p>
+        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Charts, CRUD, trees, data tables with bulk actions and inline editing,
+            page headers, KPI cards, a wizard, autocomplete, context menus and more are <a href="#new">coming with the next release</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">View on GitHub</a>
@@ -570,6 +570,19 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Context menu</strong><code>row.add(Oat.Behaviors.contextMenu().addAction("Open", t -&gt; ...))</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="oat-tree" style="width:100%">
+                            <div class="tree-branch"><div class="tree-node"><button type="button" class="oat-junction oat-junction-expanded" aria-expanded="true" aria-label="Collapse Customers"></button><span class="tree-content"><a class="oat-tree-label" href="#components"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Customers</span></a></span></div>
+                                <div class="tree-subtree">
+                                    <div class="tree-branch"><div class="tree-node"><button type="button" class="oat-junction oat-junction-collapsed" aria-expanded="false" aria-label="Expand ACME GmbH"></button><span class="tree-content"><a class="oat-tree-label" href="#components" aria-current="true"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>ACME GmbH</span></a></span></div></div>
+                                    <div class="tree-branch"><div class="tree-node"><button type="button" class="oat-junction oat-junction-leaf" aria-hidden="true" tabindex="-1"></button><span class="tree-content"><a class="oat-tree-label" href="#components"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Globex</span></a></span></div></div>
+                                </div></div>
+                            <div class="tree-branch"><div class="tree-node"><button type="button" class="oat-junction oat-junction-collapsed" aria-expanded="false" aria-label="Expand Finance"></button><span class="tree-content"><a class="oat-tree-label" href="#components"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Finance</span></a></span></div></div>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatTree / OatTableTree</strong><code>new OatTree&lt;&gt;(id, provider).setLabel(Folder::name).onSelect(...)</code></div>
+                </div>
             </div>
         </div>
 
@@ -872,6 +885,28 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLoadMoreList</strong><code>loadMoreList(id, provider, 20, (id, item) -&gt; row).setLoadOnScroll(true)</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="oat-table-bar"><div class="oat-table-toolbar"><div class="hstack oat-crud-toolbar"><input type="search" aria-label="Search products" placeholder="Search products" class="oat-crud-search"><button type="button" class="small">New</button></div></div></div>
+                        <div class="table" style="min-width:0"><table class="w-100 align-left small" style="min-width:0">
+                            <thead><tr class="headers"><th>Name</th><th class="align-right">Price</th><th></th></tr></thead>
+                            <tbody class="oat-row"><tr><td>Docking station</td><td class="align-right">&euro;189.00</td><td class="align-right"><button type="button" class="ghost small icon" aria-label="Actions">&ctdot;</button></td></tr></tbody>
+                            <tbody class="oat-row"><tr><td>Laptop 14&quot;</td><td class="align-right">&euro;1,299.00</td><td class="align-right"><button type="button" class="ghost small icon" aria-label="Actions">&ctdot;</button></td></tr></tbody>
+                        </table></div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatCrud</strong><code>.setEditor((id, c) -&gt; new CustomerFields(id, c)).onSave(...).onDelete(...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="table" style="min-width:0"><table class="w-100 align-left small" style="min-width:0">
+                            <thead><tr class="headers"><th class="oat-details-toggle"></th><th>Product</th><th>Stock</th></tr></thead>
+                            <tbody class="oat-row"><tr><td class="oat-details-toggle"><button type="button" class="ghost small icon" aria-expanded="true" aria-label="Hide details"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></td><td>Backup, 1 TB</td><td><button type="button" class="ghost small oat-editable" aria-label="Edit Stock: 500">500</button></td></tr>
+                                <tr class="oat-row-details"><td colspan="3"><p class="text-light small" style="margin:0">Encrypted off-site backup, billed monthly.</p></td></tr></tbody>
+                            <tbody class="oat-row"><tr><td class="oat-details-toggle"><button type="button" class="ghost small icon" aria-expanded="false" aria-label="Show details"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></td><td>Docking station</td><td><form class="oat-editing" onsubmit="return false"><div class="hstack gap-1"><input type="text" class="small" value="40" aria-label="Stock" style="width:4rem;flex-basis:4rem"><button type="submit" class="small icon" aria-label="Save"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button><button type="button" class="ghost small icon" aria-label="Cancel"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div></form></td></tr></tbody>
+                        </table></div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Row details, editing in place, columns, CSV</strong><code>OatRowDetailsColumn &middot; OatEditableColumn &middot; table.setColumnChooser(true) &middot; setCsvExport("invoices.csv")</code></div>
+                </div>
             </div>
         </div>
 
@@ -1007,6 +1042,21 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         </fieldset>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatFieldset + grid behaviors</strong><code>new OatFieldset("billing") &middot; field.add(Oat.Behaviors.col(8))</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <fieldset class="oat-custom-field" style="width:100%;margin:0">
+                            <legend>Notify</legend>
+                            <div class="vstack gap-2 oat-multi-select">
+                                <ul class="unstyled hstack gap-2 oat-chips">
+                                    <li class="oat-chip"><span>Sam Rivera</span><button type="button" class="ghost small icon" aria-label="Remove Sam Rivera"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></li>
+                                    <li class="oat-chip"><span>Robin Chen</span><button type="button" class="ghost small icon" aria-label="Remove Robin Chen"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></li>
+                                </ul>
+                                <input type="text" aria-label="Notify" placeholder="Search...">
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMultiSelectField</strong><code>.setChoices(text -&gt; users.search(text)).setDisplay(User::name)</code></div>
                 </div>
             </div>
         </div>

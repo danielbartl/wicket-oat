@@ -205,9 +205,118 @@ th.wicket_orderDown a::after {
     content: "↓" / "";
 }
 
-/* The toolbar and the bar shown while rows are selected, above the table */
-.oat-table-toolbar {
+/* The toolbar (yours, on the left) and the tools (columns, export, on the right) above the table */
+.oat-table-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
     margin-block-end: var(--space-3);
+}
+
+.oat-table-bar:not(:has(> *)) {
+    display: none;
+}
+
+.oat-table-toolbar {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.oat-table-tools {
+    gap: var(--space-2);
+    margin-inline-start: auto;
+}
+
+.oat-column-chooser {
+    margin: 0;
+}
+
+.oat-column-chooser label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+}
+
+/* A column hidden with the column chooser */
+.oat-column-hidden {
+    display: none;
+}
+
+/*
+ * OatDataTable renders each row in a <tbody> of its own, followed by its details row
+ * (OatRowDetailsColumn). Oat draws the line between rows on "tbody tr"; draw it on the
+ * <tbody> instead, so a row and its details stay together.
+ */
+tbody.oat-row {
+    border-bottom: 1px solid var(--border);
+}
+
+tbody.oat-row:last-of-type {
+    border-bottom: none;
+}
+
+tbody.oat-row > tr {
+    border-bottom: none;
+}
+
+.oat-row-details > td {
+    padding-block-start: 0;
+    padding-block-end: var(--space-4);
+}
+
+:is(th, td).oat-details-toggle {
+    width: 1%;
+}
+
+.oat-details-toggle .oat-icon {
+    transition: transform var(--transition-fast);
+}
+
+.oat-details-toggle [aria-expanded="true"] .oat-icon {
+    transform: rotate(90deg);
+}
+
+/* OatEditableColumn: the value as a quiet button, and the editor in its place */
+.oat-editable {
+    justify-content: start;
+    min-width: 3rem;
+    margin-inline: calc(-1 * var(--space-2));
+    padding-inline: var(--space-2);
+    font-weight: inherit;
+    text-decoration: underline dotted var(--muted-foreground);
+    text-underline-offset: 3px;
+}
+
+.oat-editing {
+    margin: 0;
+}
+
+/* One line however narrow the column: the field gives up width, the buttons don't wrap */
+.oat-editing > .hstack {
+    flex-wrap: nowrap;
+}
+
+.oat-editing input {
+    flex: 0 1 8rem;
+    width: 8rem;
+    min-width: 3rem;
+    height: 2rem;
+}
+
+.oat-editing button {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.oat-editing-error {
+    display: block;
+    margin-block-start: var(--space-1);
+    color: var(--danger);
 }
 
 .oat-bulk-actions {
@@ -1131,4 +1240,144 @@ fieldset.oat-range-field fieldset.group {
 /* OatStatCard's trend: a sparkline under the figure */
 .oat-stat-trend {
     margin-block: var(--space-1);
+}
+
+/* OatCrud: the search (if any) and "New" above the table */
+.oat-crud-toolbar {
+    justify-content: space-between;
+}
+
+.oat-crud-search {
+    flex: 1 1 16rem;
+    min-width: 0;
+}
+
+.oat-crud-toolbar > button {
+    margin-inline-start: auto;
+}
+
+/*
+ * OatTree and OatTableTree: Wicket's tree markup (tree-node, tree-subtree, tree-branch)
+ * with Oat's tokens instead of Wicket's image themes. The expand buttons draw their
+ * chevron with borders, so no images or icon fonts are needed.
+ */
+.oat-tree .tree-subtree {
+    margin-inline-start: 0.75rem;
+    padding-inline-start: var(--space-3);
+    border-inline-start: 1px solid var(--border);
+}
+
+.oat-table-tree .tree-subtree {
+    padding-inline-start: 1.25rem;
+}
+
+:is(.oat-tree, .oat-table-tree) .tree-node {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 2rem;
+}
+
+.oat-junction {
+    padding: 0;
+    min-height: 0;
+    background: none;
+    border: 0;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--radius-small);
+    color: var(--muted-foreground);
+}
+
+.oat-junction:is(.oat-junction-expanded, .oat-junction-collapsed) {
+    cursor: pointer;
+}
+
+.oat-junction-leaf {
+    visibility: hidden;
+}
+
+.oat-junction:is(.oat-junction-expanded, .oat-junction-collapsed):hover {
+    background-color: var(--accent);
+    color: var(--foreground);
+}
+
+.oat-junction:is(.oat-junction-expanded, .oat-junction-collapsed)::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform var(--transition-fast);
+}
+
+.oat-junction.oat-junction-expanded::before {
+    transform: rotate(45deg);
+}
+
+.oat-tree-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-small);
+    color: var(--foreground);
+}
+
+a.oat-tree-label {
+    text-decoration: none;
+}
+
+a.oat-tree-label:hover,
+a.oat-tree-label[aria-current] {
+    background-color: var(--accent);
+}
+
+a.oat-tree-label[aria-current] {
+    font-weight: var(--font-medium);
+}
+
+.oat-tree-label .oat-icon {
+    color: var(--muted-foreground);
+}
+
+/* OatMultiSelectField: the chosen values as chips, the search box under them */
+.oat-chips {
+    margin: 0;
+}
+
+.oat-chips:not(:has(> li)) {
+    display: none;
+}
+
+/* Not Oat's .badge, which hides buttons inside it and caps its width */
+.oat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px 2px 2px var(--space-3);
+    border-radius: var(--radius-full);
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    font-size: var(--text-8);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+}
+
+.oat-chip button {
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    min-height: 0;
+    color: inherit;
+    background: none;
+}
+
+.oat-chip button:hover {
+    background-color: var(--accent);
 }

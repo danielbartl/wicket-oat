@@ -59,7 +59,7 @@ public class OatTree<T> extends NestedTree<T> {
         return this;
     }
 
-    /** An {@link OatIcon} name for a node, e.g. {@code "folder"}, or {@code null} for none. */
+    /** An {@link dev.jbaby.wicket.oat.components.OatIcon} name for a node, e.g. {@code "folder"}, or {@code null} for none. */
     public OatTree<T> setIcon(SerializableFunction<T, String> icon) {
         this.icon = icon;
         return this;

@@ -1,6 +1,27 @@
 # Changelog
 
-## 0.2.0 (unreleased)
+## 0.2.0 (2026-10-10)
+
+A large release for business applications: CRUD, trees, data table selection, row actions
+and editing in place, page building blocks, a wizard, charts, icons, menus, new form fields,
+the Business themes, compact density, and translations of every text into seven languages.
+See the [user guide](https://danielbartl.github.io/wicket-oat/guide.html) for all of it.
+
+### Upgrading from 0.1.x
+
+No public API was removed, so existing code compiles unchanged. A few changes can affect
+an app's own CSS or subclasses:
+
+- `OatDataTable` renders each row in a `<tbody>` of its own (to keep a row and its details
+  row together). Component paths are unchanged; CSS selectors such as `tbody > tr:nth-child(...)`
+  written for the old structure may need adjusting.
+- `wicket-oat.css` hides Wicket's Ajax placeholders (`[data-wicket-placeholder] { display: none }`),
+  as Oat's display rules for buttons could otherwise show them as empty buttons.
+- Single-input fields extend a new `BaseOatInputField` (itself a `BaseOatField`). Subclasses of
+  `BaseOatField` keep working; component paths such as `container:field` are unchanged.
+- `OatStatCard`'s figure uses proportional digits instead of tabular ones.
+
+### Changes
 
 - `OatCrud`: a table of records with New, Edit and Delete, an edit dialog whose fields
   bind through a `CompoundPropertyModel` and change the record only on a valid save, and

@@ -27,13 +27,14 @@
 
     <p class="text-light mt-6 small">A detail page built from <code>OatPageHeader</code> (breadcrumb, title, actions),
         <code>OatStatCard</code>s, an <code>OatDescriptionList</code>, an <code>OatSplitButton</code> and an
-        <code>OatPopover</code> with a form whose "Type" field suggests values from a <code>&lt;datalist&gt;</code>,
+        <code>OatPopover</code> with a form whose "Type" field suggests values from a <code>&lt;datalist&gt;</code>, an "Assign to" field looked up on the server (<code>OatAutoCompleteField</code>, its list above the popover),
         and an <code>OatTimeline</code>.</p>
     <div wicket:id="confirm"></div>
 
     <wicket:fragment wicket:id="noteFragment">
         <form wicket:id="noteForm" class="vstack gap-2">
             <div wicket:id="type"></div>
+            <div wicket:id="assignee"></div>
             <div wicket:id="text"></div>
             <footer class="hstack justify-end"><button wicket:id="saveNote"></button></footer>
         </form>

@@ -71,6 +71,15 @@ class TierCPagesTest {
     }
 
     @Test
+    void theQuickNotePopoverHasAnAutocompleteField() {
+        tester.startPage(CustomerPage.class);
+        String html = tester.getLastResponseAsString();
+        assertTrue(html.contains(">Assign to</label>"));
+        // The script that shows the suggestions above the popover (resource names are versioned)
+        assertTrue(html.contains("OatAppLayout/wicket-oat"));
+    }
+
+    @Test
     void theWizardNotifiesChosenColleagues() {
         tester.startPage(OrderWizardPage.class);
         String html = tester.getLastResponseAsString();

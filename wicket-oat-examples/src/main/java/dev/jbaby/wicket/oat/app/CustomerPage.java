@@ -8,6 +8,7 @@ import dev.jbaby.wicket.oat.components.OatConfirmDialog;
 import dev.jbaby.wicket.oat.components.OatDescriptionList;
 import dev.jbaby.wicket.oat.components.OatPageHeader;
 import dev.jbaby.wicket.oat.components.OatPopover;
+import dev.jbaby.wicket.oat.components.form.OatAutoCompleteField;
 import dev.jbaby.wicket.oat.components.OatSplitButton;
 import dev.jbaby.wicket.oat.components.OatStatCard;
 import dev.jbaby.wicket.oat.components.form.OatTextArea;
@@ -41,8 +42,11 @@ public class CustomerPage extends BasePage {
 
     public static class Note implements Serializable {
         public String type;
+        public String assignee;
         public String text;
     }
+
+    private static final List<String> COLLEAGUES = List.of("Jordan Lee", "Sam Rivera", "Alex Kim", "Taylor Morgan", "Robin Chen");
 
     private final Customer customer = new Customer();
     private final Note note = new Note();
@@ -65,10 +69,17 @@ public class CustomerPage extends BasePage {
             fragment.add(form);
             // The browser suggests these as the user types; anything else is fine too
             form.add(new OatTextField<String>("type").setSuggestions(List.of("Call", "Meeting", "Email", "Complaint")));
+            // An autocomplete inside the popover: its suggestions open above it
+            form.add(new OatAutoCompleteField<String>("assignee")
+                    .setChoices(text -> COLLEAGUES.stream()
+                            .filter(name -> name.toLowerCase(java.util.Locale.ROOT).contains(text.toLowerCase(java.util.Locale.ROOT)))
+                            .toList()));
             form.add(new OatTextArea<String>("text").setRequired(true));
             form.add(Oat.Components.submitButton("saveNote", "Save note", target -> {
-                success("Note saved" + (note.type != null ? " (" + note.type + ")" : "") + ".");
+                success("Note saved" + (note.type != null ? " (" + note.type + ")" : "")
+                        + (note.assignee != null ? " for " + note.assignee : "") + ".");
                 note.type = null;
+                note.assignee = null;
                 note.text = null;
                 quickNote.close(target);
                 target.add(fragment);

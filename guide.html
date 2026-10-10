@@ -149,9 +149,9 @@
 <pre class="guide-code" data-lang="Maven"><code>&lt;dependency&gt;
     &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
     &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
-    &lt;version&gt;0.1.1&lt;/version&gt;
+    &lt;version&gt;0.2.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
-<aside class="guide-note" role="note"><p>Sections marked <span class="badge new-badge" data-variant="success">New in 0.2.0</span> describe components in the upcoming release. They are on the <code>master</code> branch now; build it with <code>./mvnw install</code> to try them.</p></aside>
+<aside class="guide-note" role="note"><p>Sections marked <span class="badge new-badge" data-variant="success">New in 0.2.0</span> describe what this release added. Upgrading from 0.1.x? See <a href="#whats-new">What's new in 0.2.0</a>.</p></aside>
 <h3 id="install">Install it in your application <a class="guide-anchor" href="#install" aria-label="Link to this section">#</a></h3>
 <p>Call <code>WicketOats.install(this)</code> in your application's <code>init()</code>. It adds Oat's CSS and JavaScript to every page, registers the themes, hooks the busy indicator into Ajax requests, and adds the one CSP source Oat needs.</p>
 <pre class="guide-code" data-lang="Java"><code>public class MyApplication extends WebApplication {
@@ -730,9 +730,9 @@ tester.executeBehavior(first.getBehaviors(AjaxFormComponentUpdatingBehavior.clas
 </section>
 <section class="guide-section" aria-labelledby="whats-new">
 <h2 id="whats-new">What's new in 0.2.0 <a class="guide-anchor" href="#whats-new" aria-label="Link to this section">#</a></h2>
-<p>The upcoming release adds, in short:</p>
+<p>0.2.0 adds, in short:</p>
 <ul><li><strong>Business apps:</strong> CRUD, trees and tree grids, data table selection, bulk and row actions, Oat columns, row details, editing in place, a column chooser and CSV export.</li><li><strong>Pages:</strong> page header, stat cards with trends, description lists, split buttons, popovers, a wizard, master-detail, timelines, messages, a login form.</li><li><strong>Fields:</strong> money and percent fields, input addons, suggestions, date ranges, autocomplete, multi-select, custom fields and fieldsets.</li><li><strong>Charts, icons, menus:</strong> server-rendered SVG charts, 64 icons, a menu bar, context menus, a split layout, a load-more list and cookie consent.</li><li><strong>App shell:</strong> sidebar groups and badges, busy buttons, confirm dialogs, lazy loading, the Business themes and compact density.</li><li><strong>Translations</strong> of every text into seven languages.</li></ul>
-<p>See the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a> for the details, and the <a href="https://github.com/danielbartl/wicket-oat/tree/master/wicket-oat-examples" target="_blank" rel="noopener">live examples</a> for every component in use.</p>
+<p>No public API was removed, so existing code compiles unchanged. Check your own CSS if it targets data table rows: each row is now a <code>&lt;tbody&gt;</code> of its own. The <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a> has the details and the other upgrade notes, and the <a href="https://github.com/danielbartl/wicket-oat/tree/master/wicket-oat-examples" target="_blank" rel="noopener">examples</a> show every component in use.</p>
 </section>
         <p class="guide-end">Something missing or unclear? <a href="https://github.com/danielbartl/wicket-oat/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>.</p>
     </article>

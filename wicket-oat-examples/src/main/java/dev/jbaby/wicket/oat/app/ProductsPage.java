@@ -5,6 +5,7 @@ import dev.jbaby.wicket.oat.components.OatCrud;
 import dev.jbaby.wicket.oat.components.OatDescriptionList;
 import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatMoneyField;
+import dev.jbaby.wicket.oat.components.form.OatMultiSelectField;
 import dev.jbaby.wicket.oat.components.form.OatNumberField;
 import dev.jbaby.wicket.oat.components.form.OatSearchField;
 import dev.jbaby.wicket.oat.components.form.OatTextArea;
@@ -45,6 +46,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProductsPage extends BasePage {
 
     public static final List<String> CATEGORIES = List.of("Hardware", "Software", "Services", "Accessories");
+    public static final List<String> SUPPLIERS = List.of("Acme Components", "Brightline Distribution", "Contoso Supply",
+            "Northwind Traders", "Globex Wholesale", "Initech Parts");
 
     /** A product, equal by id like an entity. Getters and setters for the CompoundPropertyModel. */
     public static final class Product implements Serializable {
@@ -54,6 +57,7 @@ public class ProductsPage extends BasePage {
         private BigDecimal price;
         private Integer stock;
         private String description;
+        private List<String> suppliers = new ArrayList<>();
 
         public Product() {
         }
@@ -78,6 +82,8 @@ public class ProductsPage extends BasePage {
         public void setStock(Integer stock) { this.stock = stock; }
         public String getDescription() { return description; }
         public void setDescription(String description) { this.description = description; }
+        public List<String> getSuppliers() { return suppliers; }
+        public void setSuppliers(List<String> suppliers) { this.suppliers = suppliers; }
 
         @Override
         public boolean equals(Object other) {
@@ -172,6 +178,10 @@ public class ProductsPage extends BasePage {
             add(new OatMoneyField("price", "Price", null).setCurrency(Currency.getInstance("EUR")).setRequired(true));
             add(new OatNumberField<Integer>("stock", "Stock", null).setRequired(true));
             add(new OatTextArea<String>("description", "Description", null));
+            // An autocomplete inside the dialog: its suggestions open above it
+            add(new OatMultiSelectField<String>("suppliers", Model.of("Suppliers"), null, Model.of("Type e.g. \"co\"."))
+                    .setChoices(text -> SUPPLIERS.stream()
+                            .filter(name -> name.toLowerCase(Locale.ROOT).contains(text.toLowerCase(Locale.ROOT))).toList()));
         }
     }
 

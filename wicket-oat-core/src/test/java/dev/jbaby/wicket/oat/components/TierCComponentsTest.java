@@ -300,6 +300,44 @@ class TierCComponentsTest {
         assertThat(response).contains(".oat-junction").contains("focus()");
     }
 
+    // --- Autocomplete fields in dialogs ---
+
+    /** Both autocomplete fields in a dialog, as in a CRUD editor. */
+    public static class AutoCompleteDialogPage extends WebPage implements IMarkupResourceStreamProvider {
+        public AutoCompleteDialogPage() {
+            OatDialog dialog = new OatDialog("dialog", "Edit");
+            dialog.setBody(new FieldsPanel(OatDialog.BODY_ID));
+            add(dialog);
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><head></head><body><div wicket:id='dialog'></div></body></html>");
+        }
+    }
+
+    public static final class FieldsPanel extends Panel implements IMarkupResourceStreamProvider {
+        public FieldsPanel(String id) {
+            super(id);
+            add(new dev.jbaby.wicket.oat.components.form.OatAutoCompleteField<String>("one", "One", Model.of((String) null))
+                    .setChoices(text -> List.of("Alpha", "Beta")));
+            add(new OatMultiSelectField<String>("many", "Many", Model.ofList(new ArrayList<>()))
+                    .setChoices(text -> List.of("Alpha", "Beta")));
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<wicket:panel><div wicket:id='one'></div><div wicket:id='many'></div></wicket:panel>");
+        }
+    }
+
+    @Test
+    void autocompleteFieldsLoadTheScriptThatLiftsTheirListAboveADialog() {
+        tester.startPage(AutoCompleteDialogPage.class);
+        assertThat(html()).contains("wicket-oat.js").contains("wicket-autocomplete");
+        assertThat(html().split("wicket-oat\\.js", -1).length - 1).isEqualTo(1);
+    }
+
     // --- Multi-select ---
 
     @Test

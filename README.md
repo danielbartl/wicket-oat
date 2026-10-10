@@ -506,8 +506,9 @@ add(Oat.Components.loadMoreList("mail", provider, 20, (id, mail) -> new MailRow(
 
 `OatMultiSelectField` chooses several values, looked up on the server as the
 user types, and shows them as chips with a remove button. Like `OatAutoCompleteField`,
-it can't be used inside a modal `OatDialog`, because Wicket adds the suggestion
-list to the page body, which the dialog covers.
+it also works inside an `OatDialog` or `OatPopover`. Wicket adds the suggestion list
+to the page body, which a modal dialog would cover, so `wicket-oat.js` shows the
+list above the dialog instead. Escape then closes the list first, then the dialog.
 
 ```java
 form.add(new OatMultiSelectField<User>("members", "Members", membersModel)

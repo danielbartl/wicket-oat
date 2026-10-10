@@ -1,6 +1,9 @@
 package dev.jbaby.wicket.oat.components.form;
 
+import dev.jbaby.wicket.oat.WicketOats;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AbstractAutoCompleteTextRenderer;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
@@ -31,8 +34,8 @@ import java.util.Objects;
  * e.g. {@code setFreeText(text -> text)} for a {@code String} field where the
  * suggestions only help typing.
  * <p>
- * Not inside a modal {@code OatDialog}: Wicket adds the suggestion list to the page's
- * {@code <body>}, and a modal dialog covers everything outside it.
+ * It works inside an {@code OatDialog} or {@code OatPopover} too: {@code wicket-oat.js}
+ * shows the suggestion list above them, which Wicket alone would put behind.
  *
  * @param <T> the model object type
  */
@@ -181,5 +184,12 @@ public class OatAutoCompleteField<T> extends BaseOatInputField<T, AutoCompleteTe
         public Object convertToObject(String value, Locale locale) {
             return lookUp(value);
         }
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        // Shows the suggestion list above a dialog or popover the field is in
+        response.render(JavaScriptHeaderItem.forReference(WicketOats.WICKET_OAT_JS));
     }
 }

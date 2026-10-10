@@ -1,7 +1,10 @@
 package dev.jbaby.wicket.oat.components.form;
 
 import dev.jbaby.wicket.oat.components.OatIcon;
+import dev.jbaby.wicket.oat.WicketOats;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -42,8 +45,8 @@ import java.util.Objects;
  * Oat badges, the box is named by the field's label and each remove button by
  * {@code OatMultiSelectField.remove} ("Remove {0}").
  * <p>
- * Not inside a modal {@code OatDialog}: Wicket adds the suggestion list to the page's
- * {@code <body>}, and a modal dialog covers everything outside it.
+ * It works inside an {@code OatDialog} or {@code OatPopover} too: {@code wicket-oat.js}
+ * shows the suggestion list above them, which Wicket alone would put behind.
  *
  * @param <T> the value type
  */
@@ -220,5 +223,12 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
             super.onModelChanged();
             chosen = null; // read the new value
         }
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        // Shows the suggestion list above a dialog or popover the field is in
+        response.render(JavaScriptHeaderItem.forReference(WicketOats.WICKET_OAT_JS));
     }
 }

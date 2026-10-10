@@ -14,6 +14,10 @@
   (`OatCsvExport`: every row in the current sort order, machine-readable values, formula
   injection defused). `OatDataTable` now renders each row in a `<tbody>` of its own.
 - `OatMultiSelectField`: several values chosen from server-side suggestions, shown as chips.
+- Fix: `OatAutoCompleteField` and `OatMultiSelectField` work inside an `OatDialog` or
+  `OatPopover`. Wicket's suggestion list opened behind the modal dialog; `wicket-oat.js` now
+  moves it into the dialog and shows it in the top layer above it, and Escape closes the
+  list before the dialog.
 - `ShowsErrorsInline`: containers that show a component's error themselves are skipped by
   `NotShownInlineFilter`, so a toast doesn't repeat it.
 - `SerializableSupplier` and `ObjectModel` (a model for objects that aren't `Serializable`

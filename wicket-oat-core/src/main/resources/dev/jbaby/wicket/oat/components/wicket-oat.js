@@ -1,7 +1,8 @@
 /*
  * Wicket Oat's own script, for the few components that need one: context menus
- * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn) and loading more
- * list items on scroll (OatLoadMoreList).
+ * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn), autocomplete
+ * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField) and
+ * loading more list items on scroll (OatLoadMoreList).
  * It only reads data- attributes, so pages keep Wicket's strict, nonce-based CSP:
  * no inline scripts or event handlers.
  */
@@ -170,6 +171,79 @@
             cancel.click();
         }
     });
+
+    // ---- Autocomplete lists in dialogs and popovers ----
+    //
+    // Wicket adds an autocomplete field's suggestion list (.wicket-aa-container) to
+    // <body>. A modal <dialog> or an open popover sits in the browser's top layer, above
+    // everything in the page, so the list would open behind it. For a field inside one,
+    // move the list into it (so clicking the list counts as inside and doesn't close it)
+    // and show the list as a manual popover, in the top layer above it. A top-layer
+    // element is positioned against the page, so Wicket's own coordinates still apply.
+
+    function layerOf(container) {
+        var input = document.getElementById(container.id.replace(/-autocomplete-container$/, ''));
+        return input && input.closest ? input.closest('dialog, [popover]') : null;
+    }
+
+    function syncAutocomplete(container) {
+        var layer = layerOf(container);
+        if (!layer || !container.showPopover) {
+            return;
+        }
+        if (container.parentNode !== layer) {
+            layer.appendChild(container);
+        }
+        if (!container.hasAttribute('popover')) {
+            container.setAttribute('popover', 'manual');
+        }
+        var shown = container.style.display !== 'none' && !container.hasAttribute('hidden');
+        var open = container.matches(':popover-open');
+        if (shown && !open && layer.isConnected) {
+            container.showPopover();
+        } else if (!shown && open) {
+            container.hidePopover();
+        }
+    }
+
+    // Escape with the list open closes the list only (Wicket hides it), not the dialog
+    document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape' || !event.target || !event.target.id) {
+            return;
+        }
+        var list = document.getElementById(event.target.id + '-autocomplete-container');
+        if (list && list.hasAttribute('popover') && list.matches(':popover-open')) {
+            event.preventDefault();
+        }
+    }, true);
+
+    if ('MutationObserver' in window) {
+        var visibility = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                syncAutocomplete(mutation.target);
+            });
+        });
+        var watch = function (node) {
+            if (node.nodeType === 1 && node.classList.contains('wicket-aa-container') && !node.oatWatched) {
+                node.oatWatched = true;
+                visibility.observe(node, { attributes: true, attributeFilter: ['style', 'hidden'] });
+                syncAutocomplete(node);
+            }
+        };
+        var startWatching = function () {
+            new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    mutation.addedNodes.forEach(watch);
+                });
+            }).observe(document.body, { childList: true });
+            document.querySelectorAll('.wicket-aa-container').forEach(watch);
+        };
+        if (document.body) {
+            startWatching();
+        } else {
+            document.addEventListener('DOMContentLoaded', startWatching);
+        }
+    }
 
     // ---- Load more on scroll: clicks [data-oat-load-on-scroll] when it comes into view ----
 

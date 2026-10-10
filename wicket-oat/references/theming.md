@@ -31,7 +31,7 @@ OatTheme theme = OatTheme.current();  // the stored choice if registered, else t
 - `Oat.Behaviors.theme(OatTheme.LIGHT)` pins one component to a theme, whatever the user chose.
 
 ## Density
-Independent of the theme: `OatSettings.setDensity(OatDensity.COMPACT)` tightens spacing and body text app-wide (`DEFAULT` otherwise). `OatAppLayout` sets it as `data-density` on `<html>`; with your own base page add `Oat.Behaviors.density()` to the `<html>` container. `Oat.Behaviors.density(OatDensity.COMPACT)` makes one component compact, e.g. a large table.
+Independent of the theme: `OatSettings.setDensity(OatDensity.COMPACT)` tightens spacing and body text app-wide (`DEFAULT` otherwise). `OatAppLayout` sets it as `data-density` on `<html>`; with your own base page add `Oat.Behaviors.density()` to the `<html>` container. `Oat.Behaviors.density(OatDensity.COMPACT)` makes one component compact, e.g. a large table; `Oat.Behaviors.density(OatDensity.DEFAULT)` keeps one part at Oat's own spacing in a compact app.
 
 ## Custom Themes
 Define the CSS variables, then register the theme so it can be chosen:

@@ -910,6 +910,8 @@ WicketOats.install(this)
 
 // Or only for one component, e.g. a large table on an otherwise default page
 table.add(Oat.Behaviors.density(OatDensity.COMPACT));
+// ... or the other way round: one part at Oat's own spacing in a compact app
+form.add(Oat.Behaviors.density(OatDensity.DEFAULT));
 ```
 
 Without `OatAppLayout`, add `Oat.Behaviors.density()` next to

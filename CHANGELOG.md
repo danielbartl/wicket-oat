@@ -2,6 +2,9 @@
 
 ## 0.3.0 (unreleased)
 
+- Fix: `Oat.Behaviors.density(OatDensity.DEFAULT)` now really pins a component to Oat's own
+  spacing inside a compact app (`data-density="default"`); before, it inherited the compact
+  density. A component pinned to a density also gets that density's body text size.
 - The examples app no longer needs MongoDB or Docker, and a `Dockerfile` and `railway.toml`
   deploy it as a public demo (deployment mode, `PORT`, HTTPS behind a proxy, 5 MB uploads).
   Its upload demo has an Upload button and shows what was received.

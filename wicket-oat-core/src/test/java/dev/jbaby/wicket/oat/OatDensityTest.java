@@ -46,6 +46,12 @@ class OatDensityTest {
     }
 
     @Test
+    void aComponentCanBePinnedToTheDefaultDensityInACompactApp() {
+        OatSettings.get(tester.getApplication()).setDensity(OatDensity.COMPACT);
+        assertThat(renderedDensity(new OatDensityBehavior(OatDensity.DEFAULT))).isEqualTo("default");
+    }
+
+    @Test
     void theDensityCannotBeNull() {
         assertThatNullPointerException().isThrownBy(() -> OatSettings.get(tester.getApplication()).setDensity(null));
     }

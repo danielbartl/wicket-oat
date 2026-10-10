@@ -102,6 +102,21 @@ select[multiple] {
     --text-regular: var(--text-7);
 }
 
+/* A part pinned to Oat's own spacing (OatDensity.DEFAULT) inside a compact page: Oat's values */
+[data-density="default"] {
+    --space-2: .5rem;
+    --space-3: .75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --text-regular: var(--text-6);
+}
+
+/* A pinned part's body text follows its density (on <html>, font-size would change the rem) */
+[data-density]:not(html) {
+    font-size: var(--text-regular);
+}
+
 /*
  * A form field with a prefix or suffix (BaseOatInputField) wraps its input in Oat's
  * fieldset.group. Give the group the spacing a plain input has - Oat drops the input's

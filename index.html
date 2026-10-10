@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wicket Oat — UI Components for Apache Wicket</title>
-<meta name="description" content="Wicket Oat is a modern, themeable UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
+<meta name="description" content="Wicket Oat is a modern, themeable and accessible UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
 <link rel="canonical" href="https://danielbartl.github.io/wicket-oat/">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielbartl.github.io/wicket-oat/">
 <meta property="og:title" content="Wicket Oat — UI Components for Apache Wicket">
-<meta property="og:description" content="A modern, themeable UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
+<meta property="og:description" content="A modern, themeable and accessible UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Wicket Oat — UI Components for Apache Wicket">
-<meta name="twitter:description" content="A modern, themeable UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
+<meta name="twitter:description" content="A modern, themeable and accessible UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.3/oat.min.css"
       integrity="sha384-/A9LW2ziQPR2sphPEFhOKH2gC5Ymkr3aYOf1Er7GliGwkR3UYO2DjNWCPn/cU2MI" crossorigin="anonymous">
@@ -81,8 +81,9 @@
         <h1>Wicket Oat</h1>
         <p class="tagline">A modern, themeable component library for Apache Wicket &mdash; built on
             <a href="https://oat.ink" target="_blank" rel="noopener">Oat</a>'s ultra-lightweight,
-            semantic CSS and JS. No utility-class soup, no client framework, just Wicket the way
-            you already write it.</p>
+            semantic CSS and JS: real HTML elements that screen readers and keyboards already
+            understand. No utility-class soup, no client framework, just Wicket the way you
+            already write it.</p>
         <div class="badges">
             <span class="badge" data-variant="secondary">Wicket 10.8+</span>
             <span class="badge" data-variant="secondary">Java 17+</span>
@@ -133,10 +134,10 @@
                     like anything else in your app.</p>
             </article>
             <article class="card">
-                <h3>Accessible forms by default</h3>
-                <p>Every form field automatically wires <code>aria-describedby</code> to its feedback
-                    message, toggles <code>aria-invalid</code> on validation errors and marks
-                    required fields &mdash; no extra markup or wiring required.</p>
+                <h3>Accessible by default</h3>
+                <p>Native HTML elements, form fields wired to their error messages, full keyboard
+                    use and ARIA states built in &mdash; no extra markup on your side.
+                    <a href="#accessibility">How it works</a></p>
             </article>
             <article class="card">
                 <h3>Forms the Wicket way</h3>
@@ -166,7 +167,64 @@
     </div>
 </section>
 
-<section id="quick-start" class="section section-alt">
+<section id="accessibility" class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow">Accessibility</p>
+            <h2>Accessible because it's real HTML</h2>
+            <p>Oat styles native elements &mdash; <code>&lt;button&gt;</code>, <code>&lt;dialog&gt;</code>,
+                <code>&lt;details&gt;</code>, <code>&lt;label&gt;</code>, <code>&lt;table&gt;</code> &mdash;
+                instead of rebuilding them out of <code>&lt;div&gt;</code> elements. Screen readers, keyboards
+                and browser zoom already know how they work. Wicket Oat renders the same native
+                markup and adds the ARIA attributes that HTML can't express on its own.</p>
+        </div>
+        <div class="feature-grid">
+            <article class="card">
+                <h3>Forms that explain themselves</h3>
+                <p>Labels belong to their inputs, required fields are marked, and a validation
+                    error appears next to its field in a <code>role="status"</code> region, linked
+                    through <code>aria-describedby</code> with <code>aria-invalid</code> set.</p>
+            </article>
+            <article class="card">
+                <h3>Keyboard all the way</h3>
+                <p>Dialogs are native modal dialogs: focus stays inside and Escape closes them.
+                    Menus and context menus work with the arrow keys, Shift+F10 or the Menu key and
+                    give focus back when they close. Tree nodes expand with real buttons, and cells
+                    edited in place save with Enter and cancel with Escape.</p>
+            </article>
+            <article class="card">
+                <h3>States a screen reader can announce</h3>
+                <p><code>aria-current</code> marks the current page in navigation, breadcrumbs and
+                    pagination, <code>aria-sort</code> the sorted column, <code>aria-expanded</code>
+                    an open tree node, and <code>aria-busy</code> a button whose Ajax request is
+                    still running.</p>
+            </article>
+            <article class="card">
+                <h3>Charts you can read without seeing them</h3>
+                <p>Every chart comes with its numbers as a data table, and its marks carry text
+                    titles. Icons are hidden from screen readers unless you give them a label, and
+                    then they are announced by it.</p>
+            </article>
+            <article class="card">
+                <h3>Respects user settings</h3>
+                <p>Animations stop for users who ask for reduced motion, keyboard focus is always
+                    visible, and layouts reflow down to phone width, so zooming in doesn't mean
+                    scrolling sideways.</p>
+            </article>
+            <article class="card">
+                <h3>Labels in the user's language</h3>
+                <p>The texts only screen readers hear, such as &ldquo;Toggle menu&rdquo; or
+                    &ldquo;Expand&rdquo;, come in eight languages and follow each user's locale, like
+                    every other text the library renders.</p>
+            </article>
+        </div>
+        <p class="release-note">Wicket Oat gives you accessible building blocks, not a certificate:
+            whether an application meets WCAG 2.1 AA also depends on its content and labels, the
+            colors of the theme it uses, and testing with real assistive technology.</p>
+    </div>
+</section>
+
+<section id="quick-start" class="section">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Get Started</p>
@@ -222,7 +280,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
     </div>
 </section>
 
-<section id="applayout" class="section">
+<section id="applayout" class="section section-alt">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">The Application Frame</p>
@@ -324,7 +382,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
     </div>
 </section>
 
-<section id="components" class="section section-alt">
+<section id="components" class="section">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Component Showcase</p>
@@ -1100,7 +1158,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
     </div>
 </section>
 
-<section id="theming" class="section">
+<section id="theming" class="section section-alt">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Theming</p>
@@ -1149,7 +1207,7 @@ card.add(Oat.Behaviors.theme(OatTheme.LIGHT));</code></pre>
     </div>
 </section>
 
-<section id="ai-skill" class="section section-alt">
+<section id="ai-skill" class="section">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">AI-Powered Development</p>

@@ -5,6 +5,10 @@
 - Fix: `Oat.Behaviors.density(OatDensity.DEFAULT)` now really pins a component to Oat's own
   spacing inside a compact app (`data-density="default"`); before, it inherited the compact
   density. A component pinned to a density also gets that density's body text size.
+- The examples app looks like a business app by default: the Business theme at compact
+  density, with the current theme shown in the top navigation. On Halloween and from
+  10 to 31 December it defaults to the Halloween and Christmas themes, through its own
+  `OatThemeStore`. Its Getting Started page shows version 0.2.0.
 - The examples app no longer needs MongoDB or Docker, and a `Dockerfile` and `railway.toml`
   deploy it as a public demo (deployment mode, `PORT`, HTTPS behind a proxy, 5 MB uploads).
   Its upload demo has an Upload button and shows what was received.

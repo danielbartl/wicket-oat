@@ -15,6 +15,9 @@
                 <a wicket:id="useDefault">Back to the default</a>
             </div>
             <p class="mt-4">Or pick any registered theme with the switcher in the sidebar footer.</p>
+            <p>Until you pick one, this demo uses <code>Business</code>, except on Halloween (31 October) and at
+                Christmas (10 to 31 December): its own <code>OatThemeStore</code>, a <code>CookieThemeStore</code>
+                subclass, returns a seasonal theme when the visitor has chosen none.</p>
         </div>
 
         <article class="card mt-4" wicket:id="pinnedCard">
@@ -23,8 +26,9 @@
         </article>
 
         <div class="row mt-4">
-            <article class="card col-6">
+            <article class="card col-6" wicket:id="defaultTable">
                 <header><h3>Default density</h3></header>
+                <p>This demo is compact app-wide (<code>WicketOats.install(this).setDensity(OatDensity.COMPACT)</code>); this card is pinned to Oat's own spacing with <code>Oat.Behaviors.density(OatDensity.DEFAULT)</code>.</p>
                 <table>
                     <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th></tr></thead>
                     <tbody>
@@ -38,7 +42,7 @@
             </article>
             <article class="card col-6" wicket:id="compactTable">
                 <header><h3>Compact density</h3></header>
-                <p>Pinned with <code>Oat.Behaviors.density(OatDensity.COMPACT)</code>. For a whole app, use <code>WicketOats.install(this).setDensity(OatDensity.COMPACT)</code>; it works with every theme.</p>
+                <p>Pinned with <code>Oat.Behaviors.density(OatDensity.COMPACT)</code>, as on an otherwise default page. Compact works with every theme.</p>
                 <table>
                     <thead><tr><th>Invoice</th><th>Customer</th><th>Amount</th></tr></thead>
                     <tbody>

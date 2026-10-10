@@ -12,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import java.time.Clock;
+import java.time.ZoneId;
+
 @SpringBootApplication
 public class WicketOatApplication {
 
@@ -19,8 +22,14 @@ public class WicketOatApplication {
         SpringApplication.run(WicketOatApplication.class, args);
     }
 
+    /** The demo's calendar, for its seasonal themes: Vienna time, wherever it runs. */
     @Bean
-    WebApplication wicketApp(ApplicationContext ctx) {
+    Clock clock() {
+        return Clock.system(ZoneId.of("Europe/Vienna"));
+    }
+
+    @Bean
+    WebApplication wicketApp(ApplicationContext ctx, Clock clock) {
         return new WebApplication() {
             @Override
             public Class<? extends Page> getHomePage() {
@@ -65,10 +74,14 @@ public class WicketOatApplication {
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));
 
-                // Built-in themes plus a custom one, whose CSS is in examples.css
-                // (.setDensity(OatDensity.COMPACT) would make every page denser)
+                // Built-in themes plus a custom one, whose CSS is in examples.css. The demo
+                // looks like a business app by default - Business, compact - except on
+                // Halloween and at Christmas, unless a visitor picked a theme.
                 WicketOats.install(this)
-                        .addTheme(new OatTheme("ocean", "Ocean", "🌊"));
+                        .addTheme(new OatTheme("ocean", "Ocean", "🌊"))
+                        .setDefaultTheme(OatTheme.BUSINESS)
+                        .setDensity(OatDensity.COMPACT)
+                        .setThemeStore(new SeasonalThemeStore(clock));
 
                 // The avatar demo loads photos from Unsplash; image hosts for an app's own
                 // content are the app's to allow, on top of Wicket's strict default CSP.

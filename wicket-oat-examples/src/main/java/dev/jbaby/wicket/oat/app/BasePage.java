@@ -34,6 +34,11 @@ public class BasePage extends OatAppLayout {
     }
 
     @Override
+    protected Component createTopNavExtra(String id) {
+        return new CurrentThemeLink(id);
+    }
+
+    @Override
     protected @NonNull IModel<List<MenuItem>> sidebarMenuItemsModel() {
         return Model.ofList(List.of(
                 MenuItem.of("Home", HomePage.class),

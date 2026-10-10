@@ -28,7 +28,10 @@ public class ThemePage extends BasePage {
         pinned.add(Oat.Behaviors.theme(OatTheme.LIGHT));
         add(pinned);
 
-        // The same table at the default and at the compact density
+        // The same table at the default and at the compact density, each pinned
+        WebMarkupContainer standard = new WebMarkupContainer("defaultTable");
+        standard.add(Oat.Behaviors.density(OatDensity.DEFAULT));
+        add(standard);
         WebMarkupContainer compact = new WebMarkupContainer("compactTable");
         compact.add(Oat.Behaviors.density(OatDensity.COMPACT));
         add(compact);

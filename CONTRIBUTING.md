@@ -41,7 +41,8 @@ secrets:
 To release:
 
 1. Set the release version (`./mvnw versions:set -DnewVersion=X.Y.Z -DgenerateBackupPoms=false`),
-   update the version in the README and `CHANGELOG.md`, and commit.
+   update the version in the README, the examples' Getting Started page
+   (`GettingStartedPage.html`) and `CHANGELOG.md`, and commit.
 2. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The workflow checks
    that the tag matches the project version, publishes `wicket-oat-parent` and
    `wicket-oat-core`, and creates the GitHub release.

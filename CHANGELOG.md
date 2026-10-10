@@ -20,9 +20,15 @@ an app's own CSS or subclasses:
 - Single-input fields extend a new `BaseOatInputField` (itself a `BaseOatField`). Subclasses of
   `BaseOatField` keep working; component paths such as `container:field` are unchanged.
 - `OatStatCard`'s figure uses proportional digits instead of tabular ones.
+- Oat UI 0.8.3 (was 0.8.1) changes two things: alerts get a thick left border in their
+  variant's color, and a tooltip is now a popover. While it shows, Oat inserts a
+  `<span class="ot-tooltip">` right after the element, which sibling selectors such as
+  `:last-child` in your own CSS can notice.
 
 ### Changes
 
+- Oat UI 0.8.3: tooltips are no longer cut off by scrolling containers or hidden behind
+  dialogs, and alerts have a colored left border.
 - `OatCrud`: a table of records with New, Edit and Delete, an edit dialog whose fields
   bind through a `CompoundPropertyModel` and change the record only on a valid save, and
   a confirmation before deleting.

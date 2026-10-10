@@ -4,7 +4,7 @@
 
 Wicket Oat is a modern, lightweight, and themeable UI component library for [Apache Wicket](https://wicket.apache.org/). It provides a set of high-quality components and behaviors built on top of a sleek, modern design system.
 
-**[Live demo & docs](https://danielbartl.github.io/wicket-oat/)** &middot; **[User guide](https://danielbartl.github.io/wicket-oat/guide.html)** &middot; **[Step-by-step tutorial](https://danielbartl.github.io/wicket-oat/tutorial.html)**
+**[Live demo](https://wicket-oat-production.up.railway.app/)** &middot; **[Website](https://danielbartl.github.io/wicket-oat/)** &middot; **[User guide](https://danielbartl.github.io/wicket-oat/guide.html)** &middot; **[Step-by-step tutorial](https://danielbartl.github.io/wicket-oat/tutorial.html)**
 
 ## Features
 
@@ -917,7 +917,8 @@ Without `OatAppLayout`, add `Oat.Behaviors.density()` next to
 
 ## Running the Examples
 
-The project includes an examples module `wicket-oat-examples`. To run it:
+The project includes an examples module `wicket-oat-examples`, which also runs as the
+[live demo](https://wicket-oat-production.up.railway.app/). To run it yourself:
 
 1. Clone the repository.
 2. Install the library into your local Maven repository, so the examples

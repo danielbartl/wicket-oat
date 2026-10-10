@@ -1,0 +1,8 @@
+# Deploys the examples app (see the Dockerfile)
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+watchPatterns = ["pom.xml", "Dockerfile", "wicket-oat-core/**", "wicket-oat-examples/**"]
+
+[deploy]
+restartPolicyType = "ON_FAILURE"

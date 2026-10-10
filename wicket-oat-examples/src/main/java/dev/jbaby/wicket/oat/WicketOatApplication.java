@@ -6,6 +6,7 @@ import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.lang.Bytes;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -72,6 +73,9 @@ public class WicketOatApplication {
                 // The avatar demo loads photos from Unsplash; image hosts for an app's own
                 // content are the app's to allow, on top of Wicket's strict default CSP.
                 getCspSettings().blocking().add(CSPDirective.IMG_SRC, "https://images.unsplash.com");
+
+                // A public demo: cap uploads (Wicket's default is unlimited)
+                getApplicationSettings().setDefaultMaximumUploadSize(Bytes.megabytes(5));
             }
         };
     }

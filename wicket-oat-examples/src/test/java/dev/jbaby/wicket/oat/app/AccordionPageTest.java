@@ -1,15 +1,12 @@
 package dev.jbaby.wicket.oat.app;
 
-import dev.jbaby.wicket.oat.TestcontainersConfiguration;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.apache.wicket.protocol.http.WebApplication;
 
-@Import(TestcontainersConfiguration.class)
 @SpringBootTest
 class AccordionPageTest {
 

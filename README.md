@@ -926,14 +926,27 @@ The project includes an examples module `wicket-oat-examples`. To run it:
    ```bash
    ./mvnw install -DskipTests
    ```
-3. Run the application using Maven (it starts MongoDB through Docker Compose,
-   so Docker must be running; the argument points it at the repository's
-   `compose.yaml`, since the app runs in the module directory):
+3. Run the application using Maven (it needs no database or Docker):
    ```bash
-   ./mvnw spring-boot:run -pl wicket-oat-examples \
-       -Dspring-boot.run.arguments=--spring.docker.compose.file=../compose.yaml
+   ./mvnw spring-boot:run -pl wicket-oat-examples
    ```
 4. Access the demo at `http://localhost:8080/`.
+
+### Deploying the Examples
+
+The repository's `Dockerfile` builds the examples app into a container that runs Wicket in
+deployment mode, and `railway.toml` deploys it on [Railway](https://railway.com) from the
+repository. On other hosts:
+
+```bash
+docker build -t wicket-oat-examples .
+docker run -p 8080:8080 wicket-oat-examples
+```
+
+The app listens on `PORT` (default 8080) and trusts the hosting proxy's `X-Forwarded-*`
+headers, so it can run behind HTTPS. `JAVA_TOOL_OPTIONS` overrides the default JVM
+options (`-Xmx384m -XX:+UseSerialGC`). Each visitor's demo data lives in their own
+session, and uploads are limited to 5 MB.
 
 ## AI-Powered Development
 

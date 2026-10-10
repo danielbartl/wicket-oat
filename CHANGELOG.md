@@ -2,6 +2,10 @@
 
 ## 0.3.0 (unreleased)
 
+- The examples app no longer needs MongoDB or Docker, and a `Dockerfile` and `railway.toml`
+  deploy it as a public demo (deployment mode, `PORT`, HTTPS behind a proxy, 5 MB uploads).
+  Its upload demo has an Upload button and shows what was received.
+
 ## 0.2.0 (2026-10-10)
 
 A large release for business applications: CRUD, trees, data table selection, row actions

@@ -4,9 +4,12 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.settings.RequestCycleSettings;
+import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,6 +53,28 @@ class WicketOatsTest {
         assertThat(html).contains("oat-app-main").contains("oat-breadcrumb").contains("title=\"Midnight\"");
         // Inline style attributes are blocked by the strict CSP's nonce-only style-src
         assertThat(html).doesNotContain("style=");
+    }
+
+    @Test
+    void theLayoutSetsThePageLanguage() {
+        tester.getSession().setLocale(Locale.forLanguageTag("de-AT"));
+        tester.startPage(LayoutTestPage.class);
+
+        assertThat(TagTester.createTagByName(tester.getLastResponseAsString(), "html").getAttribute("lang")).isEqualTo("de-AT");
+    }
+
+    @Test
+    void theLayoutHasASkipLinkToTheMainContent() {
+        tester.getSession().setLocale(Locale.GERMANY);
+        tester.startPage(LayoutTestPage.class);
+        String html = tester.getLastResponseAsString();
+
+        TagTester skip = TagTester.createTagByAttribute(html, "class", "oat-skip-link");
+        assertThat(skip.getAttribute("href")).isEqualTo("#oat-main");
+        assertThat(skip.getValue().replaceAll("<[^>]+>", "")).isEqualTo("Zum Inhalt springen");   // without dev mode's wicket: tags
+        assertThat(TagTester.createTagByName(html, "main").getAttribute("id")).isEqualTo("oat-main");
+        // It comes before the navigation, so it is the first stop for Tab
+        assertThat(html.indexOf("oat-skip-link")).isLessThan(html.indexOf("data-topnav"));
     }
 
     @Test

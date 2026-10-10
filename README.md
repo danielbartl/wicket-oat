@@ -223,6 +223,14 @@ To update it without reloading the page, re-render the sidebar from an Ajax
 handler with `target.add(sidebar)`. Pages the user isn't authorized to open are
 left out, and so is a group left empty. Groups can't contain other groups.
 
+### Page language and skip link
+
+`OatAppLayout` sets the page's `lang` on `<html>` from its locale (the session's,
+unless you override `getLocale()`), so screen readers pronounce the content in
+the right language. Its first element is a "Skip to content" link: hidden until
+it gets keyboard focus, it moves focus past the top navigation and sidebar to
+`<main id="oat-main">`.
+
 ### Busy buttons
 
 For a slow action, a button can show that it's working: with
@@ -713,6 +721,7 @@ getResourceSettings().getStringResourceLoaders()
 | :--- | :--- |
 | `OatDialog.cancel` / `OatDialog.confirm` | Cancel / Confirm |
 | `OatAppLayout.toggleMenu` | Toggle menu |
+| `OatAppLayout.skipToContent` | Skip to content |
 | `OatAppLayout.title` / `OatAppLayout.name` | Wicket Oat Application (not translated: meant to be overridden) |
 | `OatPagingNavigator.label` | Pagination |
 | `OatFileDropzone.choose` / `OatFileDropzone.hint` | Choose files / Drop files here or click to choose |

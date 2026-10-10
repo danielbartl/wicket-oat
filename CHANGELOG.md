@@ -2,6 +2,9 @@
 
 ## 0.3.0 (unreleased)
 
+- `OatAppLayout` sets the page's `lang` on `<html>` from its locale, and starts with a
+  "Skip to content" link (`OatAppLayout.skipToContent`, translated), shown only while it has
+  keyboard focus, that moves focus to `<main id="oat-main">`.
 - Fix: `Oat.Behaviors.density(OatDensity.DEFAULT)` now really pins a component to Oat's own
   spacing inside a compact app (`data-density="default"`); before, it inherited the compact
   density. A component pinned to a density also gets that density's body text size.

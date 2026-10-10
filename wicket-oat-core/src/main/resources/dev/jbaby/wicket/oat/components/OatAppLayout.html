@@ -7,6 +7,8 @@
 </head>
 <body data-sidebar-layout>
 
+<a class="oat-skip-link" href="#oat-main"><wicket:message key="OatAppLayout.skipToContent">Skip to content</wicket:message></a>
+
 <header data-topnav wicket:id="topNav">
     <button data-sidebar-toggle wicket:message="aria-label:OatAppLayout.toggleMenu" class="outline">☰</button>
     <span wicket:id="appName">App Name</span>
@@ -36,7 +38,7 @@
     </footer>
 </aside>
 
-<main class="oat-app-main">
+<main class="oat-app-main" id="oat-main" tabindex="-1">
     <wicket:child/>
 </main>
 

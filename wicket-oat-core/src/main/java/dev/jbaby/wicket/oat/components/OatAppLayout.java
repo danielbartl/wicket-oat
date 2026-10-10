@@ -23,6 +23,10 @@ import java.util.List;
 /**
  * Base page providing the Oat UI application layout (sidebar + topnav).
  * Override factory methods (e.g., {@link #createFooter(String)}) to customize the layout.
+ * <p>
+ * The {@code <html>} tag gets the page's {@code lang} from its locale, and a "Skip to
+ * content" link ({@code OatAppLayout.skipToContent}), shown when it has keyboard focus,
+ * jumps past the navigation to {@code <main id="oat-main">}.
  */
 public abstract class OatAppLayout extends WebPage {
 
@@ -48,6 +52,11 @@ public abstract class OatAppLayout extends WebPage {
         TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
         html.add(new OatThemeBehavior());
         html.add(new OatDensityBehavior());
+        // The page's language, for screen readers' pronunciation and the browser's hyphenation
+        html.add(AttributeModifier.replace("lang", (IModel<String>) () -> {
+            String tag = getLocale().toLanguageTag();
+            return "und".equals(tag) ? null : tag;
+        }));
         add(html);
     }
 

@@ -16,6 +16,33 @@
     padding-inline: var(--space-6);
 }
 
+/* The skip link moves focus to <main>; it needs no focus ring of its own */
+.oat-app-main:focus {
+    outline: none;
+}
+
+/*
+ * OatAppLayout's skip link: the first stop for Tab, shown only while it has focus, so
+ * keyboard and screen-reader users can jump past the navigation to the content.
+ */
+.oat-skip-link {
+    position: fixed;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: calc(var(--z-modal) + 1);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-medium);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: var(--font-semibold);
+    text-decoration: none;
+    transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.oat-skip-link:focus {
+    transform: none;
+}
+
 .oat-topnav-extra {
     flex: 1;
 }

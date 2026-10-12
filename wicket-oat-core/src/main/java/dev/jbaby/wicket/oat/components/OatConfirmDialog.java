@@ -3,7 +3,6 @@ package dev.jbaby.wicket.oat.components;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.util.SerializableConsumer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -26,7 +25,7 @@ import org.apache.wicket.model.Model;
  * }</pre>
  * The action is kept on the server until the user answers, so the browser can't run
  * anything but the action that was asked about, and only once. Cancel (or Escape)
- * closes the dialog without running it.
+ * closes the dialog without running it, and the server forgets the action.
  * <p>
  * The confirm button is a danger button by default, since confirmation is mostly asked
  * for destructive actions; use {@link #setConfirmVariant} and {@link #setConfirmLabel}
@@ -39,14 +38,14 @@ public class OatConfirmDialog extends OatDialog {
 
     public OatConfirmDialog(String id) {
         super(id, new Model<>());
-        message = new Label(BODY_ID, new Model<String>()) {
+        message = new Label(CONTENT_ID, new Model<String>()) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
                 setVisible(getDefaultModelObject() != null);
             }
         };
-        setBody(message);
+        setContent(message);
         setConfirmVariant(OatVariant.DANGER);
     }
 
@@ -57,7 +56,7 @@ public class OatConfirmDialog extends OatDialog {
      * @param header the question, e.g. "Delete invoice?"
      * @param message more detail, e.g. "This can't be undone.", or {@code null}
      */
-    public OatConfirmDialog ask(IPartialPageRequestHandler target, String header, String message,
+    public OatConfirmDialog ask(AjaxRequestTarget target, String header, String message,
                                 SerializableConsumer<AjaxRequestTarget> onConfirm) {
         return ask(target, Model.of(header), Model.of(message), onConfirm);
     }
@@ -69,7 +68,7 @@ public class OatConfirmDialog extends OatDialog {
      * @param header the question, e.g. "Delete invoice?"
      * @param message more detail, e.g. "This can't be undone.", or {@code null}
      */
-    public OatConfirmDialog ask(IPartialPageRequestHandler target, IModel<String> header, IModel<String> message,
+    public OatConfirmDialog ask(AjaxRequestTarget target, IModel<String> header, IModel<String> message,
                                 SerializableConsumer<AjaxRequestTarget> onConfirm) {
         this.action = onConfirm;
         setHeader(header);
@@ -118,5 +117,15 @@ public class OatConfirmDialog extends OatDialog {
         if (pending != null) {
             pending.accept(target);
         }
+    }
+
+    /**
+     * Forgets the action asked about, so it can't run once the user cancelled. A subclass
+     * overriding this calls {@code super.onClose(target)}.
+     */
+    @Override
+    protected void onClose(AjaxRequestTarget target) {
+        action = null;
+        super.onClose(target);
     }
 }

@@ -105,6 +105,12 @@ public class OatCrud<T, S> extends Panel {
             protected void onConfirm(AjaxRequestTarget target) {
                 save(target);
             }
+
+            @Override
+            protected void onClose(AjaxRequestTarget target) {
+                // Saved or cancelled: the dialog dropped the fields, and the record goes too
+                editing = null;
+            }
         };
         editor.setConfirmLabel(new StringResourceModel("OatCrud.save", this).setDefaultValue("Save"));
         editor.setBusyIndicator(true);
@@ -199,13 +205,13 @@ public class OatCrud<T, S> extends Panel {
     private void open(AjaxRequestTarget target, IModel<T> model, boolean isNew) {
         editing = model;
         editingNew = isNew;
-        Component fields = editorFactory.apply(OatDialog.BODY_ID, new CompoundPropertyModel<>(model));
-        if (fields == null || !OatDialog.BODY_ID.equals(fields.getId())) {
-            throw new IllegalArgumentException("The editor must use the id passed to the factory (\"" + OatDialog.BODY_ID
+        Component fields = editorFactory.apply(OatDialog.CONTENT_ID, new CompoundPropertyModel<>(model));
+        if (fields == null || !OatDialog.CONTENT_ID.equals(fields.getId())) {
+            throw new IllegalArgumentException("The editor must use the id passed to the factory (\"" + OatDialog.CONTENT_ID
                     + "\"), but was " + (fields == null ? "null" : "\"" + fields.getId() + "\""));
         }
-        editor.setBody(fields);
-        editor.open(target);
+        // Removed again when the dialog closes
+        editor.open(fields, target);
     }
 
     private void save(AjaxRequestTarget target) {

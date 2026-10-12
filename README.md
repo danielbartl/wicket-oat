@@ -160,9 +160,11 @@ option: it has an overload that binds the variant to a reactive
 the constructor and the factory, so pick whichever shape matches what you
 already have on hand.
 
-`OatDialog` can be opened and closed from any Ajax handler with
-`dialog.open(target)` / `dialog.close(target)`, and validates the form fields in
-its body when Confirm is clicked, staying open to show any errors:
+`OatDialog` works like Wicket's own `ModalDialog`, on the native `<dialog>`
+element: set its content with `setContent(...)` (id `OatDialog.CONTENT_ID`), and
+open and close it from any Ajax handler with `dialog.open(target)` /
+`dialog.close(target)`. It validates the form fields in its content when Confirm is
+clicked, staying open to show any errors:
 
 ```java
 OatDialog editDialog = new OatDialog("editDialog", Model.of("Edit person")) {
@@ -170,13 +172,24 @@ OatDialog editDialog = new OatDialog("editDialog", Model.of("Edit person")) {
     protected void onConfirm(AjaxRequestTarget target) {
         success("Saved."); // closes afterwards, unless an error was reported here
     }
+
+    @Override
+    protected void onClose(AjaxRequestTarget target) {
+        selectedPerson.setObject(null); // saved, cancelled, Escape or a click beside it
+    }
 };
-editDialog.setBody(new PersonFieldsPanel(OatDialog.BODY_ID, selectedPerson));
+editDialog.setContent(new PersonFieldsPanel(OatDialog.CONTENT_ID, selectedPerson));
 
 // e.g. in a table row's AjaxLink:
 selectedPerson.setObject(person);
 editDialog.open(target);
 ```
+
+The server knows whether the dialog is open (`isOpen()`): Cancel, the Escape key
+and a click on the backdrop close it in the browser and tell the server, and
+`onClose` runs once however it closed. Re-rendering it with `target.add(dialog)`
+keeps an open dialog open. `open(content, target)` sets content that is removed
+again when the dialog closes, e.g. the fields for the row that was clicked.
 
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,

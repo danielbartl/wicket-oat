@@ -179,14 +179,14 @@ class TierCComponentsTest {
         assertThat(html()).contains(">New entry<").contains(">Save<");
 
         FormTester form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:input", "");
+        form.setValue("content:name:input", "");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.log).isEmpty();
         assertThat(page.customers).hasSize(2);
 
         form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:input", "Initech");
-        form.setValue("body:city:input", "Munich");
+        form.setValue("content:name:input", "Initech");
+        form.setValue("content:city:input", "Munich");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.log).containsExactly("saved Initech/Munich");
         assertThat(page.customers).hasSize(3);
@@ -201,16 +201,29 @@ class TierCComponentsTest {
 
         // An invalid submit leaves the record untouched
         FormTester form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:input", "");
-        form.setValue("body:city:input", "Graz");
+        form.setValue("content:name:input", "");
+        form.setValue("content:city:input", "Graz");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.customers.get(0).city).isEqualTo("Vienna");
 
         form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:input", "ACME GmbH");
-        form.setValue("body:city:input", "Graz");
+        form.setValue("content:name:input", "ACME GmbH");
+        form.setValue("content:city:input", "Graz");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.log).containsExactly("saved ACME GmbH/Graz");
+    }
+
+    @Test
+    void cancellingTheEditorDropsItsFields() {
+        CrudPage page = tester.startPage(CrudPage.class);
+        tester.executeAjaxEvent(menuItem(page, "rows:1", 0), "click");
+        assertThat(page.crud.getEditor().getForm().get("content:name")).isNotNull();
+
+        tester.executeAjaxEvent("crud:editor:dialog", "close"); // Cancel in the browser
+
+        assertThat(page.crud.getEditor().isOpen()).isFalse();
+        assertThat(page.crud.getEditor().getForm().get("content:name")).isNull();
+        assertThat(page.log).isEmpty();
     }
 
     @Test
@@ -306,7 +319,7 @@ class TierCComponentsTest {
     public static class AutoCompleteDialogPage extends WebPage implements IMarkupResourceStreamProvider {
         public AutoCompleteDialogPage() {
             OatDialog dialog = new OatDialog("dialog", "Edit");
-            dialog.setBody(new FieldsPanel(OatDialog.BODY_ID));
+            dialog.setContent(new FieldsPanel(OatDialog.CONTENT_ID));
             add(dialog);
         }
 

@@ -38,6 +38,7 @@ class OatDialogTest {
         public final OatTextField<String> nameField;
         public final OatDialog dialog;
         public int confirmed;
+        public int closed;
         public int outerSubmitted;
         public String rejectName;
         private final boolean nested;
@@ -65,17 +66,40 @@ class OatDialogTest {
                     }
                     confirmed++;
                 }
+
+                @Override
+                protected void onClose(AjaxRequestTarget target) {
+                    closed++;
+                }
             };
             nameField = new OatTextField<String>("name", "Name", name).setRequired(true);
-            Fragment body = new Fragment(OatDialog.BODY_ID, "fields", this);
+            Fragment body = new Fragment(OatDialog.CONTENT_ID, "fields", this);
             body.add(nameField);
-            dialog.setBody(body);
+            dialog.setContent(body);
             parent.add(dialog);
 
             add(new AjaxLink<Void>("open") {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
                     dialog.open(target);
+                }
+            });
+            add(new AjaxLink<Void>("openOnce") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    dialog.open(new Label(OatDialog.CONTENT_ID, "Just this once"), target);
+                }
+            });
+            add(new AjaxLink<Void>("refresh") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    target.add(dialog);
+                }
+            });
+            add(new AjaxLink<Void>("close") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    dialog.close(target);
                 }
             });
         }
@@ -85,7 +109,8 @@ class OatDialogTest {
             String dialogTag = "<div wicket:id='dialog'></div>";
             return new StringResourceStream("<html><body>"
                     + (nested ? "<form wicket:id='outer'>" + dialogTag + "</form>" : dialogTag)
-                    + "<a wicket:id='open'>Edit</a>"
+                    + "<a wicket:id='open'>Edit</a><a wicket:id='openOnce'>Once</a>"
+                    + "<a wicket:id='refresh'>Refresh</a><a wicket:id='close'>Close</a>"
                     + "<wicket:fragment wicket:id='fields'><div wicket:id='name'></div></wicket:fragment>"
                     + "</body></html>");
         }
@@ -95,7 +120,7 @@ class OatDialogTest {
     void theDialogsFormIsADirectChildOfTheDialogElement() {
         tester.startPage(new DialogPage(false));
 
-        TagTester form = tester.getTagByWicketId("dialog").getChild("form");
+        TagTester form = TagTester.createTagByName(tester.getLastResponseAsString(), "dialog").getChild("form");
         assertThat(form).isNotNull();
         assertThat(form.getAttribute("class")).isEqualTo("oat-dialog-form");
         // Without a trigger label there is no trigger button
@@ -109,10 +134,86 @@ class OatDialogTest {
 
         tester.clickLink("open");
 
-        tester.assertComponentOnAjaxResponse("dialog:dialog:form");
+        assertThat(page.dialog.isOpen()).isTrue();
+        tester.assertComponentOnAjaxResponse("dialog");
         String response = tester.getLastResponseAsString();
         assertThat(response).contains("value=\"Grace\"");
         assertThat(response).contains(".showModal()");
+    }
+
+    @Test
+    void thePanelRendersItsOwnTagSoItCanBeReRendered() {
+        tester.startPage(new DialogPage(false));
+
+        TagTester panel = tester.getTagByWicketId("dialog");
+        assertThat(panel.getName()).isEqualTo("div");
+        assertThat(panel.getAttribute("class")).isEqualTo("oat-dialog");
+        assertThat(panel.getAttribute("id")).isNotBlank();
+    }
+
+    @Test
+    void reRenderingAnOpenDialogKeepsItOpen() {
+        tester.startPage(new DialogPage(false));
+        tester.clickLink("refresh");
+        tester.assertComponentOnAjaxResponse("dialog");
+        assertThat(tester.getLastResponseAsString()).doesNotContain(".showModal()");
+
+        tester.clickLink("open");
+        tester.clickLink("refresh");
+        assertThat(tester.getLastResponseAsString()).contains(".showModal()");
+    }
+
+    @Test
+    void closingInTheBrowserTellsTheServer() {
+        DialogPage page = tester.startPage(new DialogPage(false));
+        // Not for a close the server asked for, nor for a dialog replaced by a re-render
+        assertThat(tester.getLastResponseAsString()).contains("data-oat-closing").contains("isConnected");
+        tester.clickLink("open");
+
+        // Cancel, Escape or a click on the backdrop
+        tester.executeAjaxEvent("dialog:dialog", "close");
+
+        assertThat(page.dialog.isOpen()).isFalse();
+        assertThat(page.closed).isEqualTo(1);
+    }
+
+    @Test
+    void closeRunsOnCloseOnceAndOnlyWhenOpen() {
+        DialogPage page = tester.startPage(new DialogPage(false));
+        tester.clickLink("close");
+        assertThat(page.closed).isZero();
+
+        tester.clickLink("open");
+        tester.clickLink("close");
+        tester.clickLink("close");
+
+        assertThat(page.closed).isEqualTo(1);
+        assertThat(page.dialog.isOpen()).isFalse();
+        // Marked, so the browser doesn't report this close back
+        assertThat(tester.getLastResponseAsString()).contains("setAttribute('data-oat-closing','')").contains(".close()");
+    }
+
+    @Test
+    void contentOpenedWithTheDialogIsRemovedWhenItCloses() {
+        DialogPage page = tester.startPage(new DialogPage(false));
+        tester.clickLink("openOnce");
+        tester.assertLabel("dialog:dialog:form:content", "Just this once");
+
+        tester.executeAjaxEvent("dialog:dialog", "close");
+
+        assertThat(page.dialog.getForm().get(OatDialog.CONTENT_ID)).isNotInstanceOf(Label.class);
+        tester.assertComponentOnAjaxResponse("dialog:dialog:form");
+    }
+
+    @Test
+    void theTriggerTellsTheServerTheDialogIsOpen() {
+        OatDialog dialog = new OatDialog("dialog", "Open", "Title");
+        tester.startComponentInPage(dialog);
+        assertThat(dialog.isOpen()).isFalse();
+
+        tester.executeAjaxEvent("dialog:trigger", "click");
+
+        assertThat(dialog.isOpen()).isTrue();
     }
 
     @Test
@@ -120,10 +221,12 @@ class OatDialogTest {
         DialogPage page = tester.startPage(new DialogPage(false));
 
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:input", "Grace");
+        formTester.setValue("content:name:input", "Grace");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
 
         assertThat(page.confirmed).isEqualTo(1);
+        assertThat(page.closed).isEqualTo(1);
+        assertThat(page.dialog.isOpen()).isFalse();
         assertThat(page.name.getObject()).isEqualTo("Grace");
         assertThat(tester.getLastResponseAsString()).contains(".close()");
     }
@@ -133,7 +236,7 @@ class OatDialogTest {
         DialogPage page = tester.startPage(new DialogPage(false));
 
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:input", "");
+        formTester.setValue("content:name:input", "");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
 
         assertThat(page.confirmed).isZero();
@@ -149,7 +252,7 @@ class OatDialogTest {
         page.rejectName = "Taken";
 
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:input", "Taken");
+        formTester.setValue("content:name:input", "Taken");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
 
         String response = tester.getLastResponseAsString();
@@ -161,7 +264,7 @@ class OatDialogTest {
     void openDiscardsInputLeftFromAFailedConfirm() {
         tester.startPage(new DialogPage(false));
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:input", "");
+        formTester.setValue("content:name:input", "");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
         tester.cleanupFeedbackMessages();
 
@@ -181,7 +284,7 @@ class OatDialogTest {
 
         // Confirming submits just the dialog's (nested) form
         FormTester formTester = tester.newFormTester("outer:dialog:dialog:form");
-        formTester.setValue("body:name:input", "Grace");
+        formTester.setValue("content:name:input", "Grace");
         tester.executeAjaxEvent("outer:dialog:dialog:form:confirm", "click");
         assertThat(page.confirmed).isEqualTo(1);
         assertThat(page.name.getObject()).isEqualTo("Grace");
@@ -193,7 +296,7 @@ class OatDialogTest {
 
         // The dialog's required field is empty, but the dialog isn't what's submitted
         FormTester formTester = tester.newFormTester("outer");
-        formTester.setValue("dialog:dialog:form:body:name:input", "");
+        formTester.setValue("dialog:dialog:form:content:name:input", "");
         formTester.submit();
 
         tester.assertNoErrorMessage();
@@ -219,10 +322,10 @@ class OatDialogTest {
     }
 
     @Test
-    void setBodyRejectsTheWrongId() {
+    void setContentRejectsTheWrongId() {
         OatDialog dialog = new OatDialog("dialog", "Title");
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> dialog.setBody(new Label("content", "Hi")))
-                .withMessageContaining("OatDialog.BODY_ID");
+                .isThrownBy(() -> dialog.setContent(new Label("body", "Hi")))
+                .withMessageContaining("OatDialog.CONTENT_ID");
     }
 }

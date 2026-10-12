@@ -91,8 +91,7 @@ class NewComponentsTest {
         OatDialog dialog = new OatDialog("dialog", Model.of("Open dialog"), Model.of("Title"));
         tester.startComponentInPage(dialog);
 
-        TagTester dialogTag = tester.getTagByWicketId("dialog");
-        assertThat(dialogTag.getName()).isEqualTo("dialog");
+        TagTester dialogTag = TagTester.createTagByName(tester.getLastResponseAsString(), "dialog");
         assertThat(dialogTag.getAttribute("closedby")).isEqualTo("any");
         String dialogMarkupId = dialogTag.getAttribute("id");
 

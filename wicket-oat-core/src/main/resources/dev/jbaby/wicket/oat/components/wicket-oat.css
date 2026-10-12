@@ -52,6 +52,14 @@
 }
 
 /*
+ * OatDialog's own tag only wraps its trigger button and the <dialog>, which shows in the
+ * top layer. It gets no box of its own, so the trigger lays out as if it stood there alone.
+ */
+.oat-dialog {
+    display: contents;
+}
+
+/*
  * An OatDialog inside another Wicket form renders its own form as a <div>, because
  * HTML forbids nested forms. Mirror Oat's "dialog > form > ..." rules for that case,
  * and undo the padding Oat gives to any "dialog > div".

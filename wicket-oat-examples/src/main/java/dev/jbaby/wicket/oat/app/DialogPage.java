@@ -46,11 +46,11 @@ public class DialogPage extends BasePage {
             protected void onConfirm(AjaxRequestTarget target) {
                 success("Item deleted.");
             }
-        }.setBody(new Label(OatDialog.BODY_ID, "This action cannot be undone."))
+        }.setContent(new Label(OatDialog.CONTENT_ID, "This action cannot be undone."))
                 .setConfirmLabel(Model.of("Delete"))
                 .setConfirmVariant(OatVariant.DANGER));
 
-        // 2. An edit dialog opened from the server, with validated fields in its body
+        // 2. An edit dialog opened from the server, with validated fields in its content
         WebMarkupContainer table = new WebMarkupContainer("people");
         table.setOutputMarkupId(true);
         add(table);
@@ -65,10 +65,10 @@ public class DialogPage extends BasePage {
         };
         // Fields take their models from the CompoundPropertyModel and their labels from
         // DialogPage.properties, both by id
-        Fragment fields = new Fragment(OatDialog.BODY_ID, "editFields", this, new CompoundPropertyModel<>(selected));
+        Fragment fields = new Fragment(OatDialog.CONTENT_ID, "editFields", this, new CompoundPropertyModel<>(selected));
         fields.add(new OatTextField<String>("name").setRequired(true));
         fields.add(new OatEmailField("email").setRequired(true));
-        editDialog.setBody(fields).setConfirmLabel(Model.of("Save"));
+        editDialog.setContent(fields).setConfirmLabel(Model.of("Save"));
         add(editDialog);
 
         table.add(new ListView<>("rows", people) {

@@ -38,7 +38,7 @@ class DialogPageTest {
         assertEquals(dialog.getAttribute("id"), trigger.getAttribute("commandfor"));
 
         tester.assertLabel("deleteDialog:dialog:form:header", "Delete item?");
-        tester.assertLabel("editDialog:dialog:form:body:name:label", "Name");
+        tester.assertLabel("editDialog:dialog:form:content:name:label", "Name");
     }
 
     @Test
@@ -46,11 +46,11 @@ class DialogPageTest {
         tester.startPage(DialogPage.class);
 
         tester.clickLink("people:rows:1:edit");
-        tester.assertComponentOnAjaxResponse("editDialog:dialog:form");
+        tester.assertComponentOnAjaxResponse("editDialog");
         assertTrue(tester.getLastResponseAsString().contains("value=\"Grace Hopper\""));
 
         FormTester formTester = tester.newFormTester("editDialog:dialog:form");
-        formTester.setValue("body:name:input", "");
+        formTester.setValue("content:name:input", "");
         tester.executeAjaxEvent("editDialog:dialog:form:confirm", "click");
         String response = tester.getLastResponseAsString();
         assertTrue(response.contains("&#039;Name&#039; is required."));
@@ -58,7 +58,7 @@ class DialogPageTest {
 
         tester.cleanupFeedbackMessages();
         formTester = tester.newFormTester("editDialog:dialog:form");
-        formTester.setValue("body:name:input", "Grace B. Hopper");
+        formTester.setValue("content:name:input", "Grace B. Hopper");
         tester.executeAjaxEvent("editDialog:dialog:form:confirm", "click");
         response = tester.getLastResponseAsString();
         assertTrue(response.contains(".close()"));

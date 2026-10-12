@@ -251,8 +251,10 @@ class AppShellTest {
 
         assertThat(tester.getLastResponseAsString()).contains("showModal()");
         tester.assertLabel("confirm:dialog:form:header", "Delete invoice?");
-        tester.assertLabel("confirm:dialog:form:body", "This can&#039;t be undone.");
-        assertThat(tester.getTagByWicketId("confirm").getAttribute("data-variant")).isEqualTo("danger");
+        tester.assertLabel("confirm:dialog:form:content", "This can&#039;t be undone.");
+        // The dialog's confirm button, not the dialog panel of the same id
+        assertThat(TagTester.createTagByAttribute(tester.getLastResponseAsString(), "type", "submit")
+                .getAttribute("data-variant")).isEqualTo("danger");
     }
 
     @Test
@@ -271,13 +273,26 @@ class AppShellTest {
     }
 
     @Test
+    void cancellingForgetsTheAction() {
+        ConfirmPage page = tester.startPage(ConfirmPage.class);
+        tester.executeAjaxEvent("delete", "click");
+
+        tester.executeAjaxEvent("confirm:dialog", "close"); // Cancel, Escape or the backdrop
+        assertThat(page.confirm.isOpen()).isFalse();
+
+        // A confirm sent anyway finds nothing to run
+        tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
+        assertThat(page.deleted).isEmpty();
+    }
+
+    @Test
     void aNewQuestionReplacesTheOpenOne() {
         ConfirmPage page = tester.startPage(ConfirmPage.class);
         tester.executeAjaxEvent("delete", "click");
         tester.executeAjaxEvent("archive", "click");
 
         tester.assertLabel("confirm:dialog:form:confirm:confirmLabel", "Archive");
-        tester.assertInvisible("confirm:dialog:form:body");
+        tester.assertInvisible("confirm:dialog:form:content");
         tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
         assertThat(page.deleted).containsExactly("archived");
     }

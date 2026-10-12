@@ -4,8 +4,8 @@
 
 ### Upgrading from 0.2.x
 
-This release changes form fields and data tables to work more like the Wicket components
-they wrap, which breaks some code and tests:
+This release changes form fields, dialogs and data tables to work more like the Wicket
+components they wrap, which breaks some code and tests:
 
 - A form field's wrapped form component is now its child `input`, so its path is
   `"email:input"` instead of `"email:container:field"`, in `FormTester.setValue(...)` and
@@ -14,6 +14,12 @@ they wrap, which breaks some code and tests:
 - `BaseOatField.getField()` is now `getInput()`, and the factory method subclasses
   implement, `createFormComponent(id, model)`, is now `newInput(id, model)`. The protected
   `container` field is gone; a subclass adds its components to the field itself.
+- `OatDialog` follows Wicket's `ModalDialog`: `setBody(...)` and `BODY_ID` are now
+  `setContent(...)` and `CONTENT_ID`, so a form field in it is at `"content:name:input"`.
+  `open`, `close` and `OatConfirmDialog.ask` take an `AjaxRequestTarget` instead of an
+  `IPartialPageRequestHandler`. The dialog's own tag is now rendered, with the class
+  `oat-dialog`, which `wicket-oat.css` gives no box of its own, so the layout doesn't
+  change; in a test, `getTagByWicketId(...)` with the dialog's id now finds that tag.
 - `OatDataTable` and `OatTableTree` sort and page over Ajax, re-rendering only the table,
   with plain links as the fallback without JavaScript. Their navigation toolbar holds an
   `OatAjaxPagingNavigator` instead of an `OatPagingNavigator`. A test clicking a page or
@@ -25,6 +31,12 @@ they wrap, which breaks some code and tests:
   `addToInput(AttributeModifier.replace("autocomplete", "email"))`, and `setPlaceholder`
   also takes a `String`. `add(...)` still sends validators and Ajax form-component behaviors
   to the input, as they only work there.
+- `OatDialog` keeps its open state on the server (`isOpen()`). Cancel, the Escape key and
+  a click on the backdrop tell the server when they close it, and the new `onClose(target)`
+  runs once whenever it closes, also after a confirm or `close(target)`. `target.add(dialog)`
+  now works, and keeps an open dialog open. `open(content, target)` sets content that is
+  removed again on close; `OatCrud` uses it for its editor, and forgets the record once it
+  closes. `OatConfirmDialog` forgets its action when the user cancels.
 - `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
   `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
   `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.

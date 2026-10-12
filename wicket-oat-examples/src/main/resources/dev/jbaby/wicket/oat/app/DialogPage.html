@@ -4,7 +4,7 @@
 <wicket:extend>
     <section>
         <h1>Oat Dialog Demo</h1>
-        <p>A modal dialog built on the native <code>&lt;dialog&gt;</code> element. Cancel, the Escape key and a click on the backdrop close it natively; Confirm validates the fields in its body and calls <code>onConfirm</code> over Ajax.</p>
+        <p>A modal dialog built on the native <code>&lt;dialog&gt;</code> element. Cancel, the Escape key and a click on the backdrop close it in the browser and tell the server, which runs <code>onClose</code>; Confirm validates the fields in its content and calls <code>onConfirm</code> over Ajax.</p>
 
         <h3 class="mt-6">Confirmation</h3>
         <p>With a trigger label, the dialog renders its own button, which opens it without a server round trip.</p>
@@ -16,14 +16,14 @@ add(new OatDialog("deleteDialog", Model.of("Delete item"), Model.of("Delete item
     protected void onConfirm(AjaxRequestTarget target) {
         success("Item deleted.");
     }
-}.setBody(new Label(OatDialog.BODY_ID, "This action cannot be undone."))
+}.setContent(new Label(OatDialog.CONTENT_ID, "This action cannot be undone."))
         .setConfirmLabel(Model.of("Delete"))
         .setConfirmVariant(OatVariant.DANGER));</code></pre>
         <pre><code>&lt;!-- HTML --&gt;
 &lt;div wicket:id="deleteDialog"&gt;&lt;/div&gt;</code></pre>
 
         <h3 class="mt-6">Editing from the server</h3>
-        <p>Open a dialog from any Ajax handler with <code>dialog.open(target)</code>, which re-renders it first. Its body sits in the dialog's own form: clear a field and click Save, and the dialog stays open with the error shown inline.</p>
+        <p>Open a dialog from any Ajax handler with <code>dialog.open(target)</code>, which re-renders it first. Its content sits in the dialog's own form: clear a field and click Save, and the dialog stays open with the error shown inline.</p>
         <table wicket:id="people" class="w-100 align-left">
             <thead><tr><th>Name</th><th>Email</th><th></th></tr></thead>
             <tbody>
@@ -51,9 +51,9 @@ OatDialog editDialog = new OatDialog("editDialog", Model.of("Edit person")) {
         target.add(table);
     }
 };
-Fragment fields = new Fragment(OatDialog.BODY_ID, "editFields", this, new CompoundPropertyModel&lt;&gt;(selected));
+Fragment fields = new Fragment(OatDialog.CONTENT_ID, "editFields", this, new CompoundPropertyModel&lt;&gt;(selected));
 fields.add(new OatTextField&lt;String&gt;("name").setRequired(true));
-editDialog.setBody(fields);
+editDialog.setContent(fields);
 
 // in a row's AjaxLink
 selected.setObject(person);

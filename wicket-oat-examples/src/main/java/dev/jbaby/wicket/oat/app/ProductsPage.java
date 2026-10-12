@@ -159,7 +159,7 @@ public class ProductsPage extends BasePage {
 
                         @Override
                         protected void onUpdate(AjaxRequestTarget target) {
-                            crud.getDataTable().getTable().setCurrentPage(0);
+                            crud.getDataTable().setCurrentPage(0);
                             target.add(crud.getDataTable());
                         }
                     }));

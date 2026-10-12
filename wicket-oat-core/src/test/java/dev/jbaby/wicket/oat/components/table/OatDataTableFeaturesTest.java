@@ -149,6 +149,33 @@ class OatDataTableFeaturesTest {
         assertThat(tags("aria-sort", "descending")).hasSize(1);
     }
 
+    // --- Paging and sorting over Ajax ---
+
+    @Test
+    void pagingAndSortingReRenderTheTableOverAjax() {
+        nextPage();
+        tester.assertComponentOnAjaxResponse(page.table.getTable());
+        assertThat(page.table.getCurrentPage()).isEqualTo(1);
+        assertThat(tester.getLastResponseAsString()).contains("Initech");
+
+        sortByNumber();
+        tester.assertComponentOnAjaxResponse(page.table.getTable());
+        assertThat(page.table.getCurrentPage()).isZero(); // a new sort order starts on the first page
+    }
+
+    @Test
+    void theTableIsPageableLikeADataTable() {
+        assertThat(page.table.getItemCount()).isEqualTo(3);
+        assertThat(page.table.getItemsPerPage()).isEqualTo(2);
+        assertThat(page.table.getPageCount()).isEqualTo(2);
+
+        page.table.setCurrentPage(1);
+        assertThat(page.table.getTable().getCurrentPage()).isEqualTo(1);
+
+        page.table.setItemsPerPage(3);
+        assertThat(page.table.getPageCount()).isEqualTo(1);
+    }
+
     // --- Row actions ---
 
     @Test

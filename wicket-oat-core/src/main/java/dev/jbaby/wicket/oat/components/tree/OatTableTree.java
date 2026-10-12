@@ -1,6 +1,6 @@
 package dev.jbaby.wicket.oat.components.tree;
 
-import dev.jbaby.wicket.oat.components.OatPagingNavigator;
+import dev.jbaby.wicket.oat.components.OatAjaxPagingNavigator;
 import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.AttributeModifier;
@@ -9,6 +9,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
@@ -40,8 +41,9 @@ import java.util.Set;
  * The {@link TreeColumn} shows each node indented under its parent, with an expand
  * button (see {@link OatTreeNode}) and its {@linkplain #setLabel label}; the other
  * columns are ordinary data table columns, including Oat's. Children are loaded when
- * their parent is expanded. Rows are paged ({@link OatPagingNavigator}), sortable
- * headers set {@code aria-sort} when the provider is an {@link ISortableTreeProvider},
+ * their parent is expanded. Rows are paged ({@link OatAjaxPagingNavigator}) and sorted
+ * over Ajax, sortable headers set {@code aria-sort} when the provider is an
+ * {@link ISortableTreeProvider},
  * and an empty tree shows {@code OatTableTree.empty}. After a node is expanded or
  * collapsed, focus returns to its button.
  *
@@ -68,7 +70,7 @@ public class OatTableTree<T, S> extends TableTree<T, S> {
         table.add(AttributeModifier.append("class", "w-100 align-left small"));
         if (provider instanceof ISortStateLocator<?>) {
             ISortStateLocator<S> locator = (ISortStateLocator<S>) provider;
-            table.addTopToolbar(new HeadersToolbar<>(table, locator) {
+            table.addTopToolbar(new AjaxFallbackHeadersToolbar<>(table, locator) {
                 @Override
                 protected WebMarkupContainer newSortableHeader(String headerId, S property, ISortStateLocator<S> sortLocator) {
                     WebMarkupContainer header = super.newSortableHeader(headerId, property, sortLocator);
@@ -86,7 +88,12 @@ public class OatTableTree<T, S> extends TableTree<T, S> {
         table.addBottomToolbar(new NavigationToolbar(table) {
             @Override
             protected PagingNavigator newPagingNavigator(String navigatorId, DataTable<?, ?> dataTable) {
-                return new OatPagingNavigator(navigatorId, dataTable);
+                return new OatAjaxPagingNavigator(navigatorId, dataTable) {
+                    @Override
+                    protected void onAjaxEvent(AjaxRequestTarget target) {
+                        target.add(dataTable);
+                    }
+                };
             }
         });
     }

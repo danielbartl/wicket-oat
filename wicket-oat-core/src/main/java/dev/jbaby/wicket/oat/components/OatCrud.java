@@ -168,7 +168,7 @@ public class OatCrud<T, S> extends Panel {
 
     /**
      * A component beside "New", e.g. a search field: have the provider read its model,
-     * and in its Ajax handler call {@code crud.getDataTable().getTable().setCurrentPage(0)}
+     * and in its Ajax handler call {@code crud.getDataTable().setCurrentPage(0)}
      * and {@code target.add(crud.getDataTable())}. Created with the id it is given.
      */
     public OatCrud<T, S> setSearch(SerializableFunction<String, ? extends Component> search) {

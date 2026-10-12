@@ -251,7 +251,7 @@ class FeedbackAndPagingTest {
     }
 
     @Test
-    void dataTableUsesTheOatPagingNavigator() {
+    void dataTablePagesWithTheOatAjaxPagingNavigator() {
         OatDataTable<String, String> table = new OatDataTable<>("table",
                 List.of(new org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn<>(Model.of("Value"), "toString")),
                 new org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider<>() {
@@ -272,8 +272,11 @@ class FeedbackAndPagingTest {
                 }, 10);
         tester.startComponentInPage(table);
 
-        OatPagingNavigator navigator = table.visitChildren(OatPagingNavigator.class, (c, visit) -> visit.stop((OatPagingNavigator) c));
+        OatAjaxPagingNavigator navigator = table.visitChildren(OatAjaxPagingNavigator.class, (c, visit) -> visit.stop((OatAjaxPagingNavigator) c));
         assertThat(navigator).isNotNull();
         assertThat(tester.getLastResponseAsString()).contains("aria-current=\"page\"");
+
+        // The table is pageable itself, so a navigator of your own can page it
+        assertThat(new OatPagingNavigator("pages", table).getPageable()).isSameAs(table);
     }
 }

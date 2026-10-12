@@ -602,7 +602,9 @@ add(Oat.Components.cookieConsent("cookies").setPolicyLink(PrivacyPage.class));
 ## Data Tables
 
 `OatDataTable` is a Wicket `DataTable` with Oat styling: sortable headers show
-the sort order (and set `aria-sort`), and it pages with `OatPagingNavigator`.
+the sort order (and set `aria-sort`), and it pages with `OatAjaxPagingNavigator`.
+Sorting and paging re-render only the table over Ajax, like Wicket's
+`AjaxFallbackDefaultDataTable`, and fall back to plain links without JavaScript.
 Columns for common cells are in `dev.jbaby.wicket.oat.components.table`:
 
 ```java
@@ -639,9 +641,12 @@ table.setEmptyState(id -> Oat.Components.emptyState(id, "No invoices found"));
   receive a copy of the selected rows; call `clearSelection(target)` when done.
   Each change also sends an `OatSelectionColumn.SelectionChanged` event.
 - The table has a markup id: `target.add(table)` re-renders it after an action.
-  To filter, have the data provider read a search model, and in the search
-  field's Ajax handler call `table.getTable().setCurrentPage(0)` and
-  `target.add(table.getTable())`.
+- Like a `DataTable` it is pageable (`IPageableItems`): `setCurrentPage(...)`,
+  `getPageCount()`, `setItemsPerPage(...)`, and a navigator of your own can page it.
+  `addTopToolbar(...)`/`addBottomToolbar(...)` add toolbars, and `getTable()` is the
+  `DataTable` inside, e.g. to create one. To filter, have the data provider read a
+  search model, and in the search field's Ajax handler call `table.setCurrentPage(0)`
+  and `target.add(table.getTable())` (only the rows, so the search field keeps focus).
 
 ### Row details, editing in place, columns and CSV
 
@@ -716,8 +721,8 @@ focus stays on the button. A selected node is marked with `aria-current`.
 
 `OatPagingNavigator` and `OatAjaxPagingNavigator` are Wicket's `PagingNavigator`
 and `AjaxPagingNavigator` rendered as Oat pagination, for any `IPageable`
-(`DataView`, `PageableListView`, `DataTable`, ...). `OatDataTable` uses
-`OatPagingNavigator` for its navigation toolbar.
+(`DataView`, `PageableListView`, `DataTable`, `OatDataTable`, ...). `OatDataTable`
+and `OatTableTree` use `OatAjaxPagingNavigator` for their navigation toolbar.
 
 ```java
 add(new OatAjaxPagingNavigator("navigator", dataView));

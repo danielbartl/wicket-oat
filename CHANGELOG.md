@@ -4,8 +4,8 @@
 
 ### Upgrading from 0.2.x
 
-This release changes form fields to work more like the Wicket components they wrap,
-which breaks some code and tests:
+This release changes form fields and data tables to work more like the Wicket components
+they wrap, which breaks some code and tests:
 
 - A form field's wrapped form component is now its child `input`, so its path is
   `"email:input"` instead of `"email:container:field"`, in `FormTester.setValue(...)` and
@@ -14,6 +14,10 @@ which breaks some code and tests:
 - `BaseOatField.getField()` is now `getInput()`, and the factory method subclasses
   implement, `createFormComponent(id, model)`, is now `newInput(id, model)`. The protected
   `container` field is gone; a subclass adds its components to the field itself.
+- `OatDataTable` and `OatTableTree` sort and page over Ajax, re-rendering only the table,
+  with plain links as the fallback without JavaScript. Their navigation toolbar holds an
+  `OatAjaxPagingNavigator` instead of an `OatPagingNavigator`. A test clicking a page or
+  sort link now gets an Ajax response.
 
 ### Changes
 
@@ -21,6 +25,9 @@ which breaks some code and tests:
   `addToInput(AttributeModifier.replace("autocomplete", "email"))`, and `setPlaceholder`
   also takes a `String`. `add(...)` still sends validators and Ajax form-component behaviors
   to the input, as they only work there.
+- `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
+  `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
+  `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.
 - `OatBottomNav`: a tab bar fixed to the bottom of a phone's screen, three to five tabs
   of an icon above a label (`BottomNavItem`), with the current page's tab marked
   (`aria-current="page"`, or a rule of your own with `withActive`), badges, and one

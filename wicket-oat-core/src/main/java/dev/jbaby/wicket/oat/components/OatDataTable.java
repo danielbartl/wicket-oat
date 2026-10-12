@@ -10,6 +10,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
@@ -17,6 +18,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -44,7 +46,8 @@ import java.util.List;
 
 /**
  * A styled Wicket DataTable wrapper for the Oat library: sortable headers (with an
- * arrow and {@code aria-sort} for the sort order), paging, and optionally
+ * arrow and {@code aria-sort} for the sort order) and paging, both over Ajax and
+ * falling back to plain links without JavaScript, and optionally
  * <ul>
  * <li>a {@linkplain #setToolbar toolbar} above the table, e.g. for a search field and a
  * "New" button,</li>
@@ -57,10 +60,13 @@ import java.util.List;
  * <li>a {@linkplain #setCsvExport CSV export} of all rows, in the current sort order.</li>
  * </ul>
  * It renders its own tag with a markup id, so {@code target.add(table)} re-renders it,
- * e.g. after an action changed its rows. Columns for common cells - badges, links,
- * numbers, dates, row actions - are in {@code dev.jbaby.wicket.oat.components.table}.
+ * e.g. after an action changed its rows. Like Wicket's {@code DataTable} it is
+ * {@link IPageableItems pageable}: {@code table.setCurrentPage(0)} goes back to the first
+ * page, e.g. after a filter changed, and a paging navigator of your own can page it.
+ * Columns for common cells - badges, links, numbers, dates, row actions - are in
+ * {@code dev.jbaby.wicket.oat.components.table}.
  */
-public class OatDataTable<T, S> extends Panel {
+public class OatDataTable<T, S> extends Panel implements IPageableItems {
 
     private static final String EMPTY_STATE_ID = "msg";
     private static final String TOOLBAR_ID = "toolbar";
@@ -88,8 +94,8 @@ public class OatDataTable<T, S> extends Panel {
         table = new RowsTable("table", columns, dataProvider, rowsPerPage);
         table.setOutputMarkupId(true);
 
-        // Standard Oat toolbars
-        table.addTopToolbar(new HeadersToolbar<>(table, dataProvider) {
+        // Standard Oat toolbars, sorting and paging over Ajax
+        table.addTopToolbar(new AjaxFallbackHeadersToolbar<>(table, dataProvider) {
             @Override
             protected WebMarkupContainer newSortableHeader(String headerId, S property, ISortStateLocator<S> locator) {
                 WebMarkupContainer header = super.newSortableHeader(headerId, property, locator);
@@ -116,8 +122,13 @@ public class OatDataTable<T, S> extends Panel {
         });
         table.addBottomToolbar(new NavigationToolbar(table) {
             @Override
-            protected PagingNavigator newPagingNavigator(String navigatorId, DataTable<?, ?> table) {
-                return new OatPagingNavigator(navigatorId, table);
+            protected PagingNavigator newPagingNavigator(String navigatorId, DataTable<?, ?> dataTable) {
+                return new OatAjaxPagingNavigator(navigatorId, dataTable) {
+                    @Override
+                    protected void onAjaxEvent(AjaxRequestTarget target) {
+                        target.add(dataTable);
+                    }
+                };
             }
         });
         add(table);
@@ -188,8 +199,8 @@ public class OatDataTable<T, S> extends Panel {
      * on a {@code <div>}. Calling this again replaces the previous toolbar.
      * <p>
      * To filter the rows, have the data provider read the filter's model, and in the
-     * field's Ajax handler go back to the first page and re-render the table:
-     * {@code table.getTable().setCurrentPage(0); target.add(table);}
+     * field's Ajax handler go back to the first page and re-render the rows, which keeps
+     * the field (and its focus) as it is: {@code table.setCurrentPage(0); target.add(table.getTable());}
      */
     public OatDataTable<T, S> setToolbar(SerializableFunction<String, ? extends Component> toolbarFactory) {
         Component toolbar = toolbarFactory.apply(TOOLBAR_ID);
@@ -368,8 +379,51 @@ public class OatDataTable<T, S> extends Panel {
         }
     }
 
+    /** The Wicket {@code DataTable} inside, e.g. to create a toolbar for it. */
     public DataTable<T, S> getTable() {
         return table;
+    }
+
+    /** Adds a toolbar above the headers, e.g. a {@code FilterToolbar}. */
+    public OatDataTable<T, S> addTopToolbar(AbstractToolbar toolbar) {
+        table.addTopToolbar(toolbar);
+        return this;
+    }
+
+    /** Adds a toolbar below the rows, e.g. one showing totals. */
+    public OatDataTable<T, S> addBottomToolbar(AbstractToolbar toolbar) {
+        table.addBottomToolbar(toolbar);
+        return this;
+    }
+
+    @Override
+    public long getCurrentPage() {
+        return table.getCurrentPage();
+    }
+
+    @Override
+    public void setCurrentPage(long page) {
+        table.setCurrentPage(page);
+    }
+
+    @Override
+    public long getPageCount() {
+        return table.getPageCount();
+    }
+
+    @Override
+    public long getItemCount() {
+        return table.getItemCount();
+    }
+
+    @Override
+    public long getItemsPerPage() {
+        return table.getItemsPerPage();
+    }
+
+    @Override
+    public void setItemsPerPage(long items) {
+        table.setItemsPerPage(items);
     }
 
     /** Adds {@code oat-column-hidden} to a column's cells while the user hides it. */

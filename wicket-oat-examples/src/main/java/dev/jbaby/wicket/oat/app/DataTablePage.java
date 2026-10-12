@@ -149,7 +149,7 @@ public class DataTablePage extends BasePage {
 
                         @Override
                         protected void onUpdate(AjaxRequestTarget target) {
-                            table.getTable().setCurrentPage(0);
+                            table.setCurrentPage(0);
                             target.add(table.getTable());
                         }
                     }));

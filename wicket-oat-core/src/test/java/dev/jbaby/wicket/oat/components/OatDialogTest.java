@@ -38,6 +38,7 @@ class OatDialogTest {
         public final OatTextField<String> nameField;
         public final OatDialog dialog;
         public int confirmed;
+        public int outerSubmitted;
         public String rejectName;
         private final boolean nested;
 
@@ -45,7 +46,12 @@ class OatDialogTest {
             this.nested = nested;
             MarkupContainer parent = this;
             if (nested) {
-                Form<Void> outer = new Form<>("outer");
+                Form<Void> outer = new Form<Void>("outer") {
+                    @Override
+                    protected void onSubmit() {
+                        outerSubmitted++;
+                    }
+                };
                 add(outer);
                 parent = outer;
             }
@@ -179,6 +185,20 @@ class OatDialogTest {
         tester.executeAjaxEvent("outer:dialog:dialog:form:confirm", "click");
         assertThat(page.confirmed).isEqualTo(1);
         assertThat(page.name.getObject()).isEqualTo("Grace");
+    }
+
+    @Test
+    void submittingTheOuterFormLeavesTheClosedDialogsFieldsOut() {
+        DialogPage page = tester.startPage(new DialogPage(true));
+
+        // The dialog's required field is empty, but the dialog isn't what's submitted
+        FormTester formTester = tester.newFormTester("outer");
+        formTester.setValue("dialog:dialog:form:body:name:container:field", "");
+        formTester.submit();
+
+        tester.assertNoErrorMessage();
+        assertThat(page.outerSubmitted).isEqualTo(1);
+        assertThat(page.name.getObject()).isEqualTo("Ada");
     }
 
     @Test

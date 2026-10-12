@@ -41,7 +41,7 @@ public class OatFileUpload extends BaseOatField<List<FileUpload>, FileUploadFiel
     }
 
     @Override
-    protected FileUploadField createFormComponent(String id, IModel<List<FileUpload>> model) {
+    protected FileUploadField newInput(String id, IModel<List<FileUpload>> model) {
         return new FileUploadField(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

@@ -208,7 +208,7 @@ public abstract class OatWizard extends Panel {
 
     /**
      * Called when Next (or Finish) is clicked and the step's fields are valid. Report an
-     * error on a component - e.g. {@code emailField.getField().error("Already registered")}
+     * error on a component - e.g. {@code emailField.getInput().error("Already registered")}
      * - to keep the user on the step.
      *
      * @param step the index of the step being left, from 0

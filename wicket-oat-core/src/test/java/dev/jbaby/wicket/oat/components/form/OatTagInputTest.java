@@ -37,7 +37,7 @@ class OatTagInputTest {
         IModel<List<String>> tags = Model.ofList(new ArrayList<>());
         FormTester formTester = formWith(new OatTagInput("tags", "Tags", tags));
 
-        formTester.setValue("tags:container:field", " apple, mango,,apple ,kiwi");
+        formTester.setValue("tags:input", " apple, mango,,apple ,kiwi");
         formTester.submit();
 
         tester.assertNoErrorMessage();
@@ -48,13 +48,13 @@ class OatTagInputTest {
     void noTagsIsAnEmptyListAndFailsRequired() {
         IModel<List<String>> tags = Model.ofList(new ArrayList<>(List.of("old")));
         FormTester formTester = formWith(new OatTagInput("tags", "Tags", tags));
-        formTester.setValue("tags:container:field", "");
+        formTester.setValue("tags:input", "");
         formTester.submit();
         assertThat(tags.getObject()).isEmpty();
 
         tester = new WicketTester();
         formTester = formWith(new OatTagInput("tags", "Tags", tags).setRequired(true));
-        formTester.setValue("tags:container:field", "");
+        formTester.setValue("tags:input", "");
         formTester.submit();
         tester.assertErrorMessages("'Tags' is required.");
     }
@@ -70,10 +70,10 @@ class OatTagInputTest {
         form.add(new OatTagInput("tags"));
         tester.startComponentInPage(form, Markup.of("<form wicket:id='form'><div wicket:id='tags'></div></form>"));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("java,wicket");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("java,wicket");
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("tags:container:field", "java,oat");
+        formTester.setValue("tags:input", "java,oat");
         formTester.submit();
         assertThat(article.tags).containsExactly("java", "oat");
     }

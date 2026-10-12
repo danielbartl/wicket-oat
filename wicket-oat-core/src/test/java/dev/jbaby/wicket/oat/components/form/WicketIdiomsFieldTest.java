@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.components.form;
 import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
@@ -33,9 +34,9 @@ class WicketIdiomsFieldTest {
     void labelsAreLookedUpByIdAndFallBackToTheId() {
         tester.startPage(FieldTestPage.class);
 
-        tester.assertLabel("form:name:container:label", "Full name");
-        tester.assertLabel("form:age:container:label", "Age");
-        tester.assertLabel("form:nickname:container:label", "nickname");
+        tester.assertLabel("form:name:label", "Full name");
+        tester.assertLabel("form:age:label", "Age");
+        tester.assertLabel("form:nickname:label", "nickname");
     }
 
     @Test
@@ -43,7 +44,7 @@ class WicketIdiomsFieldTest {
         tester.startPage(FieldTestPage.class);
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "");
+        formTester.setValue("name:input", "");
         formTester.submit();
 
         tester.assertErrorMessages("'Full name' is required.");
@@ -62,9 +63,9 @@ class WicketIdiomsFieldTest {
         assertThat(fieldTag("age").getAttribute("value")).isEqualTo("36");
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "Grace");
-        formTester.setValue("age:container:field", "42");
-        formTester.setValue("active:container:field", "true");
+        formTester.setValue("name:input", "Grace");
+        formTester.setValue("age:input", "42");
+        formTester.setValue("active:input", "true");
         formTester.submit();
 
         tester.assertNoErrorMessage();
@@ -79,7 +80,7 @@ class WicketIdiomsFieldTest {
         tester.startPage(FieldTestPage.class);
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "");
+        formTester.setValue("name:input", "");
         tester.executeAjaxEvent("form:submit", "click");
 
         tester.assertComponentOnAjaxResponse("form:name");
@@ -107,12 +108,48 @@ class WicketIdiomsFieldTest {
         };
         field.add(StringValidator.maximumLength(3), onChange, AttributeModifier.append("class", "wide"));
 
-        assertThat(field.getField().getValidators()).hasSize(1);
-        assertThat(field.getField().getBehaviors(AjaxFormComponentUpdatingBehavior.class)).containsExactly(onChange);
+        assertThat(field.getInput().getValidators()).hasSize(1);
+        assertThat(field.getInput().getBehaviors(AjaxFormComponentUpdatingBehavior.class)).containsExactly(onChange);
         assertThat(field.getBehaviors()).hasSize(1); // only the AttributeModifier
 
         tester.startComponentInPage(field);
         assertThat(tester.getTagByWicketId("id").getAttribute("class")).isEqualTo("wide");
+    }
+
+    @Test
+    void addToInputPutsBehaviorsOnTheInputItself() {
+        OatTextField<String> field = new OatTextField<String>("id", "Email", Model.of(""))
+                .addToInput(AttributeModifier.replace("autocomplete", "email"))
+                .setPlaceholder("you@example.com");
+        tester.startComponentInPage(field);
+
+        TagTester input = tester.getTagByWicketId("input");
+        assertThat(input.getAttribute("autocomplete")).isEqualTo("email");
+        assertThat(input.getAttribute("placeholder")).isEqualTo("you@example.com");
+        assertThat(tester.getTagByWicketId("id").getAttribute("autocomplete")).isNull();
+    }
+
+    @Test
+    void choiceUpdatingBehaviorsAreAddedToTheInnerChoice() {
+        OatRadioChoice<String> choice = new OatRadioChoice<>("id", "Size", Model.of("S"), Model.ofList(List.of("S", "M")));
+        AjaxFormChoiceComponentUpdatingBehavior onChange = new AjaxFormChoiceComponentUpdatingBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+            }
+        };
+        choice.add(onChange);
+
+        assertThat(choice.getInput().getBehaviors(AjaxFormChoiceComponentUpdatingBehavior.class)).containsExactly(onChange);
+        tester.startComponentInPage(choice);
+    }
+
+    @Test
+    void theInputIsAChildOfTheFieldWithAShortPath() {
+        OatTextField<String> field = new OatTextField<>("email", "Email", Model.of(""));
+        tester.startComponentInPage(field);
+
+        assertThat(field.get(BaseOatField.INPUT_ID)).isSameAs(field.getInput());
+        assertThat(field.getInput().getInputName()).isEqualTo("email:input");
     }
 
     @Test
@@ -122,9 +159,9 @@ class WicketIdiomsFieldTest {
         OatSwitch toggle = Oat.Components.oatSwitch("s", Model.of(true)).setRequired(false);
         OatTextField<String> text = Oat.Components.textField("t", Model.of("")).setPlaceholder(Model.of("Type here")).setLabel(Model.of("Text"));
 
-        assertThat(number.getField().isRequired()).isTrue();
-        assertThat(toggle.getField().isRequired()).isFalse();
-        assertThat(text.getField().getLabel().getObject()).isEqualTo("Text");
+        assertThat(number.getInput().isRequired()).isTrue();
+        assertThat(toggle.getInput().isRequired()).isFalse();
+        assertThat(text.getInput().getLabel().getObject()).isEqualTo("Text");
     }
 
     @Test
@@ -132,8 +169,8 @@ class WicketIdiomsFieldTest {
         OatTextField<String> field = new OatTextField<String>("id", Model.of("")).setLabel(Model.of("Email"));
         tester.startComponentInPage(field);
 
-        tester.assertLabel("id:container:label", "Email");
-        assertThat(field.getField().getLabel().getObject()).isEqualTo("Email");
+        tester.assertLabel("id:label", "Email");
+        assertThat(field.getInput().getLabel().getObject()).isEqualTo("Email");
     }
 
     @Test
@@ -141,12 +178,12 @@ class WicketIdiomsFieldTest {
         OatDropdownChoice<String> choice = new OatDropdownChoice<>("id", Model.of("B"), Model.ofList(List.of("A", "B")));
         tester.startComponentInPage(choice);
 
-        assertThat(choice.get("container:field")).isSameAs(choice.getField());
+        assertThat(choice.get("input")).isSameAs(choice.getInput());
         assertThat(tester.getLastResponseAsString()).contains(">A</option>").contains("selected=\"selected\" value=\"1\">B</option>");
     }
 
     /** The inner input of the field with the given id; inputs are named by their form-relative path. */
     private TagTester fieldTag(String fieldId) {
-        return TagTester.createTagByAttribute(tester.getLastResponseAsString(), "name", fieldId + ":container:field");
+        return TagTester.createTagByAttribute(tester.getLastResponseAsString(), "name", fieldId + ":input");
     }
 }

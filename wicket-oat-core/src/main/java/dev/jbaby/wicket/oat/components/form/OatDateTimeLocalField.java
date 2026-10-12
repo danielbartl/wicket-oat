@@ -37,7 +37,7 @@ public class OatDateTimeLocalField extends BaseOatInputField<LocalDateTime, Html
     }
 
     @Override
-    protected Html5TextField<LocalDateTime> createFormComponent(String id, IModel<LocalDateTime> model) {
+    protected Html5TextField<LocalDateTime> newInput(String id, IModel<LocalDateTime> model) {
         return new Html5TextField<>(id, model, LocalDateTime.class, "datetime-local", Html5Converters.dateTimeLocal());
     }
 }

@@ -838,8 +838,23 @@ form.add(new AjaxButton("save") {
 ```
 
 You can still pass a model and a label explicitly
-(`new OatTextField<>("name", "Full name", model)`), and `getField()` gives
-access to the wrapped `FormComponent` for anything else.
+(`new OatTextField<>("name", "Full name", model)`).
+
+The wrapped form component is the field's child `input`, so a test reaches it at
+`"name:input"`, and `getInput()` returns it for anything the field doesn't offer
+itself. `add(...)` keeps Wicket's meaning - a behavior applies to the field's own
+tag - except for validators and Ajax form-component behaviors, which only work on
+the input; `addToInput(...)` puts any other behavior there:
+
+```java
+form.add(new OatEmailField("email").addToInput(AttributeModifier.replace("autocomplete", "email")));
+form.add(new EqualPasswordInputValidator(password.getInput(), repeat.getInput()));
+OatDropdownChoice<String> country = new OatDropdownChoice<>("country", Model.ofList(countries));
+country.getInput().setNullValid(true);
+
+// In a test
+formTester.setValue("email:input", "ada@example.com");
+```
 
 ### Addons, money and sections
 

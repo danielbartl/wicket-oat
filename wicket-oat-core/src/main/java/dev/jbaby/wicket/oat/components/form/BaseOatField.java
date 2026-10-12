@@ -7,34 +7,39 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.validation.IValidator;
 
 /**
  * Base class for every Oat form field: wraps a label, the underlying Wicket
  * {@link FormComponent}, and a feedback/hint message in Oat's standard field
- * markup. Wires accessibility automatically - the field's {@code aria-describedby}
+ * markup. Wires accessibility automatically - the input's {@code aria-describedby}
  * points at the feedback message, and {@code aria-invalid}/{@code data-field="error"}
  * are toggled based on validation state - so subclasses get this for free.
  * <p>
  * It is meant to be used like a plain Wicket form component:
  * <ul>
- * <li>The model is this panel's model, which the inner field reads and writes. Leave it
+ * <li>The model is this panel's model, which the input reads and writes. Leave it
  * out to inherit one from a parent {@code CompoundPropertyModel}, keyed by the id.</li>
  * <li>Leave the label out to look it up in the {@code .properties} files with the id
  * as the key (falling back to the id itself), as Wicket does for {@code ${label}} in
  * validation messages.</li>
  * <li>The panel renders its own tag with a markup id, so it can be re-rendered with
  * {@code target.add(field)}, e.g. to show validation errors after an Ajax submit.</li>
+ * <li>The wrapped form component is the panel's child {@code input}, so a test sets its
+ * value with {@code formTester.setValue("email:input", ...)}; {@link #getInput()}
+ * returns it.</li>
  * <li>Validators and {@link AjaxFormComponentUpdatingBehavior}s passed to
- * {@link #add(Behavior...)} are added to the inner field; any other behavior applies
- * to the panel's own tag.</li>
+ * {@link #add(Behavior...)} are added to the input, as they only work there; any other
+ * behavior applies to the panel's own tag. {@link #addToInput} adds one to the input,
+ * e.g. an {@code AttributeModifier} for {@code autocomplete}.</li>
  * </ul>
  *
  * @param <T> the model object type
@@ -43,8 +48,10 @@ import org.apache.wicket.validation.IValidator;
  */
 public abstract class BaseOatField<T, C extends FormComponent<T>, F extends BaseOatField<T, C, F>> extends GenericPanel<T> {
 
-    private C field;
-    protected final WebMarkupContainer container;
+    /** The id of the wrapped form component, a child of this panel. */
+    public static final String INPUT_ID = "input";
+
+    private C input;
     protected final IModel<String> helperText;
     private final Label label;
     private final Label feedback;
@@ -60,12 +67,14 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
         this.helperText = helperText;
         setOutputMarkupId(true);
 
-        // The Semantic Container (<section>)
-        container = new WebMarkupContainer("container");
+        // The field's element in Oat's markup (a <section> or <fieldset>). Transparent, so
+        // the label, input and feedback inside it are children of this panel, with short
+        // paths such as "email:input".
+        TransparentWebMarkupContainer container = new TransparentWebMarkupContainer("container");
         // Oat's magic: data-field="error" on the container (aria-invalid goes on the input)
-        container.add(AttributeModifier.replace("data-field", (IModel<String>) () -> getField().hasErrorMessage() ? "error" : ""));
+        container.add(AttributeModifier.replace("data-field", (IModel<String>) () -> getInput().hasErrorMessage() ? "error" : ""));
         // Marks required fields for wicket-oat.css (an asterisk after the label)
-        container.add(AttributeModifier.replace("data-required", (IModel<String>) () -> getField().isRequired() ? "" : null));
+        container.add(AttributeModifier.replace("data-required", (IModel<String>) () -> getInput().isRequired() ? "" : null));
         add(container);
 
         this.label = new Label("label", label != null ? label : new StringResourceModel(id, this).setDefaultValue(id));
@@ -74,53 +83,57 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
             public void onComponentTag(Component component, ComponentTag tag) {
                 // Only a <label> takes "for"; group fields label themselves with a <legend>
                 if ("label".equalsIgnoreCase(tag.getName())) {
-                    tag.put("for", getField().getMarkupId());
+                    tag.put("for", getInput().getMarkupId());
                 }
             }
         });
-        container.add(this.label);
+        add(this.label);
 
         feedback = new Label("feedback", this::getFeedbackContent);
         feedback.setOutputMarkupId(true);
         feedback.add(new HintBehavior()); // Add standard Oat hint styling
-        container.add(feedback);
+        add(feedback);
     }
 
     /**
-     * Creates the wrapped form component. Called lazily - on the first {@link #getField()}
+     * Creates the wrapped form component. Called lazily - on the first {@link #getInput()}
      * or, at the latest, in {@link #onInitialize()} - so fields a subclass sets in its own
      * constructor are already available here.
      *
-     * @param id the component id to use
+     * @param id the component id to use ({@link #INPUT_ID})
      * @param model the model to use; it reads and writes this panel's model
      */
-    protected abstract C createFormComponent(String id, IModel<T> model);
+    protected abstract C newInput(String id, IModel<T> model);
 
-    /** The wrapped form component, for advanced customization. */
-    public C getField() {
-        if (field == null) {
-            field = createFormComponent("field", new FieldModel());
-            field.setLabel(getLabel());
-            field.setOutputMarkupId(true);
+    /**
+     * The wrapped form component, for what this field doesn't offer itself: e.g.
+     * {@code setNullValid(true)} on a dropdown's, or a form validator comparing two
+     * fields, {@code new EqualPasswordInputValidator(password.getInput(), repeat.getInput())}.
+     */
+    public C getInput() {
+        if (input == null) {
+            input = newInput(INPUT_ID, new InputModel());
+            input.setLabel(getLabel());
+            input.setOutputMarkupId(true);
             // Link input to feedback for screen readers
-            field.add(AttributeModifier.replace("aria-describedby", (IModel<String>) feedback::getMarkupId));
-            field.add(AttributeModifier.replace("aria-invalid", (IModel<String>) () -> field.hasErrorMessage() ? "true" : "false"));
+            input.add(AttributeModifier.replace("aria-describedby", (IModel<String>) feedback::getMarkupId));
+            input.add(AttributeModifier.replace("aria-invalid", (IModel<String>) () -> input.hasErrorMessage() ? "true" : "false"));
             // Not the native "required", which would make the browser block the submit
             // with its own message before Wicket's validation could show one inline
-            field.add(AttributeModifier.replace("aria-required", (IModel<String>) () -> field.isRequired() ? "true" : null));
-            container.add(field);
+            input.add(AttributeModifier.replace("aria-required", (IModel<String>) () -> input.isRequired() ? "true" : null));
+            add(input);
         }
-        return field;
+        return input;
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
-        getField(); // create it now if no fluent call or subclass has done so yet
+        getInput(); // create it now if no fluent call or subclass has done so yet
     }
 
     private String getFeedbackContent() {
-        FeedbackMessage error = getField().getFeedbackMessages().first(FeedbackMessage.ERROR);
+        FeedbackMessage error = getInput().getFeedbackMessages().first(FeedbackMessage.ERROR);
         if (error != null) {
             error.markRendered();
             return String.valueOf(error.getMessage());
@@ -129,8 +142,8 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     }
 
     /**
-     * The markup id of the feedback/hint message, for a subclass whose field holds several
-     * inputs, so each can point {@code aria-describedby} at it.
+     * The markup id of the feedback/hint message, for a subclass whose input is made of
+     * several inputs, so each can point {@code aria-describedby} at it.
      */
     protected final String getFeedbackMarkupId() {
         return feedback.getMarkupId();
@@ -150,15 +163,17 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     // Fluent API, typed to the concrete field so calls chain with its own setters
 
     /**
-     * Validators and {@link AjaxFormComponentUpdatingBehavior}s only work on a form
-     * component, so they are added to the inner {@link #getField() field}. Any other
-     * behavior applies to this panel's own tag.
+     * Validators and {@link AjaxFormComponentUpdatingBehavior}s (which include
+     * {@code OnChangeAjaxBehavior} and {@code AjaxFormChoiceComponentUpdatingBehavior})
+     * only work on a form component, so they are added to the {@link #getInput() input}.
+     * Any other behavior applies to this panel's own tag, as with any component; add
+     * one to the input with {@link #addToInput}.
      */
     @Override
     public F add(Behavior... behaviors) {
         for (Behavior behavior : behaviors) {
             if (behavior instanceof IValidator<?> || behavior instanceof AjaxFormComponentUpdatingBehavior) {
-                getField().add(behavior);
+                getInput().add(behavior);
             } else {
                 super.add(behavior);
             }
@@ -166,33 +181,46 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
         return self();
     }
 
+    /**
+     * Adds behaviors to the {@link #getInput() input} rather than to this panel, e.g.
+     * {@code addToInput(AttributeModifier.replace("autocomplete", "email"))}.
+     */
+    public F addToInput(Behavior... behaviors) {
+        getInput().add(behaviors);
+        return self();
+    }
+
     public F addValidator(IValidator<? super T> validator) {
-        getField().add(validator);
+        getInput().add(validator);
         return self();
     }
 
     public F setRequired(boolean required) {
-        getField().setRequired(required);
+        getInput().setRequired(required);
         return self();
     }
 
     public F setLabel(IModel<String> label) {
         this.label.setDefaultModel(label);
-        getField().setLabel(label);
+        getInput().setLabel(label);
         return self();
     }
 
+    public F setPlaceholder(String placeholder) {
+        return setPlaceholder(Model.of(placeholder));
+    }
+
     public F setPlaceholder(IModel<String> placeholder) {
-        getField().add(AttributeModifier.replace("placeholder", placeholder));
+        getInput().add(AttributeModifier.replace("placeholder", placeholder));
         return self();
     }
 
     /**
-     * The inner field's model: reads and writes this panel's model, which may be one
+     * The input's model: reads and writes this panel's model, which may be one
      * inherited from a parent {@code CompoundPropertyModel}. Passes on that model's
      * object class too, so text fields can resolve their type for conversion.
      */
-    private final class FieldModel implements IObjectClassAwareModel<T> {
+    private final class InputModel implements IObjectClassAwareModel<T> {
 
         @Override
         public T getObject() {

@@ -33,7 +33,7 @@ class OtherFormComponentsTest {
     void testOatColorField() {
         OatColorField field = new OatColorField("id", "Color", Model.of("#ff0000"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("color");
     }
 
@@ -41,7 +41,7 @@ class OtherFormComponentsTest {
     void testOatDateField() {
         OatDateField field = new OatDateField("id", "Date", Model.of(LocalDate.of(2023, 10, 27)));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("date");
     }
 
@@ -49,15 +49,15 @@ class OtherFormComponentsTest {
     void testOatDateFieldFactoryWithModelLabelAndHelper() {
         OatDateField field = Oat.Components.dateField("id", Model.of("Date"), Model.of(LocalDate.of(2023, 10, 27)), Model.of("Pick a date"));
         tester.startComponentInPage(field);
-        tester.assertLabel("id:container:label", "Date");
-        tester.assertLabel("id:container:feedback", "Pick a date");
+        tester.assertLabel("id:label", "Date");
+        tester.assertLabel("id:feedback", "Pick a date");
     }
 
     @Test
     void testOatDateTimeLocalField() {
         OatDateTimeLocalField field = new OatDateTimeLocalField("id", "DateTime", Model.of(LocalDateTime.of(2023, 10, 27, 10, 30)));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("datetime-local");
     }
 
@@ -65,7 +65,7 @@ class OtherFormComponentsTest {
     void testOatEmailField() {
         OatEmailField field = new OatEmailField("id", "Email", Model.of("test@example.com"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("email");
     }
 
@@ -73,7 +73,7 @@ class OtherFormComponentsTest {
     void testOatFileUpload() {
         OatFileUpload field = new OatFileUpload("id", "File", new ListModel<>());
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("file");
     }
 
@@ -81,7 +81,7 @@ class OtherFormComponentsTest {
     void testOatNumberField() {
         OatNumberField field = new OatNumberField("id", "Number", Model.of(42));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("number");
     }
 
@@ -89,7 +89,7 @@ class OtherFormComponentsTest {
     void testOatPasswordField() {
         OatPasswordField field = new OatPasswordField("id", "Password", Model.of("secret"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("password");
     }
 
@@ -98,7 +98,7 @@ class OtherFormComponentsTest {
         OatRangeField<Integer> field = new OatRangeField<>("id", "Range", Model.of(10));
         field.setMin(0).setMax(100);
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("range");
     }
 
@@ -106,7 +106,7 @@ class OtherFormComponentsTest {
     void testOatSearchField() {
         OatSearchField field = new OatSearchField("id", "Search", Model.of("query"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("search");
     }
 
@@ -114,7 +114,7 @@ class OtherFormComponentsTest {
     void testOatTelField() {
         OatTelField field = new OatTelField("id", "Tel", Model.of("12345678"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("tel");
     }
 
@@ -122,7 +122,7 @@ class OtherFormComponentsTest {
     void testOatTimeField() {
         OatTimeField field = new OatTimeField("id", "Time", Model.of(LocalTime.of(10, 30)));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("time");
     }
 
@@ -130,7 +130,7 @@ class OtherFormComponentsTest {
     void testOatUrlField() {
         OatUrlField field = new OatUrlField("id", "URL", Model.of("https://example.com"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("url");
     }
 
@@ -138,7 +138,7 @@ class OtherFormComponentsTest {
     void testOatDropdownChoice() {
         OatDropdownChoice<String> field = new OatDropdownChoice<String>("id", "Select", Model.of("A"), Model.ofList(Arrays.asList("A", "B")));
         tester.startComponentInPage(field);
-        TagTester select = tester.getTagByWicketId("field");
+        TagTester select = tester.getTagByWicketId("input");
         assertThat(select.getName()).isEqualTo("select");
     }
 
@@ -147,7 +147,7 @@ class OtherFormComponentsTest {
         OatDropdownChoice<String> field = Oat.Components.dropdownChoice("id", Model.of("Select"), Model.of("A"),
                 Model.ofList(Arrays.asList("A", "B")), new ChoiceRenderer<>());
         tester.startComponentInPage(field);
-        TagTester select = tester.getTagByWicketId("field");
+        TagTester select = tester.getTagByWicketId("input");
         assertThat(select.getName()).isEqualTo("select");
     }
 
@@ -155,7 +155,7 @@ class OtherFormComponentsTest {
     void testOatSwitch() {
         OatSwitch field = new OatSwitch("id", "Switch", Model.of(true));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("checkbox");
         assertThat(input.getAttribute("role")).isEqualTo("switch");
     }
@@ -164,7 +164,7 @@ class OtherFormComponentsTest {
     void testOatMonthField() {
         OatMonthField field = new OatMonthField("id", "Month", Model.of("2023-10"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("month");
     }
 
@@ -172,13 +172,13 @@ class OtherFormComponentsTest {
     void testOatWeekField() {
         OatWeekField field = new OatWeekField("id", "Week", Model.of("2023-W43"));
         tester.startComponentInPage(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("type")).isEqualTo("week");
     }
 
     private String renderedValue(Component field) {
         tester.startComponentInPage(field);
-        return tester.getTagByWicketId("field").getAttribute("value");
+        return tester.getTagByWicketId("input").getAttribute("value");
     }
 
     @Test
@@ -225,9 +225,9 @@ class OtherFormComponentsTest {
                 "<form wicket:id='form'><div wicket:id='date'></div><div wicket:id='time'></div><div wicket:id='dateTime'></div></form>"));
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("date:container:field", "2026-12-24");
-        formTester.setValue("time:container:field", "14:05");
-        formTester.setValue("dateTime:container:field", "2026-12-24T14:05:30");
+        formTester.setValue("date:input", "2026-12-24");
+        formTester.setValue("time:input", "14:05");
+        formTester.setValue("dateTime:input", "2026-12-24T14:05:30");
         formTester.submit();
 
         tester.assertNoErrorMessage();

@@ -45,9 +45,9 @@ public abstract class BaseOatInputField<T, C extends FormComponent<T>, F extends
     public BaseOatInputField(String id, IModel<String> label, IModel<T> model, IModel<String> helperText) {
         super(id, label, model, helperText);
 
-        // Transparent, so the field and addons stay children of the container and keep
+        // Transparent, so the input and addons stay children of this panel and keep
         // their component paths whether or not the group is rendered
-        container.add(new TransparentWebMarkupContainer("group") {
+        add(new TransparentWebMarkupContainer("group") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -58,7 +58,7 @@ public abstract class BaseOatInputField<T, C extends FormComponent<T>, F extends
 
         prefix = newAddon("prefix");
         suffix = newAddon("suffix");
-        container.add(prefix, suffix);
+        add(prefix, suffix);
 
         datalist = new WebMarkupContainer("suggestions") {
             @Override
@@ -77,14 +77,14 @@ public abstract class BaseOatInputField<T, C extends FormComponent<T>, F extends
                 item.add(AttributeModifier.replace("value", String.valueOf(item.getModelObject())));
             }
         });
-        container.add(datalist);
+        add(datalist);
     }
 
     @Override
     protected void onInitialize() {
         super.onInitialize();
         // The browser offers the datalist's values as the user types
-        getField().add(AttributeModifier.replace("list", (IModel<String>) () -> hasSuggestions() ? datalist.getMarkupId() : null));
+        getInput().add(AttributeModifier.replace("list", (IModel<String>) () -> hasSuggestions() ? datalist.getMarkupId() : null));
     }
 
     private boolean hasSuggestions() {
@@ -104,7 +104,7 @@ public abstract class BaseOatInputField<T, C extends FormComponent<T>, F extends
         addon.add(new Behavior() {
             @Override
             public void onComponentTag(Component component, ComponentTag tag) {
-                tag.put("for", getField().getMarkupId());
+                tag.put("for", getInput().getMarkupId());
             }
         });
         return addon;

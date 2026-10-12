@@ -39,7 +39,7 @@ public class OatTextField<T> extends BaseOatInputField<T, TextField<T>, OatTextF
     }
 
     @Override
-    protected TextField<T> createFormComponent(String id, IModel<T> model) {
+    protected TextField<T> newInput(String id, IModel<T> model) {
         return new TextField<>(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

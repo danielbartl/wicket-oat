@@ -27,8 +27,8 @@ class EventRegistrationPageTest {
     void labelsComeFromThePropertiesFile() {
         tester.startPage(EventRegistrationPage.class);
         tester.assertRenderedPage(EventRegistrationPage.class);
-        tester.assertLabel("registrationForm:fullName:container:label", "Full Name");
-        tester.assertLabel("registrationForm:subscribeNewsletter:container:label", "Subscribe to Newsletter");
+        tester.assertLabel("registrationForm:fullName:label", "Full Name");
+        tester.assertLabel("registrationForm:subscribeNewsletter:label", "Subscribe to Newsletter");
     }
 
     @Test
@@ -36,7 +36,7 @@ class EventRegistrationPageTest {
         tester.startPage(EventRegistrationPage.class);
 
         FormTester formTester = tester.newFormTester("registrationForm");
-        formTester.setValue("fullName:container:field", "");
+        formTester.setValue("fullName:input", "");
         tester.executeAjaxEvent("registrationForm:submit", "click");
 
         tester.assertComponentOnAjaxResponse("registrationForm");
@@ -50,8 +50,8 @@ class EventRegistrationPageTest {
         tester.startPage(EventRegistrationPage.class);
 
         FormTester formTester = tester.newFormTester("registrationForm");
-        formTester.setValue("fullName:container:field", "Ada Lovelace");
-        formTester.setValue("email:container:field", "ada@example.com");
+        formTester.setValue("fullName:input", "Ada Lovelace");
+        formTester.setValue("email:input", "ada@example.com");
         tester.executeAjaxEvent("registrationForm:submit", "click");
 
         tester.assertNoErrorMessage();

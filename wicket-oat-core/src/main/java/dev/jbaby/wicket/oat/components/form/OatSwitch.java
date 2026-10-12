@@ -38,7 +38,7 @@ public class OatSwitch extends BaseOatField<Boolean, CheckBox, OatSwitch> {
     }
 
     @Override
-    protected CheckBox createFormComponent(String id, IModel<Boolean> model) {
+    protected CheckBox newInput(String id, IModel<Boolean> model) {
         CheckBox checkBox = new CheckBox(id, model);
         checkBox.add(new SwitchBehavior());
         return checkBox;

@@ -36,7 +36,7 @@ public class OatCheckBox extends BaseOatField<Boolean, CheckBox, OatCheckBox> {
     }
 
     @Override
-    protected CheckBox createFormComponent(String id, IModel<Boolean> model) {
+    protected CheckBox newInput(String id, IModel<Boolean> model) {
         return new CheckBox(id, model);
     }
 }

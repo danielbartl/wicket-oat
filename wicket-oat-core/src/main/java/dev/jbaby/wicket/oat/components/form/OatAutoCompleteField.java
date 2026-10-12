@@ -99,7 +99,7 @@ public class OatAutoCompleteField<T> extends BaseOatInputField<T, AutoCompleteTe
     }
 
     @Override
-    protected AutoCompleteTextField<T> createFormComponent(String id, IModel<T> model) {
+    protected AutoCompleteTextField<T> newInput(String id, IModel<T> model) {
         AutoCompleteSettings settings = new AutoCompleteSettings()
                 .setCssClassName("oat-autocomplete")
                 .setThrottleDelay(300)

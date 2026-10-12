@@ -60,7 +60,7 @@ class OatDialogTest {
                 @Override
                 protected void onConfirm(AjaxRequestTarget target) {
                     if (name.getObject().equals(rejectName)) {
-                        nameField.getField().error("That name is taken.");
+                        nameField.getInput().error("That name is taken.");
                         return;
                     }
                     confirmed++;
@@ -120,7 +120,7 @@ class OatDialogTest {
         DialogPage page = tester.startPage(new DialogPage(false));
 
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:container:field", "Grace");
+        formTester.setValue("body:name:input", "Grace");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
 
         assertThat(page.confirmed).isEqualTo(1);
@@ -133,7 +133,7 @@ class OatDialogTest {
         DialogPage page = tester.startPage(new DialogPage(false));
 
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:container:field", "");
+        formTester.setValue("body:name:input", "");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
 
         assertThat(page.confirmed).isZero();
@@ -149,7 +149,7 @@ class OatDialogTest {
         page.rejectName = "Taken";
 
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:container:field", "Taken");
+        formTester.setValue("body:name:input", "Taken");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
 
         String response = tester.getLastResponseAsString();
@@ -161,7 +161,7 @@ class OatDialogTest {
     void openDiscardsInputLeftFromAFailedConfirm() {
         tester.startPage(new DialogPage(false));
         FormTester formTester = tester.newFormTester("dialog:dialog:form");
-        formTester.setValue("body:name:container:field", "");
+        formTester.setValue("body:name:input", "");
         tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
         tester.cleanupFeedbackMessages();
 
@@ -181,7 +181,7 @@ class OatDialogTest {
 
         // Confirming submits just the dialog's (nested) form
         FormTester formTester = tester.newFormTester("outer:dialog:dialog:form");
-        formTester.setValue("body:name:container:field", "Grace");
+        formTester.setValue("body:name:input", "Grace");
         tester.executeAjaxEvent("outer:dialog:dialog:form:confirm", "click");
         assertThat(page.confirmed).isEqualTo(1);
         assertThat(page.name.getObject()).isEqualTo("Grace");
@@ -193,7 +193,7 @@ class OatDialogTest {
 
         // The dialog's required field is empty, but the dialog isn't what's submitted
         FormTester formTester = tester.newFormTester("outer");
-        formTester.setValue("dialog:dialog:form:body:name:container:field", "");
+        formTester.setValue("dialog:dialog:form:body:name:input", "");
         formTester.submit();
 
         tester.assertNoErrorMessage();

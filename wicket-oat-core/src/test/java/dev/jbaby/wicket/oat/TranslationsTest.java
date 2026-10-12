@@ -93,7 +93,7 @@ class TranslationsTest {
         form.add(new OatMoneyField("price", "Price", Model.of(BigDecimal.ONE)));
         tester.startComponentInPage(form, Markup.of("<form wicket:id='form'><div wicket:id='price'></div></form>"));
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("price:container:field", "abc");
+        formTester.setValue("price:input", "abc");
         formTester.submit();
         return tester.getTagByWicketId("feedback").getValue();
     }

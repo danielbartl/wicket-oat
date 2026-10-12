@@ -23,7 +23,7 @@ public class NotShownInlineFilter implements IFeedbackMessageFilter {
             return true;
         }
         BaseOatField<?, ?, ?> field = reporter.findParent(BaseOatField.class);
-        if (field != null && field.getField() == reporter) {
+        if (field != null && field.getInput() == reporter) {
             return false;
         }
         for (Component parent = reporter.getParent(); parent != null; parent = parent.getParent()) {

@@ -103,7 +103,7 @@ class FeedbackAndPagingTest {
         tester.startPage(new FeedbackPage(false));
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "");
+        formTester.setValue("name:input", "");
         tester.executeAjaxEvent("form:submit", "click");
 
         tester.assertComponentOnAjaxResponse("feedback");
@@ -172,7 +172,7 @@ class FeedbackAndPagingTest {
         tester.startPage(new FeedbackPage(true));
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "");
+        formTester.setValue("name:input", "");
         tester.executeAjaxEvent("form:submit", "click");
 
         String response = tester.getLastResponseAsString();

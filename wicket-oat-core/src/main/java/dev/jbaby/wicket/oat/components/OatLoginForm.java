@@ -64,19 +64,17 @@ public abstract class OatLoginForm extends Panel {
             }
         });
 
-        OatTextField<String> usernameField = new OatTextField<String>("username",
+        form.add(new OatTextField<String>("username",
                 new StringResourceModel("OatLoginForm.username", this).setDefaultValue("Username"), username)
-                .setRequired(true);
-        usernameField.getField().add(AttributeModifier.replace("autocomplete", "username"),
-                AttributeModifier.replace("autocapitalize", "none"),
-                AttributeModifier.replace("spellcheck", "false"));
-        form.add(usernameField);
+                .setRequired(true)
+                .addToInput(AttributeModifier.replace("autocomplete", "username"),
+                        AttributeModifier.replace("autocapitalize", "none"),
+                        AttributeModifier.replace("spellcheck", "false")));
 
-        OatPasswordField passwordField = new OatPasswordField("password",
+        form.add(new OatPasswordField("password",
                 new StringResourceModel("OatLoginForm.password", this).setDefaultValue("Password"), password)
-                .setRequired(true);
-        passwordField.getField().add(AttributeModifier.replace("autocomplete", "current-password"));
-        form.add(passwordField);
+                .setRequired(true)
+                .addToInput(AttributeModifier.replace("autocomplete", "current-password")));
 
         rememberMeField = new OatCheckBox("rememberMe",
                 new StringResourceModel("OatLoginForm.rememberMe", this).setDefaultValue("Remember me"), rememberMe);

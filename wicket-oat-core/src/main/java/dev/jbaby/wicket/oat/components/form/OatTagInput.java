@@ -47,13 +47,13 @@ public class OatTagInput extends BaseOatField<List<String>, TextField<List<Strin
         super(id, label, model, helper);
 
         WebMarkupContainer taginput = new WebMarkupContainer("taginput");
-        taginput.add(new TagInputBehavior(getField()));
-        container.add(taginput);
+        taginput.add(new TagInputBehavior(getInput()));
+        add(taginput);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected TextField<List<String>> createFormComponent(String id, IModel<List<String>> model) {
+    protected TextField<List<String>> newInput(String id, IModel<List<String>> model) {
         TextField<List<String>> hidden = new TextField<>(id, model, (Class) List.class) {
             @Override
             protected String[] getInputTypes() {

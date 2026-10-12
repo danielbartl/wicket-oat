@@ -39,17 +39,17 @@ public class OatNumberField<N extends Number & Comparable<N>> extends BaseOatInp
     }
 
     public OatNumberField<N> setMin(N min) {
-        getField().setMinimum(min);
+        getInput().setMinimum(min);
         return this;
     }
 
     public OatNumberField<N> setMax(N max) {
-        getField().setMaximum(max);
+        getInput().setMaximum(max);
         return this;
     }
 
     @Override
-    protected NumberTextField<N> createFormComponent(String id, IModel<N> model) {
+    protected NumberTextField<N> newInput(String id, IModel<N> model) {
         return new NumberTextField<>(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

@@ -37,7 +37,7 @@ public class OatTextArea<T> extends BaseOatField<T, TextArea<T>, OatTextArea<T>>
     }
 
     @Override
-    protected TextArea<T> createFormComponent(String id, IModel<T> model) {
+    protected TextArea<T> newInput(String id, IModel<T> model) {
         return new TextArea<>(id, model);
     }
 }

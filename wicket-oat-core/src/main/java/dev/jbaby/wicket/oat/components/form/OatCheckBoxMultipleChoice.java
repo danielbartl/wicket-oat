@@ -75,7 +75,7 @@ public class OatCheckBoxMultipleChoice<T> extends BaseOatField<Collection<T>, Ch
     }
 
     @Override
-    protected CheckBoxMultipleChoice<T> createFormComponent(String id, IModel<Collection<T>> model) {
+    protected CheckBoxMultipleChoice<T> newInput(String id, IModel<Collection<T>> model) {
         CheckBoxMultipleChoice<T> choice = new CheckBoxMultipleChoice<>(id, model, choices, renderer);
         // <label><input type="checkbox"> Text</label>, the markup Oat styles
         choice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);

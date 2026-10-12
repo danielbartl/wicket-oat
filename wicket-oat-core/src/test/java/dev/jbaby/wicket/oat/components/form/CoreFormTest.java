@@ -26,8 +26,8 @@ class CoreFormTest {
     void testOatTextField() {
         OatTextField field = new OatTextField("id", "Label", Model.of("Value"));
         tester.startComponentInPage(field);
-        tester.assertLabel("id:container:label", "Label");
-        TagTester input = tester.getTagByWicketId("field");
+        tester.assertLabel("id:label", "Label");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("value")).isEqualTo("Value");
     }
 
@@ -35,8 +35,8 @@ class CoreFormTest {
     void testOatCheckBox() {
         OatCheckBox field = new OatCheckBox("id", "Label", Model.of(true));
         tester.startComponentInPage(field);
-        tester.assertLabel("id:container:label", "Label");
-        TagTester input = tester.getTagByWicketId("field");
+        tester.assertLabel("id:label", "Label");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("checked")).isEqualTo("checked");
     }
 
@@ -44,16 +44,16 @@ class CoreFormTest {
     void testOatTextArea() {
         OatTextArea field = new OatTextArea("id", "Label", Model.of("Value"));
         tester.startComponentInPage(field);
-        tester.assertLabel("id:container:label", "Label");
-        tester.assertModelValue("id:container:field", "Value");
+        tester.assertLabel("id:label", "Label");
+        tester.assertModelValue("id:input", "Value");
     }
 
     @Test
     void testOatCheckBoxFactoryWithHelper() {
         OatCheckBox field = Oat.Components.checkBox("id", Model.of("Label"), Model.of(true), Model.of("Helper text"));
         tester.startComponentInPage(field);
-        tester.assertLabel("id:container:label", "Label");
-        tester.assertLabel("id:container:feedback", "Helper text");
+        tester.assertLabel("id:label", "Label");
+        tester.assertLabel("id:feedback", "Helper text");
     }
 
     @Test
@@ -61,7 +61,7 @@ class CoreFormTest {
         OatTextField<String> field = new OatTextField<>("id", "Label", Model.of("Value"));
         tester.startComponentInPage(field);
         Component container = field.get("container");
-        int fieldBehaviors = field.getField().getBehaviors().size();
+        int fieldBehaviors = field.getInput().getBehaviors().size();
         int containerBehaviors = container.getBehaviors().size();
 
         WebPage page = (WebPage) tester.getLastRenderedPage();
@@ -69,7 +69,7 @@ class CoreFormTest {
             tester.startPage(page);
         }
 
-        assertThat(field.getField().getBehaviors()).hasSize(fieldBehaviors);
+        assertThat(field.getInput().getBehaviors()).hasSize(fieldBehaviors);
         assertThat(container.getBehaviors()).hasSize(containerBehaviors);
     }
 
@@ -81,21 +81,21 @@ class CoreFormTest {
         tester.startComponentInPage(form, Markup.of("<form wicket:id='form'><div wicket:id='name'></div></form>"));
 
         assertThat(tester.getTagByWicketId("container").getAttribute("data-field")).isEmpty();
-        assertThat(tester.getTagByWicketId("field").getAttribute("aria-invalid")).isEqualTo("false");
+        assertThat(tester.getTagByWicketId("input").getAttribute("aria-invalid")).isEqualTo("false");
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "");
+        formTester.setValue("name:input", "");
         formTester.submit();
 
         assertThat(tester.getTagByWicketId("container").getAttribute("data-field")).isEqualTo("error");
-        assertThat(tester.getTagByWicketId("field").getAttribute("aria-invalid")).isEqualTo("true");
+        assertThat(tester.getTagByWicketId("input").getAttribute("aria-invalid")).isEqualTo("true");
 
         formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "Ada");
+        formTester.setValue("name:input", "Ada");
         formTester.submit();
 
         assertThat(tester.getTagByWicketId("container").getAttribute("data-field")).isEmpty();
-        assertThat(tester.getTagByWicketId("field").getAttribute("aria-invalid")).isEqualTo("false");
+        assertThat(tester.getTagByWicketId("input").getAttribute("aria-invalid")).isEqualTo("false");
         assertThat(model.getObject()).isEqualTo("Ada");
     }
 
@@ -107,12 +107,12 @@ class CoreFormTest {
         form.add(choice);
         tester.startComponentInPage(form, Markup.of("<form wicket:id='form'><div wicket:id='choice'></div></form>"));
 
-        TagTester select = tester.getTagByWicketId("field");
+        TagTester select = tester.getTagByWicketId("input");
         assertThat(tester.getTagByWicketId("label").getAttribute("for")).isEqualTo(select.getAttribute("id"));
         assertThat(select.getAttribute("aria-describedby")).isEqualTo(tester.getTagByWicketId("feedback").getAttribute("id"));
 
         tester.newFormTester("form").submit();
-        assertThat(tester.getTagByWicketId("field").getAttribute("aria-invalid")).isEqualTo("true");
+        assertThat(tester.getTagByWicketId("input").getAttribute("aria-invalid")).isEqualTo("true");
     }
 
     @Test
@@ -120,7 +120,7 @@ class CoreFormTest {
         OatTextField<String> field = new OatTextField<String>("id", "Label", Model.of("")).setRequired(true);
         tester.startComponentInPage(field);
 
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("aria-required")).isEqualTo("true");
         assertThat(input.getAttribute("required")).isNull();
         assertThat(tester.getTagByWicketId("container").getAttribute("data-required")).isEmpty();
@@ -130,7 +130,7 @@ class CoreFormTest {
     void optionalFieldsCarryNoRequiredMarkers() {
         tester.startComponentInPage(new OatTextField<>("id", "Label", Model.of("")));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("aria-required")).isNull();
+        assertThat(tester.getTagByWicketId("input").getAttribute("aria-required")).isNull();
         assertThat(tester.getTagByWicketId("container").getAttribute("data-required")).isNull();
     }
 
@@ -152,7 +152,7 @@ class CoreFormTest {
     void textFieldLabelsKeepTheirForAttribute() {
         tester.startComponentInPage(new OatTextField<>("id", "Label", Model.of("")));
         assertThat(tester.getTagByWicketId("label").getAttribute("for"))
-                .isEqualTo(tester.getTagByWicketId("field").getAttribute("id"));
+                .isEqualTo(tester.getTagByWicketId("input").getAttribute("id"));
     }
 
     @Test

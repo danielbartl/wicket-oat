@@ -38,8 +38,8 @@ class InputAddonsAndDecimalFieldsTest {
         tester.startComponentInPage(new OatTextField<>("id", "Label", Model.of("Value")));
 
         assertThat(tester.getLastResponseAsString()).doesNotContain("<fieldset").doesNotContain("group");
-        tester.assertComponent("id:container:field", org.apache.wicket.markup.html.form.TextField.class);
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("Value");
+        tester.assertComponent("id:input", org.apache.wicket.markup.html.form.TextField.class);
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("Value");
     }
 
     @Test
@@ -53,7 +53,7 @@ class InputAddonsAndDecimalFieldsTest {
         assertThat(group.getName()).isEqualTo("fieldset");
         assertThat(group.getAttribute("class")).isEqualTo("group");
 
-        String inputId = field.getField().getMarkupId();
+        String inputId = field.getInput().getMarkupId();
         TagTester prefix = tester.getTagByWicketId("prefix");
         assertThat(prefix.getValue()).isEqualTo("https://");
         assertThat(prefix.getAttribute("for")).isEqualTo(inputId);
@@ -61,7 +61,7 @@ class InputAddonsAndDecimalFieldsTest {
         assertThat(tester.getTagByWicketId("suffix").getAttribute("for")).isEqualTo(inputId);
 
         // The group is transparent: the field keeps its usual path
-        tester.assertComponent("id:container:field", org.apache.wicket.markup.html.form.TextField.class);
+        tester.assertComponent("id:input", org.apache.wicket.markup.html.form.TextField.class);
     }
 
     @Test
@@ -100,9 +100,9 @@ class InputAddonsAndDecimalFieldsTest {
         tester.getSession().setLocale(Locale.GERMANY);
         tester.startComponentInPage(new OatMoneyField("id", "Price", Model.of(new BigDecimal("1234.5"))).setCurrency(EUR));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("1.234,50");
-        assertThat(tester.getTagByWicketId("field").getAttribute("inputmode")).isEqualTo("decimal");
-        assertThat(tester.getTagByWicketId("field").getAttribute("type")).isEqualTo("text");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("1.234,50");
+        assertThat(tester.getTagByWicketId("input").getAttribute("inputmode")).isEqualTo("decimal");
+        assertThat(tester.getTagByWicketId("input").getAttribute("type")).isEqualTo("text");
         assertThat(tester.getTagByWicketId("prefix")).isNull();
         assertThat(tester.getTagByWicketId("suffix").getValue()).isEqualTo("€");
     }
@@ -112,7 +112,7 @@ class InputAddonsAndDecimalFieldsTest {
         tester.getSession().setLocale(Locale.US);
         tester.startComponentInPage(new OatMoneyField("id", "Price", Model.of(new BigDecimal("1234.5"))).setCurrency(USD));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("1,234.50");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("1,234.50");
         assertThat(tester.getTagByWicketId("prefix").getValue()).isEqualTo("$");
         assertThat(tester.getTagByWicketId("suffix")).isNull();
     }
@@ -122,7 +122,7 @@ class InputAddonsAndDecimalFieldsTest {
         tester.getSession().setLocale(Locale.US);
         tester.startComponentInPage(new OatMoneyField("id", "Price", Model.of(new BigDecimal("1234"))).setCurrency(JPY));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("1,234");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("1,234");
     }
 
     @Test
@@ -130,7 +130,7 @@ class InputAddonsAndDecimalFieldsTest {
         tester.getSession().setLocale(Locale.US);
         tester.startComponentInPage(new OatMoneyField("id", "Price", Model.of(new BigDecimal("3"))));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("3.00");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("3.00");
         assertThat(tester.getLastResponseAsString()).doesNotContain("<fieldset");
     }
 
@@ -175,7 +175,7 @@ class InputAddonsAndDecimalFieldsTest {
         OatMoneyField field = new OatMoneyField("price", "Price", model).setCurrency(USD);
         submit(field, "abc");
 
-        assertThat(field.getField().hasErrorMessage()).isTrue();
+        assertThat(field.getInput().hasErrorMessage()).isTrue();
         assertThat(model.getObject()).isEqualTo(BigDecimal.ONE);
         assertThat(tester.getTagByWicketId("container").getAttribute("data-field")).isEqualTo("error");
         assertThat(tester.getTagByWicketId("feedback").getValue()).isEqualTo("The value of &#039;Price&#039; is not a valid amount.");
@@ -191,14 +191,14 @@ class InputAddonsAndDecimalFieldsTest {
                 .setMax(new BigDecimal("100"));
 
         submit(field, "-5");
-        assertThat(field.getField().hasErrorMessage()).isTrue();
+        assertThat(field.getInput().hasErrorMessage()).isTrue();
 
         submit(field, "100.01");
-        assertThat(field.getField().hasErrorMessage()).isTrue();
+        assertThat(field.getInput().hasErrorMessage()).isTrue();
         assertThat(model.getObject()).isEqualTo(BigDecimal.ONE);
 
         submit(field, "100");
-        assertThat(field.getField().hasErrorMessage()).isFalse();
+        assertThat(field.getInput().hasErrorMessage()).isFalse();
         assertThat(model.getObject()).isEqualTo(new BigDecimal("100.00"));
     }
 
@@ -207,9 +207,9 @@ class InputAddonsAndDecimalFieldsTest {
         OatMoneyField field = new OatMoneyField("price", "Price", Model.of(BigDecimal.ONE))
                 .setMin(BigDecimal.ZERO).setMin(BigDecimal.ONE).setMax(BigDecimal.TEN);
 
-        assertThat(field.getField().getValidators()).hasSize(1);
+        assertThat(field.getInput().getValidators()).hasSize(1);
         field.setMin(null).setMax(null);
-        assertThat(field.getField().getValidators()).isEmpty();
+        assertThat(field.getInput().getValidators()).isEmpty();
     }
 
     // --- Percent ---
@@ -219,11 +219,11 @@ class InputAddonsAndDecimalFieldsTest {
         tester.getSession().setLocale(Locale.GERMANY);
         tester.startComponentInPage(new OatPercentField("id", "Tax", Model.of(new BigDecimal("19"))));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("19");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("19");
         assertThat(tester.getTagByWicketId("suffix").getValue()).isEqualTo("%");
 
         tester.startComponentInPage(new OatPercentField("id", "Tax", Model.of(new BigDecimal("7.5"))));
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("7,5");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("7,5");
     }
 
     @Test
@@ -254,7 +254,7 @@ class InputAddonsAndDecimalFieldsTest {
         Model<BigDecimal> model = Model.of(new BigDecimal("999"));
         OatMoneyField field = new OatMoneyField("price", "Price", model).setCurrency(currency);
         submit(field, input);
-        assertThat(field.getField().hasErrorMessage()).as("error for '%s'", input).isFalse();
+        assertThat(field.getInput().hasErrorMessage()).as("error for '%s'", input).isFalse();
         return model.getObject();
     }
 
@@ -265,7 +265,7 @@ class InputAddonsAndDecimalFieldsTest {
             tester.startComponentInPage(form, Markup.of("<form wicket:id='form'><div wicket:id='" + field.getId() + "'></div></form>"));
         }
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue(field.getId() + ":container:field", input);
+        formTester.setValue(field.getId() + ":input", input);
         formTester.submit();
     }
 }

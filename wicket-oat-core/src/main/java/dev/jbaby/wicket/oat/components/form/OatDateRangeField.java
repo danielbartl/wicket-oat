@@ -48,7 +48,7 @@ public class OatDateRangeField extends BaseOatField<DateRange, OatDateRangeField
     }
 
     @Override
-    protected RangeInput createFormComponent(String id, IModel<DateRange> model) {
+    protected RangeInput newInput(String id, IModel<DateRange> model) {
         return new RangeInput(id, model);
     }
 

@@ -37,7 +37,7 @@ public class OatUrlField extends BaseOatInputField<String, UrlTextField, OatUrlF
     }
 
     @Override
-    protected UrlTextField createFormComponent(String id, IModel<String> model) {
+    protected UrlTextField newInput(String id, IModel<String> model) {
         return new UrlTextField(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

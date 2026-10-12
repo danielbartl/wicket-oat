@@ -43,8 +43,8 @@ class CustomerPageTest {
     @Test
     void savesAQuickNote() {
         FormTester form = tester.newFormTester("pageHeader:pageHeader_body:quickNote:popover:content:noteForm");
-        form.setValue("type:container:field", "Call");
-        form.setValue("text:container:field", "Asked about the Q3 invoice.");
+        form.setValue("type:input", "Call");
+        form.setValue("text:input", "Asked about the Q3 invoice.");
         tester.executeAjaxEvent("pageHeader:pageHeader_body:quickNote:popover:content:noteForm:saveNote", "click");
         tester.assertNoErrorMessage();
         assertTrue(tester.getLastResponseAsString().contains("Note saved (Call)."));

@@ -2,6 +2,9 @@ package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.form.OatCustomField;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.Markup;
@@ -77,6 +80,40 @@ class TierAComponentsTest {
         }
     }
 
+    private static final MetaDataKey<String> USER = new MetaDataKey<>() {};
+
+    /** A login page keeping OatLoginForm's own onSignedIn; it remembers the user in the session. */
+    public static class SignInPage extends WebPage implements IMarkupResourceStreamProvider {
+        public SignInPage() {
+            add(new OatLoginForm("login") {
+                @Override
+                protected boolean signIn(String username, String password, boolean rememberMe) {
+                    Session.get().setMetaData(USER, username);
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><div wicket:id='login'></div></body></html>");
+        }
+    }
+
+    /** A page for signed-in users only, sending everyone else to sign in first. */
+    public static class MembersPage extends WebPage implements IMarkupResourceStreamProvider {
+        public MembersPage() {
+            if (Session.get().getMetaData(USER) == null) {
+                throw new RestartResponseAtInterceptPageException(SignInPage.class);
+            }
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body>Members only</body></html>");
+        }
+    }
+
     private void signIn(String username, String password) {
         FormTester form = tester.newFormTester("login:form");
         form.setValue("username:container:field", username);
@@ -114,6 +151,36 @@ class TierAComponentsTest {
         LoginPage page = tester.startPage(LoginPage.class);
         signIn("ada", "secret");
         assertThat(page.signedIn).isTrue();
+    }
+
+    @Test
+    void aSuccessfulSignInContinuesToThePageTheUserWasGoingTo() {
+        tester.startPage(MembersPage.class);
+        tester.assertRenderedPage(SignInPage.class);
+
+        signIn("ada", "secret");
+
+        tester.assertRenderedPage(MembersPage.class);
+    }
+
+    @Test
+    void aSuccessfulSignInWithoutAPageToGoBackToGoesHome() {
+        tester.startPage(SignInPage.class);
+        signIn("ada", "secret");
+        tester.assertRenderedPage(tester.getApplication().getHomePage());
+    }
+
+    @Test
+    void aSuccessfulSignInChangesTheSessionIdButKeepsTheSession() {
+        // The HTTP session a servlet container would have; MockApplication's store creates none
+        tester.getHttpSession().setTemporary(false);
+        tester.startPage(SignInPage.class);
+        String idBefore = tester.getHttpSession().getId();
+
+        signIn("ada", "secret");
+
+        assertThat(tester.getHttpSession().getId()).isNotEqualTo(idBefore);
+        assertThat(tester.getSession().getMetaData(USER)).isEqualTo("ada");
     }
 
     @Test

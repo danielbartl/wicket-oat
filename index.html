@@ -59,6 +59,7 @@
         <a href="#applayout">AppLayout</a>
         <a href="#components">Components</a>
         <a href="#new">New in 0.2.0</a>
+        <a href="#next">Coming in 0.3.0</a>
         <a href="#theming">Theming</a>
         <a href="#ai-skill">AI Skill</a>
         <a href="#quick-start">Get Started</a>
@@ -92,6 +93,8 @@
         </div>
         <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Charts, CRUD, trees, data tables with bulk actions and inline editing,
             page headers, KPI cards, a wizard, autocomplete, context menus and more are <a href="#new">out now in 0.2.0</a>.</p>
+        <p class="announce"><a href="#next"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span></a> A bottom tab bar for phone apps, and a skip link
+            and the page's language in <code>OatAppLayout</code>, are <a href="#next">coming with the next release</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -192,6 +195,8 @@
                     Menus and context menus work with the arrow keys, Shift+F10 or the Menu key and
                     give focus back when they close. Tree nodes expand with real buttons, and cells
                     edited in place save with Enter and cancel with Escape.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> <code>OatAppLayout</code> starts with a
+                    &ldquo;Skip to content&rdquo; link past the navigation.</p>
             </article>
             <article class="card">
                 <h3>States a screen reader can announce</h3>
@@ -217,6 +222,8 @@
                 <p>The texts only screen readers hear, such as &ldquo;Toggle menu&rdquo; or
                     &ldquo;Expand&rdquo;, come in eight languages and follow each user's locale, like
                     every other text the library renders.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> <code>OatAppLayout</code> sets the page's
+                    <code>lang</code>, so screen readers pronounce it in the right language.</p>
             </article>
         </div>
         <p class="release-note">Wicket Oat gives you accessible building blocks, not a certificate:
@@ -335,6 +342,11 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                 <p><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Menu items can be grouped into collapsible sections, open while
                     one of their pages is shown, and carry a badge such as a count, which
                     <code>target.add(sidebar)</code> updates over Ajax.</p>
+                <p><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> <code>&lt;html&gt;</code> gets the page's <code>lang</code>
+                    from its locale, and a &ldquo;Skip to content&rdquo; link, shown only while it has
+                    keyboard focus, jumps past the navigation to <code>&lt;main&gt;</code>. For
+                    phone-first apps, <code>OatMobileLayout</code> puts a
+                    <a href="#bottom-nav">bottom tab bar</a> under the content instead.</p>
             </div>
 
             <div class="applayout-demo-wrap">
@@ -394,6 +406,11 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                 added in 0.2.0, the current release. The
                 <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
                 lists everything new, including notes on upgrading from 0.1.x.</p>
+            <p class="release-note" id="next"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> Cards with this label show components
+                coming with the next release, 0.3.0. Their source is on
+                <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already,
+                and the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
+                lists everything coming.</p>
         </div>
 
         <div class="showcase-group">
@@ -643,6 +660,22 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         </div>
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatTree / OatTableTree</strong><code>new OatTree&lt;&gt;(id, provider).setLabel(Folder::name).onSelect(...)</code></div>
+                </div>
+                <div class="showcase-card" id="bottom-nav">
+                    <div class="showcase-preview block">
+                        <div class="demo-phone">
+                            <div class="demo-phone-screen vstack gap-1"><strong>Today</strong><small class="text-light">4 of 6 in the office</small></div>
+                            <nav class="oat-bottom-nav" aria-label="Example tab bar" data-always-visible>
+                                <ul>
+                                    <li><a href="#bottom-nav" aria-current="page"><span class="oat-bottom-nav-icon" aria-hidden="true"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></span><span class="oat-bottom-nav-label">Today</span></a></li>
+                                    <li><a href="#bottom-nav"><span class="oat-bottom-nav-icon" aria-hidden="true"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span><span class="oat-bottom-nav-label">Capacity</span></a></li>
+                                    <li><a href="#bottom-nav"><span class="oat-bottom-nav-icon" aria-hidden="true"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg></span><span class="oat-bottom-nav-label">Team</span><span class="badge">2</span></a></li>
+                                    <li><a href="#bottom-nav" class="button oat-fab" aria-label="Add absence"><span class="oat-bottom-nav-icon" aria-hidden="true"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg></span></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span><strong>OatBottomNav / OatMobileLayout</strong><code>BottomNavItem.of("Team", TeamPage.class).withIcon(Icon.sprite("team")).withBadge(() -&gt; open) &middot; .asPrimary()</code></div>
                 </div>
             </div>
         </div>
@@ -1204,7 +1237,10 @@ WicketOats.install(this)
         .setDensity(OatDensity.COMPACT);   // new in 0.2.0: tighter spacing app-wide
 
 // Pin one component to a theme, whatever the user chose
-card.add(Oat.Behaviors.theme(OatTheme.LIGHT));</code></pre>
+card.add(Oat.Behaviors.theme(OatTheme.LIGHT));
+
+// Keep Oat's own spacing in one part of a compact app (works from 0.3.0)
+form.add(Oat.Behaviors.density(OatDensity.DEFAULT));</code></pre>
     </div>
 </section>
 

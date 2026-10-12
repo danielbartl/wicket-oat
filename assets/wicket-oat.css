@@ -16,6 +16,33 @@
     padding-inline: var(--space-6);
 }
 
+/* The skip link moves focus to <main>; it needs no focus ring of its own */
+.oat-app-main:focus {
+    outline: none;
+}
+
+/*
+ * OatAppLayout's skip link: the first stop for Tab, shown only while it has focus, so
+ * keyboard and screen-reader users can jump past the navigation to the content.
+ */
+.oat-skip-link {
+    position: fixed;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: calc(var(--z-modal) + 1);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-medium);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: var(--font-semibold);
+    text-decoration: none;
+    transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.oat-skip-link:focus {
+    transform: none;
+}
+
 .oat-topnav-extra {
     flex: 1;
 }
@@ -100,6 +127,21 @@ select[multiple] {
     --space-5: 1rem;
     --space-6: 1rem;
     --text-regular: var(--text-7);
+}
+
+/* A part pinned to Oat's own spacing (OatDensity.DEFAULT) inside a compact page: Oat's values */
+[data-density="default"] {
+    --space-2: .5rem;
+    --space-3: .75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --text-regular: var(--text-6);
+}
+
+/* A pinned part's body text follows its density (on <html>, font-size would change the rem) */
+[data-density]:not(html) {
+    font-size: var(--text-regular);
 }
 
 /*
@@ -489,6 +531,14 @@ fieldset.oat-range-field fieldset.group {
     border: 1px solid var(--border);
     border-radius: var(--radius-medium);
     box-shadow: var(--shadow-small);
+}
+
+/* In a dialog or popover, wicket-oat.js shows the list as a popover; keep Wicket's position and size */
+.wicket-aa-container[popover] {
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    color: inherit;
 }
 
 .oat-autocomplete ul {
@@ -1380,4 +1430,156 @@ a.oat-tree-label[aria-current] {
 
 .oat-chip button:hover {
     background-color: var(--accent);
+}
+
+/*
+ * OatBottomNav: a tab bar fixed to the bottom of a phone's screen, and OatMobileLayout's
+ * content, which leaves room for it. Oat has no tab bar, so it is built from Oat's
+ * variables only, and follows the theme, light or dark. Override the variables to line
+ * the tabs up with a wider column, or to keep your own layout's content clear of the bar.
+ */
+:root {
+    /* The width of the row of tabs and of OatMobileLayout's content */
+    --oat-bottom-nav-max-width: 28rem;
+    /* The bar's height above the safe area: its padding, a 3rem row of tabs and its top border */
+    --oat-bottom-nav-height: calc(var(--space-2) + 3rem + var(--space-3) + 1px);
+}
+
+.oat-bottom-nav {
+    position: fixed;
+    inset: auto 0 0 0;
+    /* Under dropdowns, popovers and dialogs */
+    z-index: calc(var(--z-dropdown) - 1);
+    background-color: var(--card);
+    border-block-start: 1px solid var(--border);
+    /* Above the iPhone's home indicator; needs viewport-fit=cover in the viewport meta tag */
+    padding: var(--space-2) var(--space-2) calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+}
+
+/*
+ * One equal column per tab, however many there are. The columns come from the tabs
+ * themselves rather than a count in a style attribute, which Wicket's strict Content
+ * Security Policy would block. Not "> ul": in development mode, Wicket keeps the
+ * panel's <wicket:panel> tag between the two.
+ */
+.oat-bottom-nav ul {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    align-items: center;
+    max-width: var(--oat-bottom-nav-max-width);
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+.oat-bottom-nav li {
+    margin: 0;
+}
+
+/* A tab: the icon above the label, in the muted text color, at least 44px to tap */
+.oat-bottom-nav li > a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--space-1) / 2);
+    min-height: 3rem;
+    padding: 0 var(--space-1);
+    border-radius: var(--radius-medium);
+    font-size: var(--text-8);
+    font-weight: var(--font-medium);
+    line-height: var(--leading-normal);
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: none;
+}
+
+/* The current page's tab. Never the primary item: its icon must keep the button's foreground color. */
+.oat-bottom-nav li > a[aria-current="page"]:not(.oat-fab) {
+    color: var(--primary);
+    font-weight: var(--font-semibold);
+}
+
+@media (hover: hover) {
+    .oat-bottom-nav li > a:not(.oat-fab, [aria-current="page"]):hover {
+        color: var(--foreground);
+    }
+}
+
+.oat-bottom-nav li > a:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* OatIcon draws at 1em, so the icon's size is its font size; sprite and inline SVGs follow */
+.oat-bottom-nav-icon {
+    display: inline-flex;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.oat-bottom-nav-icon > svg {
+    width: 1em;
+    height: 1em;
+}
+
+/* Short labels: one line, cut off rather than wrapped */
+.oat-bottom-nav-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* A count at the icon's top end, set off from the icon by a ring in the bar's color */
+.oat-bottom-nav li > a > .badge {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(50% + var(--space-2));
+    min-width: calc(var(--text-8) * var(--leading-normal));
+    padding: 0 var(--space-1);
+    box-shadow: 0 0 0 2px var(--card);
+}
+
+/*
+ * The primary item: Oat's a.button (background, hover, border), as a 3rem circle in the
+ * middle of its column. Its color is set here because the tab's muted color above would
+ * otherwise win over the button's, as these rules beat Oat's layered ones.
+ */
+.oat-bottom-nav li > a.oat-fab {
+    flex-direction: row;
+    width: 3rem;
+    height: 3rem;
+    min-height: 3rem;
+    margin-inline: auto;
+    padding: 0;
+    border-radius: var(--radius-full);
+    color: var(--primary-foreground);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .oat-bottom-nav li > a {
+        transition: color var(--transition-fast), background-color var(--transition-fast);
+    }
+}
+
+/* OatMobileLayout's content: the bar's width, with room below for the bar */
+.oat-mobile-main {
+    max-width: var(--oat-bottom-nav-max-width);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    padding-block-end: calc(var(--oat-bottom-nav-height) + var(--space-6) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Wider than a phone (Oat's grid breakpoint): no bar, unless OatBottomNav.setAlwaysVisible(true) */
+@media (min-width: 769px) {
+    .oat-bottom-nav:not([data-always-visible]) {
+        display: none;
+    }
+
+    .oat-mobile-main:has(~ .oat-bottom-nav:not([data-always-visible])) {
+        padding-block-end: var(--space-8);
+    }
 }

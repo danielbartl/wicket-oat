@@ -437,6 +437,34 @@ a.unstyled, .site-nav a {
     margin-block-start: var(--space-1);
 }
 
+/* ---------- Coming in 0.3.0 ---------- */
+
+/* The next release's announcement, right under the current one's */
+.hero .announce + .announce {
+    margin-block-start: var(--space-2);
+}
+
+/* Bottom-nav showcase: a phone's screen with the bar at its foot, in the flow rather than fixed */
+.demo-phone {
+    display: flex;
+    flex-direction: column;
+    max-width: 22rem;
+    margin-inline: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    overflow: hidden;
+    background-color: var(--background);
+}
+
+.demo-phone-screen {
+    padding: var(--space-4);
+}
+
+.demo-phone .oat-bottom-nav {
+    position: static;
+    padding-block-end: var(--space-3);
+}
+
 /* Master-detail showcase: the list of customers as plain links */
 .demo-master a {
     display: block;

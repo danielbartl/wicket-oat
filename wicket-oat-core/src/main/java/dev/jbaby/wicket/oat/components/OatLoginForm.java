@@ -4,6 +4,7 @@ import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.components.form.OatCheckBox;
 import dev.jbaby.wicket.oat.components.form.OatPasswordField;
 import dev.jbaby.wicket.oat.components.form.OatTextField;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -88,8 +89,7 @@ public abstract class OatLoginForm extends Panel {
             protected void onSubmit(AjaxRequestTarget target) {
                 if (signIn(username.getObject(), password.getObject(), Boolean.TRUE.equals(rememberMe.getObject()))) {
                     failed = false;
-                    // A new session id once signed in, so an id planted before can't be used
-                    getSession().replaceSession();
+                    renewSessionId();
                     onSignedIn(target);
                 } else {
                     failed = true;
@@ -103,6 +103,19 @@ public abstract class OatLoginForm extends Panel {
                 target.add(form);
             }
         }.setBusyIndicator(true));
+    }
+
+    /**
+     * Gives the session a new id once signed in, so an id planted before can't be used.
+     * Not {@code replaceSession()}: it clears the session's metadata, which holds the page
+     * {@code continueToOriginalDestination()} goes back to. Without an HTTP session there
+     * is no id that could have been planted, e.g. under {@code WicketTester}'s default
+     * {@code MockApplication}, whose session store doesn't create one.
+     */
+    private void renewSessionId() {
+        if (getRequest().getContainerRequest() instanceof HttpServletRequest request && request.getSession(false) != null) {
+            getSession().changeSessionId();
+        }
     }
 
     /**

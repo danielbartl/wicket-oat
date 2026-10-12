@@ -19,6 +19,10 @@
 - Fix: `Oat.Behaviors.density(OatDensity.DEFAULT)` now really pins a component to Oat's own
   spacing inside a compact app (`data-density="default"`); before, it inherited the compact
   density. A component pinned to a density also gets that density's body text size.
+- Fix: after signing in, `OatLoginForm` now continues to the page the user was going to.
+  It replaced the session against session fixation, which also cleared the page Wicket
+  had remembered, so users always landed on the home page. It now only changes the
+  session's id, keeping the session's metadata.
 - The examples app looks like a business app by default: the Business theme at compact
   density, with the current theme shown in the top navigation. On Halloween and from
   10 to 31 December it defaults to the Halloween and Christmas themes, through its own

@@ -82,7 +82,7 @@ is the more natural choice for it.
 ## Available Components
 
 - **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`, `OatIcon`, `OatCookieConsent`
-- **Navigation/Layout:** `OatAppLayout`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
 - **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
@@ -280,6 +280,65 @@ add(Oat.Components.lazyLoad("revenue", id -> new RevenuePanel(id, reports.revenu
 
 It extends Wicket's `AjaxLazyLoadPanel`, so it can also wait for background work:
 override `isContentReady()`.
+
+## Bottom Navigation for Phones
+
+`OatBottomNav` is a tab bar fixed to the bottom of the screen, for an app's three
+to five main pages: each tab an icon above a short label. Oat has no tab bar, so
+`wicket-oat.css` builds one from Oat's own variables; it follows the theme, light or dark.
+`OatMobileLayout` is a base page with the content in `<main>` and the bar after it:
+
+```java
+public abstract class TimeOffPage extends OatMobileLayout {
+
+    @Override
+    protected IModel<List<BottomNavItem>> bottomNavItemsModel() {
+        return Model.ofList(List.of(
+                BottomNavItem.of("Today", TodayPage.class).withIcon(Icon.sprite("today")),
+                BottomNavItem.of("Team", TeamPage.class).withIcon(Icon.named("users"))
+                        .withBadge(() -> requests.countOpen())
+                        .withActive(page -> page instanceof TeamPage || page instanceof MemberPage),
+                BottomNavItem.of("Add absence", AddAbsencePage.class).withIcon(Icon.named("plus")).asPrimary()));
+    }
+}
+```
+
+- **Icons:** Wicket Oat ships no icon set for the bar. `Icon.sprite("today")` draws a
+  symbol of an SVG sprite your page supplies (`<svg aria-hidden="true"><use href="#today"/></svg>`),
+  `Icon.svg("<svg ...>...</svg>")` writes an SVG into the page as it is, so pass only
+  markup you trust, never user input, and `Icon.named("users")` uses one of `OatIcon`'s
+  icons. Draw sprites and SVGs with `currentColor`, so they take the tab's color.
+- **Current tab:** the tab whose page is shown gets `aria-current="page"` and the
+  primary color. By default that's the item's page class (and its parameters, if it
+  has any); `withActive(...)` replaces the rule, e.g. for pages that belong to a tab
+  without being its target.
+- **Badge:** `withBadge(...)` shows a count on the icon, read on every render and
+  hidden while `null` or 0. `OatMobileLayout`'s `bottomNav` has a markup id, so
+  `target.add(bottomNav)` updates it over Ajax.
+- **Primary item:** `asPrimary()` makes one item the bar's main action, a round Oat
+  button showing only its icon; screen readers get its label as `aria-label`. It never
+  takes the current tab's color, so its icon stays readable on the button.
+- **Wide screens:** the bar shows up to 768px, where Oat's grid switches to phones too.
+  `setAlwaysVisible(true)` keeps it on wider screens, e.g. from `createBottomNav(...)`.
+- **The `<nav>`** is named "Main" for screen readers (`OatBottomNav.label`, translated);
+  change it with `setLabel(...)` or an `aria-label` in the markup. Tabs for pages the
+  user may not open are left out. Override `newLink(id, item)` to use, for example, an
+  `AjaxLink` instead of a `BookmarkablePageLink`.
+
+Without `OatMobileLayout`, put the bar on a `<nav>` with `Oat.Components.bottomNav(id, items)`,
+and keep your content clear of it:
+
+```css
+main {
+    padding-block-end: calc(var(--oat-bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+}
+```
+
+On an iPhone, the bar keeps clear of the home indicator only if the page's viewport
+meta tag has `viewport-fit=cover`, as `OatMobileLayout`'s does:
+`<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>`.
+The bar's rules are in `wicket-oat.css`; set `--oat-bottom-nav-max-width` (28rem) to
+line the tabs up with a wider content column.
 
 ## Feedback Messages
 
@@ -723,6 +782,7 @@ getResourceSettings().getStringResourceLoaders()
 | `OatAppLayout.toggleMenu` | Toggle menu |
 | `OatAppLayout.skipToContent` | Skip to content |
 | `OatAppLayout.title` / `OatAppLayout.name` | Wicket Oat Application (not translated: meant to be overridden) |
+| `OatBottomNav.label` | Main |
 | `OatPagingNavigator.label` | Pagination |
 | `OatFileDropzone.choose` / `OatFileDropzone.hint` | Choose files / Drop files here or click to choose |
 | `OatTagInput.placeholder` | Add tags... |

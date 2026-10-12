@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h1 class="mb-4">Add absence</h1>
+
+    <form wicket:id="form">
+        <div class="row">
+            <label data-field class="col-6">First day <input type="date" wicket:id="start"/></label>
+            <label data-field class="col-6">Last day <input type="date" wicket:id="end"/></label>
+        </div>
+
+        <p id="absence-type" class="mb-2"><strong>Type</strong></p>
+        <div wicket:id="type" class="row mb-4" role="radiogroup" aria-labelledby="absence-type">
+            <label class="card hstack justify-between col-6">Vacation <input type="radio" wicket:id="vacation"/></label>
+            <label class="card hstack justify-between col-6">Away <input type="radio" wicket:id="away"/></label>
+        </div>
+
+        <div class="vstack gap-2 mb-6">
+            <label class="card hstack justify-between">Tentative <input type="checkbox" role="switch" wicket:id="tentative"/></label>
+            <label class="card hstack justify-between">Half day at start <input type="checkbox" role="switch" wicket:id="halfDayStart"/></label>
+            <label class="card hstack justify-between">Half day at end <input type="checkbox" role="switch" wicket:id="halfDayEnd"/></label>
+        </div>
+
+        <button type="submit" class="w-100">Add absence</button>
+    </form>
+</wicket:extend>
+</body>
+</html>

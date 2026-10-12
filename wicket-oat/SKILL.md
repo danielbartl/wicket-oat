@@ -16,7 +16,7 @@ WicketOats.install(this);
 ```
 
 ### 2. Base Layout
-Extend `OatAppLayout` for your main pages to get the sidebar and topnav structure.
+Extend `OatAppLayout` for your main pages to get the sidebar and topnav structure, or `OatMobileLayout` for a phone-first app with a bottom tab bar (`OatBottomNav`).
 
 ### 3. Creating UI
 Use the `Oat` factory for the most common tasks:

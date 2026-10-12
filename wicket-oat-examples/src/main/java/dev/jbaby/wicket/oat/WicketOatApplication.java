@@ -70,6 +70,10 @@ public class WicketOatApplication {
                 mountPage("/dropdown", DropdownPage.class);
                 mountPage("/tabs", TabsPage.class);
                 mountPage("/upload", UploadPage.class);
+                mountPage("/mobile/today", MobileTodayPage.class);
+                mountPage("/mobile/capacity", MobileCapacityPage.class);
+                mountPage("/mobile/team", MobileTeamPage.class);
+                mountPage("/mobile/add", MobileAddAbsencePage.class);
 
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));

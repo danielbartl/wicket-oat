@@ -2,6 +2,17 @@
 
 ## 0.3.0 (unreleased)
 
+- `OatBottomNav`: a tab bar fixed to the bottom of a phone's screen, three to five tabs
+  of an icon above a label (`BottomNavItem`), with the current page's tab marked
+  (`aria-current="page"`, or a rule of your own with `withActive`), badges, and one
+  primary item as a round Oat button. Icons come from your SVG sprite, inline SVG or
+  `OatIcon`. Its rules in `wicket-oat.css` use Oat's variables only and keep it clear
+  of the iPhone's home indicator. It shows up to 768px unless `setAlwaysVisible(true)`. The `<nav>` is named by `OatBottomNav.label`,
+  translated.
+- `OatMobileLayout`: a base page for phone-first apps, with the content in `<main>` and
+  an `OatBottomNav` below it, from `bottomNavItemsModel()`.
+- The examples app has a "Time off" demo for phones: Today, Capacity and Team tabs, a
+  badge updated over Ajax, and an "Add absence" form of Oat markup.
 - `OatAppLayout` sets the page's `lang` on `<html>` from its locale, and starts with a
   "Skip to content" link (`OatAppLayout.skipToContent`, translated), shown only while it has
   keyboard focus, that moves focus to `<main id="oat-main">`.

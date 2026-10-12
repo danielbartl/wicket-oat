@@ -1,11 +1,8 @@
 package dev.jbaby.wicket.oat.components;
 
-import dev.jbaby.wicket.oat.behaviors.OatDensityBehavior;
-import dev.jbaby.wicket.oat.behaviors.OatThemeBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -40,24 +37,12 @@ public abstract class OatAppLayout extends WebPage {
     /** For bookmarkable pages: pass their {@code PageParameters} on. */
     public OatAppLayout(PageParameters parameters) {
         super(parameters);
-        addThemedHtml();
+        add(new LayoutHtml("html"));
     }
 
     public OatAppLayout(IModel<?> model) {
         super(model);
-        addThemedHtml();
-    }
-
-    private void addThemedHtml() {
-        TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
-        html.add(new OatThemeBehavior());
-        html.add(new OatDensityBehavior());
-        // The page's language, for screen readers' pronunciation and the browser's hyphenation
-        html.add(AttributeModifier.replace("lang", (IModel<String>) () -> {
-            String tag = getLocale().toLanguageTag();
-            return "und".equals(tag) ? null : tag;
-        }));
-        add(html);
+        add(new LayoutHtml("html"));
     }
 
     @Override

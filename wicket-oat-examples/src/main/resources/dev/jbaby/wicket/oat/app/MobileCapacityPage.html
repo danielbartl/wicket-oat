@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h1 class="mb-2">Capacity</h1>
+    <p class="text-light">Who's in on the next two weeks' working days.</p>
+
+    <ul class="unstyled vstack gap-4 mt-6">
+        <li wicket:id="days" class="vstack gap-1">
+            <span class="hstack justify-between"><strong wicket:id="day">Mon 12 Oct</strong><small class="text-light" wicket:id="count">5 of 6 in</small></span>
+            <!-- The text above says the same for screen readers -->
+            <meter wicket:id="meter" aria-hidden="true"></meter>
+        </li>
+    </ul>
+</wicket:extend>
+</body>
+</html>

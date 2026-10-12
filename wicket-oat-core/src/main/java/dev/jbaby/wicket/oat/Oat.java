@@ -520,6 +520,11 @@ public final class Oat {
             return new OatMenuBar(id);
         }
 
+        /** A tab bar at the bottom of a phone's screen, on a {@code <nav>}: three to five tabs, each an icon and a label. */
+        public static OatBottomNav bottomNav(String id, List<BottomNavItem> items) {
+            return new OatBottomNav(id, items);
+        }
+
         /** Two panes side by side, the first resizable by dragging its corner. */
         public static OatSplitLayout splitLayout(String id, SerializableFunction<String, ? extends Component> first,
                                                  SerializableFunction<String, ? extends Component> second) {

@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h1 class="mb-2">Today</h1>
+    <p class="text-light"><span wicket:id="date">Monday, 12 October</span>: <strong wicket:id="inCount">4</strong> of
+        <span wicket:id="teamSize">6</span> in.</p>
+
+    <h2 class="mt-6 mb-4">Out today</h2>
+    <ul class="unstyled vstack gap-2">
+        <li wicket:id="out" class="card hstack justify-between">
+            <span class="vstack gap-1"><strong wicket:id="name"></strong><small class="text-light" wicket:id="when"></small></span>
+            <span wicket:id="type" class="badge"></span>
+        </li>
+    </ul>
+    <p wicket:id="nobody" class="text-light">Everyone's in.</p>
+
+    <h2 class="mt-6 mb-4">Coming up</h2>
+    <ul class="unstyled vstack gap-2">
+        <li wicket:id="next" class="card hstack justify-between">
+            <span class="vstack gap-1"><strong wicket:id="name"></strong><small class="text-light" wicket:id="when"></small></span>
+            <span wicket:id="type" class="badge"></span>
+        </li>
+    </ul>
+</wicket:extend>
+</body>
+</html>

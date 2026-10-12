@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+    <h1 class="mb-2">Team</h1>
+    <p class="text-light">The tab's badge counts the tentative absences. Confirming one updates it over Ajax,
+        with <code>target.add(bottomNav)</code>.</p>
+
+    <div wicket:id="team">
+        <h2 class="mt-6 mb-4">Tentative</h2>
+        <ul class="unstyled vstack gap-2">
+            <li wicket:id="tentative" class="card hstack justify-between">
+                <span class="vstack gap-1"><strong wicket:id="name"></strong><small class="text-light" wicket:id="what"></small></span>
+                <button wicket:id="confirm"></button>
+            </li>
+        </ul>
+        <p wicket:id="allConfirmed" class="text-light">Nothing left to confirm.</p>
+
+        <h2 class="mt-6 mb-4">Vacation days left</h2>
+        <ul class="unstyled vstack gap-2">
+            <li wicket:id="members" class="card hstack justify-between">
+                <strong wicket:id="name"></strong>
+                <small class="text-light" wicket:id="left"></small>
+            </li>
+        </ul>
+    </div>
+</wicket:extend>
+</body>
+</html>

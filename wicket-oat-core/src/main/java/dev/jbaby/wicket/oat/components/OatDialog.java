@@ -29,6 +29,8 @@ import org.apache.wicket.model.StringResourceModel;
  * in it are validated when Confirm is clicked. On a validation error the dialog stays
  * open and shows the errors; otherwise {@link #onConfirm} runs, and the dialog closes
  * unless an error was reported in it there.</li>
+ * <li>It can sit inside a form of the page: submitting that form leaves the dialog's
+ * fields out, so they are neither validated nor stored.</li>
  * <li>Cancel, the Escape key and a click on the backdrop close it natively.</li>
  * </ul>
  *
@@ -95,8 +97,15 @@ public class OatDialog extends Panel {
         trigger.setVisible(triggerLabel != null);
         add(trigger);
 
-        // The dialog's own form, re-rendered as a whole by open() and after a failed confirm
-        form = new Form<>("form");
+        // The dialog's own form, re-rendered as a whole by open() and after a failed confirm.
+        // Inside a page's form it is nested; submitting that form leaves it out, so the
+        // fields of a closed dialog can't block the page's submit.
+        form = new Form<Void>("form") {
+            @Override
+            protected boolean wantSubmitOnParentFormSubmit() {
+                return false;
+            }
+        };
         form.setOutputMarkupId(true);
         dialog.add(form);
 

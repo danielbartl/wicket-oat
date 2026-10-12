@@ -116,15 +116,15 @@ class TierAComponentsTest {
 
     private void signIn(String username, String password) {
         FormTester form = tester.newFormTester("login:form");
-        form.setValue("username:container:field", username);
-        form.setValue("password:container:field", password);
+        form.setValue("username:input", username);
+        form.setValue("password:input", password);
         tester.executeAjaxEvent("login:form:signIn", "click");
     }
 
     @Test
     void loginFormHelpsPasswordManagers() {
         tester.startPage(LoginPage.class);
-        List<TagTester> inputs = tags("wicket:id", "field");
+        List<TagTester> inputs = tags("wicket:id", "input");
         assertThat(inputs.get(0).getAttribute("autocomplete")).isEqualTo("username");
         assertThat(inputs.get(1).getAttribute("type")).isEqualTo("password");
         assertThat(inputs.get(1).getAttribute("autocomplete")).isEqualTo("current-password");
@@ -143,7 +143,7 @@ class TierAComponentsTest {
         assertThat(page.signedIn).isFalse();
         assertThat(tester.getTagByWicketId("failed").getValue()).isEqualTo("Wrong username or password.");
         assertThat(tester.getTagByWicketId("failed").getAttribute("role")).isEqualTo("alert");
-        assertThat(tags("wicket:id", "field").get(1).getAttribute("value")).isNullOrEmpty();
+        assertThat(tags("wicket:id", "input").get(1).getAttribute("value")).isNullOrEmpty();
     }
 
     @Test
@@ -199,7 +199,7 @@ class TierAComponentsTest {
         assertThat(tester.getTagByWicketId("forgot").getValue()).contains("Forgot your password?");
 
         FormTester form = tester.newFormTester("login:form");
-        form.setValue("rememberMe:container:field", true);
+        form.setValue("rememberMe:input", true);
         signIn("ada", "secret");
         assertThat(page.attempts).containsExactly("ada/secret/true");
     }
@@ -349,14 +349,14 @@ class TierAComponentsTest {
         assertThat(tester.getTagByWicketId("height").getAttribute("aria-invalid")).isEqualTo("false");
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("size:container:field:width", "3");
-        formTester.setValue("size:container:field:height", "4");
+        formTester.setValue("size:input:width", "3");
+        formTester.setValue("size:input:height", "4");
         formTester.submit();
         assertThat(size.getObject()).isEqualTo("3x4");
 
         formTester = tester.newFormTester("form");
-        formTester.setValue("size:container:field:width", "");
-        formTester.setValue("size:container:field:height", "");
+        formTester.setValue("size:input:width", "");
+        formTester.setValue("size:input:height", "");
         formTester.submit();
         assertThat(tester.getTagByWicketId("width").getAttribute("aria-invalid")).isEqualTo("true");
         assertThat(tester.getTagByWicketId("container").getAttribute("data-field")).isEqualTo("error");
@@ -365,6 +365,6 @@ class TierAComponentsTest {
     @Test
     void customFieldIsValidated() {
         OatCustomField<String> field = new OatCustomField<>("size", "Size", new Model<>(), (id, model) -> new TextField<>("other", model));
-        assertThatIllegalArgumentException().isThrownBy(field::getField);
+        assertThatIllegalArgumentException().isThrownBy(field::getInput);
     }
 }

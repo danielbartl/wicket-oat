@@ -37,7 +37,7 @@ public class OatEmailField extends BaseOatInputField<String, EmailTextField, Oat
     }
 
     @Override
-    protected EmailTextField createFormComponent(String id, IModel<String> model) {
+    protected EmailTextField newInput(String id, IModel<String> model) {
         return new EmailTextField(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

@@ -53,7 +53,7 @@ public class OatCustomField<T> extends BaseOatField<T, FormComponent<T>, OatCust
     }
 
     @Override
-    protected FormComponent<T> createFormComponent(String id, IModel<T> model) {
+    protected FormComponent<T> newInput(String id, IModel<T> model) {
         FormComponent<T> component = input.apply(id, model);
         if (component == null || !id.equals(component.getId())) {
             throw new IllegalArgumentException("The input must use the id passed to the factory (\"" + id + "\"), but was "
@@ -71,7 +71,7 @@ public class OatCustomField<T> extends BaseOatField<T, FormComponent<T>, OatCust
         ariaWired = true;
         // Once the input's own components exist (also those added in its onInitialize).
         // Every form component is a container; visit the inputs of a FormComponentPanel.
-        FormComponent<T> field = getField();
+        FormComponent<T> field = getInput();
         field.visitChildren(FormComponent.class, (inner, visit) -> {
             inner.add(AttributeModifier.replace("aria-describedby", (IModel<String>) this::getFeedbackMarkupId));
             inner.add(AttributeModifier.replace("aria-invalid", (IModel<String>) () ->

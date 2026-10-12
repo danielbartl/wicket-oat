@@ -42,7 +42,7 @@ class UploadPageTest {
     void reportsTheUploadedFile(@TempDir Path dir) throws IOException {
         tester.startPage(UploadPage.class);
         FormTester form = tester.newFormTester("form");
-        form.setFile("plainUpload:container:field", new File(Files.write(dir.resolve("notes.txt"), new byte[1024]).toFile()), "text/plain");
+        form.setFile("plainUpload:input", new File(Files.write(dir.resolve("notes.txt"), new byte[1024]).toFile()), "text/plain");
         tester.executeAjaxEvent("form:upload", "click");
 
         String message = tester.getFeedbackMessages(null).get(0).getMessage().toString();
@@ -53,7 +53,7 @@ class UploadPageTest {
     void rejectsFilesOverTheUploadLimit(@TempDir Path dir) throws IOException {
         tester.startPage(UploadPage.class);
         FormTester form = tester.newFormTester("form");
-        form.setFile("plainUpload:container:field", new File(Files.write(dir.resolve("big.bin"), new byte[6 * 1024 * 1024]).toFile()), "application/octet-stream");
+        form.setFile("plainUpload:input", new File(Files.write(dir.resolve("big.bin"), new byte[6 * 1024 * 1024]).toFile()), "application/octet-stream");
         tester.executeAjaxEvent("form:upload", "click");
 
         tester.assertErrorMessages("File must be less than 5MB.");

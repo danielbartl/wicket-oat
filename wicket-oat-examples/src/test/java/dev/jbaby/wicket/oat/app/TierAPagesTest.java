@@ -31,14 +31,14 @@ class TierAPagesTest {
     void signInRejectsAWrongPasswordAndAcceptsTheDemoUser() {
         tester.startPage(SignInPage.class);
         FormTester form = tester.newFormTester("card:login:form");
-        form.setValue("username:container:field", "demo");
-        form.setValue("password:container:field", "wrong");
+        form.setValue("username:input", "demo");
+        form.setValue("password:input", "wrong");
         tester.executeAjaxEvent("card:login:form:signIn", "click");
         assertTrue(tester.getLastResponseAsString().contains("Wrong username or password."));
 
         form = tester.newFormTester("card:login:form");
-        form.setValue("username:container:field", "demo");
-        form.setValue("password:container:field", "demo");
+        form.setValue("username:input", "demo");
+        form.setValue("password:input", "demo");
         tester.executeAjaxEvent("card:login:form:signIn", "click");
         assertTrue(tester.getLastResponseAsString().contains("Signed in as demo."));
     }

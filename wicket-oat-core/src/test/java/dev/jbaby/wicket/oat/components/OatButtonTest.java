@@ -96,12 +96,12 @@ class OatButtonTest {
         assertThat(save.getValue()).isEqualTo("Save");
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "");
+        formTester.setValue("name:input", "");
         tester.executeAjaxEvent("form:save", "click");
         assertThat(calls).containsExactly("error");
 
         formTester = tester.newFormTester("form");
-        formTester.setValue("name:container:field", "Ada");
+        formTester.setValue("name:input", "Ada");
         tester.executeAjaxEvent("form:save", "click");
         assertThat(calls).containsExactly("error", "submit");
         assertThat(name.getObject()).isEqualTo("Ada");

@@ -71,21 +71,21 @@ class LaterRoadmapTest {
         Model<DateRange> model = new Model<>();
         OatDateRangeField field = new OatDateRangeField("period", "Period", model);
         FormTester form = startInForm(field);
-        form.setValue("period:container:field:from", "2026-01-01");
-        form.setValue("period:container:field:to", "2026-03-31");
+        form.setValue("period:input:from", "2026-01-01");
+        form.setValue("period:input:to", "2026-03-31");
         form.submit();
         assertThat(model.getObject()).isEqualTo(new DateRange(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 3, 31)));
 
         form = tester.newFormTester("form");
-        form.setValue("period:container:field:from", "2026-02-01");
-        form.setValue("period:container:field:to", "");
+        form.setValue("period:input:from", "2026-02-01");
+        form.setValue("period:input:to", "");
         form.submit();
         assertThat(model.getObject()).isEqualTo(new DateRange(LocalDate.of(2026, 2, 1), null));
         assertThat(model.getObject().contains(LocalDate.of(2030, 1, 1))).isTrue();
         assertThat(model.getObject().contains(LocalDate.of(2026, 1, 31))).isFalse();
 
         form = tester.newFormTester("form");
-        form.setValue("period:container:field:from", "");
+        form.setValue("period:input:from", "");
         form.submit();
         assertThat(model.getObject()).isNull();
     }
@@ -95,8 +95,8 @@ class LaterRoadmapTest {
         Model<DateRange> model = new Model<>();
         OatDateRangeField field = new OatDateRangeField("period", "Period", model);
         FormTester form = startInForm(field);
-        form.setValue("period:container:field:from", "2026-03-01");
-        form.setValue("period:container:field:to", "2026-02-01");
+        form.setValue("period:input:from", "2026-03-01");
+        form.setValue("period:input:to", "2026-02-01");
         form.submit();
 
         assertThat(model.getObject()).isNull();
@@ -108,9 +108,9 @@ class LaterRoadmapTest {
     void aRequiredDateRangeNeedsBothEnds() {
         OatDateRangeField field = new OatDateRangeField("period", "Period", new Model<>()).setRequired(true);
         FormTester form = startInForm(field);
-        form.setValue("period:container:field:from", "2026-03-01");
+        form.setValue("period:input:from", "2026-03-01");
         form.submit();
-        assertThat(field.getField().hasErrorMessage()).isTrue();
+        assertThat(field.getInput().hasErrorMessage()).isTrue();
     }
 
     // --- Autocomplete ---
@@ -129,12 +129,12 @@ class LaterRoadmapTest {
         OatAutoCompleteField<Customer> field = new OatAutoCompleteField<Customer>("customer", "Customer", new Model<>())
                 .setChoices(LaterRoadmapTest::search).setDisplay(Customer::name).setMaxChoices(1);
         startInForm(field);
-        TagTester input = tester.getTagByWicketId("field");
+        TagTester input = tester.getTagByWicketId("input");
         assertThat(input.getAttribute("autocomplete")).isEqualTo("off");
         assertThat(input.getAttribute("role")).isEqualTo("combobox"); // Wicket's own ARIA support
 
         tester.getRequest().getPostParameters().setParameterValue("q", "acme");
-        tester.executeBehavior(field.getField().getBehaviors(AutoCompleteBehavior.class).get(0));
+        tester.executeBehavior(field.getInput().getBehaviors(AutoCompleteBehavior.class).get(0));
         assertThat(tester.getLastResponseAsString()).contains("<li textvalue=\"ACME GmbH\"").doesNotContain("Acme Ltd");
     }
 
@@ -144,13 +144,13 @@ class LaterRoadmapTest {
         OatAutoCompleteField<Customer> field = new OatAutoCompleteField<Customer>("customer", "Customer", model)
                 .setChoices(LaterRoadmapTest::search).setDisplay(Customer::name);
         FormTester form = startInForm(field);
-        form.setValue("customer:container:field", "acme ltd");
+        form.setValue("customer:input", "acme ltd");
         form.submit();
         assertThat(model.getObject()).isEqualTo(CUSTOMERS.get(1));
 
         // Shown again by its display text
         tester.startPage(tester.getLastRenderedPage());
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("Acme Ltd");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("Acme Ltd");
     }
 
     @Test
@@ -159,7 +159,7 @@ class LaterRoadmapTest {
         OatAutoCompleteField<Customer> field = new OatAutoCompleteField<Customer>("customer", "Customer", model)
                 .setChoices(LaterRoadmapTest::search).setDisplay(Customer::name);
         FormTester form = startInForm(field);
-        form.setValue("customer:container:field", "Initech");
+        form.setValue("customer:input", "Initech");
         form.submit();
 
         assertThat(model.getObject()).isEqualTo(CUSTOMERS.get(2));
@@ -172,7 +172,7 @@ class LaterRoadmapTest {
         OatAutoCompleteField<String> field = Oat.Components.autoCompleteField("city", "City", model)
                 .setChoices(text -> List.of("Vienna", "Villach")).setFreeText(text -> text);
         FormTester form = startInForm(field);
-        form.setValue("city:container:field", "Graz");
+        form.setValue("city:input", "Graz");
         form.submit();
         assertThat(model.getObject()).isEqualTo("Graz");
         assertThatIllegalArgumentException().isThrownBy(() -> field.setMaxChoices(0));
@@ -228,7 +228,7 @@ class LaterRoadmapTest {
         assertThat(tester.getLastResponseAsString()).contains("data-field=\"error\"");
 
         FormTester form = tester.newFormTester("wizard:form");
-        form.setValue("body:container:field", "Ada");
+        form.setValue("body:input", "Ada");
         tester.executeAjaxEvent("wizard:form:next", "click");
         assertThat(wizard.getCurrentStep()).isEqualTo(1);
         assertThat(tags("wicket:id", "steps")).extracting(s -> s.getAttribute("data-state")).containsExactly("done", "current", "upcoming");
@@ -236,10 +236,10 @@ class LaterRoadmapTest {
         // Back to a finished step by its number, then forward again
         tester.clickLink(wizard.get("steps:0:link"));
         assertThat(wizard.getCurrentStep()).isZero();
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("Ada");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("Ada");
         tester.executeAjaxEvent("wizard:form:next", "click");
         form = tester.newFormTester("wizard:form");
-        form.setValue("body:container:field", "ada@example.com");
+        form.setValue("body:input", "ada@example.com");
         tester.executeAjaxEvent("wizard:form:next", "click");
         assertThat(wizard.getCurrentStep()).isEqualTo(2);
         tester.assertInvisible("wizard:form:next");

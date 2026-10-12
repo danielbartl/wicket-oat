@@ -68,12 +68,12 @@ public class OatListMultipleChoice<T> extends BaseOatField<Collection<T>, ListMu
 
     /** The number of visible rows of the list. */
     public OatListMultipleChoice<T> setMaxRows(int maxRows) {
-        getField().setMaxRows(maxRows);
+        getInput().setMaxRows(maxRows);
         return this;
     }
 
     @Override
-    protected ListMultipleChoice<T> createFormComponent(String id, IModel<Collection<T>> model) {
+    protected ListMultipleChoice<T> newInput(String id, IModel<Collection<T>> model) {
         return new ListMultipleChoice<>(id, model, choices, renderer);
     }
 }

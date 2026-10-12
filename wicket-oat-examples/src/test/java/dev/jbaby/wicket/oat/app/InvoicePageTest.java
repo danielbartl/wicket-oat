@@ -46,13 +46,13 @@ class InvoicePageTest {
     void savesAmountsInTheChosenNumberFormat() {
         tester.startPage(InvoicePage.class);
         FormTester form = tester.newFormTester("invoiceForm");
-        form.select("formLocale:container:field", 1); // Deutsch (Deutschland)
-        tester.executeAjaxEvent("invoiceForm:formLocale:container:field", "change");
+        form.select("formLocale:input", 1); // Deutsch (Deutschland)
+        tester.executeAjaxEvent("invoiceForm:formLocale:input", "change");
 
         form = tester.newFormTester("invoiceForm");
-        form.setValue("customerSection:customerSection_body:customer:container:field", "ACME GmbH");
-        form.setValue("amountsSection:amountsSection_body:netAmount:container:field", "2.000,00 €");
-        form.setValue("amountsSection:amountsSection_body:discount:container:field", "10");
+        form.setValue("customerSection:customerSection_body:customer:input", "ACME GmbH");
+        form.setValue("amountsSection:amountsSection_body:netAmount:input", "2.000,00 €");
+        form.setValue("amountsSection:amountsSection_body:discount:input", "10");
         tester.executeAjaxEvent("invoiceForm:submit", "click");
 
         tester.assertNoErrorMessage();

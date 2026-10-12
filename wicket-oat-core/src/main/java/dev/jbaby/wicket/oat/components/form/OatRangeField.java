@@ -39,17 +39,17 @@ public class OatRangeField<N extends Number & Comparable<N>> extends BaseOatFiel
     }
 
     public OatRangeField<N> setMin(N min) {
-        getField().setMinimum(min);
+        getInput().setMinimum(min);
         return this;
     }
 
     public OatRangeField<N> setMax(N max) {
-        getField().setMaximum(max);
+        getInput().setMaximum(max);
         return this;
     }
 
     @Override
-    protected RangeTextField<N> createFormComponent(String id, IModel<N> model) {
+    protected RangeTextField<N> newInput(String id, IModel<N> model) {
         return new RangeTextField<>(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

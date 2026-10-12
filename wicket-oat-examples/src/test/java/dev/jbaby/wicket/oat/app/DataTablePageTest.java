@@ -76,8 +76,8 @@ class DataTablePageTest {
     @Test
     void searchFiltersTheRows() {
         FormTester form = tester.newFormTester("dataTable:toolbar:searchForm");
-        form.setValue("search:container:field", "globex");
-        tester.executeAjaxEvent("dataTable:toolbar:searchForm:search:container:field", "input");
+        form.setValue("search:input", "globex");
+        tester.executeAjaxEvent("dataTable:toolbar:searchForm:search:input", "input");
 
         List<TagTester> rows = tags("aria-label", "Select row");
         assertTrue(rows.size() > 0 && rows.size() < 8);

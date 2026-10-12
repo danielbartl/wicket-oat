@@ -46,12 +46,12 @@ class ChoiceFieldsTest {
         assertThat(legend.getName()).isEqualTo("legend");
         assertThat(legend.getAttribute("for")).isNull();
 
-        TagTester group = tester.getTagByWicketId("field");
+        TagTester group = tester.getTagByWicketId("input");
         assertThat(group.getAttribute("role")).isEqualTo("radiogroup");
         assertThat(group.getAttribute("class")).isEqualTo("vstack gap-2");
         assertThat(group.getAttribute("aria-required")).isEqualTo("true");
         // Each radio is wrapped in its label, the markup Oat styles
-        assertThat(group.getValue()).contains("<label><input name=\"choice:container:field\" type=\"radio\"");
+        assertThat(group.getValue()).contains("<label><input name=\"choice:input\" type=\"radio\"");
         assertThat(group.getValue()).containsPattern("checked=\"checked\"[^>]*/> Medium</label>");
     }
 
@@ -59,9 +59,9 @@ class ChoiceFieldsTest {
     void radioChoiceCanBeInlineAndUpdatesItsModel() {
         Model<String> size = Model.of((String) null);
         FormTester formTester = formWith(Oat.Components.radioChoice("choice", Model.of("Size"), size, SIZES).setInline(true));
-        assertThat(tester.getTagByWicketId("field").getAttribute("class")).isEqualTo("hstack");
+        assertThat(tester.getTagByWicketId("input").getAttribute("class")).isEqualTo("hstack");
 
-        formTester.select("choice:container:field", 2);
+        formTester.select("choice:input", 2);
         formTester.submit();
         assertThat(size.getObject()).isEqualTo("Large");
     }
@@ -72,8 +72,8 @@ class ChoiceFieldsTest {
         IModel<List<String>> model = Model.ofList(selected);
         FormTester formTester = formWith(new OatCheckBoxMultipleChoice<>("choice", "Sizes", model, SIZES));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("role")).isEqualTo("group");
-        formTester.selectMultiple("choice:container:field", new int[] {1, 2}, true);
+        assertThat(tester.getTagByWicketId("input").getAttribute("role")).isEqualTo("group");
+        formTester.selectMultiple("choice:input", new int[] {1, 2}, true);
         formTester.submit();
 
         tester.assertNoErrorMessage();
@@ -94,13 +94,13 @@ class ChoiceFieldsTest {
         IModel<List<String>> model = Model.ofList(new ArrayList<>());
         FormTester formTester = formWith(new OatListMultipleChoice<>("choice", "Sizes", model, SIZES).setMaxRows(3));
 
-        TagTester select = tester.getTagByWicketId("field");
+        TagTester select = tester.getTagByWicketId("input");
         assertThat(select.getName()).isEqualTo("select");
         assertThat(select.getAttribute("multiple")).isEqualTo("multiple");
         assertThat(select.getAttribute("size")).isEqualTo("3");
         assertThat(tester.getTagByWicketId("label").getAttribute("for")).isEqualTo(select.getAttribute("id"));
 
-        formTester.selectMultiple("choice:container:field", new int[] {0, 2}, true);
+        formTester.selectMultiple("choice:input", new int[] {0, 2}, true);
         formTester.submit();
         assertThat(model.getObject()).containsExactly("Small", "Large");
     }

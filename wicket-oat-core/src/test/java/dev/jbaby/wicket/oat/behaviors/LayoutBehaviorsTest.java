@@ -62,6 +62,6 @@ class LayoutBehaviorsTest {
                 .add(Oat.Behaviors.col(6));
         tester.startComponentInPage(field);
         assertThat(tester.getTagByWicketId("id").getAttribute("class")).isEqualTo("col-6");
-        assertThat(tester.getTagByWicketId("field").getAttribute("class")).isNull();
+        assertThat(tester.getTagByWicketId("input").getAttribute("class")).isNull();
     }
 }

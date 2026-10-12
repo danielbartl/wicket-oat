@@ -179,14 +179,14 @@ class TierCComponentsTest {
         assertThat(html()).contains(">New entry<").contains(">Save<");
 
         FormTester form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:container:field", "");
+        form.setValue("body:name:input", "");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.log).isEmpty();
         assertThat(page.customers).hasSize(2);
 
         form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:container:field", "Initech");
-        form.setValue("body:city:container:field", "Munich");
+        form.setValue("body:name:input", "Initech");
+        form.setValue("body:city:input", "Munich");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.log).containsExactly("saved Initech/Munich");
         assertThat(page.customers).hasSize(3);
@@ -201,14 +201,14 @@ class TierCComponentsTest {
 
         // An invalid submit leaves the record untouched
         FormTester form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:container:field", "");
-        form.setValue("body:city:container:field", "Graz");
+        form.setValue("body:name:input", "");
+        form.setValue("body:city:input", "Graz");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.customers.get(0).city).isEqualTo("Vienna");
 
         form = tester.newFormTester(DIALOG_FORM);
-        form.setValue("body:name:container:field", "ACME GmbH");
-        form.setValue("body:city:container:field", "Graz");
+        form.setValue("body:name:input", "ACME GmbH");
+        form.setValue("body:city:input", "Graz");
         tester.executeAjaxEvent(DIALOG_FORM + ":confirm", "click");
         assertThat(page.log).containsExactly("saved ACME GmbH/Graz");
     }
@@ -353,7 +353,7 @@ class TierCComponentsTest {
         assertThat(tags("class", "oat-chip")).hasSize(1);
         assertThat(html()).contains("aria-label=\"Remove Jordan Lee\"").contains("aria-label=\"Members\"");
 
-        FormComponent<?> search = (FormComponent<?>) members.get("container:field:search");
+        FormComponent<?> search = (FormComponent<?>) members.get("input:search");
         tester.getRequest().getPostParameters().setParameterValue(search.getInputName(), "Sam Rivera");
         tester.executeAjaxEvent(search, "change");
         tester.getRequest().getPostParameters().setParameterValue(search.getInputName(), "Jordan Lee"); // already chosen
@@ -365,11 +365,11 @@ class TierCComponentsTest {
         submit.submit();
         assertThat(model.getObject()).containsExactly("Jordan Lee", "Sam Rivera");
 
-        tester.clickLink("form:members:container:field:chips:chip:0:remove");
-        tester.clickLink("form:members:container:field:chips:chip:0:remove");
+        tester.clickLink("form:members:input:chips:chip:0:remove");
+        tester.clickLink("form:members:input:chips:chip:0:remove");
         submit = tester.newFormTester("form");
         submit.submit();
-        assertThat(members.getField().hasErrorMessage()).isTrue(); // required
+        assertThat(members.getInput().hasErrorMessage()).isTrue(); // required
         assertThat(model.getObject()).containsExactly("Jordan Lee", "Sam Rivera");
     }
 }

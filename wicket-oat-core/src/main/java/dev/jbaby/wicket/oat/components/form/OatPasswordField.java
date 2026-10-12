@@ -37,7 +37,7 @@ public class OatPasswordField extends BaseOatInputField<String, PasswordTextFiel
     }
 
     @Override
-    protected PasswordTextField createFormComponent(String id, IModel<String> model) {
+    protected PasswordTextField newInput(String id, IModel<String> model) {
         return new PasswordTextField(id, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

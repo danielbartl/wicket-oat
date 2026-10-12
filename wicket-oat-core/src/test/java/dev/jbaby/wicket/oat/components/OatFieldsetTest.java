@@ -87,10 +87,10 @@ class OatFieldsetTest {
         tester.startComponentInPage(form, Markup.of(
                 "<form wicket:id='form'><fieldset wicket:id='billing'><div wicket:id='street'></div></fieldset></form>"));
 
-        assertThat(tester.getTagByWicketId("field").getAttribute("value")).isEqualTo("Main St");
+        assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("Main St");
 
         FormTester formTester = tester.newFormTester("form");
-        formTester.setValue(street.getField(), "Elm St");
+        formTester.setValue(street.getInput(), "Elm St");
         formTester.submit();
         assertThat(address.street).isEqualTo("Elm St");
     }

@@ -206,7 +206,7 @@ class PageBlocksTest {
 
         TagTester datalist = tester.getTagByWicketId("suggestions");
         assertThat(datalist.getName()).isEqualTo("datalist");
-        assertThat(tester.getTagByWicketId("field").getAttribute("list")).isEqualTo(datalist.getAttribute("id"));
+        assertThat(tester.getTagByWicketId("input").getAttribute("list")).isEqualTo(datalist.getAttribute("id"));
         assertThat(tags("wicket:id", "option")).extracting(o -> o.getAttribute("value")).containsExactly("Berlin", "Vienna");
     }
 
@@ -214,6 +214,6 @@ class PageBlocksTest {
     void fieldsWithoutSuggestionsHaveNoDatalist() {
         tester.startComponentInPage(new OatTextField<>("city", "City", Model.of("")));
         assertThat(tester.getLastResponseAsString()).doesNotContain("datalist");
-        assertThat(tester.getTagByWicketId("field").getAttribute("list")).isNull();
+        assertThat(tester.getTagByWicketId("input").getAttribute("list")).isNull();
     }
 }

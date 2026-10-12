@@ -63,16 +63,16 @@ public abstract class BaseOatDecimalField<F extends BaseOatDecimalField<F>> exte
 
     private void updateRange() {
         if (range != null) {
-            getField().remove(range);
+            getInput().remove(range);
         }
         range = (min == null && max == null) ? null : new RangeValidator<>(min, max);
         if (range != null) {
-            getField().add(range);
+            getInput().add(range);
         }
     }
 
     @Override
-    protected TextField<BigDecimal> createFormComponent(String id, IModel<BigDecimal> model) {
+    protected TextField<BigDecimal> newInput(String id, IModel<BigDecimal> model) {
         return new TextField<>(id, model, BigDecimal.class) {
             @Override
             protected void onComponentTag(ComponentTag tag) {

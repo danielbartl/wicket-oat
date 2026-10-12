@@ -41,10 +41,10 @@ class TierCPagesTest {
 
         tester.clickLink("products:table:toolbar:new");
         FormTester form = tester.newFormTester("products:editor:dialog:form");
-        form.setValue("body:name:container:field", "Webcam");
-        form.select("body:category:container:field", 3);
-        form.setValue("body:price:container:field", "79.00");
-        form.setValue("body:stock:container:field", "30");
+        form.setValue("body:name:input", "Webcam");
+        form.select("body:category:input", 3);
+        form.setValue("body:price:input", "79.00");
+        form.setValue("body:stock:input", "30");
         tester.executeAjaxEvent("products:editor:dialog:form:confirm", "click");
         assertTrue(tester.getLastResponseAsString().contains("Webcam saved."));
     }

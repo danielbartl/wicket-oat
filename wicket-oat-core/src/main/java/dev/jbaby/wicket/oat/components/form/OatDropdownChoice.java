@@ -63,7 +63,7 @@ public class OatDropdownChoice<T> extends BaseOatField<T, DropDownChoice<T>, Oat
     }
 
     @Override
-    protected DropDownChoice<T> createFormComponent(String id, IModel<T> model) {
+    protected DropDownChoice<T> newInput(String id, IModel<T> model) {
         if (choices == null) {
             return new DropDownChoice<>(id, model, Collections.emptyList());
         }

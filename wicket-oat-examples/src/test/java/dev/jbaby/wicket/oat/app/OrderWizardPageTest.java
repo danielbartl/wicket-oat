@@ -30,15 +30,15 @@ class OrderWizardPageTest {
     @Test
     void placesAnOrderInThreeSteps() {
         FormTester form = tester.newFormTester("wizard:form");
-        form.setValue("body:customer:container:field", "Globex");
-        form.setValue("body:delivery:container:field:from", "2026-11-02");
-        form.setValue("body:delivery:container:field:to", "2026-11-06");
+        form.setValue("body:customer:input", "Globex");
+        form.setValue("body:delivery:input:from", "2026-11-02");
+        form.setValue("body:delivery:input:to", "2026-11-06");
         tester.executeAjaxEvent("wizard:form:next", "click");
         tester.assertNoErrorMessage();
 
         form = tester.newFormTester("wizard:form");
-        form.setValue("body:quantity:container:field", "3");
-        form.setValue("body:unitPrice:container:field", "12.50");
+        form.setValue("body:quantity:input", "3");
+        form.setValue("body:unitPrice:input", "12.50");
         tester.executeAjaxEvent("wizard:form:next", "click");
         tester.assertNoErrorMessage();
 

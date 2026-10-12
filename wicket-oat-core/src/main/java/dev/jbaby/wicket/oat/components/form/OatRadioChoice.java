@@ -73,7 +73,7 @@ public class OatRadioChoice<T> extends BaseOatField<T, RadioChoice<T>, OatRadioC
     }
 
     @Override
-    protected RadioChoice<T> createFormComponent(String id, IModel<T> model) {
+    protected RadioChoice<T> newInput(String id, IModel<T> model) {
         RadioChoice<T> choice = new RadioChoice<>(id, model, choices, renderer);
         // <label><input type="radio"> Text</label>, the markup Oat styles
         choice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);

@@ -203,7 +203,7 @@ class NewComponentsTest {
         OatTagInput tagInput = new OatTagInput("tagInput", "Tags", Model.ofList(List.of("apple", "mango")));
         tester.startComponentInPage(tagInput);
 
-        TagTester field = tester.getTagByWicketId("field");
+        TagTester field = tester.getTagByWicketId("input");
         assertThat(field.getAttribute("type")).isEqualTo("hidden");
         assertThat(field.getAttribute("value")).isEqualTo("apple,mango");
 
@@ -221,7 +221,7 @@ class NewComponentsTest {
         OatFileDropzone dropzone = new OatFileDropzone("dropzone", "Attachments", Model.ofList(List.<FileUpload>of()));
         tester.startComponentInPage(dropzone);
 
-        TagTester field = tester.getTagByWicketId("field");
+        TagTester field = tester.getTagByWicketId("input");
         assertThat(field.getAttribute("type")).isEqualTo("file");
         assertThat(field.getAttribute("multiple")).isEqualTo("multiple");
         assertThat(tester.getLastResponseAsString()).contains("<ot-upload>");

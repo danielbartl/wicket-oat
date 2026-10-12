@@ -34,7 +34,7 @@ public class OatColorField extends BaseOatField<String, Html5TextField<String>, 
     }
 
     @Override
-    protected Html5TextField<String> createFormComponent(String id, IModel<String> model) {
+    protected Html5TextField<String> newInput(String id, IModel<String> model) {
         return new Html5TextField<>(id, model, String.class, "color");
     }
 }

@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.behaviors;
 
+import dev.jbaby.wicket.oat.components.form.OatTextField;
 import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.Markup;
@@ -58,7 +59,7 @@ class LayoutBehaviorsTest {
 
     @Test
     void aColumnOnAnOatFieldGoesOnItsOwnTag() {
-        var field = Oat.Components.textField("id", "Name", org.apache.wicket.model.Model.of("x"))
+        var field = new OatTextField<>("id", "Name", org.apache.wicket.model.Model.of("x"))
                 .add(Oat.Behaviors.col(6));
         tester.startComponentInPage(field);
         assertThat(tester.getTagByWicketId("id").getAttribute("class")).isEqualTo("col-6");

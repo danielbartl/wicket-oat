@@ -1,5 +1,30 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.form.OatCheckBox;
+import dev.jbaby.wicket.oat.components.form.OatCheckBoxMultipleChoice;
+import dev.jbaby.wicket.oat.components.form.OatColorField;
+import dev.jbaby.wicket.oat.components.form.OatDateField;
+import dev.jbaby.wicket.oat.components.form.OatDateTimeLocalField;
+import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
+import dev.jbaby.wicket.oat.components.form.OatEmailField;
+import dev.jbaby.wicket.oat.components.form.OatFileUpload;
+import dev.jbaby.wicket.oat.components.form.OatListMultipleChoice;
+import dev.jbaby.wicket.oat.components.OatMeter;
+import dev.jbaby.wicket.oat.components.form.OatMonthField;
+import dev.jbaby.wicket.oat.components.form.OatNumberField;
+import dev.jbaby.wicket.oat.components.form.OatPasswordField;
+import dev.jbaby.wicket.oat.components.OatProgress;
+import dev.jbaby.wicket.oat.components.form.OatRadioChoice;
+import dev.jbaby.wicket.oat.components.form.OatRangeField;
+import dev.jbaby.wicket.oat.components.form.OatSearchField;
+import dev.jbaby.wicket.oat.components.form.OatSwitch;
+import dev.jbaby.wicket.oat.components.form.OatTagInput;
+import dev.jbaby.wicket.oat.components.form.OatTelField;
+import dev.jbaby.wicket.oat.components.form.OatTextArea;
+import dev.jbaby.wicket.oat.components.form.OatTextField;
+import dev.jbaby.wicket.oat.components.form.OatTimeField;
+import dev.jbaby.wicket.oat.components.form.OatUrlField;
+import dev.jbaby.wicket.oat.components.form.OatWeekField;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.behaviors.SpinnerBehavior;
@@ -76,66 +101,66 @@ public class FormPage extends BasePage {
         textareaField.add(new TextArea<>("message", Model.of("")));
         form.add(textareaField);
 
-        // New Encapsulated Fields via Oat.Components factory
-        form.add(Oat.Components.textField("oatName", "Oat Name", Model.of(""))
+        // Oat form fields: label, input and inline feedback in one component
+        form.add(new OatTextField<>("oatName", "Oat Name", Model.of(""))
                 .setPlaceholder(Model.of("Enter your name..."))
                 .setRequired(true));
 
-        form.add(Oat.Components.passwordField("oatPassword", Model.of("Oat Password"), Model.of(""), Model.of("Must be at least 8 chars"))
+        form.add(new OatPasswordField("oatPassword", Model.of("Oat Password"), Model.of(""), Model.of("Must be at least 8 chars"))
                 .setPlaceholder(Model.of("Enter your password...")));
 
-        form.add(Oat.Components.emailField("oatEmail", "Oat Email", Model.of(""))
+        form.add(new OatEmailField("oatEmail", "Oat Email", Model.of(""))
                 .setPlaceholder(Model.of("you@example.com")));
 
-        form.add(Oat.Components.numberField("oatAge", "Oat Age (18-99)", Model.of(25))
+        form.add(new OatNumberField<>("oatAge", "Oat Age (18-99)", Model.of(25))
                 .setMin(18)
                 .setMax(99));
 
-        form.add(Oat.Components.textArea("oatBio", "Oat Biography", Model.of(""))
+        form.add(new OatTextArea<>("oatBio", "Oat Biography", Model.of(""))
                 .setPlaceholder(Model.of("Tell us about yourself...")));
 
-        form.add(Oat.Components.dropdownChoice("oatSelect", "Oat Select", Model.of("A"), Model.ofList(Arrays.asList("A", "B", "C")))
+        form.add(new OatDropdownChoice<>("oatSelect", "Oat Select", Model.of("A"), Model.ofList(Arrays.asList("A", "B", "C")))
                 .setRequired(true));
 
-        form.add(Oat.Components.radioChoice("oatRadio", Model.of("Oat Radio Choice"), Model.of("B"), Model.ofList(Arrays.asList("A", "B", "C")))
+        form.add(new OatRadioChoice<>("oatRadio", Model.of("Oat Radio Choice"), Model.of("B"), Model.ofList(Arrays.asList("A", "B", "C")))
                 .setInline(true));
 
-        form.add(Oat.Components.checkBoxMultipleChoice("oatCheckGroup", Model.of("Oat Checkbox Group"),
+        form.add(new OatCheckBoxMultipleChoice<>("oatCheckGroup", Model.of("Oat Checkbox Group"),
                 Model.ofList(new ArrayList<>(List.of("Email"))), Model.ofList(Arrays.asList("Email", "SMS", "Push"))));
 
-        form.add(Oat.Components.listMultipleChoice("oatMultiSelect", Model.of("Oat Multi-Select"),
+        form.add(new OatListMultipleChoice<>("oatMultiSelect", Model.of("Oat Multi-Select"),
                 Model.ofList(new ArrayList<>()), Model.ofList(Arrays.asList("Red", "Green", "Blue", "Yellow")))
                 .setMaxRows(4));
 
-        form.add(Oat.Components.dateField("oatDate", "Oat Date", Model.of(java.time.LocalDate.now())));
+        form.add(new OatDateField("oatDate", "Oat Date", Model.of(java.time.LocalDate.now())));
 
-        form.add(Oat.Components.urlField("oatUrl", "Oat Website", Model.of("")));
+        form.add(new OatUrlField("oatUrl", "Oat Website", Model.of("")));
 
-        form.add(Oat.Components.colorField("oatColor", "Oat Color Picker", Model.of("#6200ee")));
+        form.add(new OatColorField("oatColor", "Oat Color Picker", Model.of("#6200ee")));
 
-        form.add(Oat.Components.rangeField("oatRange", "Oat Range", Model.of(50))
+        form.add(new OatRangeField<>("oatRange", "Oat Range", Model.of(50))
                 .setMin(0)
                 .setMax(100));
 
-        form.add(Oat.Components.checkBox("oatCheck", "Oat Checkbox", Model.of(true)));
+        form.add(new OatCheckBox("oatCheck", "Oat Checkbox", Model.of(true)));
 
-        form.add(Oat.Components.oatSwitch("oatSwitch", "Oat Switch", Model.of(false)));
+        form.add(new OatSwitch("oatSwitch", "Oat Switch", Model.of(false)));
 
-        form.add(Oat.Components.timeField("oatTime", "Oat Time", Model.of(java.time.LocalTime.now())));
+        form.add(new OatTimeField("oatTime", "Oat Time", Model.of(java.time.LocalTime.now())));
 
-        form.add(Oat.Components.searchField("oatSearch", "Oat Search", Model.of("")));
+        form.add(new OatSearchField("oatSearch", "Oat Search", Model.of("")));
 
-        form.add(Oat.Components.fileUpload("oatFile", "Oat Upload", Model.ofList(new java.util.ArrayList<>())));
+        form.add(new OatFileUpload("oatFile", "Oat Upload", Model.ofList(new java.util.ArrayList<>())));
 
-        form.add(Oat.Components.dateTimeLocalField("oatDateTime", "Oat Date & Time", Model.of(java.time.LocalDateTime.now())));
+        form.add(new OatDateTimeLocalField("oatDateTime", "Oat Date & Time", Model.of(java.time.LocalDateTime.now())));
 
-        form.add(Oat.Components.monthField("oatMonth", "Oat Month", Model.of("2026-02")));
+        form.add(new OatMonthField("oatMonth", "Oat Month", Model.of("2026-02")));
 
-        form.add(Oat.Components.weekField("oatWeek", "Oat Week", Model.of("2026-W09")));
+        form.add(new OatWeekField("oatWeek", "Oat Week", Model.of("2026-W09")));
 
-        form.add(Oat.Components.telField("oatTel", "Oat Phone", Model.of("")));
+        form.add(new OatTelField("oatTel", "Oat Phone", Model.of("")));
 
-        form.add(Oat.Components.tagInput("oatTags", "Oat Tags", Model.ofList(new ArrayList<>(List.of("apple", "mango")))));
+        form.add(new OatTagInput("oatTags", "Oat Tags", Model.ofList(new ArrayList<>(List.of("apple", "mango")))));
 
         // Feedback messages, shown by an OatFeedbackPanel that updates itself via Ajax
         add(new OatFeedbackPanel("feedback"));
@@ -167,8 +192,8 @@ public class FormPage extends BasePage {
         add(boxSkeleton);
 
         // Progress & Meter
-        add(Oat.Components.progress("progress", 60));
-        add(Oat.Components.meter("meter", 0.8));
+        add(new OatProgress("progress", 60));
+        add(new OatMeter("meter", 0.8));
     }
 
     private static AjaxLink<Void> messageLink(String id, SerializableConsumer<Component> report) {

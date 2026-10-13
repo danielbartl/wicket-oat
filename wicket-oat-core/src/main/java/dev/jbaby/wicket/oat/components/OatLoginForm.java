@@ -16,6 +16,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import dev.jbaby.wicket.oat.util.SerializableBiFunction;
+import java.util.Objects;
 
 /**
  * A sign-in form: username, password, an optional "remember me" checkbox and "forgot
@@ -150,5 +152,20 @@ public abstract class OatLoginForm extends Panel {
     /** The form, e.g. to add fields of your own. */
     public Form<Void> getForm() {
         return form;
+    }
+
+    /**
+     * A sign-in form without a subclass: {@code signIn} checks the username and password
+     * and returns whether they were right, e.g.
+     * {@code OatLoginForm.signIn("login", (user, password) -> AuthenticatedWebSession.get().signIn(user, password))}.
+     */
+    public static OatLoginForm signIn(String id, SerializableBiFunction<String, String, Boolean> signIn) {
+        Objects.requireNonNull(signIn);
+        return new OatLoginForm(id) {
+            @Override
+            protected boolean signIn(String username, String password, boolean rememberMe) {
+                return Boolean.TRUE.equals(signIn.apply(username, password));
+            }
+        };
     }
 }

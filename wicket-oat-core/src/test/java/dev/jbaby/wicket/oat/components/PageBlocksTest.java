@@ -40,7 +40,7 @@ class PageBlocksTest {
 
     @Test
     void pageHeaderShowsTitleBreadcrumbAndActions() {
-        OatPageHeader header = Oat.Components.pageHeader("header", "Invoices")
+        OatPageHeader header = new OatPageHeader("header", "Invoices")
                 .setSubtitle("23 open")
                 .setBreadcrumb(List.of(MenuItem.of("Home", LayoutAndNavigationTestPages.Home.class)));
         header.add(new Label("new", "New invoice"));
@@ -79,7 +79,7 @@ class PageBlocksTest {
 
     @Test
     void statCardShowsTheFigureAndItsChange() {
-        tester.startComponentInPage(Oat.Components.statCard("revenue", "Revenue", Model.of(48250))
+        tester.startComponentInPage(new OatStatCard("revenue", "Revenue", Model.of(48250))
                 .setChange(Model.of(12.5)).setHint(Model.of("vs. last month")),
                 Markup.of("<article wicket:id='revenue'></article>"));
 
@@ -130,7 +130,7 @@ class PageBlocksTest {
 
     @Test
     void descriptionListShowsLabelsAndValues() {
-        OatDescriptionList details = Oat.Components.descriptionList("details", new CompoundPropertyModel<>(new Customer()))
+        OatDescriptionList details = new OatDescriptionList("details", new CompoundPropertyModel<>(new Customer()))
                 .addProperty("name")
                 .addProperty("vatId")
                 .addProperty("since")
@@ -159,7 +159,7 @@ class PageBlocksTest {
     @Test
     void splitButtonRunsTheMainActionOrAMenuEntry() {
         List<String> clicked = new ArrayList<>();
-        OatSplitButton save = Oat.Components.splitButton("save", "Save", target -> clicked.add("save"))
+        OatSplitButton save = new OatSplitButton("save", "Save", target -> clicked.add("save"))
                 .setVariant(OatVariant.SECONDARY).setSize(ButtonBehavior.Size.SMALL);
         save.addAction("Save as draft", target -> clicked.add("draft"));
         save.addAction("Discard", target -> clicked.add("discard")).setVariant(OatVariant.DANGER);
@@ -186,7 +186,7 @@ class PageBlocksTest {
 
     @Test
     void popoverHoldsAnyContent() {
-        OatPopover popover = Oat.Components.popover("filters", "Filters", id -> new Label(id, "Only overdue"));
+        OatPopover popover = new OatPopover("filters", "Filters", id -> new Label(id, "Only overdue"));
         tester.startComponentInPage(popover);
 
         TagTester content = tester.getTagByWicketId("popover");

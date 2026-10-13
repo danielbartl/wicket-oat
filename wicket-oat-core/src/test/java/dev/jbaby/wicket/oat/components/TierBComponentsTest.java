@@ -1,5 +1,9 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.components.chart.OatBarChart;
+import dev.jbaby.wicket.oat.components.chart.OatColumnChart;
+import dev.jbaby.wicket.oat.components.chart.OatDonutChart;
+import dev.jbaby.wicket.oat.components.chart.OatSparkline;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.WicketOats;
@@ -107,7 +111,7 @@ class TierBComponentsTest {
 
     private OatLoadMoreList<Integer> numbers(int count) {
         List<Integer> items = IntStream.rangeClosed(1, count).boxed().toList();
-        return Oat.Components.loadMoreList("numbers", new ListDataProvider<>(items), 20,
+        return new OatLoadMoreList<>("numbers", new ListDataProvider<>(items), 20,
                 (id, number) -> new Label(id, () -> "Item " + number.getObject()));
     }
 
@@ -143,7 +147,7 @@ class TierBComponentsTest {
     @Test
     void menuBarHasButtonsLinksAndMenus() {
         List<String> ran = new ArrayList<>();
-        OatMenuBar bar = Oat.Components.menuBar("commands").addAction("Save", target -> ran.add("save"))
+        OatMenuBar bar = new OatMenuBar("commands").addAction("Save", target -> ran.add("save"))
                 .addLink("Home", ParamLayoutPage.SecretPage.class);
         bar.addMenu("Export").addAction("CSV", target -> ran.add("csv"))
                 .addAction(Model.of("Delete all"), OatVariant.DANGER, target -> ran.add("delete"));
@@ -164,7 +168,7 @@ class TierBComponentsTest {
 
     @Test
     void splitLayoutSetsItsStartingSplitWithClasses() {
-        tester.startComponentInPage(Oat.Components.splitLayout("split", id -> new Label(id, "List"), id -> new Label(id, "Message"))
+        tester.startComponentInPage(new OatSplitLayout("split", id -> new Label(id, "List"), id -> new Label(id, "Message"))
                 .setSplit(30).setOrientation(OatSplitLayout.Orientation.VERTICAL));
         assertThat(tester.getTagByWicketId("split").getAttribute("class")).isEqualTo("oat-split oat-split-vertical");
         assertThat(tester.getTagByWicketId("firstPane").getAttribute("class"))
@@ -179,7 +183,7 @@ class TierBComponentsTest {
     @Test
     void cookieConsentAsksUntilAnswered() {
         List<Boolean> answers = new ArrayList<>();
-        tester.startComponentInPage(Oat.Components.cookieConsent("cookies").setOnAnswer(answers::add));
+        tester.startComponentInPage(new OatCookieConsent("cookies").setOnAnswer(answers::add));
         assertThat(html()).contains("We use cookies").contains(">Accept<").contains(">Only necessary<");
         assertThat(OatCookieConsent.isAnswered()).isFalse();
 
@@ -205,7 +209,7 @@ class TierBComponentsTest {
 
     @Test
     void iconsAreInlineSvg() {
-        tester.startComponentInPage(Oat.Components.icon("icon", "pencil"), Markup.of("<svg wicket:id='icon'></svg>"));
+        tester.startComponentInPage(new OatIcon("icon", "pencil"), Markup.of("<svg wicket:id='icon'></svg>"));
         TagTester svg = tester.getTagByWicketId("icon");
         assertThat(svg.getAttribute("class")).isEqualTo("oat-icon");
         assertThat(svg.getAttribute("viewBox")).isEqualTo("0 0 24 24");
@@ -232,7 +236,7 @@ class TierBComponentsTest {
 
     @Test
     void barChartScalesBarsToTheLargestValue() {
-        tester.startComponentInPage(Oat.Components.barChart("bars", Model.ofList(MONTHS), Month::label, Month::revenue)
+        tester.startComponentInPage(new OatBarChart<>("bars", Model.ofList(MONTHS), Month::label, Month::revenue)
                 .setTitle("Revenue"));
         assertThat(html()).contains("<figcaption").contains(">Revenue</figcaption>");
         assertThat(html()).contains("width=\"100%\"><title>Feb: 3,000").contains("width=\"40%\"><title>Jan: 1,200");
@@ -244,7 +248,7 @@ class TierBComponentsTest {
 
     @Test
     void columnChartLabelsTheHighestAndLastColumn() {
-        tester.startComponentInPage(Oat.Components.columnChart("columns", Model.ofList(MONTHS), Month::label, Month::revenue));
+        tester.startComponentInPage(new OatColumnChart<>("columns", Model.ofList(MONTHS), Month::label, Month::revenue));
         String svg = tester.getTagByWicketId("svg").getValue();
         assertThat(svg).contains(">3,000</text>").contains(">2,400</text>").doesNotContain(">1,200</text>");
         assertThat(svg).contains("<title>Feb: 3,000</title>").contains("<title>Mar: </title>");
@@ -253,7 +257,7 @@ class TierBComponentsTest {
 
     @Test
     void lineChartDrawsUpToThreeSeriesWithGaps() {
-        OatLineChart<Month> chart = Oat.Components.lineChart("lines", Model.ofList(MONTHS), Month::label)
+        OatLineChart<Month> chart = new OatLineChart<>("lines", Model.ofList(MONTHS), Month::label)
                 .addSeries("2026", Month::revenue).addSeries("2025", Month::lastYear);
         chart.setCategoryHeader(Model.of("Month"));
         tester.startComponentInPage(chart);
@@ -271,7 +275,7 @@ class TierBComponentsTest {
 
     @Test
     void aSingleLineGetsAnAreaAndItsLastValue() {
-        tester.startComponentInPage(Oat.Components.lineChart("lines", Model.ofList(MONTHS), Month::label).addSeries("2025", Month::lastYear));
+        tester.startComponentInPage(new OatLineChart<>("lines", Model.ofList(MONTHS), Month::label).addSeries("2025", Month::lastYear));
         String svg = tester.getTagByWicketId("svg").getValue();
         assertThat(svg).contains("<polygon class=\"oat-area-1\"").contains(">2,600</text>");
         assertThat(tags("wicket:id", "legend")).isEmpty();
@@ -284,7 +288,7 @@ class TierBComponentsTest {
     void donutChartFoldsSmallPartsIntoOther() {
         List<Region> regions = Arrays.asList(new Region("North", 40), new Region("South", 25), new Region("East", 15),
                 new Region("West", 10), new Region("Central", 5), new Region("Islands", 3), new Region("Overseas", 2));
-        tester.startComponentInPage(Oat.Components.donutChart("regions", Model.ofList(regions), Region::name, Region::revenue));
+        tester.startComponentInPage(new OatDonutChart<>("regions", Model.ofList(regions), Region::name, Region::revenue));
         assertThat(tags("class", "oat-donut-name")).extracting(TagTester::getValue)
                 .containsExactly("North", "South", "East", "West", "Central", "Other");
         assertThat(tags("wicket:id", "share")).extracting(TagTester::getValue).containsExactly("40%", "25%", "15%", "10%", "5%", "5%");
@@ -297,7 +301,7 @@ class TierBComponentsTest {
 
     @Test
     void chartsHaveADataTable() {
-        tester.startComponentInPage(Oat.Components.columnChart("columns", Model.ofList(MONTHS), Month::label, Month::revenue)
+        tester.startComponentInPage(new OatColumnChart<>("columns", Model.ofList(MONTHS), Month::label, Month::revenue)
                 .setValueFormat((value, locale) -> "€" + value));
         assertThat(tester.getTagByWicketId("data").getName()).isEqualTo("details");
         assertThat(tester.getTagByWicketId("summary").getValue()).isEqualTo("Data");
@@ -329,7 +333,7 @@ class TierBComponentsTest {
 
     @Test
     void sparklineAndStatCardTrend() {
-        tester.startComponentInPage(Oat.Components.sparkline("trend", Model.ofList(List.of(3, 5, 4, 8))), Markup.of("<span wicket:id='trend'></span>"));
+        tester.startComponentInPage(new OatSparkline("trend", Model.ofList(List.of(3, 5, 4, 8))), Markup.of("<span wicket:id='trend'></span>"));
         TagTester spark = tester.getTagByWicketId("trend");
         assertThat(spark.getAttribute("aria-hidden")).isEqualTo("true");
         assertThat(spark.getValue()).contains("<polyline").contains("<circle class=\"oat-dot-1\" cx=\"100.00%\"");

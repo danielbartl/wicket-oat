@@ -58,7 +58,7 @@ class ChoiceFieldsTest {
     @Test
     void radioChoiceCanBeInlineAndUpdatesItsModel() {
         Model<String> size = Model.of((String) null);
-        FormTester formTester = formWith(Oat.Components.radioChoice("choice", Model.of("Size"), size, SIZES).setInline(true));
+        FormTester formTester = formWith(new OatRadioChoice<>("choice", Model.of("Size"), size, SIZES).setInline(true));
         assertThat(tester.getTagByWicketId("input").getAttribute("class")).isEqualTo("hstack");
 
         formTester.select("choice:input", 2);

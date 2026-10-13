@@ -279,7 +279,7 @@ class TierAComponentsTest {
         List<Comment> comments = List.of(
                 new Comment("Jordan Lee", "Sent the invoice.\nCall back on Monday.", LocalDateTime.of(2026, 10, 9, 14, 5)),
                 new Comment("ada", "<b>Done</b>", null));
-        tester.startComponentInPage(Oat.Components.messageList("comments", Model.ofList(comments),
+        tester.startComponentInPage(new OatMessageList<>("comments", Model.ofList(comments),
                 Comment::author, Comment::text, Comment::at));
 
         assertThat(tags("wicket:id", "initials")).extracting(TagTester::getValue).containsExactly("JL", "A");
@@ -301,7 +301,7 @@ class TierAComponentsTest {
     @Test
     void messageInputSendsTheTextAndEmptiesTheBox() {
         List<String> sent = new ArrayList<>();
-        tester.startComponentInPage(Oat.Components.messageInput("reply", (target, text) -> sent.add(text)));
+        tester.startComponentInPage(new OatMessageInput("reply", (target, text) -> sent.add(text)));
         assertThat(tester.getTagByWicketId("text").getAttribute("aria-label")).isEqualTo("Message");
 
         FormTester form = tester.newFormTester("reply:form");
@@ -337,7 +337,7 @@ class TierAComponentsTest {
     @Test
     void customFieldWrapsAnInputOfYourOwn() {
         Model<String> size = new Model<>();
-        OatCustomField<String> field = Oat.Components.customField("size", "Size", size, SizeInput::new);
+        OatCustomField<String> field = new OatCustomField<>("size", "Size", size, SizeInput::new);
         field.setRequired(true);
         Form<Void> form = new Form<>("form");
         form.add(field);

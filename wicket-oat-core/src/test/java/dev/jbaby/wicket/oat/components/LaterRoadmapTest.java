@@ -169,7 +169,7 @@ class LaterRoadmapTest {
     @Test
     void autoCompleteCanAcceptFreeText() {
         Model<String> model = new Model<>();
-        OatAutoCompleteField<String> field = Oat.Components.autoCompleteField("city", "City", model)
+        OatAutoCompleteField<String> field = new OatAutoCompleteField<>("city", "City", model)
                 .setChoices(text -> List.of("Vienna", "Villach")).setFreeText(text -> text);
         FormTester form = startInForm(field);
         form.setValue("city:input", "Graz");
@@ -189,7 +189,7 @@ class LaterRoadmapTest {
                 new Event("Invoice sent", LocalDateTime.of(2026, 10, 1, 9, 30), "By Jordan", null),
                 new Event("Payment received", LocalDateTime.of(2026, 10, 9, 14, 5), null, OatVariant.SUCCESS),
                 new Event("Note", null, "  ", null));
-        tester.startComponentInPage(Oat.Components.timeline("history", Model.ofList(events), Event::title, Event::at)
+        tester.startComponentInPage(new OatTimeline<>("history", Model.ofList(events), Event::title, Event::at)
                 .setDescription(Event::details).setVariant(Event::variant));
 
         assertThat(tags("wicket:id", "title")).extracting(TagTester::getValue).containsExactly("Invoice sent", "Payment received", "Note");

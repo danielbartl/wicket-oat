@@ -160,11 +160,11 @@ checkBox.add(Oat.Behaviors.oatSwitch());</code></pre>
 
             <h4>Feedback</h4>
             <p>Use <code>OatSpinner</code>, <code>OatSkeleton</code> components or their behaviors for loading states.</p>
-            <pre><code>// Java - Components via Oat factory (recommended)
-add(Oat.Components.spinner("spinner", SpinnerBehavior.Size.SMALL));
-add(Oat.Components.skeleton("skeleton", SkeletonBehavior.Shape.LINE));
+            <pre><code>// Java - Components
+add(new OatSpinner("spinner", SpinnerBehavior.Size.SMALL));
+add(new OatSkeleton("skeleton", SkeletonBehavior.Shape.LINE));
 
-// Java - Behaviors via Oat factory
+// Java - Behaviors
 container.add(Oat.Behaviors.spinner(SpinnerBehavior.Size.SMALL));
 container.add(Oat.Behaviors.skeleton(SkeletonBehavior.Shape.LINE));</code></pre>
             <pre><code>&lt;!-- HTML --&gt;
@@ -172,12 +172,12 @@ container.add(Oat.Behaviors.skeleton(SkeletonBehavior.Shape.LINE));</code></pre>
 &lt;div wicket:id="skeleton"&gt;&lt;/div&gt;</code></pre>
 
             <h4>Progress & Meter</h4>
-            <p>Use the specialized <code>OatProgress</code> and <code>OatMeter</code> components via the <code>Oat</code> factory. <code>OatMeter</code> supports advanced ranges like low, high, and optimum.</p>
-            <pre><code>// Java - Simple Progress via Oat factory
-add(Oat.Components.progress("progress", 60));
+            <p>Use the specialized <code>OatProgress</code> and <code>OatMeter</code> components. <code>OatMeter</code> supports advanced ranges like low, high, and optimum.</p>
+            <pre><code>// Java - Simple progress
+add(new OatProgress("progress", 60));
 
-// Java - Advanced Meter via Oat factory
-add(Oat.Components.meter("meter", 0.8)); // Default values 0-1 range
+// Java - Advanced meter
+add(new OatMeter("meter", 0.8)); // Default values 0-1 range
 // or for full control:
 add(new OatMeter("meter", 
     Model.of(0.8), // value

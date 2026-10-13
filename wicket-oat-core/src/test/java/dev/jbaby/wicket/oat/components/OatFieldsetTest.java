@@ -31,7 +31,7 @@ class OatFieldsetTest {
 
     @Test
     void rendersLegendAndBody() {
-        OatFieldset fieldset = Oat.Components.fieldset("id", "Billing address");
+        OatFieldset fieldset = new OatFieldset("id", "Billing address");
         fieldset.add(new Label("child", "Inside"));
         tester.startComponentInPage(fieldset, markup());
 

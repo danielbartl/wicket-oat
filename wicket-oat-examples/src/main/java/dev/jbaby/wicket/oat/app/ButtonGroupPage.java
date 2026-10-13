@@ -15,7 +15,7 @@ public class ButtonGroupPage extends BasePage {
         // Default Button Group - Oat only applies the connected/grouped button
         // styling to <li> children of a <menu class="buttons">, so OatButtonGroup
         // is a ListView driven by a model rather than a plain container of buttons.
-        OatButtonGroup<String> group = Oat.Components.buttonGroup("group", Model.ofList(List.of("Left", "Center", "Right")), (item, label) -> {
+        OatButtonGroup<String> group = OatButtonGroup.of("group", Model.ofList(List.of("Left", "Center", "Right")), (item, label) -> {
             Link<Void> button = new Link<>("button") {
                 @Override
                 public void onClick() {}

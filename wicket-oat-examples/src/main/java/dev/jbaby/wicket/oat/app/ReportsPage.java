@@ -1,5 +1,9 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.chart.OatBarChart;
+import dev.jbaby.wicket.oat.components.chart.OatColumnChart;
+import dev.jbaby.wicket.oat.components.chart.OatDonutChart;
+import dev.jbaby.wicket.oat.components.chart.OatLineChart;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.OatStatCard;
 import org.apache.wicket.model.IModel;
@@ -61,21 +65,21 @@ public class ReportsPage extends BasePage {
                 .setTrend(Model.ofList(MONTHS.stream().map(m -> m.revenue() / m.orders()).toList()))
                 .setHint(Model.of("vs. last year")));
 
-        add(Oat.Components.columnChart("monthly", Model.ofList(MONTHS), Month::label, Month::revenue)
+        add(new OatColumnChart<>("monthly", Model.ofList(MONTHS), Month::label, Month::revenue)
                 .setTitle("Revenue per month")
                 .setCategoryHeader(Model.of("Month"))
                 .setValueFormat(ReportsPage::euros));
-        add(Oat.Components.lineChart("trend", Model.ofList(MONTHS), Month::label)
+        add(new OatLineChart<>("trend", Model.ofList(MONTHS), Month::label)
                 .addSeries("2026", Month::revenue)
                 .addSeries("2025", Month::lastYear)
                 .setTitle("Revenue, this year and last")
                 .setCategoryHeader(Model.of("Month"))
                 .setValueFormat(ReportsPage::euros));
-        add(Oat.Components.barChart("customers", Model.ofList(CUSTOMERS), Customer::name, Customer::revenue)
+        add(new OatBarChart<>("customers", Model.ofList(CUSTOMERS), Customer::name, Customer::revenue)
                 .setTitle("Top customers")
                 .setCategoryHeader(Model.of("Customer"))
                 .setValueFormat(ReportsPage::euros));
-        add(Oat.Components.donutChart("regions", Model.ofList(REGIONS), Region::name, Region::revenue)
+        add(new OatDonutChart<>("regions", Model.ofList(REGIONS), Region::name, Region::revenue)
                 .setTitle("Revenue by region")
                 .setCategoryHeader(Model.of("Region"))
                 .setValueFormat(ReportsPage::euros));

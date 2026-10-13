@@ -8,6 +8,8 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 
 import java.time.Duration;
+import dev.jbaby.wicket.oat.util.SerializableFunction;
+import java.util.Objects;
 
 /**
  * Renders the page first and loads slow content - a report, a chart, figures from a
@@ -85,5 +87,19 @@ public abstract class OatLazyLoadPanel<T extends Component> extends AjaxLazyLoad
             }
             add(skeletons);
         }
+    }
+
+    /**
+     * A panel loading its content over Ajax right after the page, without a subclass:
+     * {@code content} creates it with the id it is given.
+     */
+    public static OatLazyLoadPanel<Component> of(String id, SerializableFunction<String, ? extends Component> content) {
+        Objects.requireNonNull(content);
+        return new OatLazyLoadPanel<>(id) {
+            @Override
+            public Component getLazyLoadComponent(String markupId) {
+                return content.apply(markupId);
+            }
+        };
     }
 }

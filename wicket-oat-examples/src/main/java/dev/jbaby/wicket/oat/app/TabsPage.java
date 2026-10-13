@@ -1,5 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatTabs;
+import dev.jbaby.wicket.oat.components.OatTabbedPanel;
 import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -16,7 +18,7 @@ public class TabsPage extends BasePage {
 
     public TabsPage() {
         // Server-side tabs: only the selected tab's panel exists; switching swaps it over Ajax
-        add(Oat.Components.tabbedPanel("tabbedPanel", List.of(
+        add(new OatTabbedPanel<>("tabbedPanel", List.of(
                 Oat.tab("Overview", id -> createdAt(new Fragment(id, "overviewTab", this))),
                 Oat.tab("Activity", id -> createdAt(new Fragment(id, "activityTab", this))),
                 Oat.tab("Settings", id -> createdAt(new Fragment(id, "settingsTab", this))))));
@@ -28,7 +30,7 @@ public class TabsPage extends BasePage {
                 new TabData("Notifications", "Configure your notification preferences.")
         );
 
-        add(Oat.Components.tabs("tabs", Model.ofList(tabs),
+        add(OatTabs.of("tabs", Model.ofList(tabs),
                 (item, tab) -> item.add(new Label("tabLabel", tab.label())),
                 (item, tab) -> item.add(new Label("panelContent", tab.content()))));
     }

@@ -6,6 +6,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import java.util.Objects;
 
 /**
  * A container component that renders its items as an Oat tabbed interface using
@@ -54,4 +56,25 @@ public abstract class OatTabs<T> extends WebMarkupContainer {
 
     /** Populate a tab panel; the item's root tag should carry {@code role="tabpanel"}. */
     protected abstract void populatePanel(ListItem<T> item);
+
+    /**
+     * Tabs switched in the browser, without a subclass: {@code populateTab} fills each
+     * tab's button and {@code populatePanel} its panel, with the list item and its object.
+     */
+    public static <T> OatTabs<T> of(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateTab,
+                                    SerializableBiConsumer<ListItem<T>, T> populatePanel) {
+        Objects.requireNonNull(populateTab);
+        Objects.requireNonNull(populatePanel);
+        return new OatTabs<T>(id, model) {
+            @Override
+            protected void populateTab(ListItem<T> item) {
+                populateTab.accept(item, item.getModelObject());
+            }
+
+            @Override
+            protected void populatePanel(ListItem<T> item) {
+                populatePanel.accept(item, item.getModelObject());
+            }
+        };
+    }
 }

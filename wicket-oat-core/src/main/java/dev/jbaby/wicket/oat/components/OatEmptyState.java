@@ -14,6 +14,10 @@ public class OatEmptyState extends Panel {
         this(id, Model.of(title), null);
     }
 
+    public OatEmptyState(String id, String title, String message) {
+        this(id, Model.of(title), Model.of(message));
+    }
+
     public OatEmptyState(String id, IModel<String> titleModel, IModel<String> messageModel) {
         super(id);
         

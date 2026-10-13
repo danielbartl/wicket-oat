@@ -148,7 +148,7 @@ class GeneralComponentsTest {
 
     @Test
     void testOatProgressFactoryWithMax() {
-        OatProgress progress = Oat.Components.progress("progress", Model.of(50), Model.of(200));
+        OatProgress progress = new OatProgress("progress", Model.of(50), Model.of(200));
         tester.startComponentInPage(progress, Markup.of("<progress wicket:id=\"progress\"></progress>"));
         TagTester tag = tester.getTagByWicketId("progress");
         assertThat(tag.getAttribute("value")).isEqualTo("50");
@@ -157,7 +157,7 @@ class GeneralComponentsTest {
 
     @Test
     void testOatMeterFactoryFull() {
-        OatMeter meter = Oat.Components.meter("meter", Model.of(5), Model.of(0), Model.of(10), Model.of(2), Model.of(8), Model.of(6));
+        OatMeter meter = new OatMeter("meter", Model.of(5), Model.of(0), Model.of(10), Model.of(2), Model.of(8), Model.of(6));
         tester.startComponentInPage(meter, Markup.of("<meter wicket:id=\"meter\"></meter>"));
         TagTester tag = tester.getTagByWicketId("meter");
         assertThat(tag.getAttribute("low")).isEqualTo("2");
@@ -167,7 +167,7 @@ class GeneralComponentsTest {
 
     @Test
     void testOatSpinnerFactoryWithModel() {
-        OatSpinner spinner = Oat.Components.spinner("spinner", Model.of(SpinnerBehavior.Size.LARGE));
+        OatSpinner spinner = new OatSpinner("spinner", Model.of(SpinnerBehavior.Size.LARGE));
         tester.startComponentInPage(spinner);
         TagTester tag = tester.getTagByWicketId("spinner");
         assertThat(tag.getAttribute("data-spinner")).isEqualTo("large");

@@ -156,8 +156,8 @@ class WicketIdiomsFieldTest {
     void fluentSettersReturnTheConcreteFieldType() {
         // These declarations only compile if the setters keep the concrete type
         OatNumberField<Integer> number = new OatNumberField<Integer>("n", Model.of(1)).setRequired(true).setMin(0).setMax(10);
-        OatSwitch toggle = Oat.Components.oatSwitch("s", Model.of(true)).setRequired(false);
-        OatTextField<String> text = Oat.Components.textField("t", Model.of("")).setPlaceholder(Model.of("Type here")).setLabel(Model.of("Text"));
+        OatSwitch toggle = new OatSwitch("s", Model.of(true)).setRequired(false);
+        OatTextField<String> text = new OatTextField<>("t", Model.of("")).setPlaceholder(Model.of("Type here")).setLabel(Model.of("Text"));
 
         assertThat(number.getInput().isRequired()).isTrue();
         assertThat(toggle.getInput().isRequired()).isFalse();

@@ -1,5 +1,8 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatSubmitButton;
+import dev.jbaby.wicket.oat.components.form.OatFileDropzone;
+import dev.jbaby.wicket.oat.components.form.OatFileUpload;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.OatFeedbackPanel;
 import org.apache.wicket.markup.html.form.Form;
@@ -26,10 +29,10 @@ public class UploadPage extends BasePage {
 
         IModel<List<FileUpload>> plain = Model.ofList(new ArrayList<>());
         IModel<List<FileUpload>> dropzone = Model.ofList(new ArrayList<>());
-        form.add(Oat.Components.fileUpload("plainUpload", "Plain file input", plain));
-        form.add(Oat.Components.fileDropzone("dropzoneUpload", "Drag-and-drop upload", dropzone));
+        form.add(new OatFileUpload("plainUpload", "Plain file input", plain));
+        form.add(new OatFileDropzone("dropzoneUpload", "Drag-and-drop upload", dropzone));
 
-        form.add(Oat.Components.submitButton("upload", "Upload", target -> {
+        form.add(OatSubmitButton.onSubmit("upload", "Upload", target -> {
             // A field without a file sets its model to null
             List<FileUpload> files = Stream.of(plain.getObject(), dropzone.getObject())
                     .filter(Objects::nonNull).flatMap(List::stream).toList();

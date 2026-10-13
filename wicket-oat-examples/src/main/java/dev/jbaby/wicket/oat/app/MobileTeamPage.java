@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatButton;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.app.DemoAbsences.Absence;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
@@ -35,7 +36,7 @@ public class MobileTeamPage extends MobileBasePage {
                 item.add(new Label("what", absence.type().label + ", " + (absence.start().equals(absence.end())
                         ? shortDate(absence.start())
                         : shortDate(absence.start()) + " – " + shortDate(absence.end()))));
-                item.add(Oat.Components.button("confirm", "Confirm", target -> {
+                item.add(OatButton.onClick("confirm", "Confirm", target -> {
                     DemoAbsences.confirm(absence);
                     success("Confirmed " + absence.person() + "'s " + absence.type().label.toLowerCase() + ".");
                     // The list, the days left, and the Team tab's badge

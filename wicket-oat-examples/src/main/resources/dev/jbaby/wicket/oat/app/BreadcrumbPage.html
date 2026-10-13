@@ -18,7 +18,7 @@
         <div class="mt-6">
             <h3>How to use</h3>
             <pre><code>// Java
-add(Oat.Components.breadcrumb("breadcrumb", Model.ofList(crumbs), (item, label) -&gt; {
+add(OatBreadcrumb.of("breadcrumb", Model.ofList(crumbs), (item, label) -&gt; {
     Link&lt;Void&gt; link = new Link&lt;&gt;("link") { public void onClick() {} };
     link.add(new Label("label", label));
     item.add(link);

@@ -20,6 +20,12 @@ components they wrap, which breaks some code and tests:
   `IPartialPageRequestHandler`. The dialog's own tag is now rendered, with the class
   `oat-dialog`, which `wicket-oat.css` gives no box of its own, so the layout doesn't
   change; in a test, `getTagByWicketId(...)` with the dialog's id now finds that tag.
+- `Oat.Components` keeps only the factories for components driven by a callback: `button`,
+  `submitButton`, `accordion`, `tabs`, `dropdown`, `buttonGroup`, `breadcrumb`, `pagination`,
+  `avatarGroup`, `wizard`, `loginForm` and `lazyLoad`. The other 225 methods only repeated a
+  constructor (`alert`, `badge`, `dialog`, `dataTable`, every form field, ...); call the
+  constructor with the same arguments instead, e.g. `new OatAlert(...)` or
+  `new OatTextField<>(...)`.
 - Hooks follow Wicket's `newXxx(id)` naming: `OatAppLayout`'s `createTopNavExtra` and
   `createFooter` are now `newTopNavExtra` and `newSidebarFooter`, and `OatMobileLayout`'s
   `createBottomNav` is `newBottomNav`. Their `topNav()`, `sidebar()` and `sidebarMenu()`
@@ -46,6 +52,13 @@ components they wrap, which breaks some code and tests:
   now works, and keeps an open dialog open. `open(content, target)` sets content that is
   removed again on close; `OatCrud` uses it for its editor, and forgets the record once it
   closes. `OatConfirmDialog` forgets its action when the user cancels.
+- Components driven by a callback have static factories taking a lambda instead of a
+  subclass, like Wicket's `AjaxLink.onClick(...)`: `OatButton.onClick`,
+  `OatSubmitButton.onSubmit`, `OatWizard.onFinish`, `OatLoginForm.signIn`, and `of(...)` on
+  `OatAccordion`, `OatTabs`, `OatDropdown`, `OatButtonGroup`, `OatBreadcrumb`,
+  `OatPagination`, `OatAvatarGroup` and `OatLazyLoadPanel`. `Oat.Components` delegates to
+  them. New constructors `OatAlert(id)`, `OatAlert(id, variant)` and
+  `OatEmptyState(id, title, message)` cover what the removed factories offered.
 - `OatHtml`: the `<html>` tag of `OatAppLayout` and `OatMobileLayout`, now public for a base
   page of your own (`add(new OatHtml("html"))`). It sets the theme, the density and the
   page's language.

@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatPagination;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.OatAjaxPagingNavigator;
 import org.apache.wicket.AttributeModifier;
@@ -36,7 +37,7 @@ public class PaginationPage extends BasePage {
         // Hand-rolled pagination for when there's no IPageable
         List<Integer> pages = List.of(1, 2, 3, 4, 5);
 
-        add(Oat.Components.pagination("pagination", Model.ofList(pages), (item, page) -> {
+        add(OatPagination.of("pagination", Model.ofList(pages), (item, page) -> {
             Link<Void> link = new Link<>("link") {
                 @Override
                 public void onClick() {}

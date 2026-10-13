@@ -11,6 +11,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.List;
+import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import java.util.Objects;
+import dev.jbaby.wicket.oat.util.SerializableFunction;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 
 /**
  * A self-contained dropdown menu using the {@code ot-dropdown} web component
@@ -62,5 +67,53 @@ public abstract class OatDropdown<T> extends Panel {
         target.appendJavaScript("(function(m){if(m&&m.matches(':popover-open'))m.hidePopover();})(document.getElementById('"
                 + menu.getMarkupId() + "'))");
         return this;
+    }
+
+    /**
+     * A dropdown menu without a subclass: {@code populateItem} receives each menu item and
+     * its object, to add the item's content.
+     */
+    public static <T> OatDropdown<T> of(String id, String triggerLabel, IModel<List<T>> model,
+                                        SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        return of(id, Model.of(triggerLabel), model, populateItem);
+    }
+
+    /** A dropdown menu without a subclass; {@code populateItem} fills each menu item. */
+    public static <T> OatDropdown<T> of(String id, IModel<String> triggerLabel, IModel<List<T>> model,
+                                        SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        Objects.requireNonNull(populateItem);
+        return new OatDropdown<T>(id, triggerLabel, model) {
+            @Override
+            protected void populateItem(ListItem<T> item) {
+                populateItem.accept(item, item.getModelObject());
+            }
+        };
+    }
+
+    /**
+     * A menu of actions: each object is an item labelled by {@code label}; clicking it runs
+     * {@code onClick} over Ajax and closes the menu. The menu's markup gives each item a
+     * {@code label}.
+     */
+    public static <T> OatDropdown<T> of(String id, String triggerLabel, IModel<List<T>> model,
+                                        SerializableFunction<T, String> label, SerializableBiConsumer<AjaxRequestTarget, T> onClick) {
+        return of(id, Model.of(triggerLabel), model, label, onClick);
+    }
+
+    /** A menu of actions, each labelled by {@code label} and running {@code onClick} when clicked. */
+    public static <T> OatDropdown<T> of(String id, IModel<String> triggerLabel, IModel<List<T>> model,
+                                        SerializableFunction<T, String> label, SerializableBiConsumer<AjaxRequestTarget, T> onClick) {
+        Objects.requireNonNull(label);
+        Objects.requireNonNull(onClick);
+        return new OatDropdown<T>(id, triggerLabel, model) {
+            @Override
+            protected void populateItem(ListItem<T> item) {
+                item.add(new Label("label", label.apply(item.getModelObject())));
+                item.add(AjaxEventBehavior.onEvent("click", target -> {
+                    onClick.accept(target, item.getModelObject());
+                    close(target);
+                }));
+            }
+        };
     }
 }

@@ -1,5 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatButton;
+import dev.jbaby.wicket.oat.components.OatLazyLoadPanel;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
@@ -26,13 +28,13 @@ public class AppShellPage extends BasePage {
         add(Oat.Behaviors.feedbackToasts());
 
         // A slow action: the button shows a spinner and ignores clicks until it's done
-        add(Oat.Components.button("slowSave", "Save (takes 2 seconds)", target -> {
+        add(OatButton.onClick("slowSave", "Save (takes 2 seconds)", target -> {
             pause(2000);
             success("Saved once, however often you clicked.");
         }).setBusyIndicator(true));
 
         // Confirm before deleting; one dialog serves every row
-        OatConfirmDialog confirm = Oat.Components.confirmDialog("confirm");
+        OatConfirmDialog confirm = new OatConfirmDialog("confirm");
         add(confirm);
 
         WebMarkupContainer tasks = new WebMarkupContainer("tasks");
@@ -43,7 +45,7 @@ public class AppShellPage extends BasePage {
             protected void populateItem(ListItem<String> item) {
                 String task = item.getModelObject();
                 item.add(new Label("name", task));
-                item.add(Oat.Components.button("delete", "Delete", target ->
+                item.add(OatButton.onClick("delete", "Delete", target ->
                         confirm.ask(target, "Delete “" + task + "”?", "This can't be undone.", t -> {
                             DemoTasks.get().remove(task);
                             success("Deleted “" + task + "”.");
@@ -61,17 +63,17 @@ public class AppShellPage extends BasePage {
                 setVisible(DemoTasks.get().isEmpty());
             }
         });
-        add(Oat.Components.button("restore", "Restore tasks", target -> {
+        add(OatButton.onClick("restore", "Restore tasks", target -> {
             DemoTasks.reset();
             target.add(tasks, getSidebar());
         }).setStyle(ButtonBehavior.Style.OUTLINE));
 
         // Slow content, loaded after the page is shown
-        add(Oat.Components.lazyLoad("revenue", id -> {
+        add(OatLazyLoadPanel.of("revenue", id -> {
             pause(1500);
             return new Fragment(id, "revenueFragment", this);
         }).setPlaceholder(SkeletonBehavior.Shape.LINE, 2));
-        add(Oat.Components.lazyLoad("activity", id -> {
+        add(OatLazyLoadPanel.of("activity", id -> {
             pause(2500);
             return new Fragment(id, "activityFragment", this);
         }).setPlaceholder(SkeletonBehavior.Shape.LINE, 4));

@@ -121,7 +121,7 @@ class NewComponentsTest {
 
     @Test
     void testOatDialogFactoryWithModel() {
-        OatDialog dialog = Oat.Components.dialog("dialog", Model.of("Open dialog"), Model.of("Title"));
+        OatDialog dialog = new OatDialog("dialog", Model.of("Open dialog"), Model.of("Title"));
         tester.startComponentInPage(dialog);
 
         tester.assertLabel("dialog:trigger:triggerLabel", "Open dialog");

@@ -1,5 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatSkeleton;
+import dev.jbaby.wicket.oat.components.OatSpinner;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
@@ -54,7 +56,7 @@ public class ComponentsPage extends BasePage {
         });
 
         // Spinner and Skeleton
-        add(Oat.Components.spinner("spinnerComponent"));
-        add(Oat.Components.skeleton("skeletonComponent", SkeletonBehavior.Shape.BOX));
+        add(new OatSpinner("spinnerComponent"));
+        add(new OatSkeleton("skeletonComponent", SkeletonBehavior.Shape.BOX));
     }
 }

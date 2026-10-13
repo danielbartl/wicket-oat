@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
 ## 0.3.0 (2026-10-13)
 
 A release that makes Wicket Oat work the way Wicket users expect: dialogs like Wicket's

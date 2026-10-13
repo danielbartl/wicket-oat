@@ -28,7 +28,7 @@ public class LayoutTestPage extends OatAppLayout {
     }
 
     @Override
-    protected Component createFooter(String id) {
+    protected Component newSidebarFooter(String id) {
         return new OatThemeSwitcher(id);
     }
 }

@@ -127,20 +127,20 @@ public class ProductsPage extends BasePage {
                 .setType(Integer.class)
                 .setRequired(true)
                 .addValidator(RangeValidator.minimum(0))
-                .onSave((target, product) -> success("Stock of " + product.getName() + " is now " + product.getStock() + ".")));
+                .setOnSave((target, product) -> success("Stock of " + product.getName() + " is now " + product.getStock() + ".")));
 
         OatCrud<Product, String> crud = new OatCrud<>("products", columns, new ProductProvider(), 5)
                 .setEditor(ProductFields::new)
                 .setNewItem(Product::new)
                 .setTitle(Product::getName)
-                .onSave((target, product) -> {
+                .setOnSave((target, product) -> {
                     if (product.getId() == 0) {
                         product.id = nextId.getAndIncrement();
                         products.add(product);
                     }
                     success(product.getName() + " saved.");
                 })
-                .onDelete((target, product) -> {
+                .setOnDelete((target, product) -> {
                     products.remove(product);
                     success(product.getName() + " deleted.");
                 });

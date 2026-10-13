@@ -6,6 +6,7 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -19,7 +20,9 @@ import java.util.List;
 
 /**
  * Base page providing the Oat UI application layout (sidebar + topnav).
- * Override factory methods (e.g., {@link #createFooter(String)}) to customize the layout.
+ * Override its hooks to customize it: the menu ({@link #sidebarMenuItemsModel()}), the
+ * names ({@link #appNameModel()}, {@link #appTitleModel()}), and components of your own
+ * in the top bar ({@link #newTopNavExtra}) and under the menu ({@link #newSidebarFooter}).
  * <p>
  * The {@code <html>} tag gets the page's {@code lang} from its locale, and a "Skip to
  * content" link ({@code OatAppLayout.skipToContent}), shown when it has keyboard focus,
@@ -27,8 +30,8 @@ import java.util.List;
  */
 public abstract class OatAppLayout extends WebPage {
 
-    protected WebMarkupContainer sidebar;
-    protected WebMarkupContainer topNav;
+    private WebMarkupContainer sidebar;
+    private WebMarkupContainer topNav;
 
     public OatAppLayout() {
         this((PageParameters) null);
@@ -60,12 +63,12 @@ public abstract class OatAppLayout extends WebPage {
         return new StringResourceModel("OatAppLayout.title", this).setDefaultValue("Wicket Oat Application");
     }
 
-    protected void topNav() {
+    private void topNav() {
         topNav = new WebMarkupContainer("topNav");
         add(topNav);
 
         topNav.add(new Label("appName", appNameModel()));
-        topNav.add(createTopNavExtra("topNavExtra"));
+        topNav.add(newTopNavExtra("topNavExtra"));
     }
 
     /** The name in the top navigation; by default the {@code OatAppLayout.name} resource. */
@@ -74,26 +77,26 @@ public abstract class OatAppLayout extends WebPage {
     }
 
     /**
-     * Hook to add extra components to the top navigation (e.g., user profile, search).
+     * Components of your own on the right of the top navigation, e.g. a search field or
+     * the signed-in user; none by default. Use the given id; the component is rendered on a
+     * {@code <div>}.
      */
-    protected Component createTopNavExtra(String id) {
+    protected Component newTopNavExtra(String id) {
         return new WebMarkupContainer(id).setVisible(false);
     }
 
-    protected void sidebar() {
+    private void sidebar() {
         sidebar = new WebMarkupContainer("sidebar");
-        // So an Ajax handler can re-render it with target.add(sidebar), e.g. to update badges
+        // So an Ajax handler can re-render it with target.add(getSidebar()), e.g. to update badges
         sidebar.setOutputMarkupId(true);
         add(sidebar);
 
         sidebarMenu();
-        sidebar.add(createFooter("footer"));
+        sidebar.add(newSidebarFooter("footer"));
     }
 
-    /**
-     * Child pages/apps customize the menu by overriding {@link #sidebarMenuItemsModel()}.
-     */
-    protected void sidebarMenu() {
+    /** The menu, from {@link #sidebarMenuItemsModel()}. */
+    private void sidebarMenu() {
         sidebar.add(new ListView<>("menuItems", sidebarMenuItemsModel()) {
             @Override
             protected void populateItem(ListItem<MenuItem> item) {
@@ -130,7 +133,7 @@ public abstract class OatAppLayout extends WebPage {
     private void populateMenuLink(ListItem<MenuItem> item) {
         MenuItem mi = item.getModelObject();
 
-        BookmarkablePageLink<?> link = new BookmarkablePageLink<>("link", mi.pageClass(), mi.parameters());
+        AbstractLink link = newMenuLink("link", mi);
         link.add(new Label("label", mi.label()));
         // An explicit model even without a badge, so it never inherits a page's CompoundPropertyModel
         link.add(new Label("menuBadge", mi.badge() != null ? mi.badge() : new Model<>()) {
@@ -183,10 +186,24 @@ public abstract class OatAppLayout extends WebPage {
     }
 
     /**
-     * Hook to customize the sidebar footer. 
-     * Default implementation is an empty container.
+     * The link of a menu entry: by default a {@code BookmarkablePageLink} to its page.
+     * Override it to return another link, such as an {@code AjaxLink}, on an {@code <a>};
+     * the sidebar adds the label, badge and {@code aria-current} to it.
      */
-    protected Component createFooter(String id) {
+    protected AbstractLink newMenuLink(String id, MenuItem item) {
+        return new BookmarkablePageLink<Void>(id, item.pageClass(), item.parameters());
+    }
+
+    /**
+     * Components of your own under the menu, e.g. a theme switcher; none by default. Use
+     * the given id; the component is rendered on a {@code <footer>}.
+     */
+    protected Component newSidebarFooter(String id) {
         return new WebMarkupContainer(id).setVisible(false);
+    }
+
+    /** The sidebar, e.g. to re-render it from an Ajax handler after a menu badge changed. */
+    public WebMarkupContainer getSidebar() {
+        return sidebar;
     }
 }

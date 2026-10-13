@@ -179,7 +179,7 @@ class TierBComponentsTest {
     @Test
     void cookieConsentAsksUntilAnswered() {
         List<Boolean> answers = new ArrayList<>();
-        tester.startComponentInPage(Oat.Components.cookieConsent("cookies").onAnswer(answers::add));
+        tester.startComponentInPage(Oat.Components.cookieConsent("cookies").setOnAnswer(answers::add));
         assertThat(html()).contains("We use cookies").contains(">Accept<").contains(">Only necessary<");
         assertThat(OatCookieConsent.isAnswered()).isFalse();
 

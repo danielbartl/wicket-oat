@@ -138,13 +138,13 @@ class TierCComponentsTest {
                     .setEditor(CustomerFields::new)
                     .setNewItem(() -> new Customer(null, null))
                     .setTitle(Customer::getName)
-                    .onSave((target, customer) -> {
+                    .setOnSave((target, customer) -> {
                         if (!customers.contains(customer)) {
                             customers.add(customer);
                         }
                         log.add("saved " + customer.name + "/" + customer.city);
                     })
-                    .onDelete((target, customer) -> {
+                    .setOnDelete((target, customer) -> {
                         customers.remove(customer);
                         log.add("deleted " + customer.name);
                     });
@@ -280,7 +280,7 @@ class TierCComponentsTest {
         List<String> selected = new ArrayList<>();
         OatTree<Folder> tree = new OatTree<>("tree", new FolderProvider()).setLabel(Folder::name)
                 .setIcon(f -> f.children().isEmpty() ? "file" : "folder")
-                .onSelect((target, folder) -> selected.add(folder.name()));
+                .setOnSelect((target, folder) -> selected.add(folder.name()));
         tester.startComponentInPage(tree);
         assertThat(html()).contains("class=\"oat-tree\"").contains(">Documents<").doesNotContain(">Invoices<");
         TagTester junction = tags("class", "oat-junction oat-junction-collapsed").get(0);

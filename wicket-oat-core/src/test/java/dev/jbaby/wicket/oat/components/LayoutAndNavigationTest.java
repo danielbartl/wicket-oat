@@ -59,6 +59,19 @@ class LayoutAndNavigationTest {
     }
 
     @Test
+    void menuLinksCanBeOtherLinksAndTheSidebarReRendered() {
+        AjaxMenuPage page = tester.startPage(AjaxMenuPage.class);
+        tester.assertLabel("sidebar:menuItems:0:link:label", "Reports");
+        // Still marked as the current page
+        assertThat(tester.getTagByWicketId("link").getAttribute("aria-current")).isEqualTo("page");
+
+        tester.clickLink("sidebar:menuItems:0:link");
+
+        assertThat(page.clicked).containsExactly("Reports");
+        tester.assertComponentOnAjaxResponse(page.getSidebar());
+    }
+
+    @Test
     void layoutIsSizedForPhones() {
         tester.startPage(ParamLayoutPage.class, new PageParameters().add("id", 1));
 

@@ -111,7 +111,7 @@ public class OatTableTree<T, S> extends TableTree<T, S> {
     }
 
     /** Makes labels links that select their row and then run this; the selected label has {@code aria-current}. */
-    public OatTableTree<T, S> onSelect(SerializableBiConsumer<AjaxRequestTarget, T> onSelect) {
+    public OatTableTree<T, S> setOnSelect(SerializableBiConsumer<AjaxRequestTarget, T> onSelect) {
         this.onSelect = onSelect;
         return this;
     }

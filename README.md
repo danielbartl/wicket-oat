@@ -233,8 +233,13 @@ protected IModel<List<MenuItem>> sidebarMenuItemsModel() {
 
 A badge is read on every render and hidden while it is `null`, empty or zero.
 To update it without reloading the page, re-render the sidebar from an Ajax
-handler with `target.add(sidebar)`. Pages the user isn't authorized to open are
+handler with `target.add(getSidebar())`. Pages the user isn't authorized to open are
 left out, and so is a group left empty. Groups can't contain other groups.
+
+Each entry's link is a `BookmarkablePageLink` to its page; override
+`newMenuLink(id, item)` to return another link, such as an `AjaxLink`. Components of
+your own go in the top bar with `newTopNavExtra(id)` and under the menu with
+`newSidebarFooter(id)`.
 
 ### Page language and skip link
 
@@ -327,12 +332,12 @@ public abstract class TimeOffPage extends OatMobileLayout {
   without being its target.
 - **Badge:** `withBadge(...)` shows a count on the icon, read on every render and
   hidden while `null` or 0. `OatMobileLayout`'s `bottomNav` has a markup id, so
-  `target.add(bottomNav)` updates it over Ajax.
+  `target.add(getBottomNav())` updates it over Ajax.
 - **Primary item:** `asPrimary()` makes one item the bar's main action, a round Oat
   button showing only its icon; screen readers get its label as `aria-label`. It never
   takes the current tab's color, so its icon stays readable on the button.
 - **Wide screens:** the bar shows up to 768px, where Oat's grid switches to phones too.
-  `setAlwaysVisible(true)` keeps it on wider screens, e.g. from `createBottomNav(...)`.
+  `setAlwaysVisible(true)` keeps it on wider screens, e.g. from `newBottomNav(...)`.
 - **The `<nav>`** is named "Main" for screen readers (`OatBottomNav.label`, translated);
   change it with `setLabel(...)` or an `aria-label` in the markup. Tabs for pages the
   user may not open are left out. Override `newLink(id, item)` to use, for example, an
@@ -672,7 +677,7 @@ columns.add(0, new OatRowDetailsColumn<>((id, order) -> new OrderLinesPanel(id, 
 columns.add(new OatEditableColumn<Line, String, Integer>(Model.of("Quantity"), "quantity",
                 Line::quantity, Line::setQuantity)
         .setType(Integer.class).setRequired(true).addValidator(RangeValidator.minimum(1))
-        .onSave((target, line) -> lines.save(line)));
+        .setOnSave((target, line) -> lines.save(line)));
 
 table.setColumnChooser(true);          // a "Columns" popover to hide and show columns
 table.setCsvExport("invoices.csv");    // "Export CSV": every row, in the current sort order
@@ -699,8 +704,8 @@ OatCrud<Customer, String> customers = new OatCrud<>("customers", columns, provid
         .setEditor((id, customer) -> new CustomerFields(id, customer))
         .setNewItem(Customer::new)
         .setTitle(Customer::name)
-        .onSave((target, customer) -> repository.save(customer))
-        .onDelete((target, customer) -> repository.delete(customer));
+        .setOnSave((target, customer) -> repository.save(customer))
+        .setOnDelete((target, customer) -> repository.delete(customer));
 ```
 
 The editor is a panel of form fields. It gets a `CompoundPropertyModel` over the
@@ -722,7 +727,7 @@ themes. Children load only when their parent is expanded, through an
 add(new OatTree<>("folders", new FolderProvider())
         .setLabel(Folder::name)
         .setIcon(folder -> "folder")
-        .onSelect((target, folder) -> show(target, folder)));
+        .setOnSelect((target, folder) -> show(target, folder)));
 
 List<IColumn<Account, String>> columns = List.of(
         new TreeColumn<>(Model.of("Account")),

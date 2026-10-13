@@ -20,6 +20,15 @@ components they wrap, which breaks some code and tests:
   `IPartialPageRequestHandler`. The dialog's own tag is now rendered, with the class
   `oat-dialog`, which `wicket-oat.css` gives no box of its own, so the layout doesn't
   change; in a test, `getTagByWicketId(...)` with the dialog's id now finds that tag.
+- Hooks follow Wicket's `newXxx(id)` naming: `OatAppLayout`'s `createTopNavExtra` and
+  `createFooter` are now `newTopNavExtra` and `newSidebarFooter`, and `OatMobileLayout`'s
+  `createBottomNav` is `newBottomNav`. Their `topNav()`, `sidebar()` and `sidebarMenu()`
+  build steps are private, and the `sidebar` and `bottomNav` fields are reached with
+  `getSidebar()` and `getBottomNav()`.
+- Setters taking a callback no longer look like Wicket's overridable `onXxx` methods:
+  `OatCrud.onSave`/`onDelete`, `OatEditableColumn.onSave`, `OatTree.onSelect`,
+  `OatTableTree.onSelect` and `OatCookieConsent.onAnswer` are now `setOnSave`,
+  `setOnDelete`, `setOnSelect` and `setOnAnswer`.
 - `OatDataTable` and `OatTableTree` sort and page over Ajax, re-rendering only the table,
   with plain links as the fallback without JavaScript. Their navigation toolbar holds an
   `OatAjaxPagingNavigator` instead of an `OatPagingNavigator`. A test clicking a page or
@@ -43,6 +52,8 @@ components they wrap, which breaks some code and tests:
 - `OatDataTable`'s empty state is a toolbar of its own instead of Wicket's `NoRecordsToolbar`
   with its message replaced through Wicket's internal component ids. Its cell spans the
   columns the user hasn't hidden, and keeps the `norecords-tr`/`norecords-td` classes.
+- `OatAppLayout.newMenuLink(id, item)` makes a sidebar entry's link, e.g. an `AjaxLink`
+  instead of the default `BookmarkablePageLink`, as `OatBottomNav.newLink` does for tabs.
 - `OatSelectionColumn` and `OatRowDetailsColumn` can keep rows by key, e.g. an entity's id,
   so the page no longer serializes the entities: `new OatSelectionColumn<>(selectedIds,
   Invoice::getId)`. Bulk actions then get the selected rows looked up through the data

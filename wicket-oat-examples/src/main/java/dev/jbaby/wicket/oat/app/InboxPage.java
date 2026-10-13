@@ -110,7 +110,7 @@ public class InboxPage extends BasePage {
 
         add(Oat.Components.cookieConsent("cookies")
                 .setPolicyLink(GettingStartedPage.class)
-                .onAnswer(accepted -> success(accepted ? "Thanks! Optional cookies are on." : "Only necessary cookies are used.")));
+                .setOnAnswer(accepted -> success(accepted ? "Thanks! Optional cookies are on." : "Only necessary cookies are used.")));
         add(new Link<Void>("askAgain") {
             @Override
             public void onClick() {

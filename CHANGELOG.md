@@ -43,6 +43,11 @@ components they wrap, which breaks some code and tests:
 - `OatDataTable`'s empty state is a toolbar of its own instead of Wicket's `NoRecordsToolbar`
   with its message replaced through Wicket's internal component ids. Its cell spans the
   columns the user hasn't hidden, and keeps the `norecords-tr`/`norecords-td` classes.
+- `OatSelectionColumn` and `OatRowDetailsColumn` can keep rows by key, e.g. an entity's id,
+  so the page no longer serializes the entities: `new OatSelectionColumn<>(selectedIds,
+  Invoice::getId)`. Bulk actions then get the selected rows looked up through the data
+  provider, current and in the table's sort order (`getSelectedRows(provider)`).
+  `getSelection()` and `getExpanded()` return the models as given, with rows or keys.
 - `OatThemeSwitcher` uses stateless links, so a page showing it, e.g. a sign-in page with
   the switcher in its top bar, stays stateless.
 - `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,

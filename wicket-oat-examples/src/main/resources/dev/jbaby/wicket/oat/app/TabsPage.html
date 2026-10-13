@@ -15,7 +15,7 @@
         <wicket:fragment wicket:id="settingsTab"><p>Preferences for this workspace. Panel created at <strong wicket:id="createdAt"></strong>.</p></wicket:fragment>
 
         <pre class="mt-4"><code>// Java
-add(Oat.Components.tabbedPanel("tabs", List.of(
+add(new OatTabbedPanel&lt;&gt;("tabs", List.of(
         Oat.tab("Profile", ProfilePanel::new),      // panels are created on demand
         Oat.tab("Settings", SettingsPanel::new))));</code></pre>
         <pre><code>&lt;!-- HTML --&gt;
@@ -36,7 +36,7 @@ add(Oat.Components.tabbedPanel("tabs", List.of(
         <div class="mt-6">
             <h3>How to use</h3>
             <pre><code>// Java
-add(Oat.Components.tabs("tabs", Model.ofList(tabs),
+add(OatTabs.of("tabs", Model.ofList(tabs),
         (item, tab) -&gt; item.add(new Label("tabLabel", tab.label())),
         (item, tab) -&gt; item.add(new Label("panelContent", tab.content()))));</code></pre>
 

@@ -7,6 +7,9 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import dev.jbaby.wicket.oat.util.SerializableConsumer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import java.util.Objects;
 
 /**
  * An Oat-styled {@link AjaxButton}: submits its form over Ajax, running
@@ -74,5 +77,51 @@ public class OatSubmitButton extends AjaxButton {
             getBehaviors(AjaxBusyBehavior.class).forEach(this::remove);
         }
         return this;
+    }
+
+    /**
+     * A button submitting its form over Ajax, running {@code onSubmit} when the form is
+     * valid, without a subclass:
+     * {@code form.add(OatSubmitButton.onSubmit("save", "Save", target -> ...))}.
+     */
+    public static OatSubmitButton onSubmit(String id, String label, SerializableConsumer<AjaxRequestTarget> onSubmit) {
+        return onSubmit(id, Model.of(label), onSubmit, null);
+    }
+
+    /** A button submitting its form over Ajax, running {@code onSubmit} when the form is valid. */
+    public static OatSubmitButton onSubmit(String id, IModel<String> label, SerializableConsumer<AjaxRequestTarget> onSubmit) {
+        return onSubmit(id, label, onSubmit, null);
+    }
+
+    /**
+     * A button submitting its form over Ajax, running {@code onSubmit} when the form is
+     * valid and {@code onError} when it isn't, e.g. {@code target -> target.add(form)} to
+     * show the errors.
+     */
+    public static OatSubmitButton onSubmit(String id, String label, SerializableConsumer<AjaxRequestTarget> onSubmit,
+                                           SerializableConsumer<AjaxRequestTarget> onError) {
+        return onSubmit(id, Model.of(label), onSubmit, onError);
+    }
+
+    /**
+     * A button submitting its form over Ajax, running {@code onSubmit} when the form is
+     * valid and {@code onError}, if given, when it isn't.
+     */
+    public static OatSubmitButton onSubmit(String id, IModel<String> label, SerializableConsumer<AjaxRequestTarget> onSubmit,
+                                           SerializableConsumer<AjaxRequestTarget> onError) {
+        Objects.requireNonNull(onSubmit);
+        return new OatSubmitButton(id, label) {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                onSubmit.accept(target);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target) {
+                if (onError != null) {
+                    onError.accept(target);
+                }
+            }
+        };
     }
 }

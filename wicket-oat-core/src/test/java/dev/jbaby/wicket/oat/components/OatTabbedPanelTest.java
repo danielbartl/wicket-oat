@@ -109,7 +109,7 @@ class OatTabbedPanelTest {
                 return false;
             }
         };
-        tester.startComponentInPage(Oat.Components.tabbedPanel("tabs", List.of(tab("Profile"), hidden)));
+        tester.startComponentInPage(new OatTabbedPanel<>("tabs", List.of(tab("Profile"), hidden)));
 
         assertThat(tabs()).hasSize(1);
     }

@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import dev.jbaby.wicket.oat.util.SerializableConsumer;
+import java.util.Objects;
 
 /**
  * A form filled in over several steps - onboarding, an order, an application - with a
@@ -224,5 +226,19 @@ public abstract class OatWizard extends Panel {
     }
 
     private record Step(IModel<String> title, SerializableFunction<String, ? extends Component> factory) implements Serializable {
+    }
+
+    /**
+     * A wizard without a subclass; {@code onFinish} runs after the last step. Add the
+     * steps with {@link #addStep}.
+     */
+    public static OatWizard onFinish(String id, SerializableConsumer<AjaxRequestTarget> onFinish) {
+        Objects.requireNonNull(onFinish);
+        return new OatWizard(id) {
+            @Override
+            protected void onFinish(AjaxRequestTarget target) {
+                onFinish.accept(target);
+            }
+        };
     }
 }

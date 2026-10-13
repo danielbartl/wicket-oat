@@ -6,6 +6,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import java.util.Objects;
 
 /**
  * A specialized ListView that renders its items as an Oat Accordion.
@@ -50,5 +52,26 @@ public abstract class OatAccordion<T> extends ListView<T> {
     public OatAccordion<T> setExclusive(boolean exclusive) {
         behavior.setExclusive(exclusive);
         return this;
+    }
+
+    /**
+     * An accordion of exclusive sections, without a subclass: {@code populateItem}
+     * receives each section's list item and object, e.g. to add its {@code title} and
+     * {@code content}.
+     */
+    public static <T> OatAccordion<T> of(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        return of(id, model, true, populateItem);
+    }
+
+    /** An accordion without a subclass; {@code exclusive} keeps at most one section open. */
+    public static <T> OatAccordion<T> of(String id, IModel<List<T>> model, boolean exclusive,
+                                         SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        Objects.requireNonNull(populateItem);
+        return new OatAccordion<T>(id, model, exclusive) {
+            @Override
+            protected void populateItem(ListItem<T> item) {
+                populateItem.accept(item, item.getModelObject());
+            }
+        };
     }
 }

@@ -9,6 +9,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import java.util.Objects;
 
 /**
  * A container component that renders its items as an Oat Breadcrumb trail.
@@ -58,4 +60,18 @@ public abstract class OatBreadcrumb<T> extends WebMarkupContainer {
      * wrapping a "label" child. The separator is managed automatically.
      */
     protected abstract void populateItem(ListItem<T> item);
+
+    /**
+     * A breadcrumb trail, without a subclass: {@code populateItem} receives each list item and its
+     * object.
+     */
+    public static <T> OatBreadcrumb<T> of(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        Objects.requireNonNull(populateItem);
+        return new OatBreadcrumb<T>(id, model) {
+            @Override
+            protected void populateItem(ListItem<T> item) {
+                populateItem.accept(item, item.getModelObject());
+            }
+        };
+    }
 }

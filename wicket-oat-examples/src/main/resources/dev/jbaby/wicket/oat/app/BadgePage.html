@@ -20,10 +20,10 @@
             <h3>How to use</h3>
             <p>You can use the <code>OatBadge</code> component for a simple label, or attach <code>BadgeBehavior</code> to any existing component.</p>
             
-            <pre><code>// Java - Using the OatBadge component via the Oat factory (recommended)
-add(Oat.Components.badge("myBadge", "Success", OatVariant.SUCCESS));
+            <pre><code>// Java - The OatBadge component
+add(new OatBadge("myBadge", "Success", OatVariant.SUCCESS));
 
-// Java - Using the BadgeBehavior via the Oat factory
+// Java - BadgeBehavior on any component
 label.add(Oat.Behaviors.badge(OatVariant.SUCCESS));</code></pre>
 
             <pre><code>&lt;!-- HTML - Markup for both approaches --&gt;

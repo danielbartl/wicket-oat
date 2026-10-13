@@ -244,8 +244,8 @@ class InputAddonsAndDecimalFieldsTest {
 
     @Test
     void factoriesCreateDecimalFields() {
-        assertThat(Oat.Components.moneyField("id", "Price", Model.of(BigDecimal.ONE)).getLabel().getObject()).isEqualTo("Price");
-        assertThat(Oat.Components.percentField("id", Model.of("Tax"), Model.of(BigDecimal.ONE), Model.of("Hint")).getLabel().getObject())
+        assertThat(new OatMoneyField("id", "Price", Model.of(BigDecimal.ONE)).getLabel().getObject()).isEqualTo("Price");
+        assertThat(new OatPercentField("id", Model.of("Tax"), Model.of(BigDecimal.ONE), Model.of("Hint")).getLabel().getObject())
                 .isEqualTo("Tax");
     }
 

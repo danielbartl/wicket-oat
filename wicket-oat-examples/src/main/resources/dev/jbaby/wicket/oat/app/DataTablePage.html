@@ -36,7 +36,7 @@ columns.add(actions);
 OatDataTable&lt;Invoice, String&gt; table = new OatDataTable&lt;&gt;("table", columns, provider, 10);
 table.addBulkAction("Mark as paid", (target, rows) -&gt; { invoices.markPaid(rows); table.clearSelection(target); });
 table.setToolbar(id -&gt; new SearchToolbar(id, search));
-table.setEmptyState(id -&gt; Oat.Components.emptyState(id, "No invoices found"));</code></pre>
+table.setEmptyState(id -&gt; new OatEmptyState(id, "No invoices found"));</code></pre>
         </div>
     </section>
 

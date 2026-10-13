@@ -8,7 +8,7 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 
 ## Features
 
-- **Fluent API:** Easily create components and behaviors using the `Oat` factory class.
+- **Wicket-Style API:** Plain Wicket components, created with `new` and bound to models. Components driven by a callback also have lambda factories, like Wicket's own `AjaxLink.onClick(...)`: `OatButton.onClick("save", "Save", target -> ...)`.
 - **Modern Design:** Beautifully designed components like Buttons, Cards, Modals, and more.
 - **Themeable:** Built-in support for multiple themes (Light, Dark, Midnight, Nord, etc.) that can be switched dynamically.
 - **Wicket 10+:** Fully compatible with Apache Wicket 10, on Java 17 or newer.
@@ -50,34 +50,22 @@ public class MyWicketApplication extends WebApplication {
 
 ### 3. Use Components
 
-Use the `Oat` factory class to create components in your pages:
+Oat components are plain Wicket components: create them with `new`, like any
+other, and give them a tag in your markup:
 
 ```java
-// Create a button with an Ajax click handler via Components factory
-add(Oat.Components.button("myButton", "Click Me", target -> {
-    Oat.toast(target, "Hello from Wicket Oat!", OatVariant.SUCCESS);
-}));
-
-// Create an alert via Components factory
-add(Oat.Components.alert("myAlert", "Your changes were saved.", OatVariant.SUCCESS));
-
-// Create a badge via Components factory
-add(Oat.Components.badge("myBadge", "New", OatVariant.SUCCESS));
+add(new OatAlert("myAlert", "Your changes were saved.", OatVariant.SUCCESS));   // <div wicket:id="myAlert"></div>
+add(new OatBadge("myBadge", "New", OatVariant.SUCCESS));                       // <span wicket:id="myBadge"></span>
 ```
 
-Every Oat component is also a plain Wicket component, so for components that
-don't need a callback or a list of items, a regular constructor works just as
-well:
+Components whose behavior comes from a callback, such as a button's click, also
+have a static factory taking a lambda, as Wicket's `AjaxLink.onClick(...)` does,
+so you don't have to write an anonymous subclass:
 
 ```java
-// The alert and badge above, built directly with their constructors
-add(new OatAlert("myAlert", "Your changes were saved.", OatVariant.SUCCESS));
-add(new OatBadge("myBadge", "New", OatVariant.SUCCESS));
+add(OatButton.onClick("myButton", "Click Me", target ->                        // <a wicket:id="myButton"></a>
+        Oat.toast(target, "Hello from Wicket Oat!", OatVariant.SUCCESS)));
 ```
-
-`OatButton` above is one of the components whose constructor requires
-subclassing (see [Usage Strategies](#usage-strategies) below), so the factory
-is the more natural choice for it.
 
 ## Available Components
 
@@ -101,10 +89,10 @@ any other variant renders like `DEFAULT`.
 
 Wicket Oat provides both **Components** and **Behaviors** for almost every UI element. This dual approach gives you maximum flexibility depending on your needs.
 
-### When to use Components (`Oat.Components`)
+### When to use Components
 Use a component when you want a self-contained UI widget and don't want to worry about the underlying HTML structure.
 - **Pros:** Easiest to use; encapsulates markup logic; handles internal structure (like headers/footers in a Card).
-- **Example:** `add(Oat.Components.alert("id", "Saved!", OatVariant.SUCCESS))`
+- **Example:** `add(new OatAlert("id", "Saved!", OatVariant.SUCCESS))`
 - **Markup Requirement:** Requires a simple tag like `<div wicket:id="id"></div>`.
 
 ### When to use Behaviors (`Oat.Behaviors`)
@@ -124,41 +112,42 @@ Use a behavior when you want to "Oat-ify" an existing Wicket component. This is 
 
 ## Usage Strategies
 
-Wicket Oat components are plain Wicket components — you can always create
-them with `new`. Whether you reach for `Oat.Components`/`Oat.Behaviors` or a
-constructor mostly comes down to what the component needs.
+Wicket Oat components are plain Wicket components, so you create them with `new`,
+subclass them, and give them models as you would any other.
 
-### When to use the factory (`Oat.Components` / `Oat.Behaviors`)
-Components whose behavior is driven by a callback or a list of items —
-`OatButton`, `OatTabs`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`,
-`OatPagination`, `OatDropdown`, `OatAvatarGroup` — are backed by an `abstract`
-class. Their constructors alone aren't enough; you'd need to write an
-anonymous subclass to implement a method like `onClick` or `populateItem`.
-The factory does that for you from a lambda, so it's the natural default
-here, not just a shortcut:
+### Components driven by a callback
+`OatButton`, `OatSubmitButton`, `OatTabs`, `OatAccordion`, `OatButtonGroup`,
+`OatBreadcrumb`, `OatPagination`, `OatDropdown`, `OatAvatarGroup`, `OatWizard`,
+`OatLoginForm` and `OatLazyLoadPanel` get their behavior from a method you
+implement, like `onClick` or `populateItem`. Override it in an anonymous subclass,
+as with Wicket's `AjaxLink` or `ListView`, or use the class's static factory, which
+takes a lambda instead:
+
 ```java
-// No subclass needed - the factory implements onClick() for you
-add(Oat.Components.button("id", "Click Me", target -> ...));   // <a wicket:id="id"></a>
+// The factory implements onClick() for you
+add(OatButton.onClick("id", "Click Me", target -> ...));                   // <a wicket:id="id"></a>
 
-// The same for a form's submit button: onSubmit when valid, onError when not
-form.add(Oat.Components.submitButton("save", "Save", target -> ..., target -> target.add(form)));
+// A form's submit button: onSubmit when valid, onError when not
+form.add(OatSubmitButton.onSubmit("save", "Save", target -> ..., target -> target.add(form)));
+
+// List components fill each item from its object
+add(OatAccordion.of("faq", Model.ofList(faqs), (item, faq) -> {
+    item.add(new Label("title", faq.question()));
+    item.add(new Label("content", faq.answer()));
+}));
 ```
 
-### When to use a constructor
-Every other component — `OatAlert`, `OatBadge`, `OatCard`, `OatDialog`,
-`OatAvatar`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`,
-`OatDataTable`, `OatEmptyState`, the form fields, and more — has no abstract
-methods, so a plain constructor works just as well, and is the more familiar
-style if you're used to plain Wicket:
+`Oat.Components` has the same factories in one place (`Oat.Components.button(...)`,
+`Oat.Components.accordion(...)`, ...), for code that prefers a single entry point.
+
+### Everything else
+Every other component - `OatAlert`, `OatBadge`, `OatCard`, `OatDialog`,
+`OatDataTable`, the form fields and the rest - is complete as it is, so you create
+it with its constructor:
 ```java
 add(new OatAlert("id", "Saved!", OatVariant.SUCCESS));
+form.add(new OatTextField<String>("name").setRequired(true));
 ```
-For `OatAlert`/`OatBadge` the constructor is actually the *more* capable
-option: it has an overload that binds the variant to a reactive
-`IModel<OatVariant>` which the factory doesn't expose. `OatDialog` and
-`OatDropdown` accept either a plain `String` or an `IModel<String>` on both
-the constructor and the factory, so pick whichever shape matches what you
-already have on hand.
 
 `OatDialog` works like Wicket's own `ModalDialog`, on the native `<dialog>`
 element: set its content with `setContent(...)` (id `OatDialog.CONTENT_ID`), and
@@ -259,7 +248,7 @@ confirm button, and `Oat.Behaviors.ajaxBusy()` adds it to any other Ajax link or
 button:
 
 ```java
-form.add(Oat.Components.submitButton("save", "Save", target -> ...).setBusyIndicator(true));
+form.add(OatSubmitButton.onSubmit("save", "Save", target -> ...).setBusyIndicator(true));
 add(new AjaxLink<Void>("refresh") { ... }.add(Oat.Behaviors.ajaxBusy()));
 ```
 
@@ -275,7 +264,7 @@ buttons, e.g. a Delete button on every table row:
 OatConfirmDialog confirm = new OatConfirmDialog("confirm"); // <div wicket:id="confirm"></div>
 add(confirm);
 
-add(Oat.Components.button("delete", "Delete", target ->
+add(OatButton.onClick("delete", "Delete", target ->
         confirm.ask(target, "Delete invoice?", "This can't be undone.", t -> {
             invoices.delete(invoice);
             t.add(table);
@@ -292,7 +281,7 @@ The confirm button is a danger button by default; `setConfirmLabel(...)` and
 after, showing Oat skeleton lines until it arrives:
 
 ```java
-add(Oat.Components.lazyLoad("revenue", id -> new RevenuePanel(id, reports.revenueThisYear()))
+add(OatLazyLoadPanel.of("revenue", id -> new RevenuePanel(id, reports.revenueThisYear()))
         .setPlaceholder(SkeletonBehavior.Shape.LINE, 2));
 ```
 
@@ -343,7 +332,7 @@ public abstract class TimeOffPage extends OatMobileLayout {
   user may not open are left out. Override `newLink(id, item)` to use, for example, an
   `AjaxLink` instead of a `BookmarkablePageLink`.
 
-Without `OatMobileLayout`, put the bar on a `<nav>` with `Oat.Components.bottomNav(id, items)`,
+Without `OatMobileLayout`, put the bar on a `<nav>` with `new OatBottomNav(id, items)`,
 and keep your content clear of it:
 
 ```css
@@ -549,14 +538,14 @@ separate steps for light and dark themes. Override `--oat-chart-1` to `--oat-cha
 for your brand.
 
 ```java
-add(Oat.Components.columnChart("monthly", () -> reports.monthly(), Month::label, Month::revenue)
+add(new OatColumnChart<>("monthly", () -> reports.monthly(), Month::label, Month::revenue)
         .setTitle("Revenue per month")
         .setValueFormat((value, locale) -> euros(value, locale)));
-add(Oat.Components.lineChart("trend", () -> reports.monthly(), Month::label)
+add(new OatLineChart<>("trend", () -> reports.monthly(), Month::label)
         .addSeries("2026", Month::revenue)
         .addSeries("2025", Month::lastYear));
-add(Oat.Components.barChart("customers", () -> reports.topCustomers(), Row::name, Row::revenue));
-add(Oat.Components.donutChart("regions", () -> reports.byRegion(), Region::name, Region::revenue));
+add(new OatBarChart<>("customers", () -> reports.topCustomers(), Row::name, Row::revenue));
+add(new OatDonutChart<>("regions", () -> reports.byRegion(), Region::name, Region::revenue));
 add(new OatStatCard("revenue", "Revenue", revenue).setTrend(() -> reports.last12Months()));
 ```
 
@@ -571,7 +560,7 @@ add(new OatStatCard("revenue", "Revenue", revenue).setTrend(() -> reports.last12
 
 ```java
 // A row of commands
-OatMenuBar commands = Oat.Components.menuBar("commands")
+OatMenuBar commands = new OatMenuBar("commands")
         .addAction("New", target -> create(target))
         .addLink("Reports", ReportsPage.class);
 commands.addMenu("Export").addAction("CSV", target -> exportCsv(target));
@@ -583,10 +572,10 @@ row.add(Oat.Behaviors.contextMenu()
         .addAction(Model.of("Delete"), OatVariant.DANGER, target -> delete(target, mail)));
 
 // Two panes; the first is resizable by dragging its corner, stacked on phones
-add(Oat.Components.splitLayout("inbox", id -> new MailList(id), id -> new MailView(id)).setSplit(40));
+add(new OatSplitLayout("inbox", id -> new MailList(id), id -> new MailView(id)).setSplit(40));
 
 // 20 items at a time, the next batch as the user scrolls
-add(Oat.Components.loadMoreList("mail", provider, 20, (id, mail) -> new MailRow(id, mail)).setLoadOnScroll(true));
+add(new OatLoadMoreList<>("mail", provider, 20, (id, mail) -> new MailRow(id, mail)).setLoadOnScroll(true));
 ```
 
 `OatMultiSelectField` chooses several values, looked up on the server as the
@@ -614,7 +603,7 @@ year, and hides itself once the user has answered. Check the answer with
 `OatCookieConsent.isAccepted()` before loading, for example, analytics:
 
 ```java
-add(Oat.Components.cookieConsent("cookies").setPolicyLink(PrivacyPage.class));
+add(new OatCookieConsent("cookies").setPolicyLink(PrivacyPage.class));
 ```
 
 ## Data Tables
@@ -646,7 +635,7 @@ columns.add(actions);
 OatDataTable<Invoice, String> table = new OatDataTable<>("invoices", columns, provider, 10);
 table.addBulkAction("Export", (target, rows) -> { exports.export(rows); table.clearSelection(target); });
 table.setToolbar(id -> new InvoiceSearchPanel(id, search));
-table.setEmptyState(id -> Oat.Components.emptyState(id, "No invoices found"));
+table.setEmptyState(id -> new OatEmptyState(id, "No invoices found"));
 ```
 
 - Numbers and dates are formatted in the user's locale; `OatNumberColumn` takes

@@ -47,7 +47,7 @@ class OtherFormComponentsTest {
 
     @Test
     void testOatDateFieldFactoryWithModelLabelAndHelper() {
-        OatDateField field = Oat.Components.dateField("id", Model.of("Date"), Model.of(LocalDate.of(2023, 10, 27)), Model.of("Pick a date"));
+        OatDateField field = new OatDateField("id", Model.of("Date"), Model.of(LocalDate.of(2023, 10, 27)), Model.of("Pick a date"));
         tester.startComponentInPage(field);
         tester.assertLabel("id:label", "Date");
         tester.assertLabel("id:feedback", "Pick a date");
@@ -144,7 +144,7 @@ class OtherFormComponentsTest {
 
     @Test
     void testOatDropdownChoiceFactoryWithRenderer() {
-        OatDropdownChoice<String> field = Oat.Components.dropdownChoice("id", Model.of("Select"), Model.of("A"),
+        OatDropdownChoice<String> field = new OatDropdownChoice<>("id", Model.of("Select"), Model.of("A"),
                 Model.ofList(Arrays.asList("A", "B")), new ChoiceRenderer<>());
         tester.startComponentInPage(field);
         TagTester select = tester.getTagByWicketId("input");

@@ -1,5 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatSubmitButton;
+import dev.jbaby.wicket.oat.components.OatTimeline;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.components.MenuItem;
@@ -54,16 +56,16 @@ public class CustomerPage extends BasePage {
 
     public CustomerPage() {
         add(Oat.Behaviors.feedbackToasts());
-        OatConfirmDialog confirm = Oat.Components.confirmDialog("confirm");
+        OatConfirmDialog confirm = new OatConfirmDialog("confirm");
         add(confirm);
 
         // Page header: the markup inside <header> holds the actions
-        OatPageHeader header = Oat.Components.pageHeader("pageHeader", Model.of(customer.name))
+        OatPageHeader header = new OatPageHeader("pageHeader", Model.of(customer.name))
                 .setSubtitle("Customer since 2019 · " + customer.city)
                 .setBreadcrumb(List.of(MenuItem.of("Home", HomePage.class), MenuItem.of("Invoices", DataTablePage.class)));
         add(header);
 
-        quickNote = Oat.Components.popover("quickNote", "Quick note", id -> {
+        quickNote = new OatPopover("quickNote", "Quick note", id -> {
             Fragment fragment = new Fragment(id, "noteFragment", this);
             Form<Note> form = new Form<>("noteForm", new CompoundPropertyModel<>(note));
             fragment.add(form);
@@ -75,7 +77,7 @@ public class CustomerPage extends BasePage {
                             .filter(name -> name.toLowerCase(java.util.Locale.ROOT).contains(text.toLowerCase(java.util.Locale.ROOT)))
                             .toList()));
             form.add(new OatTextArea<String>("text").setRequired(true));
-            form.add(Oat.Components.submitButton("saveNote", "Save note", target -> {
+            form.add(OatSubmitButton.onSubmit("saveNote", "Save note", target -> {
                 success("Note saved" + (note.type != null ? " (" + note.type + ")" : "")
                         + (note.assignee != null ? " for " + note.assignee : "") + ".");
                 note.type = null;
@@ -88,7 +90,7 @@ public class CustomerPage extends BasePage {
         });
         header.add(quickNote);
 
-        OatSplitButton newInvoice = Oat.Components.splitButton("newInvoice", "New invoice",
+        OatSplitButton newInvoice = new OatSplitButton("newInvoice", "New invoice",
                 target -> setResponsePage(InvoicePage.class));
         newInvoice.addAction("New quote", target -> info("A quote would open here."));
         newInvoice.addAction("New credit note", target -> info("A credit note would open here."));
@@ -119,7 +121,7 @@ public class CustomerPage extends BasePage {
         add(details);
 
         // Recent activity, newest first
-        add(Oat.Components.timeline("activity", Model.ofList(List.of(
+        add(new OatTimeline<>("activity", Model.ofList(List.of(
                         new Activity("Payment received", LocalDateTime.of(2026, 10, 9, 14, 5), "INV-1019 · €2,612.50", OatVariant.SUCCESS),
                         new Activity("Invoice sent", LocalDateTime.of(2026, 10, 2, 9, 30), "INV-1019, by Jordan Lee", null),
                         new Activity("Reminder sent", LocalDateTime.of(2026, 9, 28, 8, 0), "INV-1005 is 12 days overdue", OatVariant.WARNING),

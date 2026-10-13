@@ -7,6 +7,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import dev.jbaby.wicket.oat.util.SerializableConsumer;
+import java.util.Objects;
 
 /**
  * An Oat button that runs {@link #onClick} over Ajax. Attach it to an {@code <a>} or a
@@ -75,4 +77,23 @@ public abstract class OatButton extends AjaxLink<Void> {
 
     @Override
     public abstract void onClick(AjaxRequestTarget target);
+
+    /**
+     * A button running {@code onClick} over Ajax, without a subclass:
+     * {@code add(OatButton.onClick("save", "Save", target -> ...))}.
+     */
+    public static OatButton onClick(String id, String label, SerializableConsumer<AjaxRequestTarget> onClick) {
+        return onClick(id, Model.of(label), onClick);
+    }
+
+    /** A button running {@code onClick} over Ajax, without a subclass. */
+    public static OatButton onClick(String id, IModel<String> label, SerializableConsumer<AjaxRequestTarget> onClick) {
+        Objects.requireNonNull(onClick);
+        return new OatButton(id, label) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                onClick.accept(target);
+            }
+        };
+    }
 }

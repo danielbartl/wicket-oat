@@ -1,6 +1,6 @@
 ---
 name: wicket-oat
-description: Support for the Wicket Oat UI library — a themeable Java/Apache Wicket component library (buttons, forms, cards, dialogs, tabs, toasts, badges, dark/light themes, etc.). Use whenever writing or modifying Apache Wicket pages/components in this project: adding UI elements, building forms, styling an existing Wicket component, showing toasts or alerts, or switching/defining themes — even if the user doesn't mention "Oat" by name. Covers Oat.Components (Fast Path factory methods for common widgets) and Oat.Behaviors (Power Path composition for custom components/styling), plus the full built-in theme list and how to switch or define custom themes.
+description: Support for the Wicket Oat UI library — a themeable Java/Apache Wicket component library (buttons, forms, cards, dialogs, tabs, toasts, badges, dark/light themes, etc.). Use whenever writing or modifying Apache Wicket pages/components in this project: adding UI elements, building forms, styling an existing Wicket component, showing toasts or alerts, or switching/defining themes — even if the user doesn't mention "Oat" by name. Covers the components (constructors, and lambda factories like OatButton.onClick for callback-driven ones) and Oat.Behaviors (Oat styling for any Wicket component), plus the full built-in theme list and how to switch or define custom themes.
 ---
 
 # Wicket Oat Support
@@ -19,19 +19,22 @@ WicketOats.install(this);
 Extend `OatAppLayout` for your main pages to get the sidebar and topnav structure, or `OatMobileLayout` for a phone-first app with a bottom tab bar (`OatBottomNav`).
 
 ### 3. Creating UI
-Use the `Oat` factory for the most common tasks:
+Oat components are plain Wicket components, created with `new`; those driven by a callback have a static factory taking a lambda, like Wicket's `AjaxLink.onClick(...)`:
 ```java
-// Add a button
-add(Oat.Components.button("id", "Label", target -> { ... }));
+// A component
+add(new OatAlert("saved", "Your changes were saved.", OatVariant.SUCCESS));
 
-// Add a behavior to an existing component
+// A button, without an anonymous subclass
+add(OatButton.onClick("id", "Label", target -> { ... }));
+
+// A behavior on an existing component
 myLabel.add(Oat.Behaviors.badge(OatVariant.SUCCESS));
 ```
 
-## Core Philosophy: Fast Path vs Power Path
+## Components and Behaviors
 
-- **Fast Path (`Oat.Components`)**: Use for standard UI widgets with encapsulated markup. Great for rapid development.
-- **Power Path (`Oat.Behaviors`)**: Use for custom logic and deep customization. Add behaviors to *any* standard Wicket component.
+- **Components** (`new OatAlert(...)`, `OatButton.onClick(...)`): standard UI widgets with encapsulated markup.
+- **Behaviors** (`Oat.Behaviors`): Oat styling for *any* standard Wicket component, for custom logic and deep customization.
 
 ## Layout and Styling: Oat CSS Only
 

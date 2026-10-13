@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatMessageInput;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.components.OatBadge;
@@ -84,10 +85,10 @@ public class CustomersPage extends BasePage {
                     .addItem(Model.of("Status"), badgeId -> new OatBadge(badgeId, c.active() ? "Active" : "Inactive",
                             c.active() ? OatVariant.SUCCESS : OatVariant.SECONDARY)));
 
-            OatMessageList<Note> list = Oat.Components.messageList("notes",
+            OatMessageList<Note> list = new OatMessageList<>("notes",
                     (IModel<List<Note>>) () -> notes.getOrDefault(c.id(), List.of()), Note::author, Note::text, Note::at);
             detail.add(list);
-            detail.add(Oat.Components.messageInput("addNote", (target, text) -> {
+            detail.add(new OatMessageInput("addNote", (target, text) -> {
                 notes.computeIfAbsent(c.id(), key -> new ArrayList<>()).add(new Note("You", text, LocalDateTime.now().withNano(0)));
                 target.add(list);
             }));

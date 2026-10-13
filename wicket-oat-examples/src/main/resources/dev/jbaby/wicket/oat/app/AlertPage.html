@@ -19,10 +19,10 @@
             <h3>How to use</h3>
             <p>The <code>OatAlert</code> component is a container, while <code>AlertBehavior</code> can be added to any Wicket component.</p>
             
-            <pre><code>// Java - Using the OatAlert component via the Oat factory (recommended)
-add(Oat.Components.alert("myAlert", OatVariant.SUCCESS));
+            <pre><code>// Java - The OatAlert component
+add(new OatAlert("myAlert", OatVariant.SUCCESS));
 
-// Java - Using the AlertBehavior via the Oat factory
+// Java - AlertBehavior on any component
 label.add(Oat.Behaviors.alert(OatVariant.SUCCESS));</code></pre>
 
             <pre><code>&lt;!-- HTML - Markup for the container approach --&gt;

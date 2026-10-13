@@ -7,6 +7,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import java.util.Objects;
 
 /**
  * A container component that renders its items as an Oat Button Group.
@@ -38,4 +40,18 @@ public abstract class OatButtonGroup<T> extends WebMarkupContainer {
     }
 
     protected abstract void populateItem(ListItem<T> item);
+
+    /**
+     * A group of buttons, without a subclass: {@code populateItem} receives each list item and its
+     * object.
+     */
+    public static <T> OatButtonGroup<T> of(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        Objects.requireNonNull(populateItem);
+        return new OatButtonGroup<T>(id, model) {
+            @Override
+            protected void populateItem(ListItem<T> item) {
+                populateItem.accept(item, item.getModelObject());
+            }
+        };
+    }
 }

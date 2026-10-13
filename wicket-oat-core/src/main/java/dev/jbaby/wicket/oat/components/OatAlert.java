@@ -13,6 +13,16 @@ import org.apache.wicket.model.Model;
  */
 public class OatAlert extends Label {
 
+    /** An alert whose message comes from its model, e.g. one inherited from a {@code CompoundPropertyModel}. */
+    public OatAlert(String id) {
+        this(id, (IModel<?>) null, OatVariant.DEFAULT);
+    }
+
+    /** An alert of the given variant whose message comes from its model. */
+    public OatAlert(String id, OatVariant variant) {
+        this(id, (IModel<?>) null, variant);
+    }
+
     public OatAlert(String id, String message) {
         this(id, Model.of(message), OatVariant.DEFAULT);
     }

@@ -50,7 +50,7 @@ class CoreFormTest {
 
     @Test
     void testOatCheckBoxFactoryWithHelper() {
-        OatCheckBox field = Oat.Components.checkBox("id", Model.of("Label"), Model.of(true), Model.of("Helper text"));
+        OatCheckBox field = new OatCheckBox("id", Model.of("Label"), Model.of(true), Model.of("Helper text"));
         tester.startComponentInPage(field);
         tester.assertLabel("id:label", "Label");
         tester.assertLabel("id:feedback", "Helper text");

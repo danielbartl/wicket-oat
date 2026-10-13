@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatBreadcrumb;
 import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -12,7 +13,7 @@ public class BreadcrumbPage extends BasePage {
     public BreadcrumbPage() {
         List<String> crumbs = List.of("Home", "Docs", "Breadcrumb");
 
-        add(Oat.Components.breadcrumb("breadcrumb", Model.ofList(crumbs), (item, label) -> {
+        add(OatBreadcrumb.of("breadcrumb", Model.ofList(crumbs), (item, label) -> {
             Link<Void> link = new Link<>("link") {
                 @Override
                 public void onClick() {}

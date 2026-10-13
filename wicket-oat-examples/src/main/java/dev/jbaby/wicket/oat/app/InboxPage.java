@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatSplitLayout;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.ContextMenuBehavior;
@@ -66,7 +67,7 @@ public class InboxPage extends BasePage {
     public InboxPage() {
         add(Oat.Behaviors.feedbackToasts());
 
-        list = Oat.Components.loadMoreList("first", new ListDataProvider<>(mail), 20, this::row).setLoadOnScroll(true);
+        list = new OatLoadMoreList<>("first", new ListDataProvider<>(mail), 20, this::row).setLoadOnScroll(true);
         detail = new Fragment("second", "detailFragment", this);
         detail.setOutputMarkupId(true);
         detail.add(new WebMarkupContainer("message") {
@@ -85,7 +86,7 @@ public class InboxPage extends BasePage {
                 setVisible(selected.getObject() == null);
             }
         });
-        OatMenuBar commands = Oat.Components.menuBar("commands")
+        OatMenuBar commands = new OatMenuBar("commands")
                 .addAction("New message", target -> success("A new draft was created."))
                 .addAction("Mark all read", target -> {
                     mail.forEach(m -> m.read = true);
@@ -106,9 +107,9 @@ public class InboxPage extends BasePage {
         commands.addLink("Reports", ReportsPage.class);
         add(commands);
 
-        add(Oat.Components.splitLayout("inbox", id -> list, id -> detail).setSplit(40).add(AttributeModifier.append("class", "inbox")));
+        add(new OatSplitLayout("inbox", id -> list, id -> detail).setSplit(40).add(AttributeModifier.append("class", "inbox")));
 
-        add(Oat.Components.cookieConsent("cookies")
+        add(new OatCookieConsent("cookies")
                 .setPolicyLink(GettingStartedPage.class)
                 .setOnAnswer(accepted -> success(accepted ? "Thanks! Optional cookies are on." : "Only necessary cookies are used.")));
         add(new Link<Void>("askAgain") {

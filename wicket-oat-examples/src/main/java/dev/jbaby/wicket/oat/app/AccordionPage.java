@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatAccordion;
 import dev.jbaby.wicket.oat.Oat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -19,7 +20,7 @@ public class AccordionPage extends BasePage {
                 new AccordionData("Accordion Item 3", "Third item content. Note how opening one closes the others due to the exclusive group behavior.")
         );
 
-        add(Oat.Components.accordion("accordion", Model.ofList(data), (item, model) -> {
+        add(OatAccordion.of("accordion", Model.ofList(data), (item, model) -> {
             item.add(new Label("title", model.title()));
             item.add(new Label("content", model.content()));
         }));

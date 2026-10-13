@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatButton;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
@@ -53,7 +54,7 @@ public class ButtonPage extends BasePage {
         }.add(new ButtonBehavior().setIcon(true)));
 
         // The OatButton component itself, via the Oat factory
-        add(Oat.Components.button("liveButton", "Click me", target ->
+        add(OatButton.onClick("liveButton", "Click me", target ->
                 Oat.toast(target, "Clicked!", OatVariant.SUCCESS)));
     }
 }

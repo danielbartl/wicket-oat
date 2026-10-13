@@ -57,7 +57,7 @@ class OatBottomNavTest {
 
     @Test
     void rendersEachItemAsALinkWithItsLabel() {
-        tester.startComponentInPage(Oat.Components.bottomNav("nav", List.of(
+        tester.startComponentInPage(new OatBottomNav("nav", List.of(
                 tab("Today", MobileTestPage.Today.class),
                 tab("Team", MobileTestPage.Team.class),
                 // An item's parameters are on its link

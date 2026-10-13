@@ -8,6 +8,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import java.util.List;
+import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
+import java.util.Objects;
 
 /**
  * A container component that renders its items as Oat Pagination, reusing the
@@ -48,4 +50,18 @@ public abstract class OatPagination<T> extends WebMarkupContainer {
     }
 
     protected abstract void populateItem(ListItem<T> item);
+
+    /**
+     * A row of page links, without a subclass: {@code populateItem} receives each list item and its
+     * object.
+     */
+    public static <T> OatPagination<T> of(String id, IModel<List<T>> model, SerializableBiConsumer<ListItem<T>, T> populateItem) {
+        Objects.requireNonNull(populateItem);
+        return new OatPagination<T>(id, model) {
+            @Override
+            protected void populateItem(ListItem<T> item) {
+                populateItem.accept(item, item.getModelObject());
+            }
+        };
+    }
 }

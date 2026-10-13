@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.components.OatEmptyState;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.components.OatConfirmDialog;
@@ -81,7 +82,7 @@ public class DataTablePage extends BasePage {
                     LocalDate.of(2026, 10, 1).plusDays(i * 3L), i % 3 == 0));
         }
 
-        OatConfirmDialog confirm = Oat.Components.confirmDialog("confirm");
+        OatConfirmDialog confirm = new OatConfirmDialog("confirm");
         add(confirm);
 
         List<IColumn<Invoice, String>> columns = new ArrayList<>();
@@ -156,7 +157,7 @@ public class DataTablePage extends BasePage {
             return toolbar;
         });
 
-        add(Oat.Components.dataTable("emptyDataTable", List.<IColumn<Invoice, String>>of(
+        add(new OatDataTable<>("emptyDataTable", List.<IColumn<Invoice, String>>of(
                         OatLinkColumn.toPage(Model.of("Number"), null, Invoice::number, InvoicePage.class, invoice -> new PageParameters()),
                         new OatNumberColumn<>(Model.of("Total"), Invoice::total)),
                         new SortableDataProvider<Invoice, String>() {
@@ -175,7 +176,7 @@ public class DataTablePage extends BasePage {
                                 return Model.of(object);
                             }
                         }, 10)
-                .setEmptyState(id -> Oat.Components.emptyState(id, "No invoices found", "Try adjusting your search or creating a new invoice.")));
+                .setEmptyState(id -> new OatEmptyState(id, "No invoices found", "Try adjusting your search or creating a new invoice.")));
     }
 
     private void markPaid(List<Invoice> rows) {

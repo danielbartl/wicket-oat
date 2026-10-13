@@ -36,7 +36,7 @@ add(new OatAjaxPagingNavigator("navigator", items)); // or OatPagingNavigator</c
         <div class="mt-4">
             <h4>How to use</h4>
             <pre><code>// Java
-add(Oat.Components.pagination("pagination", Model.ofList(pages), (item, page) -&gt; {
+add(OatPagination.of("pagination", Model.ofList(pages), (item, page) -&gt; {
     Link&lt;Void&gt; link = new Link&lt;&gt;("link") { public void onClick() {} };
     link.add(new Label("label", String.valueOf(page)));
     boolean current = page == currentPage;

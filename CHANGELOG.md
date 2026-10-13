@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.3.0 (2026-10-13)
+
+A release that makes Wicket Oat work the way Wicket users expect: dialogs like Wicket's
+`ModalDialog`, data tables sorting and paging over Ajax, form fields with short paths for
+`FormTester`, lambda factories on the component classes like `AjaxLink.onClick(...)`, and
+`newXxx` hooks. It also brings a bottom tab bar and a layout for phone apps, a skip link and
+the page's language in the layouts, and fixes for signing in and for dialogs inside forms.
+Some of these changes break existing code; the notes below say what to change.
 
 ### Upgrading from 0.2.x
 
@@ -42,16 +49,44 @@ components they wrap, which breaks some code and tests:
 
 ### Changes
 
-- Form fields: `addToInput(...)` adds a behavior to the input rather than the field, e.g.
-  `addToInput(AttributeModifier.replace("autocomplete", "email"))`, and `setPlaceholder`
-  also takes a `String`. `add(...)` still sends validators and Ajax form-component behaviors
-  to the input, as they only work there.
+- `OatBottomNav`: a tab bar fixed to the bottom of a phone's screen, three to five tabs
+  of an icon above a label (`BottomNavItem`), with the current page's tab marked
+  (`aria-current="page"`, or a rule of your own with `withActive`), badges, and one
+  primary item as a round Oat button. Icons come from your SVG sprite, inline SVG or
+  `OatIcon`. Its rules in `wicket-oat.css` use Oat's variables only and keep it clear
+  of the iPhone's home indicator. It shows up to 768px unless `setAlwaysVisible(true)`.
+  The `<nav>` is named by `OatBottomNav.label`, translated.
+- `OatMobileLayout`: a base page for phone-first apps, with the content in `<main>` and
+  an `OatBottomNav` below it, from `bottomNavItemsModel()`.
+- `OatAppLayout` sets the page's `lang` on `<html>` from its locale, and starts with a
+  "Skip to content" link (`OatAppLayout.skipToContent`, translated), shown only while it has
+  keyboard focus, that moves focus to `<main id="oat-main">`.
+- `OatHtml`: the `<html>` tag of `OatAppLayout` and `OatMobileLayout`, now public for a base
+  page of your own (`add(new OatHtml("html"))`). It sets the theme, the density and the
+  page's language.
+- `OatAppLayout.newMenuLink(id, item)` makes a sidebar entry's link, e.g. an `AjaxLink`
+  instead of the default `BookmarkablePageLink`, as `OatBottomNav.newLink` does for tabs.
 - `OatDialog` keeps its open state on the server (`isOpen()`). Cancel, the Escape key and
   a click on the backdrop tell the server when they close it, and the new `onClose(target)`
   runs once whenever it closes, also after a confirm or `close(target)`. `target.add(dialog)`
   now works, and keeps an open dialog open. `open(content, target)` sets content that is
   removed again on close; `OatCrud` uses it for its editor, and forgets the record once it
   closes. `OatConfirmDialog` forgets its action when the user cancels.
+- `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
+  `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
+  `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.
+- `OatSelectionColumn` and `OatRowDetailsColumn` can keep rows by key, e.g. an entity's id,
+  so the page no longer serializes the entities: `new OatSelectionColumn<>(selectedIds,
+  Invoice::getId)`. Bulk actions then get the selected rows looked up through the data
+  provider, current and in the table's sort order (`getSelectedRows(provider)`).
+  `getSelection()` and `getExpanded()` return the models as given, with rows or keys.
+- `OatDataTable`'s empty state is a toolbar of its own instead of Wicket's `NoRecordsToolbar`
+  with its message replaced through Wicket's internal component ids. Its cell spans the
+  columns the user hasn't hidden, and keeps the `norecords-tr`/`norecords-td` classes.
+- Form fields: `addToInput(...)` adds a behavior to the input rather than the field, e.g.
+  `addToInput(AttributeModifier.replace("autocomplete", "email"))`, and `setPlaceholder`
+  also takes a `String`. `add(...)` still sends validators and Ajax form-component behaviors
+  to the input, as they only work there.
 - Components driven by a callback have static factories taking a lambda instead of a
   subclass, like Wicket's `AjaxLink.onClick(...)`: `OatButton.onClick`,
   `OatSubmitButton.onSubmit`, `OatWizard.onFinish`, `OatLoginForm.signIn`, and `of(...)` on
@@ -59,41 +94,8 @@ components they wrap, which breaks some code and tests:
   `OatPagination`, `OatAvatarGroup` and `OatLazyLoadPanel`. `Oat.Components` delegates to
   them. New constructors `OatAlert(id)`, `OatAlert(id, variant)` and
   `OatEmptyState(id, title, message)` cover what the removed factories offered.
-- `OatHtml`: the `<html>` tag of `OatAppLayout` and `OatMobileLayout`, now public for a base
-  page of your own (`add(new OatHtml("html"))`). It sets the theme, the density and the
-  page's language.
-- `OatDataTable`'s empty state is a toolbar of its own instead of Wicket's `NoRecordsToolbar`
-  with its message replaced through Wicket's internal component ids. Its cell spans the
-  columns the user hasn't hidden, and keeps the `norecords-tr`/`norecords-td` classes.
-- `OatAppLayout.newMenuLink(id, item)` makes a sidebar entry's link, e.g. an `AjaxLink`
-  instead of the default `BookmarkablePageLink`, as `OatBottomNav.newLink` does for tabs.
-- `OatSelectionColumn` and `OatRowDetailsColumn` can keep rows by key, e.g. an entity's id,
-  so the page no longer serializes the entities: `new OatSelectionColumn<>(selectedIds,
-  Invoice::getId)`. Bulk actions then get the selected rows looked up through the data
-  provider, current and in the table's sort order (`getSelectedRows(provider)`).
-  `getSelection()` and `getExpanded()` return the models as given, with rows or keys.
 - `OatThemeSwitcher` uses stateless links, so a page showing it, e.g. a sign-in page with
   the switcher in its top bar, stays stateless.
-- `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
-  `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
-  `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.
-- `OatBottomNav`: a tab bar fixed to the bottom of a phone's screen, three to five tabs
-  of an icon above a label (`BottomNavItem`), with the current page's tab marked
-  (`aria-current="page"`, or a rule of your own with `withActive`), badges, and one
-  primary item as a round Oat button. Icons come from your SVG sprite, inline SVG or
-  `OatIcon`. Its rules in `wicket-oat.css` use Oat's variables only and keep it clear
-  of the iPhone's home indicator. It shows up to 768px unless `setAlwaysVisible(true)`. The `<nav>` is named by `OatBottomNav.label`,
-  translated.
-- `OatMobileLayout`: a base page for phone-first apps, with the content in `<main>` and
-  an `OatBottomNav` below it, from `bottomNavItemsModel()`.
-- The examples app has a "Time off" demo for phones: Today, Capacity and Team tabs, a
-  badge updated over Ajax, and an "Add absence" form of Oat markup.
-- `OatAppLayout` sets the page's `lang` on `<html>` from its locale, and starts with a
-  "Skip to content" link (`OatAppLayout.skipToContent`, translated), shown only while it has
-  keyboard focus, that moves focus to `<main id="oat-main">`.
-- Fix: `Oat.Behaviors.density(OatDensity.DEFAULT)` now really pins a component to Oat's own
-  spacing inside a compact app (`data-density="default"`); before, it inherited the compact
-  density. A component pinned to a density also gets that density's body text size.
 - Fix: after signing in, `OatLoginForm` now continues to the page the user was going to.
   It replaced the session against session fixation, which also cleared the page Wicket
   had remembered, so users always landed on the home page. It now only changes the
@@ -101,10 +103,15 @@ components they wrap, which breaks some code and tests:
 - Fix: an `OatDialog` (or `OatCrud`'s editor) inside a page's form no longer blocks that
   form's submit. Its own form was submitted with the page's, so a required field in the
   closed dialog failed validation. Submitting the page's form now leaves it out.
+- Fix: `Oat.Behaviors.density(OatDensity.DEFAULT)` now really pins a component to Oat's own
+  spacing inside a compact app (`data-density="default"`); before, it inherited the compact
+  density. A component pinned to a density also gets that density's body text size.
+- The examples app has a "Time off" demo for phones: Today, Capacity and Team tabs, a
+  badge updated over Ajax, and an "Add absence" form of Oat markup.
 - The examples app looks like a business app by default: the Business theme at compact
   density, with the current theme shown in the top navigation. On Halloween and from
   10 to 31 December it defaults to the Halloween and Christmas themes, through its own
-  `OatThemeStore`. Its Getting Started page shows version 0.2.0.
+  `OatThemeStore`. Its Getting Started page shows version 0.3.0.
 - The examples app no longer needs MongoDB or Docker, and a `Dockerfile` and `railway.toml`
   deploy it as a public demo (deployment mode, `PORT`, HTTPS behind a proxy, 5 MB uploads).
   Its upload demo has an Upload button and shows what was received.

@@ -118,6 +118,10 @@ class OtherGeneralComponentsTest {
     }
 
     private OatDataTable<TestData, String> tableOf(List<TestData> list) {
+        return tableOf(list, 1);
+    }
+
+    private OatDataTable<TestData, String> tableOf(List<TestData> list, int columnCount) {
         SortableDataProvider<TestData, String> provider = new SortableDataProvider<>() {
             @Override
             public Iterator<? extends TestData> iterator(long first, long count) {
@@ -129,7 +133,9 @@ class OtherGeneralComponentsTest {
             public IModel<TestData> model(TestData object) { return Model.of(object); }
         };
         List<IColumn<TestData, String>> columns = new ArrayList<>();
-        columns.add(new PropertyColumn<>(Model.of("Name"), "name", "name"));
+        for (int i = 0; i < columnCount; i++) {
+            columns.add(new PropertyColumn<>(Model.of(i == 0 ? "Name" : "Name " + (i + 1)), "name", "name"));
+        }
         return new OatDataTable<>("table", columns, provider, 10);
     }
 
@@ -162,6 +168,26 @@ class OtherGeneralComponentsTest {
         tester.startComponentInPage(table);
 
         assertThat(tester.getLastResponseAsString()).contains("Second").doesNotContain("First");
+    }
+
+    @Test
+    void theEmptyStateSpansTheColumnsTheUserHasNotHidden() {
+        OatDataTable<TestData, String> table = tableOf(List.of(), 2)
+                .setEmptyState(id -> new OatEmptyState(id, "No users found"));
+        tester.startComponentInPage(table);
+        TagTester cell = TagTester.createTagByAttribute(tester.getLastResponseAsString(), "class", "norecords-td");
+        assertThat(cell.getAttribute("colspan")).isEqualTo("2");
+        assertThat(cell.getValue()).contains("No users found");
+
+        table.setColumnVisible(1, false);
+        tester.startComponentInPage(table);
+        assertThat(TagTester.createTagByAttribute(tester.getLastResponseAsString(), "class", "norecords-td")
+                .getAttribute("colspan")).isEqualTo("1");
+
+        table.setColumnVisible(0, false); // never less than one
+        tester.startComponentInPage(table);
+        assertThat(TagTester.createTagByAttribute(tester.getLastResponseAsString(), "class", "norecords-td")
+                .getAttribute("colspan")).isEqualTo("1");
     }
 
     @Test

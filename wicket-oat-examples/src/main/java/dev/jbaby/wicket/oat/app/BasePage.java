@@ -29,12 +29,12 @@ public class BasePage extends OatAppLayout {
     }
 
     @Override
-    protected Component createFooter(String id) {
+    protected Component newSidebarFooter(String id) {
         return new OatThemeSwitcher(id);
     }
 
     @Override
-    protected Component createTopNavExtra(String id) {
+    protected Component newTopNavExtra(String id) {
         return new CurrentThemeLink(id);
     }
 

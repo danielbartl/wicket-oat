@@ -31,8 +31,8 @@ import java.util.Objects;
  *         .setEditor((id, customer) -> new CustomerFields(id, customer))   // your fields, see below
  *         .setNewItem(Customer::new)
  *         .setTitle(Customer::name)
- *         .onSave((target, customer) -> repository.save(customer))
- *         .onDelete((target, customer) -> repository.delete(customer));
+ *         .setOnSave((target, customer) -> repository.save(customer))
+ *         .setOnDelete((target, customer) -> repository.delete(customer));
  * add(customers);
  * }</pre>
  * <ul>
@@ -41,13 +41,13 @@ import java.util.Objects;
  * panel's {@code super(id, model)} and Oat fields with a property's name as their id -
  * {@code new OatTextField<>("name")} - find their value and label by themselves.</li>
  * <li>Confirm ("Save") validates the fields. Only when they are all valid are they
- * written to the record and {@link #onSave} called; Cancel leaves the record as it was.
+ * written to the record and {@link #setOnSave} called; Cancel leaves the record as it was.
  * Report an error there, e.g. {@code nameField.error("Already taken")}, to keep the
  * dialog open; otherwise it closes and the table is re-rendered.</li>
  * <li>A record to edit is loaded through the provider's {@code model(...)}, so with a
  * {@code LoadableDetachableModel} it is fresh from the database when it's saved.</li>
  * <li>"New" shows only with {@link #setNewItem}, Edit only with an editor, and Delete
- * only with {@link #onDelete}.</li>
+ * only with {@link #setOnDelete}.</li>
  * </ul>
  * The texts ({@code OatCrud.*}) are translated; {@link #getDataTable()} gives the
  * table for its other features - selection, a column chooser, CSV export.
@@ -161,13 +161,13 @@ public class OatCrud<T, S> extends Panel {
     }
 
     /** Stores a valid record, new or changed. Report an error on the dialog's fields to keep it open. */
-    public OatCrud<T, S> onSave(SerializableBiConsumer<AjaxRequestTarget, T> onSave) {
+    public OatCrud<T, S> setOnSave(SerializableBiConsumer<AjaxRequestTarget, T> onSave) {
         this.onSave = Objects.requireNonNull(onSave);
         return this;
     }
 
     /** Deletes a record once the user confirmed it; without this there's no Delete. */
-    public OatCrud<T, S> onDelete(SerializableBiConsumer<AjaxRequestTarget, T> onDelete) {
+    public OatCrud<T, S> setOnDelete(SerializableBiConsumer<AjaxRequestTarget, T> onDelete) {
         this.onDelete = onDelete;
         return this;
     }

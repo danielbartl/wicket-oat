@@ -42,11 +42,11 @@ import java.util.Objects;
  *         .setType(Integer.class)
  *         .setRequired(true)
  *         .addValidator(RangeValidator.minimum(1))
- *         .onSave((target, line) -> { lines.save(line); target.add(totals); }));
+ *         .setOnSave((target, line) -> { lines.save(line); target.add(totals); }));
  * }</pre>
  * The typed text is converted to the column's type and validated; an invalid value
  * shows its error under the field and isn't set. A valid one is set on the row with
- * the setter, then {@link #onSave} runs, e.g. to store it. Focus goes back to the cell
+ * the setter, then {@link #setOnSave} runs, e.g. to store it. Focus goes back to the cell
  * afterwards, so keyboard users can move on. The value is exported to CSV like any
  * {@link LambdaColumn}.
  *
@@ -91,7 +91,7 @@ public class OatEditableColumn<T, S, V> extends LambdaColumn<T, S> {
     }
 
     /** Runs after a valid value was set on the row, e.g. to store the row. */
-    public OatEditableColumn<T, S, V> onSave(SerializableBiConsumer<AjaxRequestTarget, T> onSave) {
+    public OatEditableColumn<T, S, V> setOnSave(SerializableBiConsumer<AjaxRequestTarget, T> onSave) {
         this.onSave = Objects.requireNonNull(onSave);
         return this;
     }

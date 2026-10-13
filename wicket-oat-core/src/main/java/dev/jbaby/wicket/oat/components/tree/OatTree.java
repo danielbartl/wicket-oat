@@ -21,12 +21,12 @@ import java.util.Set;
  * OatTree<Category> categories = new OatTree<>("categories", new CategoryProvider())
  *         .setLabel(Category::name)
  *         .setIcon(category -> category.isLeaf() ? "tag" : "folder")
- *         .onSelect((target, category) -> { products.show(category); target.add(products); });
+ *         .setOnSelect((target, category) -> { products.show(category); target.add(products); });
  * }</pre>
  * The {@link ITreeProvider} gives the roots, each node's children and whether it has
  * any; expanded nodes are kept in the tree's model (a set compared by the provider's
  * models, see {@code ProviderSubset}). Each node has an expand button for keyboard and
- * screen reader users (see {@link OatTreeNode}) and its label; with {@link #onSelect}
+ * screen reader users (see {@link OatTreeNode}) and its label; with {@link #setOnSelect}
  * the label is a link and the selected node is marked with {@code aria-current}.
  * Styled with Oat's tokens ({@code .oat-tree}); Wicket's tree themes aren't needed.
  *
@@ -66,7 +66,7 @@ public class OatTree<T> extends NestedTree<T> {
     }
 
     /** Makes labels links that select their node and then run this. */
-    public OatTree<T> onSelect(SerializableBiConsumer<AjaxRequestTarget, T> onSelect) {
+    public OatTree<T> setOnSelect(SerializableBiConsumer<AjaxRequestTarget, T> onSelect) {
         this.onSelect = onSelect;
         return this;
     }

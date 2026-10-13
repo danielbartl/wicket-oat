@@ -24,7 +24,7 @@ import java.util.List;
  * }</pre>
  * The content is as wide as the bar's row of tabs ({@code --oat-bottom-nav-max-width},
  * 28rem by default), with room below so the bar never covers it. Like the bar, the room
- * goes away on screens wider than 768px, unless {@link #createBottomNav} makes the bar
+ * goes away on screens wider than 768px, unless {@link #newBottomNav} makes the bar
  * {@linkplain OatBottomNav#setAlwaysVisible always visible}.
  * <p>
  * Like {@link OatAppLayout}, it applies the user's theme, the density and the page's
@@ -34,8 +34,7 @@ import java.util.List;
  */
 public abstract class OatMobileLayout extends WebPage {
 
-    /** The tab bar; re-render it from an Ajax handler with {@code target.add(bottomNav)}, e.g. to update badges. */
-    protected OatBottomNav bottomNav;
+    private OatBottomNav bottomNav;
 
     public OatMobileLayout() {
         this((PageParameters) null);
@@ -58,7 +57,7 @@ public abstract class OatMobileLayout extends WebPage {
 
         add(new Label("appTitle", appTitleModel()));
 
-        bottomNav = createBottomNav("bottomNav", bottomNavItemsModel());
+        bottomNav = newBottomNav("bottomNav", bottomNavItemsModel());
         bottomNav.setOutputMarkupId(true);
         add(bottomNav);
     }
@@ -78,7 +77,12 @@ public abstract class OatMobileLayout extends WebPage {
      * Hook to customize the bottom bar, e.g. {@code setAlwaysVisible(true)}, or a subclass
      * of {@link OatBottomNav} with links of its own.
      */
-    protected OatBottomNav createBottomNav(String id, IModel<List<BottomNavItem>> items) {
+    protected OatBottomNav newBottomNav(String id, IModel<List<BottomNavItem>> items) {
         return new OatBottomNav(id, items);
+    }
+
+    /** The bottom bar, e.g. to re-render it from an Ajax handler after a badge changed. */
+    public OatBottomNav getBottomNav() {
+        return bottomNav;
     }
 }

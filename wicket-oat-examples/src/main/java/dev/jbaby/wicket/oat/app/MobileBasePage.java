@@ -57,9 +57,9 @@ public abstract class MobileBasePage extends OatMobileLayout {
     }
 
     @Override
-    protected OatBottomNav createBottomNav(String id, IModel<List<BottomNavItem>> items) {
+    protected OatBottomNav newBottomNav(String id, IModel<List<BottomNavItem>> items) {
         // A demo visited on desktops too: keep the bar under the phone-sized column
-        return super.createBottomNav(id, items).setAlwaysVisible(true);
+        return super.newBottomNav(id, items).setAlwaysVisible(true);
     }
 
     /** A short date in the page's language, e.g. "Mon 12 Oct". */

@@ -81,7 +81,7 @@ class TableExtrasTest {
             columns.add(new LambdaColumn<>(Model.of("Product"), "product", (Line line) -> line.product));
             columns.add(new OatEditableColumn<Line, String, Integer>(Model.of("Quantity"), line -> line.quantity, (line, q) -> line.quantity = q)
                     .setType(Integer.class).setRequired(true).addValidator(RangeValidator.minimum(1))
-                    .onSave((target, line) -> saved.add(line.product + "=" + line.quantity)));
+                    .setOnSave((target, line) -> saved.add(line.product + "=" + line.quantity)));
             columns.add(new OatNumberColumn<>(Model.of("Price"), line -> line.price));
             columns.add(new OatDateColumn<>(Model.of("Added"), line -> line.added));
             table = new OatDataTable<>("table", columns, new SortableDataProvider<>() {

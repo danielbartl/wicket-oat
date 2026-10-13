@@ -29,7 +29,7 @@ import java.util.Optional;
  * if (OatCookieConsent.isAccepted()) { ... }
  * }</pre>
  * The answer is kept for a year in the {@value #COOKIE} cookie, which the server sets
- * (no JavaScript); {@link #onAnswer} runs too. It doesn't block anything by itself:
+ * (no JavaScript); {@link #setOnAnswer} runs too. It doesn't block anything by itself:
  * your application decides what optional cookies or scripts it loads, by checking
  * {@link #isAccepted()}. Texts are the {@code OatCookieConsent.*} resources.
  */
@@ -77,7 +77,7 @@ public class OatCookieConsent extends Panel {
     }
 
     /** Runs when the user answers, with {@code true} for "Accept". */
-    public OatCookieConsent onAnswer(SerializableConsumer<Boolean> onAnswer) {
+    public OatCookieConsent setOnAnswer(SerializableConsumer<Boolean> onAnswer) {
         this.onAnswer = onAnswer;
         return this;
     }

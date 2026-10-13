@@ -39,7 +39,7 @@ public class MobileTeamPage extends MobileBasePage {
                     DemoAbsences.confirm(absence);
                     success("Confirmed " + absence.person() + "'s " + absence.type().label.toLowerCase() + ".");
                     // The list, the days left, and the Team tab's badge
-                    target.add(team, bottomNav);
+                    target.add(team, getBottomNav());
                 }).setSize(ButtonBehavior.Size.SMALL).setStyle(ButtonBehavior.Style.OUTLINE));
             }
         });

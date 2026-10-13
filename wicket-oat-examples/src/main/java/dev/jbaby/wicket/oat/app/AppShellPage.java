@@ -47,7 +47,7 @@ public class AppShellPage extends BasePage {
                         confirm.ask(target, "Delete “" + task + "”?", "This can't be undone.", t -> {
                             DemoTasks.get().remove(task);
                             success("Deleted “" + task + "”.");
-                            t.add(tasks, sidebar); // the sidebar's badge shows the new count
+                            t.add(tasks, getSidebar()); // the sidebar's badge shows the new count
                         }))
                         .setSize(ButtonBehavior.Size.SMALL)
                         .setStyle(ButtonBehavior.Style.OUTLINE)
@@ -63,7 +63,7 @@ public class AppShellPage extends BasePage {
         });
         add(Oat.Components.button("restore", "Restore tasks", target -> {
             DemoTasks.reset();
-            target.add(tasks, sidebar);
+            target.add(tasks, getSidebar());
         }).setStyle(ButtonBehavior.Style.OUTLINE));
 
         // Slow content, loaded after the page is shown

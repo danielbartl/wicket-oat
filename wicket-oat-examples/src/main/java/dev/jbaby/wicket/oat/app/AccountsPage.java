@@ -79,7 +79,7 @@ public class AccountsPage extends BasePage {
         add(new OatTree<>("folders", new NodeProvider(FOLDERS))
                 .setLabel(Node::name)
                 .setIcon(node -> "folder")
-                .onSelect((target, node) -> {
+                .setOnSelect((target, node) -> {
                     folder.setObject(node.name());
                     target.add(get("selectedFolder"));
                 }));

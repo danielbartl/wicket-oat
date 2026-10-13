@@ -84,11 +84,9 @@ OatTheme current = OatTheme.current();
 add(new OatThemeSwitcher("themes"));</code></pre>
 
             <h4>4. Apply the theme</h4>
-            <p><code>OatAppLayout</code> does this for you. With your own base page, put the theme behavior on the <code>&lt;html&gt;</code> tag:</p>
+            <p><code>OatAppLayout</code> does this for you. With your own base page, put an <code>OatHtml</code> on the <code>&lt;html&gt;</code> tag; it also sets the density and the page's language:</p>
             <pre><code>// Java
-TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
-html.add(Oat.Behaviors.theme());
-add(html);</code></pre>
+add(new OatHtml("html"));</code></pre>
             <pre><code>&lt;!-- HTML --&gt;
 &lt;html wicket:id="html"&gt;
     &lt;body&gt;...&lt;/body&gt;

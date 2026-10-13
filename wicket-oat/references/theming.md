@@ -27,11 +27,11 @@ OatTheme theme = OatTheme.current();  // the stored choice if registered, else t
 
 ## Applying a Theme
 - `OatAppLayout` applies the current theme to `<html>` automatically.
-- With your own base page: `TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html"); html.add(Oat.Behaviors.theme());` on `<html wicket:id="html">`.
+- With your own base page: `add(new OatHtml("html"))` on `<html wicket:id="html">`. It sets `data-theme`, `data-density` and `lang`, like the layouts, and is transparent, so the page's components can sit anywhere inside it.
 - `Oat.Behaviors.theme(OatTheme.LIGHT)` pins one component to a theme, whatever the user chose.
 
 ## Density
-Independent of the theme: `OatSettings.setDensity(OatDensity.COMPACT)` tightens spacing and body text app-wide (`DEFAULT` otherwise). `OatAppLayout` sets it as `data-density` on `<html>`; with your own base page add `Oat.Behaviors.density()` to the `<html>` container. `Oat.Behaviors.density(OatDensity.COMPACT)` makes one component compact, e.g. a large table; `Oat.Behaviors.density(OatDensity.DEFAULT)` keeps one part at Oat's own spacing in a compact app.
+Independent of the theme: `OatSettings.setDensity(OatDensity.COMPACT)` tightens spacing and body text app-wide (`DEFAULT` otherwise). `OatAppLayout` sets it as `data-density` on `<html>`; with your own base page the `OatHtml` on `<html>` sets it. `Oat.Behaviors.density(OatDensity.COMPACT)` makes one component compact, e.g. a large table; `Oat.Behaviors.density(OatDensity.DEFAULT)` keeps one part at Oat's own spacing in a compact app.
 
 ## Custom Themes
 Define the CSS variables, then register the theme so it can be chosen:

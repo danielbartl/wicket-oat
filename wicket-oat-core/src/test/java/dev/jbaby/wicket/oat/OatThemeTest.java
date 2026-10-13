@@ -2,6 +2,12 @@ package dev.jbaby.wicket.oat;
 
 import dev.jbaby.wicket.oat.behaviors.OatThemeBehavior;
 import dev.jbaby.wicket.oat.components.OatThemeSwitcher;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.MarkupContainer;
+import dev.jbaby.wicket.oat.components.OatHtml;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -106,6 +112,30 @@ class OatThemeTest {
     void aComponentCanBePinnedToATheme() {
         OatTheme.setCurrent(OatTheme.LIGHT);
         assertThat(renderedTheme(new OatThemeBehavior(OatTheme.MIDNIGHT))).isEqualTo("midnight");
+    }
+
+    /** A page with nothing stateful but the theme switcher. */
+    public static class SwitcherPage extends WebPage implements IMarkupResourceStreamProvider {
+        public SwitcherPage() {
+            add(new OatHtml("html"));
+            add(new OatThemeSwitcher("switcher"));
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html wicket:id='html'><body><div wicket:id='switcher'></div></body></html>");
+        }
+    }
+
+    @Test
+    void theSwitcherKeepsAPageStateless() {
+        SwitcherPage page = tester.startPage(SwitcherPage.class);
+        assertThat(page.isPageStateless()).isTrue();
+
+        tester.clickLink("switcher:themes:3:link"); // NORD
+
+        assertThat(OatTheme.current()).isEqualTo(OatTheme.NORD);
+        assertThat(TagTester.createTagByName(tester.getLastResponseAsString(), "html").getAttribute("data-theme")).isEqualTo("nord");
     }
 
     @Test

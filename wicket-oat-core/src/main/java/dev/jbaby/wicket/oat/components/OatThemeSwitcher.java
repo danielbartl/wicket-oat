@@ -4,7 +4,7 @@ import dev.jbaby.wicket.oat.OatSettings;
 import dev.jbaby.wicket.oat.OatTheme;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -16,7 +16,8 @@ import java.util.List;
  * Links to switch between the themes registered in {@link OatSettings} - the built-in
  * ones plus any added with {@link OatSettings#addTheme}. Each link shows the theme's
  * icon (or its label if it has none); the current theme is marked
- * {@code aria-current="true"}.
+ * {@code aria-current="true"}. The links are stateless, so the switcher can sit on a
+ * stateless page, e.g. a sign-in page, without making it stateful.
  */
 public class OatThemeSwitcher extends Panel {
 
@@ -27,7 +28,8 @@ public class OatThemeSwitcher extends Panel {
             @Override
             protected void populateItem(ListItem<OatTheme> item) {
                 OatTheme theme = item.getModelObject();
-                Link<Void> link = new Link<>("link") {
+                // Stateless, so a page showing the switcher, e.g. in its top bar, can stay stateless
+                StatelessLink<Void> link = new StatelessLink<>("link") {
                     @Override
                     public void onClick() {
                         OatTheme.setCurrent(theme);

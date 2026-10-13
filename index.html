@@ -89,11 +89,9 @@
             <span class="badge" data-variant="secondary">Oat 0.8.3</span>
             <span class="badge" data-variant="success">MIT Licensed</span>
         </div>
-        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Charts, CRUD, trees, data tables with bulk actions and inline editing,
-            page headers, KPI cards, a wizard, autocomplete, context menus and more are <a href="#new">out now in 0.2.0</a>.</p>
-        <p class="announce"><a href="#wicket-way"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span></a> Dialogs that work like Wicket's <code>ModalDialog</code>,
+        <p class="announce"><a href="#wicket-way"><span class="badge new-badge" data-variant="success">New in 0.3.0</span></a> Dialogs that work like Wicket's <code>ModalDialog</code>,
             data tables over Ajax, shorter form field paths, a bottom tab bar for phone apps and an API closer to
-            plain Wicket are <a href="#wicket-way">coming with the next release</a>.</p>
+            plain Wicket are <a href="#wicket-way">out now in 0.3.0</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -126,7 +124,7 @@
             </article>
             <article class="card">
                 <h3>Themeable</h3>
-                <p>17 built-in themes, remembered per user in a cookie, plus your own themes
+                <p>19 built-in themes, remembered per user in a cookie, plus your own themes
                     registered in one line &mdash; full CSS custom-property theming to match your
                     brand.</p>
             </article>
@@ -154,14 +152,14 @@
                     scripts or styles, no <code>'unsafe-inline'</code>, no <code>'unsafe-eval'</code>.</p>
             </article>
             <article class="card">
-                <h3>Built for business apps <span class="badge new-badge" data-variant="success">New in 0.2.0</span></h3>
+                <h3>Built for business apps</h3>
                 <p>Data tables with row actions and bulk operations, page headers, KPI cards, detail
                     views, master-detail screens, a wizard, a sign-in form, comments, server-side
                     autocomplete, money and date-range fields &mdash; the screens line-of-business
                     applications are made of.</p>
             </article>
             <article class="card">
-                <h3>Speaks your users' language <span class="badge new-badge" data-variant="success">New in 0.2.0</span></h3>
+                <h3>Speaks your users' language</h3>
                 <p>The few texts the library renders itself come in English, German, Spanish,
                     French, Italian, Japanese, Dutch and Portuguese, following each user's locale
                     like Wicket's own validation messages.</p>
@@ -194,7 +192,7 @@
                     Menus and context menus work with the arrow keys, Shift+F10 or the Menu key and
                     give focus back when they close. Tree nodes expand with real buttons, and cells
                     edited in place save with Enter and cancel with Escape.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> <code>OatAppLayout</code> starts with a
+                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>OatAppLayout</code> starts with a
                     &ldquo;Skip to content&rdquo; link past the navigation.</p>
             </article>
             <article class="card">
@@ -221,7 +219,7 @@
                 <p>The texts only screen readers hear, such as &ldquo;Toggle menu&rdquo; or
                     &ldquo;Expand&rdquo;, come in eight languages and follow each user's locale, like
                     every other text the library renders.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> <code>OatAppLayout</code> sets the page's
+                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>OatAppLayout</code> sets the page's
                     <code>lang</code>, so screen readers pronounce it in the right language.</p>
             </article>
         </div>
@@ -245,7 +243,7 @@
                     <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
     &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
-    &lt;version&gt;0.2.0&lt;/version&gt;
+    &lt;version&gt;0.3.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
                 </div>
             </div>
@@ -268,16 +266,14 @@
                     <h3>Build your first UI</h3>
                     <pre><code>add(new OatAlert("notice", "Welcome back!", OatVariant.SUCCESS));
 
-add(Oat.Components.button("save", "Save changes", target -&gt;
+add(OatButton.onClick("save", "Save changes", target -&gt;
     Oat.toast(target, "Saved!", OatVariant.SUCCESS)));</code></pre>
                     <pre><code>&lt;div wicket:id="notice"&gt;&lt;/div&gt;
 &lt;a wicket:id="save"&gt;&lt;/a&gt;</code></pre>
                     <p class="text-light">Oat components are plain Wicket components, created with
                         <code>new</code>. Those driven by a callback, like a button's click, also
-                        come from a factory taking a lambda, so you don't have to subclass them.</p>
-                    <p class="text-light"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> The factories
-                        move onto the classes, like Wicket's own <code>AjaxLink.onClick(...)</code>:
-                        <code>OatButton.onClick("save", "Save changes", target -&gt; ...)</code>.</p>
+                        have a static factory taking a lambda, like Wicket's own
+                        <code>AjaxLink.onClick(...)</code>, so you don't have to subclass them.</p>
                     <p class="text-light">Want the full walkthrough? See the
                         <a href="tutorial.html">Build a Contact Form tutorial</a>, or read the
                         <a href="guide.html">user guide</a> for every component in detail.</p>
@@ -319,15 +315,15 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
             MenuItem.of("Dashboard", DashboardPage.class),
             MenuItem.of("Customers", CustomersPage.class),
             MenuItem.of("Invoices", InvoicesPage.class)
-                .withBadge(() -&gt; invoices.countOpen()), // 0.2.0
-            MenuItem.group("Settings",                    // 0.2.0
+                .withBadge(() -&gt; invoices.countOpen()),
+            MenuItem.group("Settings",
                 MenuItem.of("General", GeneralPage.class),
                 MenuItem.of("Billing", BillingPage.class))
         ));
     }
 
     &#64;Override
-    protected Component createFooter(String id) {
+    protected Component newSidebarFooter(String id) {
         // Any component works here - the built-in switcher is one option
         return new OatThemeSwitcher(id);
     }
@@ -338,17 +334,16 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                     <code>PageParameters</code> to <code>super(...)</code>; menu items can carry
                     parameters and translatable labels, and items for pages the user isn't
                     authorized to open are left out.</p>
-                <p><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Menu items can be grouped into collapsible sections, open while
+                <p>Menu items can be grouped into collapsible sections, open while
                     one of their pages is shown, and carry a badge such as a count, which
-                    <code>target.add(sidebar)</code> updates over Ajax.</p>
-                <p><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> <code>&lt;html&gt;</code> gets the page's <code>lang</code>
+                    <code>target.add(getSidebar())</code> updates over Ajax.</p>
+                <p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>&lt;html&gt;</code> gets the page's <code>lang</code>
                     from its locale, and a &ldquo;Skip to content&rdquo; link, shown only while it has
                     keyboard focus, jumps past the navigation to <code>&lt;main&gt;</code>. For
                     phone-first apps, <code>OatMobileLayout</code> puts a
                     <a href="#bottom-nav">bottom tab bar</a> under the content instead.</p>
-                <p><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> The hooks follow Wicket's
-                    <code>newXxx(id)</code> naming: <code>createFooter</code> becomes
-                    <code>newSidebarFooter</code>, and <code>newMenuLink(id, item)</code> can make a
+                <p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> The hooks follow Wicket's
+                    <code>newXxx(id)</code> naming, and <code>newMenuLink(id, item)</code> can make a
                     menu entry an <code>AjaxLink</code>. An app with a base page of its own gets the
                     theme, density and language from <code>add(new OatHtml("html"))</code>.</p>
             </div>
@@ -406,15 +401,10 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
             <h2>Everything below is real, live Oat markup</h2>
             <p>Not screenshots &mdash; this page loads the same Oat 0.8.3 build the library
                 vendors, so what you see here is exactly what renders in your app.</p>
-            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Cards with this label show components
-                added in 0.2.0, the current release. The
+            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> Cards with this label show components
+                added in 0.3.0, the current release. The
                 <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
-                lists everything new, including notes on upgrading from 0.1.x.</p>
-            <p class="release-note" id="next"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> Cards with this label show components
-                coming with the next release, 0.3.0. Their source is on
-                <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already,
-                and the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
-                lists everything coming.</p>
+                lists everything new, including notes on upgrading from 0.2.x.</p>
         </div>
 
         <div class="showcase-group">
@@ -426,7 +416,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                         <button data-variant="secondary">Secondary</button>
                         <button class="outline">Outline</button>
                     </div>
-                    <div class="showcase-footer"><strong>OatButton / OatSubmitButton</strong><code>Oat.Components.button(id, label, onClick)</code></div>
+                    <div class="showcase-footer"><strong>OatButton / OatSubmitButton</strong><code>OatButton.onClick(id, label, onClick)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -475,7 +465,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </ot-dropdown></li>
                         </menu>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatSplitButton</strong><code>save.addAction("Save as draft", target -&gt; ...)</code></div>
+                    <div class="showcase-footer"><strong>OatSplitButton</strong><code>save.addAction("Save as draft", target -&gt; ...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -486,13 +476,13 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
     <span class="hstack gap-2 oat-stat-footer"><span class="badge" data-variant="success">+9.1%</span><span class="text-light">vs. last year</span></span>
 </article>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatStatCard</strong><code>new OatStatCard(id, "Orders", value).setChange(percent).setTrend(last12Months)</code></div>
+                    <div class="showcase-footer"><strong>OatStatCard</strong><code>new OatStatCard(id, "Orders", value).setChange(percent).setTrend(last12Months)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
                         <div class="hstack gap-4 demo-icons" style="font-size:1.5rem"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatIcon</strong><code>new OatIcon(id, "pencil") &middot; .setLabel("Edit") &middot; 64 Lucide icons</code></div>
+                    <div class="showcase-footer"><strong>OatIcon</strong><code>new OatIcon(id, "pencil") &middot; .setLabel("Edit") &middot; 64 Lucide icons</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -501,7 +491,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <div class="hstack justify-end"><button type="button" class="outline small">Only necessary</button><button type="button" class="small">Accept</button></div>
                         </section>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatCookieConsent</strong><code>cookieConsent(id).setPolicyLink(PrivacyPage.class) &middot; OatCookieConsent.isAccepted()</code></div>
+                    <div class="showcase-footer"><strong>OatCookieConsent</strong><code>cookieConsent(id).setPolicyLink(PrivacyPage.class) &middot; OatCookieConsent.isAccepted()</code></div>
                 </div>
             </div>
         </div>
@@ -516,7 +506,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <p class="p-4">A themeable component library for Apache Wicket, built on Oat.</p>
                         </details>
                     </div>
-                    <div class="showcase-footer"><strong>OatAccordion</strong><code>Oat.Components.accordion(id, model, populateItem)</code></div>
+                    <div class="showcase-footer"><strong>OatAccordion</strong><code>OatAccordion.of(id, model, populateItem)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -526,7 +516,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <li><button class="outline small">Right</button></li>
                         </menu>
                     </div>
-                    <div class="showcase-footer"><strong>OatButtonGroup</strong><code>Oat.Components.buttonGroup(id, model, populateItem)</code></div>
+                    <div class="showcase-footer"><strong>OatButtonGroup</strong><code>OatButtonGroup.of(id, model, populateItem)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -538,7 +528,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </ol>
                         </nav>
                     </div>
-                    <div class="showcase-footer"><strong>OatBreadcrumb</strong><code>Oat.Components.breadcrumb(id, model, populateItem)</code></div>
+                    <div class="showcase-footer"><strong>OatBreadcrumb</strong><code>OatBreadcrumb.of(id, model, populateItem)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -578,7 +568,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </div>
                         </header>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatPageHeader</strong><code>&lt;header wicket:id="pageHeader"&gt;your actions&lt;/header&gt; &middot; setBreadcrumb(...)</code></div>
+                    <div class="showcase-footer"><strong>OatPageHeader</strong><code>&lt;header wicket:id="pageHeader"&gt;your actions&lt;/header&gt; &middot; setBreadcrumb(...)</code></div>
                 </div>
                 <div class="showcase-card wide">
                     <div class="showcase-preview block">
@@ -596,7 +586,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <button>Next</button>
                         </footer>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatWizard</strong><code>wizard.addStep("Items", id -&gt; new ItemsStep(id, order))</code></div>
+                    <div class="showcase-footer"><strong>OatWizard</strong><code>wizard.addStep("Items", id -&gt; new ItemsStep(id, order))</code></div>
                 </div>
                 <div class="showcase-card wide">
                     <div class="showcase-preview block">
@@ -615,7 +605,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </div>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMasterDetail</strong><code>md.setMaster(id -&gt; list) &middot; md.setDetail((id, item) -&gt; panel) &middot; md.select(target, item)</code></div>
+                    <div class="showcase-footer"><strong>OatMasterDetail</strong><code>md.setMaster(id -&gt; list) &middot; md.setDetail((id, item) -&gt; panel) &middot; md.select(target, item)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -628,7 +618,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </ul>
                         </nav>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMenuBar</strong><code>menuBar(id).addAction("Save", t -&gt; ...) &middot; .addMenu("Export").addAction("CSV", ...)</code></div>
+                    <div class="showcase-footer"><strong>OatMenuBar</strong><code>menuBar(id).addAction("Save", t -&gt; ...) &middot; .addMenu("Export").addAction("CSV", ...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -637,7 +627,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <div class="oat-split-pane oat-split-second"><strong>Order #1001 has shipped</strong><p class="text-light small">Drag the corner of the list to resize it.</p></div>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatSplitLayout</strong><code>splitLayout(id, id -&gt; list, id -&gt; detail).setSplit(40)</code></div>
+                    <div class="showcase-footer"><strong>OatSplitLayout</strong><code>splitLayout(id, id -&gt; list, id -&gt; detail).setSplit(40)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -650,7 +640,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </menu>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Context menu</strong><code>row.add(Oat.Behaviors.contextMenu().addAction("Open", t -&gt; ...))</code></div>
+                    <div class="showcase-footer"><strong>Context menu</strong><code>row.add(Oat.Behaviors.contextMenu().addAction("Open", t -&gt; ...))</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -663,7 +653,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <div class="tree-branch"><div class="tree-node"><button type="button" class="oat-junction oat-junction-collapsed" aria-expanded="false" aria-label="Expand Finance"></button><span class="tree-content"><a class="oat-tree-label" href="#components"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><span>Finance</span></a></span></div></div>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatTree / OatTableTree</strong><code>new OatTree&lt;&gt;(id, provider).setLabel(Folder::name).onSelect(...)</code></div>
+                    <div class="showcase-footer"><strong>OatTree / OatTableTree</strong><code>new OatTree&lt;&gt;(id, provider).setLabel(Folder::name).setOnSelect(...)</code></div>
                 </div>
                 <div class="showcase-card" id="bottom-nav">
                     <div class="showcase-preview block">
@@ -679,7 +669,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </nav>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span><strong>OatBottomNav / OatMobileLayout</strong><code>BottomNavItem.of("Team", TeamPage.class).withIcon(Icon.sprite("team")).withBadge(() -&gt; open) &middot; .asPrimary()</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.3.0</span><strong>OatBottomNav / OatMobileLayout</strong><code>BottomNavItem.of("Team", TeamPage.class).withIcon(Icon.sprite("team")).withBadge(() -&gt; open) &middot; .asPrimary()</code></div>
                 </div>
             </div>
         </div>
@@ -718,7 +708,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </menu>
                         </ot-dropdown>
                     </div>
-                    <div class="showcase-footer"><strong>OatDropdown</strong><code>Oat.Components.dropdown(id, trigger, items, label, onClick)</code></div>
+                    <div class="showcase-footer"><strong>OatDropdown</strong><code>OatDropdown.of(id, trigger, items, label, onClick)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -747,7 +737,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </form>
                         </dialog>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatConfirmDialog</strong><code>confirm.ask(target, "Delete invoice?", detail, t -&gt; ...)</code></div>
+                    <div class="showcase-footer"><strong>OatConfirmDialog</strong><code>confirm.ask(target, "Delete invoice?", detail, t -&gt; ...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -764,7 +754,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </div>
                         </ot-dropdown>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatPopover</strong><code>new OatPopover(id, "Quick note", id -&gt; new NotePanel(id))</code></div>
+                    <div class="showcase-footer"><strong>OatPopover</strong><code>new OatPopover(id, "Quick note", id -&gt; new NotePanel(id))</code></div>
                 </div>
             </div>
         </div>
@@ -820,7 +810,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </table>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDataTable: selection, bulk and row actions, Oat columns</strong><code>OatSelectionColumn &middot; OatBadgeColumn &middot; OatNumberColumn &middot; OatActionsColumn &middot; table.addBulkAction(label, (target, rows) -&gt; ...)</code></div>
+                    <div class="showcase-footer"><strong>OatDataTable: selection, bulk and row actions, Oat columns</strong><code>OatSelectionColumn &middot; OatBadgeColumn &middot; OatNumberColumn &middot; OatActionsColumn &middot; table.addBulkAction(label, (target, rows) -&gt; ...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -831,7 +821,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <div class="oat-dl-item"><dt>Notes</dt><dd>&mdash;</dd></div>
                         </dl>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDescriptionList</strong><code>new OatDescriptionList(id, model).addProperty("vatId")</code></div>
+                    <div class="showcase-footer"><strong>OatDescriptionList</strong><code>new OatDescriptionList(id, model).addProperty("vatId")</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -841,7 +831,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <li class="oat-timeline-event" data-variant="warning"><div class="oat-timeline-heading"><strong>Reminder sent</strong><time class="text-light" datetime="2026-09-28T08:00">Sep 28, 8:00 AM</time></div></li>
                         </ol>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatTimeline</strong><code>new OatTimeline&lt;&gt;(id, events, Event::title, Event::at)</code></div>
+                    <div class="showcase-footer"><strong>OatTimeline</strong><code>new OatTimeline&lt;&gt;(id, events, Event::title, Event::at)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -854,7 +844,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <footer class="hstack justify-end"><button type="submit" class="small">Send</button></footer>
                         </form>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMessageList / OatMessageInput</strong><code>new OatMessageInput(id, (target, text) -&gt; ...)</code></div>
+                    <div class="showcase-footer"><strong>OatMessageList / OatMessageInput</strong><code>new OatMessageInput(id, (target, text) -&gt; ...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -862,7 +852,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                         <div role="status" class="skeleton line"></div>
                         <div role="status" class="skeleton line" style="width:60%"></div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLazyLoadPanel</strong><code>Oat.Components.lazyLoad(id, id -&gt; new RevenuePanel(id))</code></div>
+                    <div class="showcase-footer"><strong>OatLazyLoadPanel</strong><code>OatLazyLoadPanel.of(id, id -&gt; new RevenuePanel(id))</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -886,7 +876,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
         </details>
     </figure>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatColumnChart</strong><code>columnChart(id, months, Month::label, Month::revenue)</code></div>
+                    <div class="showcase-footer"><strong>OatColumnChart</strong><code>columnChart(id, months, Month::label, Month::revenue)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -923,7 +913,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
         </details>
     </figure>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLineChart</strong><code>lineChart(id, months, Month::label).addSeries("2026", Month::revenue)</code></div>
+                    <div class="showcase-footer"><strong>OatLineChart</strong><code>lineChart(id, months, Month::label).addSeries("2026", Month::revenue)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -948,7 +938,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
         </details>
     </figure>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDonutChart</strong><code>donutChart(id, regions, Region::name, Region::revenue)</code></div>
+                    <div class="showcase-footer"><strong>OatDonutChart</strong><code>donutChart(id, regions, Region::name, Region::revenue)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -970,7 +960,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
         </details>
     </figure>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatBarChart</strong><code>barChart(id, customers, Row::name, Row::revenue)</code></div>
+                    <div class="showcase-footer"><strong>OatBarChart</strong><code>barChart(id, customers, Row::name, Row::revenue)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -981,7 +971,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                         </div>
                         <footer class="hstack justify-center oat-load-more"><button type="button" class="outline small">Load more (3 of 64)</button></footer>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLoadMoreList</strong><code>loadMoreList(id, provider, 20, (id, item) -&gt; row).setLoadOnScroll(true)</code></div>
+                    <div class="showcase-footer"><strong>OatLoadMoreList</strong><code>loadMoreList(id, provider, 20, (id, item) -&gt; row).setLoadOnScroll(true)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -992,7 +982,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <tbody class="oat-row"><tr><td>Laptop 14&quot;</td><td class="align-right">&euro;1,299.00</td><td class="align-right"><button type="button" class="ghost small icon" aria-label="Actions">&ctdot;</button></td></tr></tbody>
                         </table></div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatCrud</strong><code>.setEditor((id, c) -&gt; new CustomerFields(id, c)).onSave(...).onDelete(...)</code></div>
+                    <div class="showcase-footer"><strong>OatCrud</strong><code>.setEditor((id, c) -&gt; new CustomerFields(id, c)).setOnSave(...).setOnDelete(...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1003,7 +993,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <tbody class="oat-row"><tr><td class="oat-details-toggle"><button type="button" class="ghost small icon" aria-expanded="false" aria-label="Show details"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></td><td>Docking station</td><td><form class="oat-editing" onsubmit="return false"><div class="hstack gap-1"><input type="text" class="small" value="40" aria-label="Stock" style="width:4rem;flex-basis:4rem"><button type="submit" class="small icon" aria-label="Save"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button><button type="button" class="ghost small icon" aria-label="Cancel"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div></form></td></tr></tbody>
                         </table></div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Row details, editing in place, columns, CSV</strong><code>OatRowDetailsColumn &middot; OatEditableColumn &middot; table.setColumnChooser(true) &middot; setCsvExport("invoices.csv")</code></div>
+                    <div class="showcase-footer"><strong>Row details, editing in place, columns, CSV</strong><code>OatRowDetailsColumn &middot; OatEditableColumn &middot; table.setColumnChooser(true) &middot; setCsvExport("invoices.csv")</code></div>
                 </div>
             </div>
         </div>
@@ -1073,7 +1063,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <fieldset class="group"><label for="demo-site">https://</label><input id="demo-site" type="text" placeholder="example.com"></fieldset>
                         </section>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMoneyField / OatPercentField / addons</strong><code>new OatMoneyField(id).setCurrency(EUR) &middot; field.setPrefix("https://")</code></div>
+                    <div class="showcase-footer"><strong>OatMoneyField / OatPercentField / addons</strong><code>new OatMoneyField(id).setCurrency(EUR) &middot; field.setPrefix("https://")</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1082,7 +1072,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <fieldset class="group"><input type="date" aria-label="From" value="2026-11-02"><label aria-hidden="true">&ndash;</label><input type="date" aria-label="To" value="2026-11-06"></fieldset>
                         </fieldset>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatDateRangeField</strong><code>new OatDateRangeField(id, label, rangeModel).setRequired(true)</code></div>
+                    <div class="showcase-footer"><strong>OatDateRangeField</strong><code>new OatDateRangeField(id, label, rangeModel).setRequired(true)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1092,7 +1082,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <div id="demo-aa" class="wicket-aa-container oat-autocomplete demo-autocomplete"><div class="wicket-aa"><ul><li class="selected">ACME GmbH</li><li>Acme Logistics</li></ul></div></div>
                         </section>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatAutoCompleteField</strong><code>.setChoices(text -&gt; customers.search(text)).setDisplay(Customer::name)</code></div>
+                    <div class="showcase-footer"><strong>OatAutoCompleteField</strong><code>.setChoices(text -&gt; customers.search(text)).setDisplay(Customer::name)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1107,7 +1097,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <button type="submit">Sign in</button>
                         </form>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatLoginForm</strong><code>protected boolean signIn(String user, String password, boolean rememberMe)</code></div>
+                    <div class="showcase-footer"><strong>OatLoginForm</strong><code>protected boolean signIn(String user, String password, boolean rememberMe)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1119,7 +1109,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </fieldset>
                         </fieldset>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatCustomField</strong><code>new OatCustomField&lt;&gt;("phone", PhoneInput::new)</code></div>
+                    <div class="showcase-footer"><strong>OatCustomField</strong><code>new OatCustomField&lt;&gt;("phone", PhoneInput::new)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1129,7 +1119,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <datalist id="demo-types"><option value="Call"><option value="Meeting"><option value="Email"><option value="Complaint"></datalist>
                         </section>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Suggestions</strong><code>field.setSuggestions(List.of("Call", "Meeting", "Email"))</code></div>
+                    <div class="showcase-footer"><strong>Suggestions</strong><code>field.setSuggestions(List.of("Call", "Meeting", "Email"))</code></div>
                 </div>
                 <div class="showcase-card wide">
                     <div class="showcase-preview block">
@@ -1139,7 +1129,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             <section data-field class="col-4"><label for="demo-city">City</label><input id="demo-city" type="text" value="Vienna"></section>
                         </fieldset>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatFieldset + grid behaviors</strong><code>new OatFieldset("billing") &middot; field.add(Oat.Behaviors.col(8))</code></div>
+                    <div class="showcase-footer"><strong>OatFieldset + grid behaviors</strong><code>new OatFieldset("billing") &middot; field.add(Oat.Behaviors.col(8))</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1154,7 +1144,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                             </div>
                         </fieldset>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>OatMultiSelectField</strong><code>.setChoices(text -&gt; users.search(text)).setDisplay(User::name)</code></div>
+                    <div class="showcase-footer"><strong>OatMultiSelectField</strong><code>.setChoices(text -&gt; users.search(text)).setDisplay(User::name)</code></div>
                 </div>
             </div>
         </div>
@@ -1189,7 +1179,7 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
                     <div class="showcase-preview">
                         <button data-demo-busy>Save (takes 2 seconds)</button>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.2.0</span><strong>Busy buttons</strong><code>button.setBusyIndicator(true) &middot; Oat.Behaviors.ajaxBusy()</code></div>
+                    <div class="showcase-footer"><strong>Busy buttons</strong><code>button.setBusyIndicator(true) &middot; Oat.Behaviors.ajaxBusy()</code></div>
                 </div>
             </div>
         </div>
@@ -1199,12 +1189,12 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
 <section id="wicket-way" class="section section-alt">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span></p>
+            <p class="eyebrow"><span class="badge new-badge" data-variant="success">New in 0.3.0</span></p>
             <h2>Wicket the way you already write it</h2>
-            <p>The next release brings the library closer to how Wicket itself works: dialogs like
+            <p>0.3.0 brings the library closer to how Wicket itself works: dialogs like
                 <code>ModalDialog</code>, data tables like <code>AjaxFallbackDefaultDataTable</code>,
                 lambda factories like <code>AjaxLink.onClick</code>, and tests that read like the
-                markup. It's on <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already.</p>
+                markup.</p>
         </div>
         <div class="feature-grid">
             <article class="card">
@@ -1261,12 +1251,12 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Theming</p>
-            <h2>17 built-in themes, plus your own</h2>
+            <h2>19 built-in themes, plus your own</h2>
             <p>Click a theme below to preview it live on this entire page &mdash; the same
                 <code>data-theme</code> mechanism <code>OatThemeSwitcher</code> uses in your app,
                 where the user's choice is remembered in a cookie (and works with any session
                 class).</p>
-            <p><span class="badge new-badge" data-variant="success">New in 0.2.0</span> Business and Business Dark, two sober themes for line-of-business
+            <p>Business and Business Dark, two sober themes for line-of-business
                 apps with status colors that meet WCAG AA, and a compact density for data-heavy
                 screens.</p>
         </div>
@@ -1289,8 +1279,8 @@ add(Oat.Components.button("save", "Save changes", target -&gt;
             <button class="theme-swatch outline" data-set-theme="halloween"><span class="dot"></span>Halloween</button>
             <button class="theme-swatch outline" data-set-theme="xmas"><span class="dot"></span>Xmas</button>
             <button class="theme-swatch outline" data-set-theme="wireframe"><span class="dot"></span>Wireframe</button>
-            <button class="theme-swatch outline" data-set-theme="business"><span class="dot"></span>Business <small class="text-light">0.2.0</small></button>
-            <button class="theme-swatch outline" data-set-theme="business-dark"><span class="dot"></span>Business Dark <small class="text-light">0.2.0</small></button>
+            <button class="theme-swatch outline" data-set-theme="business"><span class="dot"></span>Business</button>
+            <button class="theme-swatch outline" data-set-theme="business-dark"><span class="dot"></span>Business Dark</button>
         </div>
         <pre style="margin-top:var(--space-6)"><code>// Switch the current user's theme (kept in a cookie)
 OatTheme.setCurrent(OatTheme.NORD);
@@ -1299,12 +1289,12 @@ OatTheme.setCurrent(OatTheme.NORD);
 WicketOats.install(this)
         .setDefaultTheme(OatTheme.LIGHT)   // or null to follow the browser
         .addTheme(new OatTheme("brand", "Brand", "🏷️"))
-        .setDensity(OatDensity.COMPACT);   // new in 0.2.0: tighter spacing app-wide
+        .setDensity(OatDensity.COMPACT);   // tighter spacing app-wide
 
 // Pin one component to a theme, whatever the user chose
 card.add(Oat.Behaviors.theme(OatTheme.LIGHT));
 
-// Keep Oat's own spacing in one part of a compact app (works from 0.3.0)
+// Keep Oat's own spacing in one part of a compact app
 form.add(Oat.Behaviors.density(OatDensity.DEFAULT));</code></pre>
     </div>
 </section>

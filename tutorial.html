@@ -204,7 +204,7 @@ message=Message</code></pre>
                 <span class="step-num">5</span>
                 <div>
                     <h3>Add the submit button and feedback</h3>
-                    <p><code>Oat.Components.submitButton</code> creates an Oat-styled
+                    <p><code>OatSubmitButton.onSubmit</code> creates an Oat-styled
                         <code>AjaxButton</code>: the first handler runs when the form is valid, the
                         second when it isn't. Report the outcome with Wicket's own
                         <code>success()</code> and <code>error()</code>, and let
@@ -214,7 +214,7 @@ message=Message</code></pre>
                     <pre><code>// Show success()/error() messages as toasts
 add(Oat.Behaviors.feedbackToasts());
 
-form.add(Oat.Components.submitButton("submit", "Send Message",
+form.add(OatSubmitButton.onSubmit("submit", "Send Message",
         target -&gt; {
             success("Thanks, " + form.getModelObject().name + "! We'll be in touch.");
             target.add(form);
@@ -321,7 +321,7 @@ form.add(Oat.Components.submitButton("submit", "Send Message",
         form.add(new OatEmailField("email").setRequired(true));
         form.add(new OatTextArea&lt;String&gt;("message").setRequired(true));
 
-        form.add(Oat.Components.submitButton("submit", "Send Message",
+        form.add(OatSubmitButton.onSubmit("submit", "Send Message",
                 target -&gt; {
                     success("Thanks, " + form.getModelObject().name + "! We'll be in touch.");
                     target.add(form);
@@ -402,9 +402,8 @@ message=Message</code></pre>
             <article class="card">
                 <h3>More field types</h3>
                 <p>Dates, times, numbers, dropdowns, radio groups, checkbox groups, multi-selects, tag
-                    inputs and file uploads all follow the same pattern. Prefer factories? Each also
-                    has an <code>Oat.Components</code> method, e.g.
-                    <code>Oat.Components.textField("name")</code>.</p>
+                    inputs and file uploads all follow the same pattern: <code>new OatDateField("date")</code>,
+                    <code>new OatDropdownChoice&lt;&gt;("topic", Model.ofList(topics))</code>, and so on.</p>
             </article>
         </div>
     </div>

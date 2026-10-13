@@ -68,7 +68,7 @@ import java.util.List;
  */
 public class OatDataTable<T, S> extends Panel implements IPageableItems {
 
-    private static final String EMPTY_STATE_ID = "msg";
+    private static final String EMPTY_STATE_ID = "content";
     private static final String TOOLBAR_ID = "toolbar";
 
     private final DataTable<T, S> table;
@@ -80,7 +80,7 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
     private String csvFileName;
     private final List<BulkAction<T>> bulkActions = new ArrayList<>();
     private final WebMarkupContainer bulkBar;
-    private NoRecordsToolbar emptyStateToolbar;
+    private EmptyStateToolbar emptyStateToolbar;
 
     @SuppressWarnings("unchecked")
     public OatDataTable(String id, List<? extends IColumn<T, S>> columns, ISortableDataProvider<T, S> dataProvider, long rowsPerPage) {
@@ -179,18 +179,23 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
      * Calling this again replaces the previous empty state.
      */
     public OatDataTable<T, S> setEmptyState(SerializableFunction<String, ? extends Component> emptyStateFactory) {
-        if (emptyStateToolbar == null) {
-            emptyStateToolbar = new NoRecordsToolbar(table);
-            table.addBottomToolbar(emptyStateToolbar);
-        }
         Component emptyState = emptyStateFactory.apply(EMPTY_STATE_ID);
         if (emptyState == null || !EMPTY_STATE_ID.equals(emptyState.getId())) {
             throw new IllegalArgumentException("The empty state component must use the id passed to the factory (\""
                     + EMPTY_STATE_ID + "\"), but was " + (emptyState == null ? "null" : "\"" + emptyState.getId() + "\""));
         }
-        // NoRecordsToolbar nests its "msg" label inside the "td" cell
-        ((MarkupContainer) emptyStateToolbar.get("td")).replace(emptyState);
+        if (emptyStateToolbar == null) {
+            emptyStateToolbar = new EmptyStateToolbar(table);
+            table.addBottomToolbar(emptyStateToolbar);
+        }
+        emptyStateToolbar.cell.addOrReplace(emptyState);
         return this;
+    }
+
+    /** The number of columns the user hasn't hidden, at least 1, for cells spanning the table. */
+    private int visibleColumnCount() {
+        List<? extends IColumn<T, S>> columns = table.getColumns();
+        return Math.max(1, columns.size() - (int) hiddenColumns.stream().filter(i -> i < columns.size()).count());
     }
 
     /**
@@ -462,8 +467,7 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
 
         @Override
         protected Item<T> newRowItem(String id, int index, IModel<T> model) {
-            return new Row<>(id, index, model, detailsColumn,
-                    () -> getColumns().size() - (int) hiddenColumns.stream().filter(i -> i < getColumns().size()).count());
+            return new Row<>(id, index, model, detailsColumn, OatDataTable.this::visibleColumnCount);
         }
     }
 
@@ -500,6 +504,29 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
         /** The details row, e.g. to re-render it: {@code target.add(row.getDetails())}. */
         public WebMarkupContainer getDetails() {
             return details;
+        }
+    }
+
+    /**
+     * A row shown in place of the rows while the table has none, with the component set
+     * by {@link #setEmptyState} in a cell spanning the visible columns. Like Wicket's
+     * {@code NoRecordsToolbar}, whose CSS classes it keeps, but with markup of its own.
+     */
+    private final class EmptyStateToolbar extends AbstractToolbar {
+
+        private final WebMarkupContainer cell;
+
+        EmptyStateToolbar(DataTable<T, S> table) {
+            super(table);
+            cell = new WebMarkupContainer("cell");
+            cell.add(AttributeModifier.replace("colspan", (IModel<Integer>) OatDataTable.this::visibleColumnCount));
+            add(cell);
+        }
+
+        @Override
+        protected void onConfigure() {
+            super.onConfigure();
+            setVisible(getTable().getRowCount() == 0);
         }
     }
 

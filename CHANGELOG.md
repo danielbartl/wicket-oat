@@ -40,6 +40,9 @@ components they wrap, which breaks some code and tests:
 - `OatHtml`: the `<html>` tag of `OatAppLayout` and `OatMobileLayout`, now public for a base
   page of your own (`add(new OatHtml("html"))`). It sets the theme, the density and the
   page's language.
+- `OatDataTable`'s empty state is a toolbar of its own instead of Wicket's `NoRecordsToolbar`
+  with its message replaced through Wicket's internal component ids. Its cell spans the
+  columns the user hasn't hidden, and keeps the `norecords-tr`/`norecords-td` classes.
 - `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
   `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
   `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.

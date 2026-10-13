@@ -649,10 +649,14 @@ table.setEmptyState(id -> Oat.Components.emptyState(id, "No invoices found"));
   `setStyle(...)`, `setPattern(...)` and a zone for `Instant`s.
 - With an `OatSelectionColumn`, a bar above the table shows how many rows are
   selected, with the bulk actions and "Clear selection". The selection lasts
-  across pages and sorting, and rows are compared with `equals`, so give the row
-  type a meaningful one (a record, or an entity comparing ids). Bulk actions
-  receive a copy of the selected rows; call `clearSelection(target)` when done.
-  Each change also sends an `OatSelectionColumn.SelectionChanged` event.
+  across pages and sorting. It keeps either the rows themselves, compared with
+  `equals` (fine for records), or - for entities - only their keys:
+  `new OatSelectionColumn<>(selectedIds, Invoice::getId)` with an
+  `IModel<Set<Long>>`, so the page doesn't serialize entities. Bulk actions
+  receive the selected rows; selected by key, they are looked up through the data
+  provider, current and in the table's sort order. Call `clearSelection(target)`
+  when done. Each change also sends an `OatSelectionColumn.SelectionChanged` event.
+  `OatRowDetailsColumn` remembers expanded rows the same way, by `equals` or by key.
 - The table has a markup id: `target.add(table)` re-renders it after an action.
 - Like a `DataTable` it is pageable (`IPageableItems`): `setCurrentPage(...)`,
   `getPageCount()`, `setItemsPerPage(...)`, and a navigator of your own can page it.

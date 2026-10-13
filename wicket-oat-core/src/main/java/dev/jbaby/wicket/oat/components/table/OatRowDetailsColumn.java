@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.components.table;
 import dev.jbaby.wicket.oat.components.OatDataTable;
 import dev.jbaby.wicket.oat.components.OatIcon;
 import dev.jbaby.wicket.oat.util.SerializableBiFunction;
+import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,9 +30,11 @@ import java.util.Objects;
  * Use it in an {@link OatDataTable}. The panel is created the first time its row is
  * expanded, with the id it is given ({@link #DETAILS_ID}) and the row's model, and is
  * rendered on a {@code <div>} - wrap components that need another tag, such as an
- * {@code OatDescriptionList} on a {@code <dl>}, in a panel or fragment. Rows are
- * remembered as expanded by {@code equals}, as the selection is, so they stay open
- * across pages, sorting and re-renders. The button has {@code aria-expanded} and
+ * {@code OatDescriptionList} on a {@code <dl>}, in a panel or fragment. Expanded rows
+ * stay open across pages, sorting and re-renders. They are remembered by {@code equals},
+ * or by key, so the page keeps only, e.g., an entity's id:
+ * {@code new OatRowDetailsColumn<>(details, new SetModel<>(new HashSet<>()), Order::getId)}.
+ * The button has {@code aria-expanded} and
  * {@code aria-controls} and is named by {@code OatDataTable.showDetails}/{@code hideDetails}.
  *
  * @param <T> the row type
@@ -43,7 +46,9 @@ public class OatRowDetailsColumn<T, S> extends AbstractColumn<T, S> implements I
     public static final String DETAILS_ID = "details";
 
     private final SerializableBiFunction<String, IModel<T>, ? extends Component> details;
-    private final IModel<? extends Collection<T>> expanded;
+    private final IModel<? extends Collection<?>> expanded;
+    /** A row's key among the expanded ones; the row itself unless remembered by key. */
+    private final SerializableFunction<? super T, ?> key;
 
     /** @param details creates a row's details panel, with the id and row model it is given */
     public OatRowDetailsColumn(SerializableBiFunction<String, IModel<T>, ? extends Component> details) {
@@ -53,28 +58,47 @@ public class OatRowDetailsColumn<T, S> extends AbstractColumn<T, S> implements I
     /** @param expanded the expanded rows, e.g. to open some from the start */
     public OatRowDetailsColumn(SerializableBiFunction<String, IModel<T>, ? extends Component> details,
                                IModel<? extends Collection<T>> expanded) {
+        this(details, expanded, (SerializableFunction<T, T>) row -> row);
+    }
+
+    /**
+     * Remembers expanded rows by key, e.g. an entity's id, so the page keeps only the keys.
+     *
+     * @param expanded the keys of the expanded rows, e.g. to open some from the start
+     * @param key a row's key, e.g. {@code Order::getId}
+     */
+    public <K> OatRowDetailsColumn(SerializableBiFunction<String, IModel<T>, ? extends Component> details,
+                                   IModel<? extends Collection<K>> expanded, SerializableFunction<? super T, ? extends K> key) {
         super(Model.of(""));
         this.details = Objects.requireNonNull(details);
         this.expanded = Objects.requireNonNull(expanded);
+        this.key = Objects.requireNonNull(key);
     }
 
-    public IModel<? extends Collection<T>> getExpanded() {
+    /** The expanded rows, or their keys when remembered by key. */
+    public IModel<? extends Collection<?>> getExpanded() {
         return expanded;
     }
 
     public boolean isExpanded(T row) {
-        return row != null && expanded.getObject().contains(row);
+        return row != null && keys().contains(key.apply(row));
     }
 
     /** Expands or collapses a row; re-render its {@link OatDataTable.Row#getDetails() details} to show it. */
     public void setExpanded(T row, boolean open) {
+        Object rowKey = key.apply(row);
         if (open) {
-            if (!isExpanded(row)) {
-                expanded.getObject().add(row);
+            if (!keys().contains(rowKey)) {
+                keys().add(rowKey);
             }
         } else {
-            expanded.getObject().remove(row);
+            keys().remove(rowKey);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Collection<Object> keys() {
+        return (Collection<Object>) expanded.getObject();
     }
 
     /** Creates a row's details panel. */

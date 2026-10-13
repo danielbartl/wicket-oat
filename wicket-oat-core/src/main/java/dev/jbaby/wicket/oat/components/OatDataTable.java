@@ -159,7 +159,7 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
                 item.add(new OatButton("action", action.label()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        action.onClick().accept(target, List.copyOf(selectionColumn.getSelection().getObject()));
+                        action.onClick().accept(target, selectionColumn.getSelectedRows(table.getDataProvider()));
                     }
                 }.setSize(ButtonBehavior.Size.SMALL).setVariant(action.variant()));
             }

@@ -91,8 +91,9 @@
         </div>
         <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.2.0</span></a> Charts, CRUD, trees, data tables with bulk actions and inline editing,
             page headers, KPI cards, a wizard, autocomplete, context menus and more are <a href="#new">out now in 0.2.0</a>.</p>
-        <p class="announce"><a href="#next"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span></a> A bottom tab bar for phone apps, and a skip link
-            and the page's language in <code>OatAppLayout</code>, are <a href="#next">coming with the next release</a>.</p>
+        <p class="announce"><a href="#wicket-way"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span></a> Dialogs that work like Wicket's <code>ModalDialog</code>,
+            data tables over Ajax, shorter form field paths, a bottom tab bar for phone apps and an API closer to
+            plain Wicket are <a href="#wicket-way">coming with the next release</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -113,9 +114,9 @@
         </div>
         <div class="feature-grid">
             <article class="card">
-                <h3>Fluent, dual API</h3>
-                <p>Use <code>Oat.Components</code> for self-contained widgets, or apply
-                    <code>Oat.Behaviors</code> to any existing Wicket component &mdash;
+                <h3>Components and behaviors</h3>
+                <p>Create components with <code>new</code>, like any Wicket component, or apply
+                    <code>Oat.Behaviors</code> to a component you already have &mdash;
                     composition over inheritance, your choice per case.</p>
             </article>
             <article class="card">
@@ -265,18 +266,18 @@
                 <span class="step-num">3</span>
                 <div>
                     <h3>Build your first UI</h3>
-                    <pre><code>add(Oat.Components.button("save", "Save changes", target -&gt;
-    Oat.toast(target, "Saved!", OatVariant.SUCCESS)));
+                    <pre><code>add(new OatAlert("notice", "Welcome back!", OatVariant.SUCCESS));
 
-add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code></pre>
-                    <pre><code>&lt;a wicket:id="save"&gt;&lt;/a&gt;
-&lt;div wicket:id="notice"&gt;&lt;/div&gt;</code></pre>
-                    <p class="text-light">Prefer plain Wicket constructors? Components like
-                        <code>OatAlert</code>, <code>OatBadge</code>, <code>OatCard</code> and the
-                        form fields work the same way with <code>new</code> &mdash; the factory is
-                        mainly there for components like <code>OatButton</code> that need a callback
-                        and would otherwise require subclassing:</p>
-                    <pre><code>add(new OatAlert("notice", "Welcome back!", OatVariant.SUCCESS));</code></pre>
+add(Oat.Components.button("save", "Save changes", target -&gt;
+    Oat.toast(target, "Saved!", OatVariant.SUCCESS)));</code></pre>
+                    <pre><code>&lt;div wicket:id="notice"&gt;&lt;/div&gt;
+&lt;a wicket:id="save"&gt;&lt;/a&gt;</code></pre>
+                    <p class="text-light">Oat components are plain Wicket components, created with
+                        <code>new</code>. Those driven by a callback, like a button's click, also
+                        come from a factory taking a lambda, so you don't have to subclass them.</p>
+                    <p class="text-light"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> The factories
+                        move onto the classes, like Wicket's own <code>AjaxLink.onClick(...)</code>:
+                        <code>OatButton.onClick("save", "Save changes", target -&gt; ...)</code>.</p>
                     <p class="text-light">Want the full walkthrough? See the
                         <a href="tutorial.html">Build a Contact Form tutorial</a>, or read the
                         <a href="guide.html">user guide</a> for every component in detail.</p>
@@ -345,6 +346,11 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     keyboard focus, jumps past the navigation to <code>&lt;main&gt;</code>. For
                     phone-first apps, <code>OatMobileLayout</code> puts a
                     <a href="#bottom-nav">bottom tab bar</a> under the content instead.</p>
+                <p><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span> The hooks follow Wicket's
+                    <code>newXxx(id)</code> naming: <code>createFooter</code> becomes
+                    <code>newSidebarFooter</code>, and <code>newMenuLink(id, item)</code> can make a
+                    menu entry an <code>AjaxLink</code>. An app with a base page of its own gets the
+                    theme, density and language from <code>add(new OatHtml("html"))</code>.</p>
             </div>
 
             <div class="applayout-demo-wrap">
@@ -428,7 +434,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         <span class="badge" data-variant="success">Success</span>
                         <span class="badge outline" data-variant="danger">Danger</span>
                     </div>
-                    <div class="showcase-footer"><strong>OatBadge</strong><code>Oat.Components.badge(id, label, OatVariant)</code></div>
+                    <div class="showcase-footer"><strong>OatBadge</strong><code>new OatBadge(id, label, OatVariant)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -438,13 +444,13 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             <figure data-variant="avatar" aria-label="Oat"><abbr title="Oat User">OT</abbr></figure>
                         </figure>
                     </div>
-                    <div class="showcase-footer"><strong>OatAvatar / OatAvatarGroup</strong><code>Oat.Components.avatar(id, imageUrl)</code></div>
+                    <div class="showcase-footer"><strong>OatAvatar / OatAvatarGroup</strong><code>new OatAvatar(id, imageUrl)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
                         <div role="alert" data-variant="success"><strong>Saved.</strong> Your changes were applied.</div>
                     </div>
-                    <div class="showcase-footer"><strong>OatAlert</strong><code>Oat.Components.alert(id, message, OatVariant)</code></div>
+                    <div class="showcase-footer"><strong>OatAlert</strong><code>new OatAlert(id, message, OatVariant)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -453,7 +459,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             <p style="margin-block:var(--space-2) 0">Any HTML can live inside.</p>
                         </article>
                     </div>
-                    <div class="showcase-footer"><strong>OatCard</strong><code>Oat.Components.card(id)</code></div>
+                    <div class="showcase-footer"><strong>OatCard</strong><code>new OatCard(id)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -695,7 +701,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             </form>
                         </dialog>
                     </div>
-                    <div class="showcase-footer"><strong>OatDialog</strong><code>Oat.Components.dialog(id, header) &middot; dialog.open(target)</code></div>
+                    <div class="showcase-footer"><strong>OatDialog</strong><code>new OatDialog(id, header) &middot; dialog.open(target)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -778,14 +784,14 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             </table>
                         </div>
                     </div>
-                    <div class="showcase-footer"><strong>OatDataTable</strong><code>Oat.Components.dataTable(id, columns, provider, rowsPerPage)</code></div>
+                    <div class="showcase-footer"><strong>OatDataTable</strong><code>new OatDataTable&lt;&gt;(id, columns, provider, rowsPerPage)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
                         <progress value="60" max="100" style="width:100%"></progress>
                         <meter value="0.8" min="0" max="1" style="width:100%; margin-top: var(--space-2)"></meter>
                     </div>
-                    <div class="showcase-footer"><strong>OatProgress / OatMeter</strong><code>Oat.Components.progress(id, value)</code></div>
+                    <div class="showcase-footer"><strong>OatProgress / OatMeter</strong><code>new OatProgress(id, value)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -793,7 +799,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                         <div aria-busy="true"></div>
                         <div role="status" class="skeleton line" style="width:6rem"></div>
                     </div>
-                    <div class="showcase-footer"><strong>OatSpinner / OatSkeleton</strong><code>Oat.Components.spinner(id)</code></div>
+                    <div class="showcase-footer"><strong>OatSpinner / OatSkeleton</strong><code>new OatSpinner(id)</code></div>
                 </div>
                 <div class="showcase-card wide">
                     <div class="showcase-preview block">
@@ -1019,7 +1025,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                     <div class="showcase-preview">
                         <label><input type="checkbox" role="switch" checked> Email notifications</label>
                     </div>
-                    <div class="showcase-footer"><strong>OatSwitch</strong><code>Oat.Components.oatSwitch(id, label, model)</code></div>
+                    <div class="showcase-footer"><strong>OatSwitch</strong><code>new OatSwitch(id, label, model)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -1027,7 +1033,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             <input placeholder="Add tags&hellip;" maxlength="20">
                         </ot-taginput>
                     </div>
-                    <div class="showcase-footer"><strong>OatTagInput</strong><code>Oat.Components.tagInput(id, label, listModel)</code></div>
+                    <div class="showcase-footer"><strong>OatTagInput</strong><code>new OatTagInput(id, label, listModel)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -1040,7 +1046,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             </div>
                         </fieldset>
                     </div>
-                    <div class="showcase-footer"><strong>OatRadioChoice / OatCheckBoxMultipleChoice</strong><code>Oat.Components.radioChoice(id, label, model, choices)</code></div>
+                    <div class="showcase-footer"><strong>OatRadioChoice / OatCheckBoxMultipleChoice</strong><code>new OatRadioChoice&lt;&gt;(id, label, model, choices)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview" style="display:block">
@@ -1054,7 +1060,7 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
                             </div>
                         </ot-upload>
                     </div>
-                    <div class="showcase-footer"><strong>OatFileDropzone</strong><code>Oat.Components.fileDropzone(id, label, model)</code></div>
+                    <div class="showcase-footer"><strong>OatFileDropzone</strong><code>new OatFileDropzone(id, label, model)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -1190,7 +1196,68 @@ add(Oat.Components.alert("notice", "Welcome back!", OatVariant.SUCCESS));</code>
     </div>
 </section>
 
-<section id="theming" class="section section-alt">
+<section id="wicket-way" class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="eyebrow"><span class="badge new-badge" data-variant="warning">Coming in 0.3.0</span></p>
+            <h2>Wicket the way you already write it</h2>
+            <p>The next release brings the library closer to how Wicket itself works: dialogs like
+                <code>ModalDialog</code>, data tables like <code>AjaxFallbackDefaultDataTable</code>,
+                lambda factories like <code>AjaxLink.onClick</code>, and tests that read like the
+                markup. It's on <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already.</p>
+        </div>
+        <div class="feature-grid">
+            <article class="card">
+                <h3>Dialogs like ModalDialog</h3>
+                <p>Set the content with <code>setContent(...)</code> and
+                    <code>OatDialog.CONTENT_ID</code>. The server knows whether the dialog is open,
+                    <code>onClose</code> runs however it closed &mdash; Cancel, Escape, the backdrop
+                    or a confirm &mdash; and <code>target.add(dialog)</code> keeps an open dialog open.</p>
+            </article>
+            <article class="card">
+                <h3>Data tables over Ajax</h3>
+                <p>Sorting and paging re-render only the table, falling back to plain links without
+                    JavaScript. <code>OatDataTable</code> is pageable like a <code>DataTable</code>,
+                    so <code>table.setCurrentPage(0)</code> works, and a selection can keep just ids:
+                    <code>new OatSelectionColumn&lt;&gt;(selectedIds, Invoice::getId)</code>.</p>
+            </article>
+            <article class="card">
+                <h3>Form fields you can test</h3>
+                <p>A field's input sits at <code>"email:input"</code> instead of
+                    <code>"email:container:field"</code>, in <code>FormTester</code> and in the
+                    posted name. <code>getInput()</code> returns it, and
+                    <code>addToInput(...)</code> puts an <code>autocomplete</code> or
+                    <code>maxlength</code> right on the <code>&lt;input&gt;</code>.</p>
+            </article>
+            <article class="card">
+                <h3>Lambdas where Wicket uses them</h3>
+                <p>Components driven by a callback get factories on their own classes:
+                    <code>OatButton.onClick(...)</code>, <code>OatSubmitButton.onSubmit(...)</code>,
+                    <code>OatAccordion.of(...)</code>. Everything else is created with
+                    <code>new</code>, and hooks are named <code>newXxx(id)</code>.</p>
+            </article>
+            <article class="card">
+                <h3>Your own base page</h3>
+                <p><code>add(new OatHtml("html"))</code> gives any page the theme, density and
+                    language the layouts set, and <code>OatThemeSwitcher</code> no longer makes a
+                    page stateful, so a sign-in page can show it and stay stateless.</p>
+            </article>
+            <article class="card">
+                <h3>Fixes</h3>
+                <p>Signing in with <code>OatLoginForm</code> returns to the page the user was going
+                    to, and a dialog inside a page's form no longer blocks that form's submit.</p>
+            </article>
+        </div>
+        <p class="release-note">0.3.0 renames a few things on the way: <code>getField()</code> becomes
+            <code>getInput()</code>, <code>setBody(...)</code> becomes <code>setContent(...)</code>,
+            <code>onSave(...)</code> and the other callback setters become <code>setOnSave(...)</code>,
+            and <code>Oat.Components</code> keeps only the factories for components driven by a
+            callback. The <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">upgrade
+            notes in the changelog</a> list every change.</p>
+    </div>
+</section>
+
+<section id="theming" class="section">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Theming</p>
@@ -1242,7 +1309,7 @@ form.add(Oat.Behaviors.density(OatDensity.DEFAULT));</code></pre>
     </div>
 </section>
 
-<section id="ai-skill" class="section">
+<section id="ai-skill" class="section section-alt">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">AI-Powered Development</p>

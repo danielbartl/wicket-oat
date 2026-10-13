@@ -988,9 +988,19 @@ card.add(Oat.Behaviors.theme(OatTheme.LIGHT));
 A custom theme is a `[data-theme="brand"] { --background: ...; --primary: ...; }`
 block overriding Oat's CSS variables. To keep the choice somewhere else - only in
 the session, or in a user profile - pass an `OatThemeStore` to
-`setThemeStore(...)` (`SessionThemeStore` is built in). Without `OatAppLayout`,
-add `Oat.Behaviors.theme()` to a `TransparentWebMarkupContainer` on your
-`<html wicket:id="html">` tag.
+`setThemeStore(...)` (`SessionThemeStore` is built in).
+
+Without `OatAppLayout`, e.g. in a base page of your own, put an `OatHtml` on the
+`<html>` tag. It sets the theme, the density and the page's language, as the
+layouts do:
+
+```java
+public abstract class BasePage extends WebPage {
+    protected BasePage() {
+        add(new OatHtml("html"));   // <html wicket:id="html">
+    }
+}
+```
 
 ### Built-in Themes:
 `DARK`, `LIGHT`, `MIDNIGHT`, `NORD`, `EVERFOREST`, `TOKYO_NIGHT`, `ROSE_PINE_DAWN`, `ROYAL`, `CLAY`, `CATPPUCCIN_MOCHA`, `CATPPUCCIN_LATTE`, `MATERIAL`, `DAISY`, `ULTRAVIOLET`, `HALLOWEEN`, `XMAS`, `WIREFRAME`, `BUSINESS`, `BUSINESS_DARK`.
@@ -1016,8 +1026,8 @@ table.add(Oat.Behaviors.density(OatDensity.COMPACT));
 form.add(Oat.Behaviors.density(OatDensity.DEFAULT));
 ```
 
-Without `OatAppLayout`, add `Oat.Behaviors.density()` next to
-`Oat.Behaviors.theme()` on your `<html>` container.
+Without `OatAppLayout`, the `OatHtml` on your `<html>` tag applies it (see
+[Theming](#theming)).
 
 ## Running the Examples
 

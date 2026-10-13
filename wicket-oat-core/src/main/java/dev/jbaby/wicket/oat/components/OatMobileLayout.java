@@ -44,12 +44,12 @@ public abstract class OatMobileLayout extends WebPage {
     /** For bookmarkable pages: pass their {@code PageParameters} on. */
     public OatMobileLayout(PageParameters parameters) {
         super(parameters);
-        add(new LayoutHtml("html"));
+        add(new OatHtml("html"));
     }
 
     public OatMobileLayout(IModel<?> model) {
         super(model);
-        add(new LayoutHtml("html"));
+        add(new OatHtml("html"));
     }
 
     @Override

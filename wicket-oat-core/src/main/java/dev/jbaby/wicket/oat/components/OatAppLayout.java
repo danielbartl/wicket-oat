@@ -37,12 +37,12 @@ public abstract class OatAppLayout extends WebPage {
     /** For bookmarkable pages: pass their {@code PageParameters} on. */
     public OatAppLayout(PageParameters parameters) {
         super(parameters);
-        add(new LayoutHtml("html"));
+        add(new OatHtml("html"));
     }
 
     public OatAppLayout(IModel<?> model) {
         super(model);
-        add(new LayoutHtml("html"));
+        add(new OatHtml("html"));
     }
 
     @Override

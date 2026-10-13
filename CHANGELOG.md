@@ -37,6 +37,9 @@ components they wrap, which breaks some code and tests:
   now works, and keeps an open dialog open. `open(content, target)` sets content that is
   removed again on close; `OatCrud` uses it for its editor, and forgets the record once it
   closes. `OatConfirmDialog` forgets its action when the user cancels.
+- `OatHtml`: the `<html>` tag of `OatAppLayout` and `OatMobileLayout`, now public for a base
+  page of your own (`add(new OatHtml("html"))`). It sets the theme, the density and the
+  page's language.
 - `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
   `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
   `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.

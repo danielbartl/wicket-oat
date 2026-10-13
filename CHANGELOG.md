@@ -43,6 +43,8 @@ components they wrap, which breaks some code and tests:
 - `OatDataTable`'s empty state is a toolbar of its own instead of Wicket's `NoRecordsToolbar`
   with its message replaced through Wicket's internal component ids. Its cell spans the
   columns the user hasn't hidden, and keeps the `norecords-tr`/`norecords-td` classes.
+- `OatThemeSwitcher` uses stateless links, so a page showing it, e.g. a sign-in page with
+  the switcher in its top bar, stays stateless.
 - `OatDataTable` is pageable like a `DataTable` (`IPageableItems`): `setCurrentPage(...)`,
   `getPageCount()`, `setItemsPerPage(...)`, and a paging navigator of your own can page it.
   `addTopToolbar(...)` and `addBottomToolbar(...)` add toolbars to it.

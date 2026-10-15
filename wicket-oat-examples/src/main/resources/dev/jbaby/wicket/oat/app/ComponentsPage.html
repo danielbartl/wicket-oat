@@ -49,6 +49,29 @@
         <h3 class="mt-6">Skeleton</h3>
         <div wicket:id="skeletonComponent" class="demo-skeleton-small"></div>
 
+        <h3 class="mt-6">Steps</h3>
+        <p>Where a process stands, with <code>OatSteps</code>: done, current, still to come.</p>
+        <div wicket:id="orderSteps"></div>
+        <button wicket:id="nextStage" type="button">Next stage</button>
+
+        <h3 class="mt-6">Indicator and Status</h3>
+        <p>A count, a word or a status dot on a corner with <code>OatIndicator</code>; a dot on its own with <code>OatStatus</code>.</p>
+        <div class="hstack gap-6 items-center">
+            <span wicket:id="inbox"><button wicket:id="inboxButton" type="button">Inbox</button></span>
+            <span wicket:id="reports"><button wicket:id="reportsButton" type="button">Reports</button></span>
+            <span wicket:id="presence"><div wicket:id="presenceAvatar"></div></span>
+        </div>
+        <ul class="unstyled vstack gap-1 mt-4">
+            <li><span wicket:id="statusUp"></span> API online</li>
+            <li><span wicket:id="statusSlow"></span> Search slow</li>
+            <li><span wicket:id="statusDown"></span> Mail down</li>
+        </ul>
+
+        <h3 class="mt-6">List</h3>
+        <p>Rows with <code>OatList</code>: a title and a line under it, an avatar in front, a badge at the end. Click a row.</p>
+        <div wicket:id="team"></div>
+        <wicket:fragment wicket:id="memberAvatar"><span wicket:id="presence"><div wicket:id="avatar"></div></span></wicket:fragment>
+
     </section>
 </wicket:extend>
 </body>

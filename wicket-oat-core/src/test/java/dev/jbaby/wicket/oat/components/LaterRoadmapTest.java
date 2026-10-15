@@ -216,7 +216,7 @@ class LaterRoadmapTest {
                 .addStep("Review", id -> new org.apache.wicket.markup.html.basic.Label(id, "All set"));
         tester.startComponentInPage(wizard);
 
-        List<TagTester> steps = tags("wicket:id", "steps");
+        List<TagTester> steps = tags("wicket:id", "items");
         assertThat(steps).extracting(s -> s.getAttribute("data-state")).containsExactly("current", "upcoming", "upcoming");
         assertThat(steps.get(0).getAttribute("aria-current")).isEqualTo("step");
         tester.assertInvisible("wizard:form:back");
@@ -231,10 +231,10 @@ class LaterRoadmapTest {
         form.setValue("body:input", "Ada");
         tester.executeAjaxEvent("wizard:form:next", "click");
         assertThat(wizard.getCurrentStep()).isEqualTo(1);
-        assertThat(tags("wicket:id", "steps")).extracting(s -> s.getAttribute("data-state")).containsExactly("done", "current", "upcoming");
+        assertThat(tags("wicket:id", "items")).extracting(s -> s.getAttribute("data-state")).containsExactly("done", "current", "upcoming");
 
         // Back to a finished step by its number, then forward again
-        tester.clickLink(wizard.get("steps:0:link"));
+        tester.clickLink(wizard.get("steps:list:items:0:link"));
         assertThat(wizard.getCurrentStep()).isZero();
         assertThat(tester.getTagByWicketId("input").getAttribute("value")).isEqualTo("Ada");
         tester.executeAjaxEvent("wizard:form:next", "click");

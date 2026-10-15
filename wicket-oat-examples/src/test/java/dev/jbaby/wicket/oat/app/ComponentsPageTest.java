@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
 class ComponentsPageTest {
 
@@ -40,5 +42,13 @@ class ComponentsPageTest {
         tester.assertComponent("avatar1", OatAvatar.class);
         tester.assertComponent("avatar2", OatAvatar.class);
         tester.assertComponent("avatar3", OatAvatar.class);
+
+        String html = tester.getLastResponseAsString();
+        assertTrue(html.contains("aria-label=\"Order status\""));
+        assertTrue(html.contains("data-variant=\"danger\" data-corner=\"top-end\">3<"));
+        assertTrue(html.contains(">Mira Novak<"));
+
+        tester.clickLink("nextStage");
+        tester.assertComponentOnAjaxResponse("orderSteps");
     }
 }

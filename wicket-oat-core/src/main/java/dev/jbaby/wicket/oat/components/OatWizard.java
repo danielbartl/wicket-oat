@@ -2,7 +2,6 @@ package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -11,8 +10,6 @@ import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -21,7 +18,6 @@ import org.apache.wicket.model.StringResourceModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 import dev.jbaby.wicket.oat.util.SerializableConsumer;
 import java.util.Objects;
 
@@ -65,25 +61,11 @@ public abstract class OatWizard extends Panel {
         super(id);
         setOutputMarkupId(true);
 
-        add(new ListView<>("steps", (IModel<List<Integer>>) () -> IntStream.range(0, steps.size()).boxed().toList()) {
-            @Override
-            protected void populateItem(ListItem<Integer> item) {
-                int index = item.getModelObject();
-                item.add(AttributeModifier.replace("data-state", index < current ? "done" : index == current ? "current" : "upcoming"));
-                item.add(AttributeModifier.replace("aria-current", index == current ? "step" : null));
-                AjaxLink<Void> link = new AjaxLink<>("link") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        showStep(index, target);
-                    }
-                };
+        add(new OatSteps("steps", (IModel<List<String>>) () -> steps.stream().map(step -> step.title().getObject()).toList(),
+                () -> current)
+                .setLabel(new StringResourceModel("OatWizard.steps", this).setDefaultValue("Steps"))
                 // Only finished steps can be revisited; the others need Next and its validation
-                link.setEnabled(index < current);
-                link.add(new Label("number", String.valueOf(index + 1)));
-                link.add(new Label("title", steps.get(index).title()));
-                item.add(link);
-            }
-        });
+                .setOnSelect((target, index) -> showStep(index, target)));
 
         form = new Form<>("form") {
             @Override
@@ -226,6 +208,13 @@ public abstract class OatWizard extends Panel {
 
     private boolean hasErrors() {
         return !new FeedbackCollector(this).collect(FeedbackMessage::isError).isEmpty();
+    }
+
+    @Override
+    protected void onDetach() {
+        // OatSteps reads the titles through a model of its own, so detach them here
+        steps.forEach(step -> step.title().detach());
+        super.onDetach();
     }
 
     private record Step(IModel<String> title, SerializableFunction<String, ? extends Component> factory) implements Serializable {

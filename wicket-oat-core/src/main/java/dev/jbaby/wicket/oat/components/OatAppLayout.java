@@ -156,7 +156,8 @@ public abstract class OatAppLayout extends WebPage {
         }
     }
 
-    private static boolean isShownBadge(Object badge) {
+    /** Whether a badge shows: not for {@code null}, 0 or an empty text. Shared with {@link OatIndicator}. */
+    static boolean isShownBadge(Object badge) {
         if (badge instanceof Number number) {
             return number.doubleValue() != 0;
         }

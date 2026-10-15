@@ -617,7 +617,7 @@ fieldset.oat-range-field fieldset.group {
     font-size: var(--text-7);
 }
 
-/* OatWizard: numbered steps - done, current, upcoming - joined by a line */
+/* OatSteps, also in OatWizard: numbered steps - done, current, upcoming - joined by a line */
 .oat-steps {
     display: flex;
     flex-wrap: wrap;
@@ -678,6 +678,165 @@ fieldset.oat-range-field fieldset.group {
 .oat-steps [data-state="done"] .oat-step-number {
     border-color: var(--primary);
     color: var(--primary);
+}
+
+/* OatStatus: a dot in the variant's color */
+.oat-status {
+    display: inline-block;
+    flex: none;
+    width: .625rem;
+    height: .625rem;
+    border-radius: var(--radius-full);
+    background-color: var(--primary);
+    vertical-align: middle;
+}
+
+.oat-status[data-variant="secondary"] {
+    background-color: var(--muted-foreground);
+}
+
+.oat-status[data-variant="success"] {
+    background-color: var(--success);
+}
+
+.oat-status[data-variant="warning"] {
+    background-color: var(--warning);
+}
+
+.oat-status[data-variant="danger"] {
+    background-color: var(--danger);
+}
+
+/*
+ * OatIndicator: a badge centered on a corner of what it wraps, or a status dot just
+ * inside it, which suits round avatars. Start and end follow the text direction. The
+ * corner is on the item itself, as Wicket's tags may stand between it and the wrapper.
+ */
+.oat-indicator {
+    /* 1 for left to right, -1 for right to left: which way "end" moves the badge */
+    --oat-indicator-x: 1;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.oat-indicator:dir(rtl) {
+    --oat-indicator-x: -1;
+}
+
+.oat-indicator-item {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    translate: calc(50% * var(--oat-indicator-x)) -50%;
+}
+
+.oat-indicator-item[data-corner^="bottom"] {
+    inset-block: auto 0;
+    translate: calc(50% * var(--oat-indicator-x)) 50%;
+}
+
+.oat-indicator-item[data-corner$="start"] {
+    inset-inline: 0 auto;
+    translate: calc(-50% * var(--oat-indicator-x)) -50%;
+}
+
+.oat-indicator-item[data-corner="bottom-start"] {
+    translate: calc(-50% * var(--oat-indicator-x)) 50%;
+}
+
+.badge.oat-indicator-item {
+    min-width: 1.25rem;
+    padding: 0 var(--space-1);
+    box-shadow: 0 0 0 2px var(--background);
+}
+
+.oat-status.oat-indicator-item {
+    translate: none;
+    box-shadow: 0 0 0 2px var(--background);
+}
+
+/* OatList: rows with a title and a line under it, something in front and at the end */
+.oat-list {
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    background-color: var(--card);
+    color: var(--card-foreground);
+}
+
+.oat-list-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+}
+
+.oat-list-row + .oat-list-row {
+    border-block-start: 1px solid var(--border);
+}
+
+.oat-list-row:first-child {
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+}
+
+.oat-list-row:last-child {
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+}
+
+.oat-list-leading,
+.oat-list-trailing {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.oat-list-leading:empty,
+.oat-list-trailing:empty {
+    display: none;
+}
+
+/* Above the link's area, so buttons at the end stay clickable */
+.oat-list-trailing {
+    position: relative;
+    z-index: 1;
+}
+
+.oat-list-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.oat-list-text > small {
+    font-size: var(--text-7);
+}
+
+/* A row with an action: its link covers the whole row */
+.oat-list-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+.oat-list-link:focus-visible {
+    outline: none;
+}
+
+.oat-list-link:focus-visible::after {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+}
+
+.oat-list-row:has(.oat-list-link):hover {
+    background-color: var(--muted);
 }
 
 .oat-wizard-form > footer {

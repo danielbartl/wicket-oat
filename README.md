@@ -69,11 +69,11 @@ add(OatButton.onClick("myButton", "Click Me", target ->                        /
 
 ## Available Components
 
-- **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`, `OatIcon`, `OatCookieConsent`
-- **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatIndicator`, `OatStatus`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`, `OatIcon`, `OatCookieConsent`
+- **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatSteps`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
-- **Data Display:** `OatDataTable`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **Data Display:** `OatDataTable`, `OatList`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
 - **Records & Trees:** `OatCrud`, `OatTree`, `OatTableTree`; data table columns `OatRowDetailsColumn`, `OatEditableColumn`
 - **Forms:** `OatMultiSelectField`, `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
 
@@ -458,6 +458,14 @@ wizard.addStep("Review", id -> new ReviewStep(id, order));
 `onNext(step, target)` can check a step further and keep the user on it by
 reporting an error.
 
+The wizard's numbered steps are an `OatSteps`, which also shows on its own where
+any process stands, such as an order. The steps before the current one are done,
+and a current step past the last marks all of them done:
+
+```java
+add(new OatSteps("progress", List.of("Ordered", "Paid", "Shipped", "Delivered"), () -> order.stage().ordinal()));
+```
+
 `OatAutoCompleteField` looks its value up on the server as the user types,
 for choices too many for a dropdown. On submit the text must be one of the
 suggestions, and the field's value is that object:
@@ -580,6 +588,39 @@ add(new OatSplitLayout("inbox", id -> new MailList(id), id -> new MailView(id)).
 
 // 20 items at a time, the next batch as the user scrolls
 add(new OatLoadMoreList<>("mail", provider, 20, (id, mail) -> new MailRow(id, mail)).setLoadOnScroll(true));
+```
+
+`OatList` shows rows of things, the way a phone app lists them: a title and a line
+under it, with room for an avatar or icon in front and a badge or button at the
+end. With `setOnClick(...)` the whole row is a link, and buttons at the end stay
+clickable on their own:
+
+```java
+add(new OatList<>("team", () -> people.all(), Person::name)
+        .setSubtitle(Person::role)
+        .setLeading((id, person) -> new OatAvatar(id, person.getObject().initials()))
+        .setTrailing((id, person) -> new OatBadge(id, person.getObject().status()))
+        .setOnClick((target, person) -> setResponsePage(PersonPage.class, PersonPage.parameters(person)))
+        .setEmptyState(id -> new OatEmptyState(id, "No one here yet")));
+```
+
+`OatIndicator` puts a count or a status dot on a corner of what you put in its
+tag, such as unread messages on a link or a person's presence on their avatar. A
+count is hidden while it is 0, and `target.add(indicator)` updates it. `OatStatus`
+is the dot on its own, named for screen readers:
+
+```java
+// <span wicket:id="inbox"><a wicket:id="link">Inbox</a></span>
+add(new OatIndicator("inbox", () -> messages.countUnread()).setVariant(OatVariant.DANGER)
+        .add(new BookmarkablePageLink<>("link", InboxPage.class)));
+
+// <span wicket:id="presence"><div wicket:id="avatar"></div></span>
+add(OatIndicator.status("presence", () -> ada.isOnline() ? OatVariant.SUCCESS : OatVariant.SECONDARY,
+                () -> ada.isOnline() ? "Online" : "Away")
+        .add(new OatAvatar("avatar", "AL")));
+
+// <span wicket:id="api"></span> API
+add(new OatStatus("api", () -> api.isUp() ? OatVariant.SUCCESS : OatVariant.DANGER, () -> api.isUp() ? "Online" : "Down"));
 ```
 
 `OatMultiSelectField` chooses several values, looked up on the server as the

@@ -21,7 +21,7 @@ public class MobileTodayPage extends MobileBasePage {
         add(new Label("date", () -> DateTimeFormatter.ofPattern("EEEE, d MMMM", getLocale()).format(today)));
 
         IModel<List<Absence>> out = () -> DemoAbsences.on(today);
-        add(new Label("inCount", () -> DemoAbsences.TEAM.size() - out.getObject().size()));
+        add(new Label("inCount", () -> DemoAbsences.inOn(today)));
         add(new Label("teamSize", DemoAbsences.TEAM.size()));
         add(new ListView<Absence>("out", out) {
             @Override

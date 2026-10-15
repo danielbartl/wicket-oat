@@ -178,7 +178,10 @@ The server knows whether the dialog is open (`isOpen()`): Cancel, the Escape key
 and a click on the backdrop close it in the browser and tell the server, and
 `onClose` runs once however it closed. Re-rendering it with `target.add(dialog)`
 keeps an open dialog open. `open(content, target)` sets content that is removed
-again when the dialog closes, e.g. the fields for the row that was clicked.
+again when the dialog closes, e.g. the fields for the row that was clicked; opened
+again in `onConfirm`, e.g. for the next record, it stays open. Put it on a tag of
+its own, such as `<div wicket:id="editDialog"></div>`, which takes no room in the
+layout; not on `<wicket:container>`, which Wicket leaves out in deployment mode.
 
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,
@@ -645,11 +648,12 @@ table.setEmptyState(id -> new OatEmptyState(id, "No invoices found"));
   selected, with the bulk actions and "Clear selection". The selection lasts
   across pages and sorting. It keeps either the rows themselves, compared with
   `equals` (fine for records), or - for entities - only their keys:
-  `new OatSelectionColumn<>(selectedIds, Invoice::getId)` with an
-  `IModel<Set<Long>>`, so the page doesn't serialize entities. Bulk actions
-  receive the selected rows; selected by key, they are looked up through the data
-  provider, current and in the table's sort order. Call `clearSelection(target)`
-  when done. Each change also sends an `OatSelectionColumn.SelectionChanged` event.
+  `new OatSelectionColumn<>(selectedIds, Invoice::getId, ids -> invoices.findAllById(ids))`
+  with an `IModel<Set<Long>>`, so the page doesn't serialize entities. Bulk actions
+  receive the selected rows; selected by key, they are loaded by their keys, also
+  those a search hides at the time. Without the loader (`new OatSelectionColumn<>(selectedIds,
+  Invoice::getId)`) they are looked up through the data provider, which reads every
+  row and finds only those it returns. Call `clearSelection(target)` when done. Each change also sends an `OatSelectionColumn.SelectionChanged` event.
   `OatRowDetailsColumn` remembers expanded rows the same way, by `equals` or by key.
 - The table has a markup id: `target.add(table)` re-renders it after an action.
 - Like a `DataTable` it is pageable (`IPageableItems`): `setCurrentPage(...)`,
@@ -702,7 +706,8 @@ record, so Oat fields named after a property (`new OatTextField<>("name")`) find
 their value and label by themselves. Save writes the fields to the record only
 when they are all valid; Cancel leaves it as it was. Records to edit are loaded
 through the provider's `model(...)`, so a `LoadableDetachableModel` gives a fresh
-entity to save. `setSearch(id -> ...)` puts a search field beside "New", and
+entity to save. `setSearch(id -> ...)` puts a search field beside "New" (in its Ajax
+handler, re-render just the rows: `target.add(crud.getDataTable().getTable())`), and
 `getDataTable()` gives the table for selection, the column chooser or CSV export.
 
 ## Trees
@@ -733,7 +738,9 @@ focus stays on the button. A selected node is marked with `aria-current`.
 `OatPagingNavigator` and `OatAjaxPagingNavigator` are Wicket's `PagingNavigator`
 and `AjaxPagingNavigator` rendered as Oat pagination, for any `IPageable`
 (`DataView`, `PageableListView`, `DataTable`, `OatDataTable`, ...). `OatDataTable`
-and `OatTableTree` use `OatAjaxPagingNavigator` for their navigation toolbar.
+and `OatTableTree` use `OatAjaxPagingNavigator` for their navigation toolbar. For a
+`DataTable` of your own, `OatNavigationToolbar` and `OatHeadersToolbar` (in
+`components.table`) are those tables' paging row and column headers, over Ajax.
 
 ```java
 add(new OatAjaxPagingNavigator("navigator", dataView));

@@ -1,25 +1,22 @@
 package dev.jbaby.wicket.oat.components.tree;
 
 import dev.jbaby.wicket.oat.components.OatAjaxPagingNavigator;
+import dev.jbaby.wicket.oat.components.table.OatHeadersToolbar;
+import dev.jbaby.wicket.oat.components.table.OatNavigationToolbar;
 import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
-import org.apache.wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ISortableTreeProvider;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.extensions.markup.html.repeater.tree.TableTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.table.TreeColumn;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -69,33 +66,12 @@ public class OatTableTree<T, S> extends TableTree<T, S> {
         DataTable<T, S> table = getTable();
         table.add(AttributeModifier.append("class", "w-100 align-left small"));
         if (provider instanceof ISortStateLocator<?>) {
-            ISortStateLocator<S> locator = (ISortStateLocator<S>) provider;
-            table.addTopToolbar(new AjaxFallbackHeadersToolbar<>(table, locator) {
-                @Override
-                protected WebMarkupContainer newSortableHeader(String headerId, S property, ISortStateLocator<S> sortLocator) {
-                    WebMarkupContainer header = super.newSortableHeader(headerId, property, sortLocator);
-                    header.add(AttributeModifier.replace("aria-sort", (IModel<String>) () -> {
-                        SortOrder order = sortLocator.getSortState().getPropertySortOrder(property);
-                        return order == SortOrder.ASCENDING ? "ascending" : order == SortOrder.DESCENDING ? "descending" : null;
-                    }));
-                    return header;
-                }
-            });
+            table.addTopToolbar(new OatHeadersToolbar<>(table, (ISortStateLocator<S>) provider));
         } else {
             table.addTopToolbar(new HeadersToolbar<>(table, null));
         }
         table.addBottomToolbar(new NoRecordsToolbar(table, new StringResourceModel("OatTableTree.empty", this).setDefaultValue("Nothing to show")));
-        table.addBottomToolbar(new NavigationToolbar(table) {
-            @Override
-            protected PagingNavigator newPagingNavigator(String navigatorId, DataTable<?, ?> dataTable) {
-                return new OatAjaxPagingNavigator(navigatorId, dataTable) {
-                    @Override
-                    protected void onAjaxEvent(AjaxRequestTarget target) {
-                        target.add(dataTable);
-                    }
-                };
-            }
-        });
+        table.addBottomToolbar(new OatNavigationToolbar(table));
     }
 
     /** A node's label in the {@link TreeColumn} ({@code toString()} by default). */

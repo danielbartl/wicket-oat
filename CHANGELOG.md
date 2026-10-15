@@ -4,6 +4,36 @@
 
 - Built and tested with Wicket 10.11.0 (was 10.8.0), which fixes a thread leak in
   Wicket's file cleaner (WICKET-7186) and autocomplete fields (WICKET-7182).
+- `OatSelectionColumn` selecting by key can load the selected rows by their keys:
+  `new OatSelectionColumn<>(selectedIds, Invoice::getId, ids -> invoices.findAllById(ids))`.
+  Bulk actions then get every selected row, also those a search hides, without reading
+  the whole table. Without the loader, the rows are looked up through the data provider
+  as before, which finds only those it returns at the time.
+- `OatNavigationToolbar` and `OatHeadersToolbar`, the paging row and the `aria-sort`
+  column headers of `OatDataTable` and `OatTableTree`, over Ajax, for a `DataTable` of
+  your own.
+- An `OatDialog` on `<wicket:container>` now fails with a message saying to put it on an
+  element such as a `<div>`. Since 0.3.0 its own tag carries the id Ajax re-renders it
+  by, and deployment mode leaves `<wicket:container>` out, so it couldn't be opened
+  there.
+
+- Fix: with a provider that can't sort, `OatTableTree` paged only on the server and the
+  browser kept showing the first page, because nothing gave the table the markup id
+  the Ajax update replaces it by.
+- Fix: a dialog opened again in `onConfirm` - `OatConfirmDialog.ask(...)` asking a
+  second question, `OatCrud.edit(...)` for the next record in `setOnSave` - was closed
+  right after, and `onClose` dropped what had just been set up.
+- Fix: in a dialog inside a page's form, Confirm was a submit button of that form, so
+  Enter in a page field could click it when it came first: opening the closed dialog
+  or running `onConfirm`. It is now a plain button there; Enter in the dialog's own
+  fields still confirms.
+- Fix: the primary item of `OatBottomNav` got `aria-current="page"` on its own page,
+  though it is an action, not a tab.
+- `OatDataTable.addTopToolbar` adds toolbars below the column headers, not above as
+  its documentation said.
+- Examples: searching products re-rendered the search field with the rows, losing
+  keystrokes; the "Time off" demo counted a person with overlapping absences twice
+  and took "today" from the server's time zone instead of Vienna's.
 
 ## 0.3.0 (2026-10-13)
 

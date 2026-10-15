@@ -114,6 +114,13 @@ class OatBottomNavTest {
     }
 
     @Test
+    void thePrimaryItemIsNeverTheCurrentTab() {
+        tester.startPage(MobileTestPage.Add.class);
+
+        assertThat(links()).extracting(link -> link.getAttribute("aria-current")).containsOnlyNulls();
+    }
+
+    @Test
     void thePrimaryItemNeedsAnIcon() {
         OatBottomNav nav = new OatBottomNav("nav", List.of(BottomNavItem.of("Add", MobileTestPage.Add.class).asPrimary()));
 

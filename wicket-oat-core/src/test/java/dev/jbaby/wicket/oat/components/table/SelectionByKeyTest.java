@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,27 +58,41 @@ class SelectionByKeyTest {
         public final IModel<Set<Long>> selectedIds = new SetModel<>(new HashSet<>());
         public final IModel<Set<Long>> expandedIds = new SetModel<>(new HashSet<>());
         public final List<String> log = new ArrayList<>();
+        /** The keys the selection column loaded rows for. */
+        public final List<Long> loaded = new ArrayList<>();
+        /** Shows only the accounts whose name contains it. */
+        public String filter = "";
         public final OatDataTable<Account, String> table;
 
         public AccountsPage() {
+            this(false);
+        }
+
+        /** @param withLoader whether the selection column loads the selected rows by key */
+        public AccountsPage(boolean withLoader) {
             database.put(1L, "ACME");
             database.put(2L, "Globex");
             database.put(3L, "Initech");
             List<IColumn<Account, String>> columns = new ArrayList<>();
-            columns.add(new OatSelectionColumn<>(selectedIds, Account::getId));
+            columns.add(withLoader
+                    ? new OatSelectionColumn<>(selectedIds, Account::getId, ids -> {
+                        loaded.addAll(ids);
+                        return ids.stream().sorted().map(id -> new Account(id, database.get(id))).toList();
+                    })
+                    : new OatSelectionColumn<>(selectedIds, Account::getId));
             columns.add(new OatRowDetailsColumn<>((id, account) -> new Label(id, () -> "Details of " + account.getObject().name),
                     expandedIds, Account::getId));
             columns.add(new LambdaColumn<>(Model.of("Name"), (Account account) -> account.name));
             table = new OatDataTable<>("table", columns, new SortableDataProvider<Account, String>() {
                 @Override
                 public Iterator<? extends Account> iterator(long first, long count) {
-                    return database.entrySet().stream().skip(first).limit(count)
+                    return database.entrySet().stream().filter(e -> e.getValue().contains(filter)).skip(first).limit(count)
                             .map(e -> new Account(e.getKey(), e.getValue())).iterator();
                 }
 
                 @Override
                 public long size() {
-                    return database.size();
+                    return database.values().stream().filter(name -> name.contains(filter)).count();
                 }
 
                 @Override
@@ -121,6 +136,32 @@ class SelectionByKeyTest {
         page.database.put(2L, "Globex Corp");
         tester.executeAjaxEvent(page.get("table:bulkActions:actions:0:action"), "click");
         assertThat(page.log).containsExactly("archive [ACME, Globex Corp, Initech]");
+    }
+
+    @Test
+    void withALoaderBulkActionsAlsoGetSelectedRowsAFilterHides() {
+        tester.getSession().setLocale(Locale.ENGLISH);
+        page = tester.startPage(new AccountsPage(true));
+        check(selectAll()); // ACME and Globex, on the first page
+
+        page.filter = "AC"; // hides Globex
+        tester.startPage(page);
+        tester.executeAjaxEvent(page.get("table:bulkActions:actions:0:action"), "click");
+
+        assertThat(page.log).containsExactly("archive [ACME, Globex]");
+        assertThat(page.loaded).containsExactlyInAnyOrder(1L, 2L);
+        tester.assertLabel("table:bulkActions:count", "2 selected");
+    }
+
+    @Test
+    void withoutALoaderTheRowsAreLookedUpAmongThoseTheProviderReturns() {
+        check(selectAll());
+
+        page.filter = "AC";
+        tester.startPage(page);
+        tester.executeAjaxEvent(page.get("table:bulkActions:actions:0:action"), "click");
+
+        assertThat(page.log).containsExactly("archive [ACME]");
     }
 
     @Test

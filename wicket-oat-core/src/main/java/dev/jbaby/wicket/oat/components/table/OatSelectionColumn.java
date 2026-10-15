@@ -32,9 +32,10 @@ import java.util.Objects;
  * IModel<Set<Invoice>> selected = new SetModel<>(new HashSet<>());
  * columns.add(0, new OatSelectionColumn<>(selected));
  *
- * // By key, e.g. for entities: the page keeps only their ids, not the entities
+ * // By key, e.g. for entities: the page keeps only their ids, not the entities,
+ * // and loads the selected ones by id when a bulk action runs
  * IModel<Set<Long>> selectedIds = new SetModel<>(new HashSet<>());
- * columns.add(0, new OatSelectionColumn<>(selectedIds, Invoice::getId));
+ * columns.add(0, new OatSelectionColumn<>(selectedIds, Invoice::getId, ids -> invoices.findAllById(ids)));
  * }</pre>
  * In an {@code OatDataTable}, a selection shows a bar with its count and the table's
  * {@linkplain dev.jbaby.wicket.oat.components.OatDataTable#addBulkAction bulk actions},
@@ -51,28 +52,52 @@ public class OatSelectionColumn<T, S> extends AbstractColumn<T, S> implements IS
     /** A row's key in the selection; the row itself unless selecting by key. */
     private final SerializableFunction<? super T, ?> key;
     private final boolean byKey;
+    /** Loads the rows for keys; {@code null} to look them up through the data provider. */
+    private final SerializableFunction<List<Object>, ? extends Collection<? extends T>> rows;
 
     /** @param selection the selected rows; checking a box adds its row, unchecking removes it */
     public OatSelectionColumn(IModel<? extends Collection<T>> selection) {
-        this(selection, row -> row, false);
+        this(selection, row -> row, false, null);
     }
 
     /**
      * Selects rows by key, e.g. an entity's id, so the selection - and the page - keeps
-     * only the keys. {@link #getSelectedRows} looks the rows up through the data provider.
+     * only the keys. {@link #getSelectedRows} looks the rows up through the data provider,
+     * which finds only those it returns at the time: while a filter hides selected rows,
+     * they are left out. Give the column a way to load rows by key instead
+     * ({@link #OatSelectionColumn(IModel, SerializableFunction, SerializableFunction)}).
      *
      * @param selection the keys of the selected rows
      * @param key a row's key, e.g. {@code Invoice::getId}
      */
     public <K> OatSelectionColumn(IModel<? extends Collection<K>> selection, SerializableFunction<? super T, ? extends K> key) {
-        this(selection, key, true);
+        this(selection, key, true, null);
     }
 
-    private OatSelectionColumn(IModel<? extends Collection<?>> selection, SerializableFunction<? super T, ?> key, boolean byKey) {
+    /**
+     * Selects rows by key, e.g. an entity's id, so the selection - and the page - keeps
+     * only the keys, and loads the selected rows by their keys, e.g. from the database.
+     * {@link #getSelectedRows} then has every selected row, also those a filter hides
+     * now, without reading the whole table.
+     *
+     * @param selection the keys of the selected rows
+     * @param key a row's key, e.g. {@code Invoice::getId}
+     * @param rows the rows for the given keys, e.g. {@code ids -> invoices.findAllById(ids)}
+     */
+    @SuppressWarnings("unchecked")
+    public <K> OatSelectionColumn(IModel<? extends Collection<K>> selection, SerializableFunction<? super T, ? extends K> key,
+                                  SerializableFunction<? super List<K>, ? extends Collection<? extends T>> rows) {
+        this(selection, key, true, (SerializableFunction<List<Object>, ? extends Collection<? extends T>>)
+                (SerializableFunction<?, ?>) Objects.requireNonNull(rows));
+    }
+
+    private OatSelectionColumn(IModel<? extends Collection<?>> selection, SerializableFunction<? super T, ?> key, boolean byKey,
+                               SerializableFunction<List<Object>, ? extends Collection<? extends T>> rows) {
         super(Model.of(""));
         this.selection = Objects.requireNonNull(selection);
         this.key = Objects.requireNonNull(key);
         this.byKey = byKey;
+        this.rows = rows;
     }
 
     /** The selection as it is kept: the selected rows, or their keys when selecting by key. */
@@ -85,27 +110,32 @@ public class OatSelectionColumn<T, S> extends AbstractColumn<T, S> implements IS
     }
 
     /**
-     * The selected rows. When selecting by key, they are looked up through the data
-     * provider, so they are current, in the provider's order (the table's sort order);
-     * that reads every row once, so for a very large table read the keys from
-     * {@link #getSelection()} instead.
+     * The selected rows. When selecting by key, they are loaded by their keys, in the
+     * order the loader returns them, or else looked up through the data provider, in its
+     * order (the table's sort order): that reads every row once and finds only the rows
+     * the provider returns at the time.
      */
     public List<T> getSelectedRows(IDataProvider<T> provider) {
         Collection<Object> selected = selected();
         if (!byKey) {
             @SuppressWarnings("unchecked")
-            List<T> rows = (List<T>) List.copyOf(selected);
-            return rows;
+            List<T> selectedRows = (List<T>) List.copyOf(selected);
+            return selectedRows;
         }
-        List<T> rows = new ArrayList<>();
-        if (!selected.isEmpty()) {
-            provider.iterator(0, provider.size()).forEachRemaining(row -> {
-                if (selected.contains(key.apply(row))) {
-                    rows.add(row);
-                }
-            });
+        List<T> selectedRows = new ArrayList<>();
+        if (selected.isEmpty()) {
+            return selectedRows;
         }
-        return rows;
+        if (rows != null) {
+            selectedRows.addAll(rows.apply(List.copyOf(selected)));
+            return selectedRows;
+        }
+        provider.iterator(0, provider.size()).forEachRemaining(row -> {
+            if (selected.contains(key.apply(row))) {
+                selectedRows.add(row);
+            }
+        });
+        return selectedRows;
     }
 
     @SuppressWarnings("unchecked")

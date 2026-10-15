@@ -160,7 +160,8 @@ public class ProductsPage extends BasePage {
                         @Override
                         protected void onUpdate(AjaxRequestTarget target) {
                             crud.getDataTable().setCurrentPage(0);
-                            target.add(crud.getDataTable());
+                            // Just the rows: re-rendering the field would lose what's typed meanwhile
+                            target.add(crud.getDataTable().getTable());
                         }
                     }));
             return toolbar;

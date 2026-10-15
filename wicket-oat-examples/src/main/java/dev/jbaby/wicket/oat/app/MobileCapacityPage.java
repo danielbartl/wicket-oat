@@ -22,7 +22,7 @@ public class MobileCapacityPage extends MobileBasePage {
             @Override
             protected void populateItem(ListItem<LocalDate> item) {
                 LocalDate day = item.getModelObject();
-                int in = team - DemoAbsences.on(day).size();
+                int in = DemoAbsences.inOn(day);
                 item.add(new Label("day", shortDate(day)));
                 item.add(new Label("count", in + " of " + team + " in"));
                 // Green from 5 in, amber from 3, red below

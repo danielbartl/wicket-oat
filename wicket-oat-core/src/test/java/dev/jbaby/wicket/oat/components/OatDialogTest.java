@@ -6,6 +6,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OatDialogTest {
 
@@ -41,6 +43,7 @@ class OatDialogTest {
         public int closed;
         public int outerSubmitted;
         public String rejectName;
+        public boolean reopenOnConfirm;
         private final boolean nested;
 
         public DialogPage(boolean nested) {
@@ -65,6 +68,9 @@ class OatDialogTest {
                         return;
                     }
                     confirmed++;
+                    if (reopenOnConfirm) {
+                        open(target); // e.g. for the next record
+                    }
                 }
 
                 @Override
@@ -166,8 +172,10 @@ class OatDialogTest {
     @Test
     void closingInTheBrowserTellsTheServer() {
         DialogPage page = tester.startPage(new DialogPage(false));
-        // Not for a close the server asked for, nor for a dialog replaced by a re-render
-        assertThat(tester.getLastResponseAsString()).contains("data-oat-closing").contains("isConnected");
+        // Not for a close the server asked for, nor for a dialog replaced by a re-render,
+        // which is checked on the element the event fired on, not on the one with its id now
+        assertThat(tester.getLastResponseAsString()).contains("data-oat-closing")
+                .contains("var d=attrs.event&&attrs.event.target;if(!d||!d.isConnected)");
         tester.clickLink("open");
 
         // Cancel, Escape or a click on the backdrop
@@ -232,6 +240,20 @@ class OatDialogTest {
     }
 
     @Test
+    void openingItAgainInOnConfirmKeepsItOpen() {
+        DialogPage page = tester.startPage(new DialogPage(false));
+        page.reopenOnConfirm = true;
+        tester.clickLink("open");
+
+        tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
+
+        assertThat(page.confirmed).isEqualTo(1);
+        assertThat(page.closed).isZero();
+        assertThat(page.dialog.isOpen()).isTrue();
+        assertThat(tester.getLastResponseAsString()).contains(".showModal()").doesNotContain(".close()");
+    }
+
+    @Test
     void confirmWithInvalidInputStaysOpenAndShowsTheErrors() {
         DialogPage page = tester.startPage(new DialogPage(false));
 
@@ -288,6 +310,29 @@ class OatDialogTest {
         tester.executeAjaxEvent("outer:dialog:dialog:form:confirm", "click");
         assertThat(page.confirmed).isEqualTo(1);
         assertThat(page.name.getObject()).isEqualTo("Grace");
+    }
+
+    @Test
+    void insideAnotherFormConfirmIsNoSubmitButtonOfThatForm() {
+        // Else Enter in a field of the page's form could click it, as its first submit button
+        tester.startPage(new DialogPage(true));
+        assertThat(tester.getTagByWicketId("confirm").getAttribute("type")).isEqualTo("button");
+    }
+
+    @Test
+    void inItsOwnFormConfirmIsASubmitButton() {
+        tester.startPage(new DialogPage(false));
+        assertThat(tester.getTagByWicketId("confirm").getAttribute("type")).isEqualTo("submit");
+    }
+
+    @Test
+    void aDialogOnAWicketContainerIsRejected() {
+        // Left out in deployment mode, the tag couldn't be re-rendered to open the dialog
+        OatDialog dialog = new OatDialog("dialog", "Title");
+
+        assertThatThrownBy(() -> tester.startComponentInPage(dialog,
+                Markup.of("<wicket:container wicket:id='dialog'></wicket:container>")))
+                .hasStackTraceContaining("is on a <wicket:container>");
     }
 
     @Test

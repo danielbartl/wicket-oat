@@ -18,6 +18,7 @@ import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
@@ -311,6 +312,26 @@ class TierCComponentsTest {
         String response = html();
         assertThat(response).contains(">Invoices<").contains(">Contracts<");
         assertThat(response).contains(".oat-junction").contains("focus()");
+    }
+
+    @Test
+    void aTableTreePagesOverAjaxAlsoWithoutSorting() {
+        // FolderProvider can't sort, so no sortable header gives the table its markup id
+        List<IColumn<Folder, String>> columns = List.of(new TreeColumn<>(Model.of("Folder")));
+        OatTableTree<Folder, String> tree = new OatTableTree<>("tree", columns, new FolderProvider(), 2).setLabel(Folder::name);
+        tester.startComponentInPage(tree);
+        tester.clickLink(find(tree, OatTreeNode.class).get(0).get("junction")); // Documents, Invoices, Contracts
+        tester.startComponentInPage(tree);
+
+        // The page's table has the id the Ajax update replaces it by
+        TagTester table = tester.getTagByWicketId("table");
+        assertThat(table.getAttribute("id")).isEqualTo(tree.getTable().getMarkupId());
+        assertThat(html()).doesNotContain(">Contracts<");
+
+        tester.clickLink(find(tree, PagingNavigationIncrementLink.class).stream()
+                .filter(link -> "next".equals(link.getId())).findFirst().orElseThrow());
+        tester.assertComponentOnAjaxResponse(tree.getTable());
+        assertThat(html()).contains(">Contracts<");
     }
 
     // --- Autocomplete fields in dialogs ---

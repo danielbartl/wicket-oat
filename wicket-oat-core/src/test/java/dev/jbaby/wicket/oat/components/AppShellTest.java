@@ -235,12 +235,17 @@ class AppShellTest {
                     confirm.ask(target, "Delete invoice?", "This can't be undone.", t -> deleted.add("#12"))));
             add(Oat.Components.button("archive", "Archive", target ->
                     confirm.setConfirmLabel(Model.of("Archive")).ask(target, "Archive invoice?", null, t -> deleted.add("archived"))));
+            // A second question once the first is confirmed
+            add(Oat.Components.button("deleteAll", "Delete all", target ->
+                    confirm.ask(target, "Delete all invoices?", null, t ->
+                            confirm.ask(t, "Really delete all 12 invoices?", null, t2 -> deleted.add("all")))));
         }
 
         @Override
         public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
             return new StringResourceStream("<html><body><div wicket:id='confirm'></div>"
-                    + "<button wicket:id='delete'></button><button wicket:id='archive'></button></body></html>");
+                    + "<button wicket:id='delete'></button><button wicket:id='archive'></button>"
+                    + "<button wicket:id='deleteAll'></button></body></html>");
         }
     }
 
@@ -295,6 +300,22 @@ class AppShellTest {
         tester.assertInvisible("confirm:dialog:form:content");
         tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
         assertThat(page.deleted).containsExactly("archived");
+    }
+
+    @Test
+    void aQuestionAskedOnConfirmingIsShown() {
+        ConfirmPage page = tester.startPage(ConfirmPage.class);
+        tester.executeAjaxEvent("deleteAll", "click");
+
+        tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
+        assertThat(page.confirm.isOpen()).isTrue();
+        tester.assertLabel("confirm:dialog:form:header", "Really delete all 12 invoices?");
+        assertThat(tester.getLastResponseAsString()).contains("showModal()").doesNotContain(".close()");
+        assertThat(page.deleted).isEmpty();
+
+        tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
+        assertThat(page.deleted).containsExactly("all");
+        assertThat(page.confirm.isOpen()).isFalse();
     }
 
     // --- Lazy loading ---

@@ -2,8 +2,11 @@ package dev.jbaby.wicket.oat.app;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +44,16 @@ final class DemoAbsences {
     private DemoAbsences() {
     }
 
+    /** Today in the app's time zone (its {@link Clock} bean), not the server's. */
     static LocalDate today() {
-        return LocalDate.now();
+        AppClock appClock = new AppClock();
+        Injector.get().inject(appClock);
+        return LocalDate.now(appClock.clock);
+    }
+
+    /** How many of the team are in on a day: people, as one can have overlapping absences. */
+    static int inOn(LocalDate day) {
+        return TEAM.size() - (int) on(day).stream().map(Absence::person).distinct().count();
     }
 
     static List<Absence> get() {
@@ -78,5 +89,10 @@ final class DemoAbsences {
         if (index >= 0) {
             absences.set(index, absence.confirmed());
         }
+    }
+
+    private static final class AppClock {
+        @SpringBean
+        Clock clock;
     }
 }

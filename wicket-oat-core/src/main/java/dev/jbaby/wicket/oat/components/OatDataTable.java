@@ -10,22 +10,20 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackHeadersToolbar;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.*;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
-import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
 import dev.jbaby.wicket.oat.components.table.OatCsvExport;
+import dev.jbaby.wicket.oat.components.table.OatHeadersToolbar;
+import dev.jbaby.wicket.oat.components.table.OatNavigationToolbar;
 import dev.jbaby.wicket.oat.components.table.OatRowDetailsColumn;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.behavior.Behavior;
@@ -95,18 +93,7 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
         table.setOutputMarkupId(true);
 
         // Standard Oat toolbars, sorting and paging over Ajax
-        table.addTopToolbar(new AjaxFallbackHeadersToolbar<>(table, dataProvider) {
-            @Override
-            protected WebMarkupContainer newSortableHeader(String headerId, S property, ISortStateLocator<S> locator) {
-                WebMarkupContainer header = super.newSortableHeader(headerId, property, locator);
-                // Tell screen readers how the column is sorted, as the arrow (wicket-oat.css) shows it
-                header.add(AttributeModifier.replace("aria-sort", (IModel<String>) () -> {
-                    SortOrder order = locator.getSortState().getPropertySortOrder(property);
-                    return order == SortOrder.ASCENDING ? "ascending" : order == SortOrder.DESCENDING ? "descending" : null;
-                }));
-                return header;
-            }
-
+        table.addTopToolbar(new OatHeadersToolbar<>(table, dataProvider) {
             @Override
             protected void onBeforeRender() {
                 super.onBeforeRender();
@@ -120,17 +107,7 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
                 });
             }
         });
-        table.addBottomToolbar(new NavigationToolbar(table) {
-            @Override
-            protected PagingNavigator newPagingNavigator(String navigatorId, DataTable<?, ?> dataTable) {
-                return new OatAjaxPagingNavigator(navigatorId, dataTable) {
-                    @Override
-                    protected void onAjaxEvent(AjaxRequestTarget target) {
-                        target.add(dataTable);
-                    }
-                };
-            }
-        });
+        table.addBottomToolbar(new OatNavigationToolbar(table));
         add(table);
 
         selectionColumn = (OatSelectionColumn<T, S>) columns.stream()
@@ -389,7 +366,7 @@ public class OatDataTable<T, S> extends Panel implements IPageableItems {
         return table;
     }
 
-    /** Adds a toolbar above the headers, e.g. a {@code FilterToolbar}. */
+    /** Adds a toolbar to the table's head, below the column headers, e.g. a {@code FilterToolbar}. */
     public OatDataTable<T, S> addTopToolbar(AbstractToolbar toolbar) {
         table.addTopToolbar(toolbar);
         return this;

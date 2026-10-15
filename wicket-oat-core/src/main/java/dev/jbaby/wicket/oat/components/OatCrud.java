@@ -175,7 +175,8 @@ public class OatCrud<T, S> extends Panel {
     /**
      * A component beside "New", e.g. a search field: have the provider read its model,
      * and in its Ajax handler call {@code crud.getDataTable().setCurrentPage(0)}
-     * and {@code target.add(crud.getDataTable())}. Created with the id it is given.
+     * and {@code target.add(crud.getDataTable().getTable())}, which re-renders the rows
+     * but not the field, so typing goes on undisturbed. Created with the id it is given.
      */
     public OatCrud<T, S> setSearch(SerializableFunction<String, ? extends Component> search) {
         this.search = search;

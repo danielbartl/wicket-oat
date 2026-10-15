@@ -8,8 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Locale;
 
@@ -17,7 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Import(MobilePagesTest.ShortlyAfterMidnight.class)
 class MobilePagesTest {
+
+    /** 00:30 on Monday, 2 March in Vienna, while it is still Sunday in UTC. */
+    @TestConfiguration(proxyBeanMethods = false)
+    static class ShortlyAfterMidnight {
+        @Bean
+        @Primary
+        Clock viennaShortlyAfterMidnight() {
+            return Clock.fixed(Instant.parse("2026-03-01T23:30:00Z"), ZoneId.of("Europe/Vienna"));
+        }
+    }
 
     @Autowired
     private WebApplication wicketApp;
@@ -58,6 +76,27 @@ class MobilePagesTest {
         assertEquals("Add absence", tabs.get(3).getAttribute("aria-label"));
         assertTrue(tabs.get(3).getAttribute("class").contains("oat-fab"));
         assertTrue(tester.getLastResponseAsString().contains("<use href=\"#tab-capacity\"/>"));
+    }
+
+    @Test
+    void todayIsTheDayOfTheAppsClock() {
+        tester.startPage(MobileTodayPage.class);
+
+        tester.assertLabel("date", "Monday, 2 March");
+    }
+
+    @Test
+    void someoneWithOverlappingAbsencesIsCountedOnce() {
+        tester.startPage(MobileTodayPage.class);
+        tester.assertLabel("inCount", "4"); // all but Mira and Jonas
+        LocalDate today = DemoAbsences.today();
+        // Mira, on vacation, is also away today
+        DemoAbsences.add(new DemoAbsences.Absence("Mira Novak", DemoAbsences.Type.AWAY, today, today, false, false, false));
+
+        tester.startPage(MobileTodayPage.class);
+        tester.assertLabel("inCount", "4");
+        tester.startPage(MobileCapacityPage.class);
+        tester.assertLabel("days:0:count", "4 of 6 in");
     }
 
     @Test

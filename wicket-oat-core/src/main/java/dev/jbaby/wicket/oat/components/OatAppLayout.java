@@ -173,8 +173,7 @@ public abstract class OatAppLayout extends WebPage {
      * has parameters, the same parameters. A group containing it is shown open.
      */
     protected boolean isCurrentPage(MenuItem item) {
-        return getPage().getClass().equals(item.pageClass())
-                && (item.parameters() == null || item.parameters().equals(getPage().getPageParameters()));
+        return CurrentPage.isLinkedBy(getPage(), item.pageClass(), item.parameters());
     }
 
     /**

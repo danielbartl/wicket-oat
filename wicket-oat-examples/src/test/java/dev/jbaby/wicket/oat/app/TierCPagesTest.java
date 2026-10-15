@@ -50,6 +50,20 @@ class TierCPagesTest {
     }
 
     @Test
+    void searchingProductsReRendersTheRowsButNotTheSearchField() {
+        tester.startPage(ProductsPage.class);
+        FormTester form = tester.newFormTester("products:table:toolbar:search:form");
+        form.setValue("search:input", "antivirus");
+        tester.executeAjaxEvent("products:table:toolbar:search:form:search:input", "input");
+
+        tester.assertComponentOnAjaxResponse("products:table:table");
+        String response = tester.getLastResponseAsString();
+        assertTrue(response.contains("Antivirus, yearly"));
+        // Replacing the field would lose what's typed while the rows load
+        assertFalse(response.contains("type=\"search\""));
+    }
+
+    @Test
     void accountsShowTheTreeAndTheChart() {
         tester.startPage(AccountsPage.class);
         String html = tester.getLastResponseAsString();

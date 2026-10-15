@@ -108,7 +108,8 @@ public class OatBottomNav extends Panel {
             link.add(new AttributeAppender("class", Model.of("button oat-fab"), " "));
             link.add(AttributeModifier.replace("aria-label", tab.label()));
         }
-        link.add(AttributeModifier.replace("aria-current", (IModel<String>) () -> isActive(tab) ? "page" : null));
+        // The primary item is an action, never the current tab
+        link.add(AttributeModifier.replace("aria-current", (IModel<String>) () -> !tab.primary() && isActive(tab) ? "page" : null));
         item.add(link);
 
         // Leave out pages the current user may not open
@@ -135,8 +136,7 @@ public class OatBottomNav extends Panel {
         if (item.active() != null) {
             return item.active().test(page);
         }
-        return page.getClass().equals(item.pageClass())
-                && (item.parameters() == null || item.parameters().equals(page.getPageParameters()));
+        return CurrentPage.isLinkedBy(page, item.pageClass(), item.parameters());
     }
 
     private static Component newIcon(String id, BottomNavItem.Icon icon) {

@@ -5,17 +5,21 @@
 - Built and tested with Wicket 10.11.0 (was 10.8.0), which fixes a thread leak in
   Wicket's file cleaner (WICKET-7186) and autocomplete fields (WICKET-7182).
 - `OatSelectionColumn` selecting by key can load the selected rows by their keys:
-  `new OatSelectionColumn<>(selectedIds, Invoice::getId, ids -> invoices.findAllById(ids))`.
-  Bulk actions then get every selected row, also those a search hides, without reading
-  the whole table. Without the loader, the rows are looked up through the data provider
-  as before, which finds only those it returns at the time.
+  `new OatSelectionColumn<>(selectedIds, Invoice::getId, ids -> invoices.findAllById(ids))`,
+  with any `Iterable` the loader returns, as Spring Data's repositories do. Bulk actions
+  then get every selected row, also those a search hides, without reading the whole
+  table. Without the loader, the rows are looked up through the data provider as before,
+  which finds only those it returns at the time.
 - `OatNavigationToolbar` and `OatHeadersToolbar`, the paging row and the `aria-sort`
   column headers of `OatDataTable` and `OatTableTree`, over Ajax, for a `DataTable` of
   your own.
-- An `OatDialog` on `<wicket:container>` now fails with a message saying to put it on an
-  element such as a `<div>`. Since 0.3.0 its own tag carries the id Ajax re-renders it
-  by, and deployment mode leaves `<wicket:container>` out, so it couldn't be opened
-  there.
+- `NestedFormButtonBehavior` renders an Ajax submit button as `type="button"` while its
+  form is nested in another, so Enter in a field of the outer form can't click it.
+  `OatSubmitButton` has it, and so do the buttons of `OatDialog`, `OatWizard` and
+  `OatEditableColumn`.
+- `OatConfirmDialog` ignores clicks on Confirm while an answer is being handled (its busy
+  indicator is on by default), so a double-click can't also answer a question the
+  action asks next.
 
 - Fix: with a provider that can't sort, `OatTableTree` paged only on the server and the
   browser kept showing the first page, because nothing gave the table the markup id
@@ -23,12 +27,19 @@
 - Fix: a dialog opened again in `onConfirm` - `OatConfirmDialog.ask(...)` asking a
   second question, `OatCrud.edit(...)` for the next record in `setOnSave` - was closed
   right after, and `onClose` dropped what had just been set up.
-- Fix: in a dialog inside a page's form, Confirm was a submit button of that form, so
-  Enter in a page field could click it when it came first: opening the closed dialog
-  or running `onConfirm`. It is now a plain button there; Enter in the dialog's own
-  fields still confirms.
+- Fix: an `OatDialog` closed and opened again in one request, e.g. by `onClose`, was
+  closed in the browser while the server took it as open.
+- Fix: an `OatDialog` on `<wicket:container>` couldn't be opened from the server in
+  deployment mode, which leaves that tag out: `open` now re-renders the `<dialog>`
+  inside it there.
+- Fix: in a dialog, wizard, editable cell, message input or login form inside a page's
+  form, Enter in a page field could click a hidden button of theirs, e.g. open a closed
+  dialog or run its `onConfirm`. Enter in their own fields still works as before, and
+  `OatLoginForm` now signs in on Enter also when it is nested.
 - Fix: the primary item of `OatBottomNav` got `aria-current="page"` on its own page,
   though it is an action, not a tab.
+- Fix: `OatMenuBar` marked every link to the current page's class as current, also
+  those with other page parameters; it now uses the sidebar's rule.
 - `OatDataTable.addTopToolbar` adds toolbars below the column headers, not above as
   its documentation said.
 - Examples: searching products re-rendered the search field with the rows, losing

@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -162,6 +163,28 @@ class TierBComponentsTest {
         tester.executeAjaxEvent("commands:items:3:dropdown:menu:items:0", "click");
         assertThat(ran).containsExactly("save", "csv");
         assertThat(html()).contains("hidePopover()");
+    }
+
+    /** Links to itself, filtered two ways, as a page of invoices might. */
+    public static class InvoicesPage extends WebPage implements IMarkupResourceStreamProvider {
+        public InvoicesPage(PageParameters parameters) {
+            super(parameters);
+            add(new OatMenuBar("bar")
+                    .addLink(Model.of("Open"), InvoicesPage.class, new PageParameters().add("status", "open"))
+                    .addLink(Model.of("Paid"), InvoicesPage.class, new PageParameters().add("status", "paid")));
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><nav wicket:id='bar' aria-label='Invoices'></nav></body></html>");
+        }
+    }
+
+    @Test
+    void menuBarMarksOnlyTheLinkWithTheCurrentParameters() {
+        tester.startPage(InvoicesPage.class, new PageParameters().add("status", "paid"));
+
+        assertThat(tags("wicket:id", "link")).extracting(link -> link.getAttribute("aria-current")).containsExactly(null, "page");
     }
 
     // --- Split layout ---

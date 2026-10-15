@@ -199,7 +199,7 @@ class AppShellTest {
 
     @Test
     void aDialogsConfirmButtonCanShowItIsBusy() {
-        OatConfirmDialog dialog = new OatConfirmDialog("confirm");
+        OatDialog dialog = new OatDialog("dialog", "Title");
         Component confirmButton = dialog.get("dialog:form:confirm");
         assertThat(confirmButton.getBehaviors(AjaxBusyBehavior.class)).isEmpty();
 
@@ -300,6 +300,14 @@ class AppShellTest {
         tester.assertInvisible("confirm:dialog:form:content");
         tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
         assertThat(page.deleted).containsExactly("archived");
+    }
+
+    @Test
+    void aConfirmDialogIgnoresClicksWhileAnAnswerIsHandled() {
+        // So a double-click can't also answer the question the action asks next
+        ConfirmPage page = tester.startPage(ConfirmPage.class);
+
+        assertThat(ajaxScriptFor(page.confirm.get("dialog:form:confirm"))).contains("attrs.oatBusy");
     }
 
     @Test

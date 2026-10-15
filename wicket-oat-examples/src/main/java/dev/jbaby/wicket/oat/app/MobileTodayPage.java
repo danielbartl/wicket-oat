@@ -17,7 +17,7 @@ import java.util.List;
 public class MobileTodayPage extends MobileBasePage {
 
     public MobileTodayPage() {
-        LocalDate today = DemoAbsences.today();
+        LocalDate today = today();
         add(new Label("date", () -> DateTimeFormatter.ofPattern("EEEE, d MMMM", getLocale()).format(today)));
 
         IModel<List<Absence>> out = () -> DemoAbsences.on(today);

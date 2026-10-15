@@ -3,7 +3,7 @@ package dev.jbaby.wicket.oat.components;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-/** The rule for a navigation link pointing at the current page, shared by the sidebar and the bottom bar. */
+/** The rule for a navigation link pointing at the current page, shared by the sidebar, the bottom bar and the menu bar. */
 final class CurrentPage {
 
     private CurrentPage() {

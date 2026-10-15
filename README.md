@@ -179,9 +179,10 @@ and a click on the backdrop close it in the browser and tell the server, and
 `onClose` runs once however it closed. Re-rendering it with `target.add(dialog)`
 keeps an open dialog open. `open(content, target)` sets content that is removed
 again when the dialog closes, e.g. the fields for the row that was clicked; opened
-again in `onConfirm`, e.g. for the next record, it stays open. Put it on a tag of
-its own, such as `<div wicket:id="editDialog"></div>`, which takes no room in the
-layout; not on `<wicket:container>`, which Wicket leaves out in deployment mode.
+again in `onConfirm` or `onClose`, e.g. for the next record, it stays open. Give it
+a tag of its own, such as `<div wicket:id="editDialog"></div>`, which takes no room
+in the layout. On a `<wicket:container>`, which Wicket leaves out in deployment mode,
+`open` and `close` still work, but `target.add(dialog)` doesn't.
 
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,

@@ -18,7 +18,7 @@ public class MobileCapacityPage extends MobileBasePage {
 
     public MobileCapacityPage() {
         int team = DemoAbsences.TEAM.size();
-        add(new ListView<LocalDate>("days", Model.ofList(workingDays(DemoAbsences.today(), WORKING_DAYS))) {
+        add(new ListView<LocalDate>("days", Model.ofList(workingDays(today(), WORKING_DAYS))) {
             @Override
             protected void populateItem(ListItem<LocalDate> item) {
                 LocalDate day = item.getModelObject();

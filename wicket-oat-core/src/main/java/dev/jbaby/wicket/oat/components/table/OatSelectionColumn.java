@@ -19,6 +19,7 @@ import org.apache.wicket.model.StringResourceModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +54,7 @@ public class OatSelectionColumn<T, S> extends AbstractColumn<T, S> implements IS
     private final SerializableFunction<? super T, ?> key;
     private final boolean byKey;
     /** Loads the rows for keys; {@code null} to look them up through the data provider. */
-    private final SerializableFunction<List<Object>, ? extends Collection<? extends T>> rows;
+    private final SerializableFunction<List<Object>, ? extends Iterable<? extends T>> rows;
 
     /** @param selection the selected rows; checking a box adds its row, unchecking removes it */
     public OatSelectionColumn(IModel<? extends Collection<T>> selection) {
@@ -83,16 +84,17 @@ public class OatSelectionColumn<T, S> extends AbstractColumn<T, S> implements IS
      * @param selection the keys of the selected rows
      * @param key a row's key, e.g. {@code Invoice::getId}
      * @param rows the rows for the given keys, e.g. {@code ids -> invoices.findAllById(ids)}
+     *             with a Spring Data repository
      */
     @SuppressWarnings("unchecked")
     public <K> OatSelectionColumn(IModel<? extends Collection<K>> selection, SerializableFunction<? super T, ? extends K> key,
-                                  SerializableFunction<? super List<K>, ? extends Collection<? extends T>> rows) {
-        this(selection, key, true, (SerializableFunction<List<Object>, ? extends Collection<? extends T>>)
+                                  SerializableFunction<? super List<K>, ? extends Iterable<? extends T>> rows) {
+        this(selection, key, true, (SerializableFunction<List<Object>, ? extends Iterable<? extends T>>)
                 (SerializableFunction<?, ?>) Objects.requireNonNull(rows));
     }
 
     private OatSelectionColumn(IModel<? extends Collection<?>> selection, SerializableFunction<? super T, ?> key, boolean byKey,
-                               SerializableFunction<List<Object>, ? extends Collection<? extends T>> rows) {
+                               SerializableFunction<List<Object>, ? extends Iterable<? extends T>> rows) {
         super(Model.of(""));
         this.selection = Objects.requireNonNull(selection);
         this.key = Objects.requireNonNull(key);
@@ -127,7 +129,11 @@ public class OatSelectionColumn<T, S> extends AbstractColumn<T, S> implements IS
             return selectedRows;
         }
         if (rows != null) {
-            selectedRows.addAll(rows.apply(List.copyOf(selected)));
+            // A copy the loader can keep; not List.copyOf, which rejects a null key
+            Iterable<? extends T> loaded = rows.apply(Collections.unmodifiableList(new ArrayList<>(selected)));
+            if (loaded != null) {
+                loaded.forEach(selectedRows::add);
+            }
             return selectedRows;
         }
         provider.iterator(0, provider.size()).forEachRemaining(row -> {

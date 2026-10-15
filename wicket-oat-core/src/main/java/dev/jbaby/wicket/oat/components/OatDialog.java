@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.components;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
+import dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -13,8 +14,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -25,6 +24,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+
+import java.util.Map;
 
 /**
  * A modal dialog using the native &lt;dialog&gt; element, with a header, content and
@@ -45,8 +46,10 @@ import org.apache.wicket.model.StringResourceModel;
  * tells the server. {@link #onClose} runs whenever it closes, however that happened.</li>
  * <li>It can sit inside a form of the page: submitting that form leaves the dialog's
  * fields out, so they are neither validated nor stored.</li>
- * <li>It needs a tag of its own, e.g. {@code <div wicket:id="dialog"></div>}, not
- * {@code <wicket:container>}, which Wicket leaves out in deployment mode.</li>
+ * <li>Give it a tag of its own, e.g. {@code <div wicket:id="dialog"></div>}, which takes
+ * no room in the layout, so {@code target.add(dialog)} can re-render it. On a
+ * {@code <wicket:container>}, which Wicket leaves out in deployment mode, open and
+ * close it only with {@link #open} and {@link #close}.</li>
  * </ul>
  *
  * <pre>
@@ -111,7 +114,17 @@ public class OatDialog extends Panel {
         setOutputMarkupId(true);
         add(AttributeAppender.append("class", "oat-dialog"));
 
-        dialog = new WebMarkupContainer("dialog");
+        dialog = new WebMarkupContainer("dialog") {
+            /** Shows the dialog again when it is rendered while open, by {@link #open} or a re-render around it. */
+            @Override
+            public void renderHead(IHeaderResponse response) {
+                super.renderHead(response);
+                if (open) {
+                    response.render(OnDomReadyHeaderItem.forScript("(function(d){if(d&&!d.open)d.showModal();})"
+                            + "(document.getElementById('" + getMarkupId() + "'))"));
+                }
+            }
+        };
         dialog.setOutputMarkupId(true);
         dialog.add(AttributeModifier.replace("closedby", "any"));
         dialog.add(new ClosedInBrowser());
@@ -170,17 +183,9 @@ public class OatDialog extends Panel {
                 open = true;
                 target.add(form);
             }
-
-            @Override
-            protected void onComponentTag(ComponentTag tag) {
-                super.onComponentTag(tag);
-                // Inside a page's form the dialog's form is a <div>, so a submit button here
-                // would be the page form's: Enter in a page field could click this hidden one
-                if (!form.isRootForm()) {
-                    tag.put("type", "button");
-                }
-            }
         };
+        // Inside a page's form, so Enter in a page field can't click this hidden button
+        confirm.add(new NestedFormButtonBehavior());
         confirmLabel = new Label("confirmLabel", new StringResourceModel("OatDialog.confirm", this).setDefaultValue("Confirm"));
         confirm.add(confirmLabel);
         confirmButton = new ButtonBehavior();
@@ -215,7 +220,9 @@ public class OatDialog extends Panel {
         form.clearInput();
         open = true;
         reopened = true;
-        target.add(this);
+        // The panel; on a <wicket:container>, which deployment mode leaves out, the <dialog>
+        // inside, which has an id of its own
+        target.add(getMarkupTag() instanceof WicketTag ? dialog : this);
         return this;
     }
 
@@ -231,10 +238,22 @@ public class OatDialog extends Panel {
         return open(target);
     }
 
-    /** Closes the dialog, if it is open, and runs {@link #onClose}. */
+    /**
+     * Closes the dialog, if it is open, and runs {@link #onClose}. Opened again in the same
+     * request, e.g. by {@code onClose}, it stays open.
+     */
     public OatDialog close(AjaxRequestTarget target) {
-        target.appendJavaScript("(function(d){if(d&&d.open){d.setAttribute('" + CLOSING + "','');d.close();}})"
-                + "(document.getElementById('" + dialog.getMarkupId() + "'))");
+        // Closed in the browser at the end of the request: the script runs after the
+        // components are re-rendered, so it would also close a dialog opened again since
+        target.addListener(new AjaxRequestTarget.IListener() {
+            @Override
+            public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget respondingTarget) {
+                if (!open) {
+                    respondingTarget.appendJavaScript("(function(d){if(d&&d.open){d.setAttribute('" + CLOSING + "','');d.close();}})"
+                            + "(document.getElementById('" + dialog.getMarkupId() + "'))");
+                }
+            }
+        });
         closed(target);
         return this;
     }
@@ -257,27 +276,6 @@ public class OatDialog extends Panel {
             target.add(form);
         }
         onClose(target);
-    }
-
-    @Override
-    protected void onBeforeRender() {
-        // Ajax re-renders the dialog by its own tag's id, so that tag must reach the browser
-        if (getMarkupTag() instanceof WicketTag) {
-            throw new MarkupException("OatDialog '" + getId() + "' is on a <wicket:" + getMarkupTag().getName()
-                    + ">, which Wicket leaves out in deployment mode, so the dialog couldn't be opened there."
-                    + " Put it on an element, e.g. <div wicket:id=\"" + getId() + "\"></div>; it takes no room in the layout.");
-        }
-        super.onBeforeRender();
-    }
-
-    /** Shows the dialog again when it is rendered while open, e.g. by {@code target.add(dialog)}. */
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        if (open) {
-            response.render(OnDomReadyHeaderItem.forScript("(function(d){if(d&&!d.open)d.showModal();})"
-                    + "(document.getElementById('" + dialog.getMarkupId() + "'))"));
-        }
     }
 
     /**

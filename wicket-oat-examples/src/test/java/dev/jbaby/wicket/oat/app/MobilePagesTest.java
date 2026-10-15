@@ -40,6 +40,9 @@ class MobilePagesTest {
     @Autowired
     private WebApplication wicketApp;
 
+    @Autowired
+    private Clock clock;
+
     private WicketTester tester;
 
     @BeforeEach
@@ -89,7 +92,7 @@ class MobilePagesTest {
     void someoneWithOverlappingAbsencesIsCountedOnce() {
         tester.startPage(MobileTodayPage.class);
         tester.assertLabel("inCount", "4"); // all but Mira and Jonas
-        LocalDate today = DemoAbsences.today();
+        LocalDate today = LocalDate.now(clock);
         // Mira, on vacation, is also away today
         DemoAbsences.add(new DemoAbsences.Absence("Mira Novak", DemoAbsences.Type.AWAY, today, today, false, false, false));
 
@@ -105,7 +108,7 @@ class MobilePagesTest {
         assertEquals("2", teamBadge());
 
         tester.startPage(MobileAddAbsencePage.class);
-        LocalDate start = DemoAbsences.today().plusDays(20);
+        LocalDate start = LocalDate.now(clock).plusDays(20);
         FormTester form = tester.newFormTester("form");
         form.setValue("start", start.toString());
         form.setValue("end", start.plusDays(2).toString());
@@ -121,7 +124,7 @@ class MobilePagesTest {
     @Test
     void theLastDayCantBeBeforeTheFirst() {
         tester.startPage(MobileAddAbsencePage.class);
-        LocalDate start = DemoAbsences.today().plusDays(5);
+        LocalDate start = LocalDate.now(clock).plusDays(5);
         FormTester form = tester.newFormTester("form");
         form.setValue("start", start.toString());
         form.setValue("end", start.minusDays(1).toString());

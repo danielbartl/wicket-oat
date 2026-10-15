@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.components.table;
 
 import dev.jbaby.wicket.oat.WicketOats;
+import dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior;
 import dev.jbaby.wicket.oat.components.OatIcon;
 import dev.jbaby.wicket.oat.components.form.ShowsErrorsInline;
 import org.apache.wicket.Component;
@@ -212,6 +213,8 @@ public class OatEditableColumn<T, S, V> extends LambdaColumn<T, S> {
             };
             save.add(AttributeModifier.replace("aria-label", new StringResourceModel("OatEditableColumn.save", this).setDefaultValue("Save")));
             save.add(new OatIcon("icon", "check"));
+            // The cell's form is nested in a page's form around the table
+            save.add(new NestedFormButtonBehavior());
             form.add(save);
             form.setDefaultButton(save);
 

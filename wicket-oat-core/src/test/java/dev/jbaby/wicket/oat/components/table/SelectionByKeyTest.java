@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +78,10 @@ class SelectionByKeyTest {
             columns.add(withLoader
                     ? new OatSelectionColumn<>(selectedIds, Account::getId, ids -> {
                         loaded.addAll(ids);
-                        return ids.stream().sorted().map(id -> new Account(id, database.get(id))).toList();
+                        // An Iterable, as Spring Data's CrudRepository.findAllById returns
+                        List<Account> found = ids.stream().filter(Objects::nonNull).sorted()
+                                .map(id -> new Account(id, database.get(id))).toList();
+                        return (Iterable<Account>) found::iterator;
                     })
                     : new OatSelectionColumn<>(selectedIds, Account::getId));
             columns.add(new OatRowDetailsColumn<>((id, account) -> new Label(id, () -> "Details of " + account.getObject().name),
@@ -151,6 +155,19 @@ class SelectionByKeyTest {
         assertThat(page.log).containsExactly("archive [ACME, Globex]");
         assertThat(page.loaded).containsExactlyInAnyOrder(1L, 2L);
         tester.assertLabel("table:bulkActions:count", "2 selected");
+    }
+
+    @Test
+    void aNullKeyReachesTheLoader() {
+        // E.g. the id of an entity not saved yet
+        page = tester.startPage(new AccountsPage(true));
+        check(rowChecks().get(0));
+        page.selectedIds.getObject().add(null);
+
+        tester.executeAjaxEvent(page.get("table:bulkActions:actions:0:action"), "click");
+
+        assertThat(page.log).containsExactly("archive [ACME]");
+        assertThat(page.loaded).containsExactlyInAnyOrder(1L, null);
     }
 
     @Test

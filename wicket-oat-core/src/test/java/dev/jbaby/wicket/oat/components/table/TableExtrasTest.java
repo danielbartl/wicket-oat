@@ -179,6 +179,8 @@ class TableExtrasTest {
         OatEditableColumn<?, ?, ?>.EditableCell cell = find(OatEditableColumn.EditableCell.class).get(1); // Gadget
         tester.clickLink(cell.get("content:edit"));
         assertThat(html()).contains("data-oat-escape=\"cancel\"").contains("aria-label=\"Quantity\"");
+        // The cell's form may end up nested in a page's form around the table
+        assertThat(cell.get("content:form:save").getBehaviors(dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior.class)).hasSize(1);
 
         FormTester form = tester.newFormTester(cell.get("content:form").getPageRelativePath());
         form.setValue("input", "0");

@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class MobileAddAbsencePage extends MobileBasePage {
 
     public MobileAddAbsencePage() {
-        LocalDate tomorrow = DemoAbsences.today().plusDays(1);
+        LocalDate tomorrow = today().plusDays(1);
         IModel<LocalDate> start = Model.of(tomorrow);
         IModel<LocalDate> end = Model.of(tomorrow);
         IModel<Type> type = Model.of(Type.VACATION);

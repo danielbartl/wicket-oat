@@ -6,7 +6,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
-import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OatDialogTest {
 
@@ -108,6 +106,13 @@ class OatDialogTest {
                     dialog.close(target);
                 }
             });
+            add(new AjaxLink<Void>("closeAndOpen") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    dialog.close(target);
+                    dialog.open(target); // e.g. the next record
+                }
+            });
         }
 
         @Override
@@ -116,7 +121,7 @@ class OatDialogTest {
             return new StringResourceStream("<html><body>"
                     + (nested ? "<form wicket:id='outer'>" + dialogTag + "</form>" : dialogTag)
                     + "<a wicket:id='open'>Edit</a><a wicket:id='openOnce'>Once</a>"
-                    + "<a wicket:id='refresh'>Refresh</a><a wicket:id='close'>Close</a>"
+                    + "<a wicket:id='refresh'>Refresh</a><a wicket:id='close'>Close</a><a wicket:id='closeAndOpen'>Next</a>"
                     + "<wicket:fragment wicket:id='fields'><div wicket:id='name'></div></wicket:fragment>"
                     + "</body></html>");
         }
@@ -145,6 +150,19 @@ class OatDialogTest {
         String response = tester.getLastResponseAsString();
         assertThat(response).contains("value=\"Grace\"");
         assertThat(response).contains(".showModal()");
+    }
+
+    @Test
+    void closedAndOpenedAgainInOneRequestItStaysOpen() {
+        DialogPage page = tester.startPage(new DialogPage(false));
+        tester.clickLink("open");
+
+        tester.clickLink("closeAndOpen");
+
+        assertThat(page.closed).isEqualTo(1);
+        assertThat(page.dialog.isOpen()).isTrue();
+        // The browser isn't told to close it after showing it again
+        assertThat(tester.getLastResponseAsString()).contains(".showModal()").doesNotContain(".close()");
     }
 
     @Test
@@ -325,14 +343,39 @@ class OatDialogTest {
         assertThat(tester.getTagByWicketId("confirm").getAttribute("type")).isEqualTo("submit");
     }
 
-    @Test
-    void aDialogOnAWicketContainerIsRejected() {
-        // Left out in deployment mode, the tag couldn't be re-rendered to open the dialog
-        OatDialog dialog = new OatDialog("dialog", "Title");
+    /** A dialog on a tag that deployment mode leaves out, opened from the server. */
+    public static class ContainerPage extends WebPage implements IMarkupResourceStreamProvider {
+        public final OatDialog dialog = new OatDialog("dialog", "Title");
 
-        assertThatThrownBy(() -> tester.startComponentInPage(dialog,
-                Markup.of("<wicket:container wicket:id='dialog'></wicket:container>")))
-                .hasStackTraceContaining("is on a <wicket:container>");
+        public ContainerPage() {
+            add(dialog);
+            add(new AjaxLink<Void>("open") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    dialog.open(target);
+                }
+            });
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><wicket:container wicket:id='dialog'></wicket:container>"
+                    + "<a wicket:id='open'>Open</a></body></html>");
+        }
+    }
+
+    @Test
+    void onAWicketContainerItOpensAlsoInDeploymentMode() {
+        tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+        ContainerPage page = tester.startPage(ContainerPage.class);
+        String dialogId = page.dialog.get("dialog").getMarkupId();
+        assertThat(tester.getLastResponseAsString()).doesNotContain("wicket:container").contains("id=\"" + dialogId + "\"");
+
+        tester.clickLink("open");
+
+        // The <dialog> inside, by an id the page has
+        tester.assertComponentOnAjaxResponse(page.dialog.get("dialog"));
+        assertThat(tester.getLastResponseAsString()).contains(".showModal()");
     }
 
     @Test

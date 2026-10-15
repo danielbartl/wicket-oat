@@ -82,7 +82,7 @@ public class OatMenuBar extends Panel {
         link.setBody(label);
         link.add(newButtonStyle());
         link.add(AttributeModifier.replace("aria-current", (IModel<String>) () ->
-                getPage().getClass().equals(page) ? "page" : null));
+                CurrentPage.isLinkedBy(getPage(), page, parameters) ? "page" : null));
         fragment.add(link);
         items.add(fragment);
         return this;

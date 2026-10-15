@@ -29,7 +29,9 @@ import org.apache.wicket.model.Model;
  * <p>
  * The confirm button is a danger button by default, since confirmation is mostly asked
  * for destructive actions; use {@link #setConfirmVariant} and {@link #setConfirmLabel}
- * (e.g. "Delete") to change it.
+ * (e.g. "Delete") to change it. It ignores clicks while an answer is being handled
+ * ({@link #setBusyIndicator}), so a double-click can't also answer a question the
+ * action asks next.
  */
 public class OatConfirmDialog extends OatDialog {
 
@@ -47,6 +49,7 @@ public class OatConfirmDialog extends OatDialog {
         };
         setContent(message);
         setConfirmVariant(OatVariant.DANGER);
+        setBusyIndicator(true);
     }
 
     /**

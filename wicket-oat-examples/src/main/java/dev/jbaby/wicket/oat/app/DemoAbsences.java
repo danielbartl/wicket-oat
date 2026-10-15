@@ -2,14 +2,12 @@ package dev.jbaby.wicket.oat.app;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.io.Serializable;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /** The mobile "Time off" demo's team and their absences, kept per session. */
 final class DemoAbsences {
@@ -44,31 +42,25 @@ final class DemoAbsences {
     private DemoAbsences() {
     }
 
-    /** Today in the app's time zone (its {@link Clock} bean), not the server's. */
-    static LocalDate today() {
-        AppClock appClock = new AppClock();
-        Injector.get().inject(appClock);
-        return LocalDate.now(appClock.clock);
-    }
-
     /** How many of the team are in on a day: people, as one can have overlapping absences. */
     static int inOn(LocalDate day) {
         return TEAM.size() - (int) on(day).stream().map(Absence::person).distinct().count();
     }
 
-    static List<Absence> get() {
-        ArrayList<Absence> absences = Session.get().getMetaData(ABSENCES);
-        if (absences == null) {
-            LocalDate today = today();
-            absences = new ArrayList<>(List.of(
+    /** Gives the session its demo absences, around the given day, unless it has them already. */
+    static void seed(LocalDate today) {
+        if (Session.get().getMetaData(ABSENCES) == null) {
+            Session.get().setMetaData(ABSENCES, new ArrayList<>(List.of(
                     new Absence("Mira Novak", Type.VACATION, today.minusDays(2), today.plusDays(4), false, false, false),
                     new Absence("Jonas Berger", Type.AWAY, today, today, false, false, true),
                     new Absence("Lea Hofer", Type.AWAY, today.plusDays(1), today.plusDays(1), true, false, false),
                     new Absence("Samir Haddad", Type.VACATION, today.plusDays(2), today.plusDays(6), true, false, false),
-                    new Absence("Anna Weiss", Type.VACATION, today.plusDays(10), today.plusDays(14), false, false, false)));
-            Session.get().setMetaData(ABSENCES, absences);
+                    new Absence("Anna Weiss", Type.VACATION, today.plusDays(10), today.plusDays(14), false, false, false))));
         }
-        return absences;
+    }
+
+    static List<Absence> get() {
+        return Objects.requireNonNull(Session.get().getMetaData(ABSENCES), "MobileBasePage seeds the absences");
     }
 
     static List<Absence> on(LocalDate day) {
@@ -89,10 +81,5 @@ final class DemoAbsences {
         if (index >= 0) {
             absences.set(index, absence.confirmed());
         }
-    }
-
-    private static final class AppClock {
-        @SpringBean
-        Clock clock;
     }
 }

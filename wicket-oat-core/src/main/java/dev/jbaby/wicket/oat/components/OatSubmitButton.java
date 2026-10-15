@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.components;
 import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
+import dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
@@ -20,6 +21,10 @@ import java.util.Objects;
  * <p>
  * For a slow save, {@link #setBusyIndicator setBusyIndicator(true)} shows a spinner
  * while the form is submitted and ignores further clicks, so it can't be submitted twice.
+ * <p>
+ * In a form nested in another, it renders as {@code type="button"}, so Enter in a field
+ * of the outer form can't click it ({@link NestedFormButtonBehavior}); make it the nested
+ * form's default button for Enter in that form's fields.
  */
 public class OatSubmitButton extends AjaxButton {
 
@@ -36,13 +41,13 @@ public class OatSubmitButton extends AjaxButton {
 
     public OatSubmitButton(String id, IModel<String> label) {
         super(id, label);
-        add(buttonBehavior);
+        add(buttonBehavior, new NestedFormButtonBehavior());
     }
 
     /** A button submitting the given form, which needn't contain it. */
     public OatSubmitButton(String id, IModel<String> label, Form<?> form) {
         super(id, label, form);
-        add(buttonBehavior);
+        add(buttonBehavior, new NestedFormButtonBehavior());
     }
 
     public OatSubmitButton setStyle(ButtonBehavior.Style style) {

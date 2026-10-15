@@ -10,8 +10,10 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.jspecify.annotations.NonNull;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,9 +30,19 @@ public abstract class MobileBasePage extends OatMobileLayout {
     private static final String PLUS = "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\""
             + " stroke-linecap=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>";
 
+    /** The app's clock: Vienna time, wherever the demo runs. */
+    @SpringBean
+    private Clock clock;
+
     protected MobileBasePage() {
         // Feedback as toasts, including "Absence added" on the page after the form
         add(Oat.Behaviors.feedbackToasts());
+        DemoAbsences.seed(today());
+    }
+
+    /** Today in the app's time zone, not the server's. */
+    protected LocalDate today() {
+        return LocalDate.now(clock);
     }
 
     @Override

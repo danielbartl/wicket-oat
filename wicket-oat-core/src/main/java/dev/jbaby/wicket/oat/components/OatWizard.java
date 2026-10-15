@@ -1,5 +1,6 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -130,6 +131,7 @@ public abstract class OatWizard extends Panel {
                 setVisible(current < steps.size() - 1);
             }
         };
+        next.add(new NestedFormButtonBehavior());
         form.add(next);
 
         finish = new AjaxButton("finish", new StringResourceModel("OatWizard.finish", this).setDefaultValue("Finish")) {
@@ -154,6 +156,7 @@ public abstract class OatWizard extends Panel {
                 setVisible(current == steps.size() - 1);
             }
         };
+        finish.add(new NestedFormButtonBehavior());
         form.add(finish);
     }
 

@@ -84,7 +84,7 @@ public abstract class OatLoginForm extends Panel {
         form.add(rememberMeField);
         form.add(new WebMarkupContainer("forgot").setVisible(false));
 
-        form.add(new OatSubmitButton("signIn", new StringResourceModel("OatLoginForm.signIn", this).setDefaultValue("Sign in")) {
+        OatSubmitButton signIn = new OatSubmitButton("signIn", new StringResourceModel("OatLoginForm.signIn", this).setDefaultValue("Sign in")) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 if (signIn(username.getObject(), password.getObject(), Boolean.TRUE.equals(rememberMe.getObject()))) {
@@ -102,7 +102,10 @@ public abstract class OatLoginForm extends Panel {
             protected void onError(AjaxRequestTarget target) {
                 target.add(form);
             }
-        }.setBusyIndicator(true));
+        };
+        form.add(signIn.setBusyIndicator(true));
+        // Enter in a field signs in, also where the form is nested in a page's form
+        form.setDefaultButton(signIn);
     }
 
     /**

@@ -48,7 +48,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<wicket.version>10.8.0</wicket.version>
+		<wicket.version>10.11.0</wicket.version>
 		<!-- Only used by wicket-oat-examples; the library itself doesn't depend on Spring -->
 		<spring-boot.version>4.0.3</spring-boot.version>
 		<spring-modulith.version>2.0.3</spring-modulith.version>

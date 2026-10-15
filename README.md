@@ -1083,7 +1083,7 @@ Once installed, the AI agent will automatically understand instructions like:
 ## Requirements
 
 - Java 17 or higher
-- Apache Wicket 10.8.0+
+- Apache Wicket 10.11.0+
 - Maven
 
 ## License

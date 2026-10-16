@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Locale;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
 class ComponentsPageTest {
 
@@ -25,6 +29,8 @@ class ComponentsPageTest {
 
     @Test
     void testComponentsPageRenders() {
+        // The rating's text and number format follow the locale
+        tester.getSession().setLocale(Locale.ENGLISH);
         tester.startPage(ComponentsPage.class);
         tester.assertRenderedPage(ComponentsPage.class);
         
@@ -40,5 +46,20 @@ class ComponentsPageTest {
         tester.assertComponent("avatar1", OatAvatar.class);
         tester.assertComponent("avatar2", OatAvatar.class);
         tester.assertComponent("avatar3", OatAvatar.class);
+
+        String html = tester.getLastResponseAsString();
+        assertTrue(html.contains("aria-label=\"Order status\""));
+        assertTrue(html.contains("data-variant=\"danger\" data-corner=\"top-end\">3<"));
+        assertTrue(html.contains(">Mira Novak<"));
+
+        assertTrue(html.contains("aria-label=\"4.5 out of 5 stars\""));
+        assertTrue(html.contains("aria-valuetext=\"3/5\""));
+
+        tester.clickLink("nextStage");
+        tester.assertComponentOnAjaxResponse("orderSteps");
+
+        tester.clickLink("uploadMore");
+        tester.assertComponentOnAjaxResponse("upload");
+        assertTrue(tester.getLastResponseAsString().contains("aria-valuenow=\"80\""));
     }
 }

@@ -140,7 +140,7 @@ public abstract class OatAppLayout extends WebPage {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(isShownBadge(getDefaultModelObject()));
+                setVisible(OatBadge.isShown(getDefaultModelObject()));
             }
         });
         item.add(link);
@@ -154,13 +154,6 @@ public abstract class OatAppLayout extends WebPage {
         } else {
             link.add(AttributeModifier.remove("aria-current"));
         }
-    }
-
-    private static boolean isShownBadge(Object badge) {
-        if (badge instanceof Number number) {
-            return number.doubleValue() != 0;
-        }
-        return badge != null && !badge.toString().isEmpty();
     }
 
     private boolean isAuthorized(MenuItem item) {

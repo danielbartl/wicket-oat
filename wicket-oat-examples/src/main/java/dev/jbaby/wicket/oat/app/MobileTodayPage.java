@@ -1,17 +1,17 @@
 package dev.jbaby.wicket.oat.app;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.app.DemoAbsences.Absence;
+import dev.jbaby.wicket.oat.app.DemoAbsences.Type;
+import dev.jbaby.wicket.oat.components.OatBadge;
+import dev.jbaby.wicket.oat.components.OatList;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.List;
 
 /** The "Today" tab: who's out today, and who's out next. */
 public class MobileTodayPage extends MobileBasePage {
@@ -20,46 +20,32 @@ public class MobileTodayPage extends MobileBasePage {
         LocalDate today = today();
         add(new Label("date", () -> DateTimeFormatter.ofPattern("EEEE, d MMMM", getLocale()).format(today)));
 
-        IModel<List<Absence>> out = () -> DemoAbsences.on(today);
         add(new Label("inCount", () -> DemoAbsences.inOn(today)));
         add(new Label("teamSize", DemoAbsences.TEAM.size()));
-        add(new ListView<Absence>("out", out) {
-            @Override
-            protected void populateItem(ListItem<Absence> item) {
-                Absence absence = item.getModelObject();
-                populateAbsence(item, absence, absence.end().equals(today)
+        add(new OatList<>("out", () -> DemoAbsences.on(today), Absence::person)
+                .setSubtitle(absence -> when(absence, absence.end().equals(today)
                         ? (absence.halfDayEnd() ? "Half day today" : "Back tomorrow")
-                        : "Until " + shortDate(absence.end()));
-            }
-        });
-        add(new WebMarkupContainer("nobody") {
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setVisible(out.getObject().isEmpty());
-            }
-        });
+                        : "Until " + shortDate(absence.end())))
+                .setTrailing(MobileTodayPage::typeBadge)
+                .setEmptyState(id -> new Label(id, "Everyone's in.").add(AttributeModifier.replace("class", "text-light"))));
 
-        IModel<List<Absence>> next = () -> DemoAbsences.get().stream()
+        add(new OatList<>("next", () -> DemoAbsences.get().stream()
                 .filter(absence -> absence.start().isAfter(today))
                 .sorted(Comparator.comparing(Absence::start))
                 .limit(4)
-                .toList();
-        add(new ListView<Absence>("next", next) {
-            @Override
-            protected void populateItem(ListItem<Absence> item) {
-                Absence absence = item.getModelObject();
-                populateAbsence(item, absence, absence.start().equals(absence.end())
+                .toList(), Absence::person)
+                .setSubtitle(absence -> when(absence, absence.start().equals(absence.end())
                         ? shortDate(absence.start())
-                        : shortDate(absence.start()) + " – " + shortDate(absence.end()));
-            }
-        });
+                        : shortDate(absence.start()) + " – " + shortDate(absence.end())))
+                .setTrailing(MobileTodayPage::typeBadge));
     }
 
-    private void populateAbsence(ListItem<Absence> item, Absence absence, String when) {
-        item.add(new Label("name", absence.person()));
-        item.add(new Label("when", when + (absence.tentative() ? " · tentative" : "")));
-        item.add(new Label("type", absence.type().label)
-                .add(AttributeModifier.replace("data-variant", absence.type() == DemoAbsences.Type.AWAY ? "secondary" : null)));
+    private static String when(Absence absence, String dates) {
+        return dates + (absence.tentative() ? " · tentative" : "");
+    }
+
+    private static OatBadge typeBadge(String id, IModel<Absence> absence) {
+        Type type = absence.getObject().type();
+        return new OatBadge(id, type.label, type == Type.AWAY ? OatVariant.SECONDARY : OatVariant.DEFAULT);
     }
 }

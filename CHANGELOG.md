@@ -2,6 +2,28 @@
 
 ## 0.4.0 (unreleased)
 
+- `OatSteps`: where a process stands, as numbered steps joined by a line - done,
+  current and still to come - such as an order from "Ordered" to "Delivered". The
+  steps already done can be links back (`setOnSelect`). `OatWizard` now draws its
+  steps with it, so in a test a step's link is at `"steps:list:items:0:link"` instead of
+  `"steps:0:link"`.
+- `OatList`: rows with a title and a line under it, something in front (an avatar,
+  an icon) and at the end (a badge, a button), as phone apps list things. A row can
+  be a link (`setOnClick`), and `setEmptyState` shows a component while there are
+  no rows. The time-off demo's Today tab uses it.
+- `OatIndicator`: a count or a status dot on a corner of what it wraps - unread
+  messages on a link, a person's presence on their avatar. `OatStatus` is the dot on
+  its own, colored by an `OatVariant` and named for screen readers.
+- `OatRatingField`: a rating chosen by clicking a star, one to five or up to ten
+  (`setMax`). The stars are radio buttons, so the arrow keys move between them,
+  screen readers read "3 stars", and a test sets `"rating:input"` to `"4"`.
+  `OatRating` shows a rating as stars, rounded to half a star, read as "4.5 out of 5
+  stars".
+- `OatRadialProgress`: a ring that fills up, with the percentage or a text of yours
+  in the middle, in a variant's color; a `progressbar` for screen readers.
+- `<kbd>` is styled as a key to press, and `oat-divider` draws a line with a word in
+  the middle, such as "or" between two ways to sign in.
+
 - Built and tested with Wicket 10.11.0 (was 10.8.0), which fixes a thread leak in
   Wicket's file cleaner (WICKET-7186) and autocomplete fields (WICKET-7182).
 - `OatSelectionColumn` selecting by key can load the selected rows by their keys:

@@ -8,15 +8,39 @@ import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import dev.jbaby.wicket.oat.components.OatAvatar;
 import dev.jbaby.wicket.oat.components.OatAvatarGroup;
+import dev.jbaby.wicket.oat.components.OatBadge;
+import dev.jbaby.wicket.oat.components.OatIndicator;
+import dev.jbaby.wicket.oat.components.OatList;
+import dev.jbaby.wicket.oat.components.OatRadialProgress;
+import dev.jbaby.wicket.oat.components.OatRating;
+import dev.jbaby.wicket.oat.components.OatStatus;
+import dev.jbaby.wicket.oat.components.OatSteps;
+import dev.jbaby.wicket.oat.components.form.OatRatingField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ComponentsPage extends BasePage {
+
+    /** A person in the list demo. */
+    record Member(String name, String initials, String role, boolean online) implements Serializable {
+    }
+
+    private static final List<Member> TEAM = List.of(
+            new Member("Mira Novak", "MN", "Product owner", true),
+            new Member("Jonas Berger", "JB", "Developer", false),
+            new Member("Lea Hofer", "LH", "Designer", true));
+
+    private int stage = 2;
+    private int uploaded = 60;
 
     public ComponentsPage() {
         // Tooltip
@@ -58,5 +82,69 @@ public class ComponentsPage extends BasePage {
         // Spinner and Skeleton
         add(new OatSpinner("spinnerComponent"));
         add(new OatSkeleton("skeletonComponent", SkeletonBehavior.Shape.BOX));
+
+        // Steps: where an order stands; "Next" moves it on
+        OatSteps steps = new OatSteps("orderSteps", List.of("Ordered", "Paid", "Shipped", "Delivered"), () -> stage);
+        steps.setLabel(Model.of("Order status"));
+        add(steps);
+        add(new AjaxLink<Void>("nextStage") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                stage = (stage + 1) % 5; // past "Delivered" all are done, then it starts over
+                target.add(steps);
+            }
+        }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL)));
+
+        // Indicator and Status
+        add(new OatIndicator("inbox", Model.of(3)).setVariant(OatVariant.DANGER)
+                .add(new WebMarkupContainer("inboxButton").add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE))));
+        add(new OatIndicator("reports", Model.of("New"))
+                .add(new WebMarkupContainer("reportsButton").add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE))));
+        add(OatIndicator.status("presence", Model.of(OatVariant.SUCCESS), Model.of("Online"))
+                .add(new OatAvatar("presenceAvatar", "MN")));
+        add(new OatStatus("statusUp", OatVariant.SUCCESS, null));
+        add(new OatStatus("statusSlow", OatVariant.WARNING, null));
+        add(new OatStatus("statusDown", OatVariant.DANGER, null));
+
+        // List
+        add(new OatList<>("team", Model.ofList(TEAM), Member::name)
+                .setSubtitle(Member::role)
+                // A fragment, as the indicator wraps markup of its own: the avatar's tag
+                .setLeading((id, member) -> new Fragment(id, "memberAvatar", this)
+                        .add(OatIndicator.status("presence",
+                                        Model.of(member.getObject().online() ? OatVariant.SUCCESS : OatVariant.SECONDARY),
+                                        Model.of(member.getObject().online() ? "Online" : "Away"))
+                                .add(new OatAvatar("avatar", member.getObject().initials()))))
+                .setTrailing((id, member) -> new OatBadge(id, member.getObject().online() ? "In" : "Out",
+                        member.getObject().online() ? OatVariant.SUCCESS : OatVariant.SECONDARY))
+                .setOnClick((target, member) -> Oat.toast(target, member.role(), OatVariant.DEFAULT, member.name())));
+
+        // Rating: stars to show, and stars to choose; choosing one says thanks over Ajax
+        add(new OatRating("productRating", 4.3));
+        add(new OatRating("newRating", Model.of()));
+        Form<Void> rateForm = new Form<>("rateForm");
+        add(rateForm);
+        Model<Integer> rating = Model.of();
+        rateForm.add(new OatRatingField("rateIt", "Rate this page", rating)
+                .add(new AjaxFormChoiceComponentUpdatingBehavior() {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget target) {
+                        Oat.toast(target, "You gave it " + rating.getObject() + " of 5.", OatVariant.SUCCESS, "Thanks!");
+                    }
+                }));
+
+        // Radial progress: an upload moving on with each click, and other rings
+        OatRadialProgress upload = new OatRadialProgress("upload", () -> uploaded)
+                .setVariant(() -> uploaded >= 100 ? OatVariant.SUCCESS : OatVariant.DEFAULT);
+        add(upload);
+        add(new AjaxLink<Void>("uploadMore") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                uploaded = uploaded >= 100 ? 0 : uploaded + 20;
+                target.add(upload);
+            }
+        }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL)));
+        add(new OatRadialProgress("profile", Model.of(3), Model.of(5)).setText(Model.of("3/5")).setVariant(OatVariant.SECONDARY));
+        add(new OatRadialProgress("disk", 93).setVariant(OatVariant.DANGER));
     }
 }

@@ -7,21 +7,10 @@
         <span wicket:id="teamSize">6</span> in.</p>
 
     <h2 class="mt-6 mb-4">Out today</h2>
-    <ul class="unstyled vstack gap-2">
-        <li wicket:id="out" class="card hstack justify-between">
-            <span class="vstack gap-1"><strong wicket:id="name"></strong><small class="text-light" wicket:id="when"></small></span>
-            <span wicket:id="type" class="badge"></span>
-        </li>
-    </ul>
-    <p wicket:id="nobody" class="text-light">Everyone's in.</p>
+    <div wicket:id="out"></div>
 
     <h2 class="mt-6 mb-4">Coming up</h2>
-    <ul class="unstyled vstack gap-2">
-        <li wicket:id="next" class="card hstack justify-between">
-            <span class="vstack gap-1"><strong wicket:id="name"></strong><small class="text-light" wicket:id="when"></small></span>
-            <span wicket:id="type" class="badge"></span>
-        </li>
-    </ul>
+    <div wicket:id="next"></div>
 </wicket:extend>
 </body>
 </html>

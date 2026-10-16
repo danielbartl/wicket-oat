@@ -92,6 +92,9 @@
         <p class="announce"><a href="#wicket-way"><span class="badge new-badge" data-variant="success">New in 0.3.0</span></a> Dialogs that work like Wicket's <code>ModalDialog</code>,
             data tables over Ajax, shorter form field paths, a bottom tab bar for phone apps and an API closer to
             plain Wicket are <a href="#wicket-way">out now in 0.3.0</a>.</p>
+        <p class="announce"><a href="#next"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span></a> Steps, lists like a phone app's,
+            count badges and status dots, star ratings and a progress ring are
+            <a href="#next">coming with the next release</a>, built on Wicket 10.11.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -194,6 +197,8 @@
                     edited in place save with Enter and cancel with Escape.</p>
                 <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>OatAppLayout</code> starts with a
                     &ldquo;Skip to content&rdquo; link past the navigation.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> The stars of <code>OatRatingField</code>
+                    are radio buttons, so the arrow keys move between them.</p>
             </article>
             <article class="card">
                 <h3>States a screen reader can announce</h3>
@@ -201,6 +206,9 @@
                     pagination, <code>aria-sort</code> the sorted column, <code>aria-expanded</code>
                     an open tree node, and <code>aria-busy</code> a button whose Ajax request is
                     still running.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> A rating is read as &ldquo;4.5 out of
+                    5 stars&rdquo;, a status dot by its name, such as &ldquo;Online&rdquo;, and a progress
+                    ring as a <code>progressbar</code> with its value.</p>
             </article>
             <article class="card">
                 <h3>Charts you can read without seeing them</h3>
@@ -405,6 +413,11 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                 added in 0.3.0, the current release. The
                 <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
                 lists everything new, including notes on upgrading from 0.2.x.</p>
+            <p class="release-note" id="next"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> Cards with this label show components
+                coming with the next release, 0.4.0. Their source is on
+                <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already,
+                and the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
+                lists everything coming.</p>
         </div>
 
         <div class="showcase-group">
@@ -492,6 +505,31 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                         </section>
                     </div>
                     <div class="showcase-footer"><strong>OatCookieConsent</strong><code>cookieConsent(id).setPolicyLink(PrivacyPage.class) &middot; OatCookieConsent.isAccepted()</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="hstack gap-6 items-center justify-center">
+                            <span class="oat-indicator"><button type="button" class="outline">Inbox</button><span class="badge oat-indicator-item" data-variant="danger" data-corner="top-end">3</span></span>
+                            <span class="oat-indicator"><figure data-variant="avatar"><abbr title="Mira Novak">MN</abbr></figure><span class="oat-status oat-indicator-item" data-variant="success" role="img" aria-label="Online" data-corner="bottom-end"></span></span>
+                        </div>
+                        <ul class="unstyled vstack gap-1 mt-4" style="width:fit-content;margin-inline:auto">
+                            <li><span class="oat-status" data-variant="success" aria-hidden="true"></span> API online</li>
+                            <li><span class="oat-status" data-variant="warning" aria-hidden="true"></span> Search slow</li>
+                            <li><span class="oat-status" data-variant="danger" aria-hidden="true"></span> Mail down</li>
+                        </ul>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatIndicator / OatStatus</strong><code>new OatIndicator(id, () -&gt; unread) &middot; OatIndicator.status(id, variant, label) &middot; new OatStatus(...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <p class="small">Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search, or <kbd><kbd>Shift</kbd>+<kbd>?</kbd></kbd> for all shortcuts.</p>
+                        <div class="vstack gap-2">
+                            <button type="button" class="outline">Continue with your company account</button>
+                            <div class="oat-divider">or</div>
+                            <button type="button">Sign in with email</button>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>Keys and divider</strong><code>&lt;kbd&gt;Ctrl&lt;/kbd&gt; &middot; &lt;div class="oat-divider"&gt;or&lt;/div&gt;</code></div>
                 </div>
             </div>
         </div>
@@ -587,6 +625,17 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                         </footer>
                     </div>
                     <div class="showcase-footer"><strong>OatWizard</strong><code>wizard.addStep("Items", id -&gt; new ItemsStep(id, order))</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <ol class="unstyled oat-steps" aria-label="Order status">
+                            <li data-state="done"><a href="#components" class="unstyled"><span class="oat-step-number">1</span><span>Ordered</span></a></li>
+                            <li data-state="done"><a href="#components" class="unstyled"><span class="oat-step-number">2</span><span>Paid</span></a></li>
+                            <li data-state="current" aria-current="step"><a class="unstyled"><span class="oat-step-number">3</span><span>Shipped</span></a></li>
+                            <li data-state="upcoming"><a class="unstyled"><span class="oat-step-number">4</span><span>Delivered</span></a></li>
+                        </ol>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatSteps</strong><code>new OatSteps(id, titles, () -&gt; order.stage().ordinal()) &middot; .setOnSelect(...)</code></div>
                 </div>
                 <div class="showcase-card wide">
                     <div class="showcase-preview block">
@@ -995,6 +1044,61 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     </div>
                     <div class="showcase-footer"><strong>Row details, editing in place, columns, CSV</strong><code>OatRowDetailsColumn &middot; OatEditableColumn &middot; table.setColumnChooser(true) &middot; setCsvExport("invoices.csv")</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <ul class="unstyled oat-list">
+                            <li class="oat-list-row">
+                                <div class="oat-list-leading"><span class="oat-indicator"><figure data-variant="avatar"><abbr title="Mira Novak">MN</abbr></figure><span class="oat-status oat-indicator-item" data-variant="success" role="img" aria-label="Online" data-corner="bottom-end"></span></span></div>
+                                <div class="oat-list-text">
+                                    <a class="unstyled oat-list-link" href="#components"><strong>Mira Novak</strong></a>
+                                    <small class="text-light">Product owner</small>
+                                </div>
+                                <div class="oat-list-trailing"><span class="badge" data-variant="success">In</span></div>
+                            </li>
+                            <li class="oat-list-row">
+                                <div class="oat-list-leading"><span class="oat-indicator"><figure data-variant="avatar"><abbr title="Jonas Berger">JB</abbr></figure><span class="oat-status oat-indicator-item" data-variant="secondary" role="img" aria-label="Away" data-corner="bottom-end"></span></span></div>
+                                <div class="oat-list-text">
+                                    <a class="unstyled oat-list-link" href="#components"><strong>Jonas Berger</strong></a>
+                                    <small class="text-light">Developer</small>
+                                </div>
+                                <div class="oat-list-trailing"><span class="badge" data-variant="secondary">Out</span></div>
+                            </li>
+                            <li class="oat-list-row">
+                                <div class="oat-list-leading"><span class="oat-indicator"><figure data-variant="avatar"><abbr title="Lea Hofer">LH</abbr></figure><span class="oat-status oat-indicator-item" data-variant="success" role="img" aria-label="Online" data-corner="bottom-end"></span></span></div>
+                                <div class="oat-list-text">
+                                    <a class="unstyled oat-list-link" href="#components"><strong>Lea Hofer</strong></a>
+                                    <small class="text-light">Designer</small>
+                                </div>
+                                <div class="oat-list-trailing"><span class="badge" data-variant="success">In</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatList</strong><code>new OatList&lt;&gt;(id, people, Person::name).setSubtitle(Person::role).setLeading(...).setOnClick(...)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <p>Oat Granola <span class="oat-rating" role="img" aria-label="4.5 out of 5 stars"><span data-fill="full"></span><span data-fill="full"></span><span data-fill="full"></span><span data-fill="full"></span><span data-fill="half"></span></span><br><small class="text-light">4.3 from 128 reviews</small></p>
+                        <p class="mt-4">Oat Milk <span class="oat-rating" role="img" aria-label="Not rated yet"><span data-fill="empty"></span><span data-fill="empty"></span><span data-fill="empty"></span><span data-fill="empty"></span><span data-fill="empty"></span></span><br><small class="text-light">No reviews yet</small></p>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatRating</strong><code>new OatRating(id, () -&gt; reviews.averageFor(product))</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <div aria-label="Upload" class="oat-radial-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" aria-valuetext="60%">
+                            <svg class="oat-radial-progress-svg" viewBox="0 0 36 36" aria-hidden="true"><circle class="oat-radial-progress-track" cx="18" cy="18" r="15.5" pathLength="100"></circle><circle class="oat-radial-progress-bar" cx="18" cy="18" r="15.5" pathLength="100" transform="rotate(-90 18 18)" stroke-dasharray="60 100"></circle></svg>
+                            <span class="oat-radial-progress-text">60%</span>
+                        </div>
+                        <div aria-label="Profile filled in" class="oat-radial-progress" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3" aria-valuetext="3/5" data-variant="secondary">
+                            <svg class="oat-radial-progress-svg" viewBox="0 0 36 36" aria-hidden="true"><circle class="oat-radial-progress-track" cx="18" cy="18" r="15.5" pathLength="100"></circle><circle class="oat-radial-progress-bar" cx="18" cy="18" r="15.5" pathLength="100" transform="rotate(-90 18 18)" stroke-dasharray="60 100"></circle></svg>
+                            <span class="oat-radial-progress-text">3/5</span>
+                        </div>
+                        <div aria-label="Disk used" class="oat-radial-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="93" aria-valuetext="93%" data-variant="danger">
+                            <svg class="oat-radial-progress-svg" viewBox="0 0 36 36" aria-hidden="true"><circle class="oat-radial-progress-track" cx="18" cy="18" r="15.5" pathLength="100"></circle><circle class="oat-radial-progress-bar" cx="18" cy="18" r="15.5" pathLength="100" transform="rotate(-90 18 18)" stroke-dasharray="93 100"></circle></svg>
+                            <span class="oat-radial-progress-text">93%</span>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatRadialProgress</strong><code>new OatRadialProgress(id, used, quota).setVariant(OatVariant.DANGER) &middot; .setText(Model.of("3/5"))</code></div>
+                </div>
             </div>
         </div>
 
@@ -1146,6 +1250,16 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     </div>
                     <div class="showcase-footer"><strong>OatMultiSelectField</strong><code>.setChoices(text -&gt; users.search(text)).setDisplay(User::name)</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <fieldset data-field style="margin:0">
+                            <legend>How did we do?</legend>
+                            <div role="radiogroup" class="oat-rating-input"><input name="demo-rating" type="radio" value="1" id="demo-rating-1"><label for="demo-rating-1">1 star</label><input name="demo-rating" type="radio" value="2" id="demo-rating-2"><label for="demo-rating-2">2 stars</label><input name="demo-rating" type="radio" value="3" id="demo-rating-3"><label for="demo-rating-3">3 stars</label><input name="demo-rating" type="radio" value="4" id="demo-rating-4" checked><label for="demo-rating-4">4 stars</label><input name="demo-rating" type="radio" value="5" id="demo-rating-5"><label for="demo-rating-5">5 stars</label></div>
+                            <div role="status" data-hint>Click a star, or use the arrow keys.</div>
+                        </fieldset>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatRatingField</strong><code>new OatRatingField("rating", "How did we do?", Model.of()).setRequired(true)</code></div>
+                </div>
             </div>
         </div>
 
@@ -1203,6 +1317,9 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     <code>OatDialog.CONTENT_ID</code>. The server knows whether the dialog is open,
                     <code>onClose</code> runs however it closed &mdash; Cancel, Escape, the backdrop
                     or a confirm &mdash; and <code>target.add(dialog)</code> keeps an open dialog open.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> A dialog opened again in
+                    <code>onConfirm</code>, such as a second question, stays open, and Enter in a
+                    page's field can't click a button of a closed dialog.</p>
             </article>
             <article class="card">
                 <h3>Data tables over Ajax</h3>
@@ -1210,6 +1327,8 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     JavaScript. <code>OatDataTable</code> is pageable like a <code>DataTable</code>,
                     so <code>table.setCurrentPage(0)</code> works, and a selection can keep just ids:
                     <code>new OatSelectionColumn&lt;&gt;(selectedIds, Invoice::getId)</code>.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> The selected rows can be loaded by
+                    their ids, so bulk actions also get those a search hides.</p>
             </article>
             <article class="card">
                 <h3>Form fields you can test</h3>

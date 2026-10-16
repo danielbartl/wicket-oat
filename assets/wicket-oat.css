@@ -52,6 +52,14 @@
 }
 
 /*
+ * OatDialog's own tag only wraps its trigger button and the <dialog>, which shows in the
+ * top layer. It gets no box of its own, so the trigger lays out as if it stood there alone.
+ */
+.oat-dialog {
+    display: contents;
+}
+
+/*
  * An OatDialog inside another Wicket form renders its own form as a <div>, because
  * HTML forbids nested forms. Mirror Oat's "dialog > form > ..." rules for that case,
  * and undo the padding Oat gives to any "dialog > div".
@@ -609,7 +617,7 @@ fieldset.oat-range-field fieldset.group {
     font-size: var(--text-7);
 }
 
-/* OatWizard: numbered steps - done, current, upcoming - joined by a line */
+/* OatSteps, also in OatWizard: numbered steps - done, current, upcoming - joined by a line */
 .oat-steps {
     display: flex;
     flex-wrap: wrap;
@@ -670,6 +678,165 @@ fieldset.oat-range-field fieldset.group {
 .oat-steps [data-state="done"] .oat-step-number {
     border-color: var(--primary);
     color: var(--primary);
+}
+
+/* OatStatus: a dot in the variant's color */
+.oat-status {
+    display: inline-block;
+    flex: none;
+    width: .625rem;
+    height: .625rem;
+    border-radius: var(--radius-full);
+    background-color: var(--primary);
+    vertical-align: middle;
+}
+
+.oat-status[data-variant="secondary"] {
+    background-color: var(--muted-foreground);
+}
+
+.oat-status[data-variant="success"] {
+    background-color: var(--success);
+}
+
+.oat-status[data-variant="warning"] {
+    background-color: var(--warning);
+}
+
+.oat-status[data-variant="danger"] {
+    background-color: var(--danger);
+}
+
+/*
+ * OatIndicator: a badge centered on a corner of what it wraps, or a status dot just
+ * inside it, which suits round avatars. Start and end follow the text direction. The
+ * corner is on the item itself, as Wicket's tags may stand between it and the wrapper.
+ */
+.oat-indicator {
+    /* 1 for left to right, -1 for right to left: which way "end" moves the badge */
+    --oat-indicator-x: 1;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.oat-indicator:dir(rtl) {
+    --oat-indicator-x: -1;
+}
+
+.oat-indicator-item {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    translate: calc(50% * var(--oat-indicator-x)) -50%;
+}
+
+.oat-indicator-item[data-corner^="bottom"] {
+    inset-block: auto 0;
+    translate: calc(50% * var(--oat-indicator-x)) 50%;
+}
+
+.oat-indicator-item[data-corner$="start"] {
+    inset-inline: 0 auto;
+    translate: calc(-50% * var(--oat-indicator-x)) -50%;
+}
+
+.oat-indicator-item[data-corner="bottom-start"] {
+    translate: calc(-50% * var(--oat-indicator-x)) 50%;
+}
+
+.badge.oat-indicator-item {
+    min-width: 1.25rem;
+    padding: 0 var(--space-1);
+    box-shadow: 0 0 0 2px var(--background);
+}
+
+.oat-status.oat-indicator-item {
+    translate: none;
+    box-shadow: 0 0 0 2px var(--background);
+}
+
+/* OatList: rows with a title and a line under it, something in front and at the end */
+.oat-list {
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    background-color: var(--card);
+    color: var(--card-foreground);
+}
+
+.oat-list-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+}
+
+.oat-list-row + .oat-list-row {
+    border-block-start: 1px solid var(--border);
+}
+
+.oat-list-row:first-child {
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+}
+
+.oat-list-row:last-child {
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+}
+
+.oat-list-leading,
+.oat-list-trailing {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.oat-list-leading:empty,
+.oat-list-trailing:empty {
+    display: none;
+}
+
+/* Above the link's area, so buttons at the end stay clickable */
+.oat-list-trailing {
+    position: relative;
+    z-index: 1;
+}
+
+.oat-list-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.oat-list-text > small {
+    font-size: var(--text-7);
+}
+
+/* A row with an action: its link covers the whole row */
+.oat-list-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+}
+
+.oat-list-link:focus-visible {
+    outline: none;
+}
+
+.oat-list-link:focus-visible::after {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+}
+
+.oat-list-row:has(.oat-list-link):hover {
+    background-color: var(--muted);
 }
 
 .oat-wizard-form > footer {
@@ -1582,4 +1749,222 @@ a.oat-tree-label[aria-current] {
     .oat-mobile-main:has(~ .oat-bottom-nav:not([data-always-visible])) {
         padding-block-end: var(--space-8);
     }
+}
+
+/*
+ * OatRating and OatRatingField: stars, amber by default. Override the colors on these
+ * classes in your CSS, e.g. --oat-rating-color: var(--primary).
+ */
+.oat-rating,
+.oat-rating-input {
+    --oat-rating-color: var(--warning);
+    --oat-rating-empty: rgb(from var(--muted-foreground) r g b / .35);
+    --oat-star: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* OatRating: as tall as the text around it */
+.oat-rating {
+    display: inline-flex;
+    gap: .0625em;
+    vertical-align: -.125em;
+}
+
+.oat-rating > span {
+    width: 1em;
+    height: 1em;
+    background-color: var(--oat-rating-empty);
+    clip-path: var(--oat-star);
+}
+
+.oat-rating > [data-fill="full"] {
+    background-color: var(--oat-rating-color);
+}
+
+.oat-rating > [data-fill="half"] {
+    background-image: linear-gradient(to right, var(--oat-rating-color) 50%, transparent 50%);
+}
+
+.oat-rating:dir(rtl) > [data-fill="half"] {
+    background-image: linear-gradient(to left, var(--oat-rating-color) 50%, transparent 50%);
+}
+
+/*
+ * OatRatingField: each star is a radio button with Oat's look undone, the star drawn
+ * on it where Oat draws the checked dot, so the focus ring stays a square around it.
+ * The labels name the stars for screen readers only.
+ */
+.oat-rating-input {
+    position: relative;
+    display: inline-flex;
+}
+
+.oat-rating-input > label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.oat-rating-input > input[type="radio"] {
+    width: 1.75rem;
+    height: 1.75rem;
+    border: none;
+    border-radius: var(--radius-small);
+    background-color: transparent;
+}
+
+.oat-rating-input > input[type="radio"]::after {
+    content: "";
+    position: absolute;
+    inset: .125rem;
+    background-color: var(--oat-rating-empty);
+    mask: none;
+    clip-path: var(--oat-star);
+    transition: background-color var(--transition-fast);
+}
+
+.oat-rating-input > input[type="radio"]:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 0;
+}
+
+/* The chosen star and the ones before it */
+.oat-rating-input > input:checked::after,
+.oat-rating-input > input:has(~ input:checked)::after {
+    background-color: var(--oat-rating-color);
+}
+
+/* While the pointer is on a star: that one and the ones before it, what a click would choose */
+.oat-rating-input:has(> input:enabled:hover) > input::after {
+    background-color: var(--oat-rating-color);
+}
+
+.oat-rating-input > input:enabled:hover ~ input::after {
+    background-color: var(--oat-rating-empty);
+}
+
+.oat-rating-input > input:disabled {
+    cursor: default;
+}
+
+/*
+ * OatRadialProgress: a ring filling clockwise from the top, the text in the middle.
+ * Positioned rather than a grid: in development mode Wicket's <wicket:panel> tag
+ * stands between the ring's tag and its parts.
+ */
+.oat-radial-progress {
+    --oat-radial-progress-size: 4rem;
+    --oat-radial-progress-color: var(--primary);
+    position: relative;
+    display: inline-block;
+    width: var(--oat-radial-progress-size);
+    height: var(--oat-radial-progress-size);
+    vertical-align: middle;
+}
+
+.oat-radial-progress-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.oat-radial-progress-track,
+.oat-radial-progress-bar {
+    fill: none;
+    stroke-width: 3;
+}
+
+.oat-radial-progress-track {
+    stroke: var(--muted);
+}
+
+.oat-radial-progress-bar {
+    stroke: var(--oat-radial-progress-color);
+    stroke-linecap: round;
+    transition: stroke-dasharray var(--transition);
+}
+
+.oat-radial-progress-text {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: calc(var(--oat-radial-progress-size) / 4.5);
+    font-weight: var(--font-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.oat-radial-progress[data-variant="secondary"] {
+    --oat-radial-progress-color: var(--muted-foreground);
+}
+
+.oat-radial-progress[data-variant="success"] {
+    --oat-radial-progress-color: var(--success);
+}
+
+.oat-radial-progress[data-variant="warning"] {
+    --oat-radial-progress-color: var(--warning);
+}
+
+.oat-radial-progress[data-variant="danger"] {
+    --oat-radial-progress-color: var(--danger);
+}
+
+/*
+ * <kbd>: a key to press, e.g. <kbd>Ctrl</kbd> + <kbd>K</kbd>. In Oat's base layer, so
+ * your own rules for it win. A <kbd> holding keys, as HTML marks up a whole shortcut,
+ * is no key itself.
+ */
+@layer base {
+    kbd {
+        display: inline-block;
+        min-width: 1.75em;
+        padding: 0 .375em;
+        font-family: var(--font-mono);
+        font-size: .8125em;
+        line-height: 1.5;
+        text-align: center;
+        white-space: nowrap;
+        color: var(--foreground);
+        background-color: var(--muted);
+        border: 1px solid var(--border);
+        border-block-end-width: 2px;
+        border-radius: var(--radius-small);
+    }
+
+    kbd:has(kbd) {
+        display: inline;
+        min-width: 0;
+        padding: 0;
+        font: inherit;
+        background: none;
+        border: none;
+    }
+}
+
+/*
+ * .oat-divider: a line across with a word in the middle, e.g. "or" between two ways
+ * to sign in: <div class="oat-divider">or</div>. Empty, it is just the line.
+ */
+.oat-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block: var(--space-4);
+    font-size: var(--text-7);
+    color: var(--muted-foreground);
+}
+
+.oat-divider:empty {
+    gap: 0;
+}
+
+.oat-divider::before,
+.oat-divider::after {
+    content: "";
+    flex: 1;
+    border-block-start: 1px solid var(--border);
 }

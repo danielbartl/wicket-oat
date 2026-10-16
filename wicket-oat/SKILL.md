@@ -45,6 +45,7 @@ Wicket Oat uses Oat's CSS and nothing else. Never add Tailwind, Bootstrap or oth
 - Spacing: `gap-1`, `gap-2`, `gap-4`, `gap-6`, `mt-2`/`4`/`6`/`8`, `mb-2`/`4`/`6`/`8`, `p-4`, `w-100`
 - Text: `align-left`, `align-center`, `align-right`, `text-light`, `text-lighter`
 - Lists and links: `unstyled`
+- From `wicket-oat.css`: `oat-divider` (a line with a word in the middle, e.g. `<div class="oat-divider">or</div>`); `<kbd>` is styled as a key
 - Grid: `container`, `row`, `col-1`...`col-12`, `offset-1`...`offset-6` (or `Oat.Behaviors.row()`/`col(6)`/`container()` from Java)
 
 No other sizes exist (no `gap-3`, `mt-5`, `px-4`, ...). For anything else, write a small CSS rule in the application's own stylesheet using Oat's CSS variables (`var(--space-4)`, `var(--primary)`, ...).

@@ -9,6 +9,7 @@ import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatEmailField;
 import dev.jbaby.wicket.oat.components.form.OatFileUpload;
 import dev.jbaby.wicket.oat.components.form.OatListMultipleChoice;
+import dev.jbaby.wicket.oat.components.form.OatRatingField;
 import dev.jbaby.wicket.oat.components.OatMeter;
 import dev.jbaby.wicket.oat.components.form.OatMonthField;
 import dev.jbaby.wicket.oat.components.form.OatNumberField;
@@ -145,6 +146,8 @@ public class FormPage extends BasePage {
         form.add(new OatCheckBox("oatCheck", "Oat Checkbox", Model.of(true)));
 
         form.add(new OatSwitch("oatSwitch", "Oat Switch", Model.of(false)));
+
+        form.add(new OatRatingField("oatRating", "Oat Rating", Model.of(4)));
 
         form.add(new OatTimeField("oatTime", "Oat Time", Model.of(java.time.LocalTime.now())));
 

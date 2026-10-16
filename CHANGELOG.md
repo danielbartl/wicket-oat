@@ -14,6 +14,15 @@
 - `OatIndicator`: a count or a status dot on a corner of what it wraps - unread
   messages on a link, a person's presence on their avatar. `OatStatus` is the dot on
   its own, colored by an `OatVariant` and named for screen readers.
+- `OatRatingField`: a rating chosen by clicking a star, one to five or up to ten
+  (`setMax`). The stars are radio buttons, so the arrow keys move between them,
+  screen readers read "3 stars", and a test sets `"rating:input"` to `"4"`.
+  `OatRating` shows a rating as stars, rounded to half a star, read as "4.5 out of 5
+  stars".
+- `OatRadialProgress`: a ring that fills up, with the percentage or a text of yours
+  in the middle, in a variant's color; a `progressbar` for screen readers.
+- `<kbd>` is styled as a key to press, and `oat-divider` draws a line with a word in
+  the middle, such as "or" between two ways to sign in.
 
 - Built and tested with Wicket 10.11.0 (was 10.8.0), which fixes a thread leak in
   Wicket's file cleaner (WICKET-7186) and autocomplete fields (WICKET-7182).

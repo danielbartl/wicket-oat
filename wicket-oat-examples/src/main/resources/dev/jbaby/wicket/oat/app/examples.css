@@ -25,6 +25,10 @@
     height: 16px;
 }
 
+.demo-narrow {
+    max-width: 20rem;
+}
+
 /* A custom theme, registered in WicketOatApplication with
    WicketOats.install(this).addTheme(new OatTheme("ocean", "Ocean", "🌊")) */
 [data-theme="ocean"] {

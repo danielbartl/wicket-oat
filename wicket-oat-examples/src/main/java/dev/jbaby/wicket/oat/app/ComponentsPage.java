@@ -11,11 +11,16 @@ import dev.jbaby.wicket.oat.components.OatAvatarGroup;
 import dev.jbaby.wicket.oat.components.OatBadge;
 import dev.jbaby.wicket.oat.components.OatIndicator;
 import dev.jbaby.wicket.oat.components.OatList;
+import dev.jbaby.wicket.oat.components.OatRadialProgress;
+import dev.jbaby.wicket.oat.components.OatRating;
 import dev.jbaby.wicket.oat.components.OatStatus;
 import dev.jbaby.wicket.oat.components.OatSteps;
+import dev.jbaby.wicket.oat.components.form.OatRatingField;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
@@ -35,6 +40,7 @@ public class ComponentsPage extends BasePage {
             new Member("Lea Hofer", "LH", "Designer", true));
 
     private int stage = 2;
+    private int uploaded = 60;
 
     public ComponentsPage() {
         // Tooltip
@@ -112,5 +118,33 @@ public class ComponentsPage extends BasePage {
                 .setTrailing((id, member) -> new OatBadge(id, member.getObject().online() ? "In" : "Out",
                         member.getObject().online() ? OatVariant.SUCCESS : OatVariant.SECONDARY))
                 .setOnClick((target, member) -> Oat.toast(target, member.role(), OatVariant.DEFAULT, member.name())));
+
+        // Rating: stars to show, and stars to choose; choosing one says thanks over Ajax
+        add(new OatRating("productRating", 4.3));
+        add(new OatRating("newRating", Model.of()));
+        Form<Void> rateForm = new Form<>("rateForm");
+        add(rateForm);
+        Model<Integer> rating = Model.of();
+        rateForm.add(new OatRatingField("rateIt", "Rate this page", rating)
+                .add(new AjaxFormChoiceComponentUpdatingBehavior() {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget target) {
+                        Oat.toast(target, "You gave it " + rating.getObject() + " of 5.", OatVariant.SUCCESS, "Thanks!");
+                    }
+                }));
+
+        // Radial progress: an upload moving on with each click, and other rings
+        OatRadialProgress upload = new OatRadialProgress("upload", () -> uploaded)
+                .setVariant(() -> uploaded >= 100 ? OatVariant.SUCCESS : OatVariant.DEFAULT);
+        add(upload);
+        add(new AjaxLink<Void>("uploadMore") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                uploaded = uploaded >= 100 ? 0 : uploaded + 20;
+                target.add(upload);
+            }
+        }.add(Oat.Behaviors.button().setStyle(ButtonBehavior.Style.OUTLINE).setSize(ButtonBehavior.Size.SMALL)));
+        add(new OatRadialProgress("profile", Model.of(3), Model.of(5)).setText(Model.of("3/5")).setVariant(OatVariant.SECONDARY));
+        add(new OatRadialProgress("disk", 93).setVariant(OatVariant.DANGER));
     }
 }

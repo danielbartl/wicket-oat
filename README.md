@@ -73,9 +73,9 @@ add(OatButton.onClick("myButton", "Click Me", target ->                        /
 - **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatSteps`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
-- **Data Display:** `OatDataTable`, `OatList`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatMeter`, `OatSkeleton`, `OatSpinner`
+- **Data Display:** `OatDataTable`, `OatList`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatRadialProgress`, `OatMeter`, `OatRating`, `OatSkeleton`, `OatSpinner`
 - **Records & Trees:** `OatCrud`, `OatTree`, `OatTableTree`; data table columns `OatRowDetailsColumn`, `OatEditableColumn`
-- **Forms:** `OatMultiSelectField`, `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
+- **Forms:** `OatMultiSelectField`, `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatRatingField`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
 
 ### Variants
 
@@ -629,6 +629,32 @@ add(OatIndicator.status("presence", () -> ada.isOnline() ? OatVariant.SUCCESS : 
 add(new OatStatus("api", () -> api.isUp() ? OatVariant.SUCCESS : OatVariant.DANGER, () -> api.isUp() ? "Online" : "Down"));
 ```
 
+`OatRatingField` chooses a rating from one to five stars, and `OatRating` shows
+one, e.g. a product's average. The field's stars are radio buttons, so the arrow
+keys move between them and screen readers read "3 stars"; the model holds the
+number of stars, `null` while none is chosen. `OatRating` rounds to half a star and
+is read as "4.5 out of 5 stars". Both take `setMax(n)` for up to 10 stars:
+
+```java
+form.add(new OatRatingField("rating", "How did we do?", Model.of()).setRequired(true));
+// <span wicket:id="score"></span>
+add(new OatRating("score", () -> reviews.averageFor(product)));
+
+// In a test
+formTester.setValue("rating:input", "4");
+```
+
+`OatRadialProgress` is a ring that fills up, with the percentage in the middle, as
+a `progressbar` for screen readers. Name it in the markup, and give it a variant
+for its color:
+
+```java
+// <div wicket:id="storage" aria-label="Storage used"></div>
+add(new OatRadialProgress("storage", () -> account.usedGigabytes(), () -> account.quotaGigabytes())
+        .setVariant(() -> account.isNearlyFull() ? OatVariant.DANGER : OatVariant.DEFAULT));
+add(new OatRadialProgress("profile", Model.of(3), Model.of(5)).setText(Model.of("3/5")));
+```
+
 `OatMultiSelectField` chooses several values, looked up on the server as the
 user types, and shows them as chips with a remove button. Like `OatAutoCompleteField`,
 it also works inside an `OatDialog` or `OatPopover`. Wicket adds the suggestion list
@@ -1012,6 +1038,14 @@ customer.add(new OatEmailField("email").add(Oat.Behaviors.col(6)));
 
 `Oat.Behaviors.container()`, `col(span, offset)`, `hstack()` and `vstack()` work
 the same way.
+
+`wicket-oat.css` adds two things of its own. A `<kbd>` looks like a key to press,
+and `oat-divider` draws a line across with a word in the middle:
+
+```html
+<p>Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search.</p>
+<div class="oat-divider">or</div>   <!-- empty, it is just the line -->
+```
 
 Anything beyond that belongs in your own stylesheet, using Oat's CSS variables
 (`var(--space-4)`, `var(--primary)`, ...) so it follows the current theme.

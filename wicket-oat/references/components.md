@@ -72,6 +72,7 @@ Behavior of the field panels:
 - `new OatListMultipleChoice<>(id, label, model, choices, renderer?)`: `OatListMultipleChoice`, a `<select multiple>` bound to a collection of the selected choices; `setMaxRows(n)` sets its height.
 - `new OatCheckBox(id, label, model)`
 - `new OatSwitch(id, label, model)`
+- `new OatRatingField(id, label, IModel<Integer> model)`: `OatRatingField`, stars to choose a rating from (radio buttons with values `"1"`..`"5"` in a `<fieldset>` with a `<legend>`, each named "3 stars" by `OatRatingField.stars`); hovering previews, the arrow keys move between stars. The model holds the number of stars, `null` while none is chosen; `setMax(1..10)`. Test: `formTester.setValue("rating:input", "4")`.
 - `new OatDateField(id, label, model)`
 - `new OatDateTimeLocalField(id, label, model)`
 - `new OatTimeField(id, label, model)`
@@ -125,9 +126,12 @@ Behavior of the field panels:
   - `new OatActionsColumn<>()`: a "⋯" menu per row; `addAction(label, (target, row) -> ...)` returns the action for `.setVariant(OatVariant.DANGER)` (shown in red) and `.setVisibleWhen(row -> ...)`. A row without visible actions shows no button.
   - `new OatSelectionColumn<>(IModel<? extends Collection<T>> selection)`: row checkboxes plus a "select all on this page" box in the header; kept across pages and sorting, compared with `equals`. For entities, select by key so the page keeps only ids, and load the rows by key: `new OatSelectionColumn<>(IModel<Set<Long>> selectedIds, Invoice::getId, ids -> invoices.findAllById(ids))` (any `Iterable`); `getSelectedRows(provider)` (and bulk actions) then get every selected row, also those a search hides. Without the loader they are looked up through the data provider, which reads every row and misses those it doesn't return at the time. Sends `OatSelectionColumn.SelectionChanged` (bubbling) on every change.
 - `new OatProgress(id, value, max?)`: Standard `<progress>` bar; `max` is an optional bound model.
+- `new OatRadialProgress(id, value | IModel<? extends Number> value, IModel<? extends Number> max?)`: `OatRadialProgress`, a ring filling clockwise with the percentage in the middle (rounded down); `role="progressbar"` with `aria-valuenow`/`aria-valuemax`/`aria-valuetext`, so name it in the markup (`<div wicket:id="storage" aria-label="Storage used">`). `setVariant(OatVariant | IModel<OatVariant>)` colors the ring, `setText(model)` replaces the percentage (e.g. "3/5"); a `null` value leaves it empty. 4rem wide (`--oat-radial-progress-size`); has a markup id. On any tag.
+- `new OatRating(id, Number | IModel<? extends Number>)`: `OatRating`, a read-only rating as stars, rounded to half a star, `role="img"` named "4.5 out of 5 stars" (`OatRating.label`; `null` is `OatRating.none`, "Not rated yet"). As tall as the surrounding text; `setMax(1..10)`. On any tag, e.g. a `<span>`. Colors: `--oat-rating-color` (amber), `--oat-rating-empty`.
 - `new OatMeter(id, value)`: Simple `<meter>`.
 - `new OatMeter(id, value, min, max, low, high, optimum)`: Advanced `<meter>` with full range/zone control.
 - `new OatSpinner(id, size?)`: Loading indicator.
+- CSS only, from `wicket-oat.css`: `<kbd>Ctrl</kbd>` is styled as a key (a `<kbd>` holding `<kbd>`s, a whole shortcut, is not); `<div class="oat-divider">or</div>` is a line across with the word in the middle, an empty one just the line.
 - `new OatSkeleton(id, shape?)`: Placeholder for loading content.
 
 ## Usage Example

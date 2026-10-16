@@ -72,6 +72,29 @@
         <div wicket:id="team"></div>
         <wicket:fragment wicket:id="memberAvatar"><span wicket:id="presence"><div wicket:id="avatar"></div></span></wicket:fragment>
 
+        <h3 class="mt-6">Rating</h3>
+        <p>Stars to show with <code>OatRating</code>, rounded to half a star, and to choose with <code>OatRatingField</code>, radio buttons underneath.</p>
+        <p>Oat Granola <span wicket:id="productRating"></span> <small class="text-light">4.3 from 128 reviews</small></p>
+        <p>Oat Milk <span wicket:id="newRating"></span> <small class="text-light">No reviews yet</small></p>
+        <form wicket:id="rateForm"><div wicket:id="rateIt"></div></form>
+
+        <h3 class="mt-6">Radial Progress</h3>
+        <p>A ring filling up with <code>OatRadialProgress</code>, in a variant's color, with the percentage or a text of yours in the middle.</p>
+        <div class="hstack gap-6 items-center">
+            <div wicket:id="upload" aria-label="Upload"></div>
+            <div wicket:id="profile" aria-label="Profile filled in"></div>
+            <div wicket:id="disk" aria-label="Disk used"></div>
+            <button wicket:id="uploadMore" type="button">Upload more</button>
+        </div>
+
+        <h3 class="mt-6">Keys and Divider</h3>
+        <p>Keys to press in a <code>&lt;kbd&gt;</code>: press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search, or <kbd><kbd>Shift</kbd>+<kbd>?</kbd></kbd> for all shortcuts.</p>
+        <div class="vstack gap-2 demo-narrow">
+            <button type="button" class="outline">Continue with your company account</button>
+            <div class="oat-divider">or</div>
+            <button type="button">Sign in with email</button>
+        </div>
+
     </section>
 </wicket:extend>
 </body>

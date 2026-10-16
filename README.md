@@ -593,7 +593,10 @@ add(new OatLoadMoreList<>("mail", provider, 20, (id, mail) -> new MailRow(id, ma
 `OatList` shows rows of things, the way a phone app lists them: a title and a line
 under it, with room for an avatar or icon in front and a badge or button at the
 end. With `setOnClick(...)` the whole row is a link, and buttons at the end stay
-clickable on their own:
+clickable on their own. The parts in front and at the end are on a `<div>`, so a
+button goes in a `Fragment` or panel of yours, on a `<button>` tag. The rows are read
+once per request and each row's model finds its row by position, as in a `ListView`;
+`setReuseItems(true)` keeps form fields in the rows across a failed validation:
 
 ```java
 add(new OatList<>("team", () -> people.all(), Person::name)
@@ -606,8 +609,11 @@ add(new OatList<>("team", () -> people.all(), Person::name)
 
 `OatIndicator` puts a count or a status dot on a corner of what you put in its
 tag, such as unread messages on a link or a person's presence on their avatar. A
-count is hidden while it is 0, and `target.add(indicator)` updates it. `OatStatus`
-is the dot on its own, named for screen readers:
+count is hidden while it is 0, and `target.add(indicator)` updates it. A link's
+own name doesn't include the count; to have it read when the link is focused too,
+describe the link by the badge with
+`AttributeModifier.replace("aria-describedby", () -> inbox.getItem().getMarkupId())`.
+`OatStatus` is the dot on its own, named for screen readers:
 
 ```java
 // <span wicket:id="inbox"><a wicket:id="link">Inbox</a></span>

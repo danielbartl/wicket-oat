@@ -17,7 +17,7 @@ import java.util.Objects;
  * add(new OatStatus("database", () -> db.isUp() ? OatVariant.SUCCESS : OatVariant.DANGER,
  *         () -> db.isUp() ? "Online" : "Offline"));
  * }</pre>
- * on a {@code <span>}. The dot has the variant's color: the primary color by default,
+ * on any tag, e.g. a {@code <span>}. The dot has the variant's color: the primary color by default,
  * gray for {@code SECONDARY}, green, amber or red for {@code SUCCESS}, {@code WARNING} and
  * {@code DANGER}. Screen readers announce its label; without one, e.g. next to a text
  * that says the same, they skip the dot. {@link OatIndicator#status} puts one on a
@@ -44,7 +44,6 @@ public class OatStatus extends WebComponent {
 
     @Override
     protected void onComponentTag(ComponentTag tag) {
-        checkComponentTag(tag, "span");
         super.onComponentTag(tag);
         if (tag.isOpenClose()) {
             tag.setType(TagType.OPEN);

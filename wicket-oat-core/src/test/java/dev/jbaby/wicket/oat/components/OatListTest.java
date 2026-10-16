@@ -2,6 +2,7 @@ package dev.jbaby.wicket.oat.components;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -97,6 +99,88 @@ class OatListTest {
         tester.startComponentInPage(list);
         assertThat(tags("rows")).hasSize(1);
         assertThat(tags("empty")).isEmpty();
+    }
+
+    /** A row type that can't be serialized, such as a JPA entity. */
+    static final class Entity {
+        final String name;
+
+        Entity(String name) {
+            this.name = name;
+        }
+    }
+
+    @Test
+    void rowsAreNotKeptWithThePage() {
+        List<String> clicked = new ArrayList<>();
+        OatList<Entity> list = new OatList<>("things", () -> List.of(new Entity("First"), new Entity("Second")), entity -> entity.name)
+                .setOnClick((target, entity) -> clicked.add(entity.name));
+        tester.startComponentInPage(list);
+
+        // Read again through the row's model on click, not kept by the link
+        WicketObjects.cloneObject(tester.getLastRenderedPage());
+        List<Component> links = new ArrayList<>();
+        list.visitChildren(AjaxLink.class, (link, visit) -> links.add(link));
+        tester.clickLink(links.get(0));
+        assertThat(clicked).containsExactly("First");
+    }
+
+    @Test
+    void theRowsAreReadOncePerRequest() {
+        AtomicInteger reads = new AtomicInteger();
+        tester.startComponentInPage(new OatList<>("team", () -> {
+                    reads.incrementAndGet();
+                    return TEAM;
+                }, Person::name)
+                .setSubtitle(Person::role)
+                .setTrailing((id, person) -> new Label(id, person.map(Person::role)))
+                .setEmptyState(id -> new Label(id, "Nobody here")));
+
+        assertThat(tags("rows")).hasSize(2);
+        assertThat(reads).hasValue(1);
+    }
+
+    @Test
+    void withoutAnActionTheRowsHaveNoLinkAtAll() {
+        OatList<Person> list = new OatList<>("team", Model.ofList(TEAM), Person::name);
+        tester.startComponentInPage(list);
+
+        // Not a disabled AjaxLink, which would want a markup id it can't render
+        List<Component> links = new ArrayList<>();
+        list.visitChildren(AjaxLink.class, (link, visit) -> links.add(link));
+        assertThat(links).isEmpty();
+    }
+
+    @Test
+    void aMissingTitleIsEmptyAndMissingRowsAreNone() {
+        tester.startComponentInPage(new OatList<>("team", Model.ofList(List.of(new Person(null, "Guest"))), Person::name));
+        assertThat(tester.getTagByWicketId("title").getValue()).isEmpty();
+
+        tester.startComponentInPage(new OatList<Person>("team", () -> null, Person::name)
+                .setEmptyState(id -> new Label(id, "Nobody here")));
+        assertThat(tags("list")).isEmpty();
+        assertThat(tester.getTagByWicketId("empty").getValue()).isEqualTo("Nobody here");
+    }
+
+    @Test
+    void theListCanBeUpdatedOverAjax() {
+        tester.startComponentInPage(new OatList<>("team", Model.ofList(TEAM), Person::name));
+
+        assertThat(tester.getTagByWicketId("team").getAttribute("id")).isNotBlank();
+    }
+
+    @Test
+    void reusedRowsShowTheirRowsAfterTheListChanges() {
+        IModel<List<Person>> people = Model.ofList(new ArrayList<>(TEAM));
+        OatList<Person> list = new OatList<>("team", people, Person::name)
+                .setTrailing((id, person) -> new Label(id, person.map(Person::name)))
+                .setReuseItems(true);
+        tester.startComponentInPage(list);
+
+        people.getObject().remove(0);
+        tester.startComponentInPage(list);
+        assertThat(tags("title")).extracting(TagTester::getValue).containsExactly("Alan Turing");
+        assertThat(tags("trailing")).extracting(TagTester::getValue).containsExactly("Alan Turing");
     }
 
     @Test

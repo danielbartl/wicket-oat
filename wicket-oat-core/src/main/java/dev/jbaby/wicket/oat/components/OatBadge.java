@@ -37,6 +37,17 @@ public class OatBadge extends Label {
         add(behavior);
     }
 
+    /**
+     * Whether a badge with this content shows: not for {@code null}, 0 or an empty text.
+     * The rule of the sidebar's badges and {@link OatIndicator}'s.
+     */
+    static boolean isShown(Object badge) {
+        if (badge instanceof Number number) {
+            return number.doubleValue() != 0;
+        }
+        return badge != null && !badge.toString().isEmpty();
+    }
+
     public OatBadge setOutline(boolean outline) {
         behavior.setOutline(outline);
         return this;

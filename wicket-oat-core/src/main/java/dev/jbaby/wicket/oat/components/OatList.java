@@ -4,6 +4,7 @@ import dev.jbaby.wicket.oat.util.SerializableBiConsumer;
 import dev.jbaby.wicket.oat.util.SerializableBiFunction;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.Behavior;
@@ -13,7 +14,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.LoadableDetachableModel;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,8 +31,11 @@ import java.util.Objects;
  *         .setOnClick((target, person) -> setResponsePage(PersonPage.class, PersonPage.parameters(person))));
  * }</pre>
  * on any tag, e.g. {@code <div wicket:id="team"></div>}. The rows are shown in the order
- * given, read on every render. The factories for the parts in front and at the end get
- * the id to use and the row's model.
+ * given, read once per request. The factories for the parts in front and at the end get
+ * the id to use and the row's model; a row's model finds it by its position in the
+ * list, as a {@link ListView}'s does. The parts are on a {@code <div>}, so a button
+ * there goes in a {@code Panel} or {@code Fragment} of your own, on a {@code <button>}
+ * tag. The list has a markup id, so {@code target.add(list)} shows changed rows.
  * <p>
  * With {@link #setOnClick} the title becomes a link that covers the whole row, while
  * buttons at the end stay clickable on their own. While there are no rows,
@@ -46,53 +50,68 @@ public class OatList<T> extends Panel {
     private static final String EMPTY_ID = "empty";
 
     private final IModel<? extends List<T>> rows;
+    // The rows, read once per request: each row's model and the empty state read them through this
+    private final IModel<List<T>> loaded;
+    private final ListView<T> rowsView;
     private SerializableFunction<T, ?> subtitle;
     private SerializableBiFunction<String, IModel<T>, ? extends Component> leading;
     private SerializableBiFunction<String, IModel<T>, ? extends Component> trailing;
     private SerializableBiConsumer<AjaxRequestTarget, T> onClick;
 
     /**
-     * @param rows the rows, in the order to show them
+     * @param rows the rows, in the order to show them; {@code null} counts as none
      * @param title a row's title, e.g. a person's name
      */
     public OatList(String id, IModel<? extends List<T>> rows, SerializableFunction<T, ?> title) {
         super(id);
         this.rows = Objects.requireNonNull(rows);
         Objects.requireNonNull(title);
+        this.loaded = LoadableDetachableModel.of(() -> {
+            List<T> list = rows.getObject();
+            return list != null ? list : List.of();
+        });
+        setOutputMarkupId(true);
 
         WebMarkupContainer list = new WebMarkupContainer("list") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(!rows.getObject().isEmpty());
+                setVisible(!loaded.getObject().isEmpty());
             }
         };
         add(list);
-        list.add(new ListView<T>("rows", rows) {
+        rowsView = new ListView<T>("rows", loaded) {
             @Override
             protected void populateItem(ListItem<T> item) {
-                T row = item.getModelObject();
-                item.add(part(LEADING_ID, leading, item.getModel()));
+                IModel<T> row = item.getModel();
+                item.add(part(LEADING_ID, leading, row));
 
-                AjaxLink<Void> link = new AjaxLink<>("link") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        onClick.accept(target, row);
-                    }
-                };
-                // Without an action, just the title
-                link.setEnabled(onClick != null);
-                link.setRenderBodyOnly(onClick == null);
-                link.add(new Label("title", Model.of(String.valueOf(title.apply(row)))));
+                // The row from its model on click, so the link doesn't keep the row with the page
+                MarkupContainer link = onClick == null
+                        ? (MarkupContainer) new WebMarkupContainer("link").setRenderBodyOnly(true)
+                        : new AjaxLink<T>("link", row) {
+                            @Override
+                            public void onClick(AjaxRequestTarget target) {
+                                onClick.accept(target, getModelObject());
+                            }
+                        };
+                link.add(new Label("title", row.map(r -> title.apply(r))));
                 item.add(link);
 
-                Object text = subtitle != null ? subtitle.apply(row) : null;
-                item.add(new Label("subtitle", Model.of(text != null ? text.toString() : null))
-                        .setVisible(text != null && !text.toString().isBlank()));
+                IModel<String> text = row.map(r -> subtitle != null ? subtitle.apply(r) : null).map(Object::toString);
+                item.add(new Label("subtitle", text) {
+                    @Override
+                    protected void onConfigure() {
+                        super.onConfigure();
+                        String value = text.getObject();
+                        setVisible(value != null && !value.isBlank());
+                    }
+                });
 
-                item.add(part(TRAILING_ID, trailing, item.getModel()));
+                item.add(part(TRAILING_ID, trailing, row));
             }
-        });
+        };
+        list.add(rowsView);
         add(new WebMarkupContainer(EMPTY_ID).setVisible(false));
     }
 
@@ -101,12 +120,15 @@ public class OatList<T> extends Panel {
         if (factory == null) {
             return new WebMarkupContainer(id).setVisible(false);
         }
-        Component part = factory.apply(id, row);
-        if (part == null || !id.equals(part.getId())) {
-            throw new IllegalArgumentException("The component must use the id passed to the factory (\"" + id + "\"), but was "
-                    + (part == null ? "null" : "\"" + part.getId() + "\""));
+        return checkId(id, factory.apply(id, row), "The component");
+    }
+
+    private static Component checkId(String id, Component component, String what) {
+        if (component == null || !id.equals(component.getId())) {
+            throw new IllegalArgumentException(what + " must use the id passed to the factory (\"" + id + "\"), but was "
+                    + (component == null ? "null" : "\"" + component.getId() + "\""));
         }
-        return part;
+        return component;
     }
 
     /** A line under a row's title, e.g. a role or a date. */
@@ -121,7 +143,10 @@ public class OatList<T> extends Panel {
         return this;
     }
 
-    /** Something at the end of each row, e.g. an {@code OatBadge} or a button. */
+    /**
+     * Something at the end of each row, e.g. an {@code OatBadge}, or a panel with a button:
+     * the part is on a {@code <div>}, which can't be a button itself.
+     */
     public OatList<T> setTrailing(SerializableBiFunction<String, IModel<T>, ? extends Component> trailing) {
         this.trailing = trailing;
         return this;
@@ -142,23 +167,34 @@ public class OatList<T> extends Panel {
      * gets the id to use.
      */
     public OatList<T> setEmptyState(SerializableFunction<String, ? extends Component> emptyState) {
-        Component empty = emptyState.apply(EMPTY_ID);
-        if (empty == null || !EMPTY_ID.equals(empty.getId())) {
-            throw new IllegalArgumentException("The empty state must use the id passed to the factory (\"" + EMPTY_ID
-                    + "\"), but was " + (empty == null ? "null" : "\"" + empty.getId() + "\""));
-        }
+        Component empty = checkId(EMPTY_ID, emptyState.apply(EMPTY_ID), "The empty state");
         empty.add(new Behavior() {
             @Override
             public void onConfigure(Component component) {
-                component.setVisible(rows.getObject().isEmpty());
+                component.setVisible(loaded.getObject().isEmpty());
             }
         });
         replace(empty);
         return this;
     }
 
+    /**
+     * Keeps the rows' components from one render to the next instead of making them anew,
+     * as {@link ListView#setReuseItems} does: needed for form fields in the rows, e.g. a
+     * switch at the end of each, so that what the user entered survives a failed
+     * validation. Off by default. Rows are matched by their position, so the parts in
+     * front and at the end must read the row through its model on every render, e.g.
+     * {@code new OatAvatar(id, person.map(Person::initials))}, not
+     * {@code person.getObject().initials()} once.
+     */
+    public OatList<T> setReuseItems(boolean reuseItems) {
+        rowsView.setReuseItems(reuseItems);
+        return this;
+    }
+
     @Override
     protected void onDetach() {
+        loaded.detach();
         rows.detach();
         super.onDetach();
     }

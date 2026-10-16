@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.OatVariant;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 class OatIndicatorTest {
 
@@ -44,9 +45,29 @@ class OatIndicatorTest {
     }
 
     @Test
-    void aStatusIsASpan() {
-        assertThatThrownBy(() -> tester.startComponentInPage(new OatStatus("status", OatVariant.SUCCESS, "Online"),
-                Markup.of("<div wicket:id='status'></div>"))).hasStackTraceContaining("span");
+    void aStatusCanBeOnAnyTag() {
+        // E.g. in OatList's parts, which are <div>s
+        tester.startComponentInPage(new OatStatus("status", OatVariant.SUCCESS, "Online"), Markup.of("<div wicket:id='status'></div>"));
+
+        assertThat(tester.getTagByWicketId("status").getAttribute("class")).isEqualTo("oat-status");
+    }
+
+    @Test
+    void aStatusDotTakesItsColorFromItsOwnVariant() {
+        OatIndicator presence = OatIndicator.status("presence", Model.of(OatVariant.SUCCESS), Model.of("Online"));
+
+        assertThatIllegalStateException().isThrownBy(() -> presence.setVariant(OatVariant.DANGER));
+    }
+
+    @Test
+    void theBadgeHasAMarkupIdToDescribeALink() {
+        OatIndicator inbox = new OatIndicator("inbox", Model.of(3));
+        inbox.add(new Label("link", "Inbox").add(AttributeModifier.replace("aria-describedby", () -> inbox.getItem().getMarkupId())));
+        tester.startComponentInPage(inbox, Markup.of("<span wicket:id='inbox'><a wicket:id='link'></a></span>"));
+
+        String id = tester.getTagByWicketId("item").getAttribute("id");
+        assertThat(id).isNotBlank();
+        assertThat(tester.getTagByWicketId("link").getAttribute("aria-describedby")).isEqualTo(id);
     }
 
     @Test

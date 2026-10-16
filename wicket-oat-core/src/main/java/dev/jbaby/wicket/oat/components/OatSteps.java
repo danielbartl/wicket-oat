@@ -10,11 +10,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 /**
  * Where a process stands, as numbered steps joined by a line - an order going from
@@ -29,7 +29,8 @@ import java.util.stream.IntStream;
  * <p>
  * With {@link #setOnSelect} the steps already done are links back to them, as in
  * {@link OatWizard}. The list is named "Steps" for screen readers ({@code OatSteps.label},
- * translated); {@link #setLabel} names it otherwise.
+ * translated); {@link #setLabel} names it otherwise. The steps have a markup id, so
+ * {@code target.add(steps)} shows a new current step.
  */
 public class OatSteps extends Panel {
 
@@ -43,7 +44,7 @@ public class OatSteps extends Panel {
     }
 
     /**
-     * @param titles the steps' titles, in order, read on every render
+     * @param titles the steps' titles, in order, read once per request
      * @param current the index of the current step, from 0
      */
     public OatSteps(String id, IModel<? extends List<String>> titles, IModel<Integer> current) {
@@ -51,14 +52,21 @@ public class OatSteps extends Panel {
         this.titles = Objects.requireNonNull(titles);
         this.current = Objects.requireNonNull(current);
 
+        setOutputMarkupId(true);
+
         WebMarkupContainer list = new WebMarkupContainer("list");
         list.add(AttributeModifier.replace("aria-label",
                 (IModel<String>) () -> label != null ? label.getObject() : getString("OatSteps.label")));
         add(list);
-        list.add(new ListView<>("items", (IModel<List<Integer>>) () -> IntStream.range(0, titles.getObject().size()).boxed().toList()) {
+        // The titles read once per request, also for OatWizard's, which are models of their own
+        IModel<List<String>> loaded = LoadableDetachableModel.of(() -> {
+            List<String> all = titles.getObject();
+            return all != null ? all : List.of();
+        });
+        list.add(new ListView<String>("items", loaded) {
             @Override
-            protected void populateItem(ListItem<Integer> item) {
-                int index = item.getModelObject();
+            protected void populateItem(ListItem<String> item) {
+                int index = item.getIndex();
                 int now = currentStep();
                 item.add(AttributeModifier.replace("data-state", index < now ? "done" : index == now ? "current" : "upcoming"));
                 item.add(AttributeModifier.replace("aria-current", index == now ? "step" : null));
@@ -70,7 +78,7 @@ public class OatSteps extends Panel {
                 };
                 link.setEnabled(onSelect != null && index < now);
                 link.add(new Label("number", String.valueOf(index + 1)));
-                link.add(new Label("title", Model.of(titles.getObject().get(index))));
+                link.add(new Label("title", item.getModel()));
                 item.add(link);
             }
         });

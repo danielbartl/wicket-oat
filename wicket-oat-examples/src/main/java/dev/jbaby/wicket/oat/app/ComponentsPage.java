@@ -79,7 +79,7 @@ public class ComponentsPage extends BasePage {
 
         // Steps: where an order stands; "Next" moves it on
         OatSteps steps = new OatSteps("orderSteps", List.of("Ordered", "Paid", "Shipped", "Delivered"), () -> stage);
-        steps.setLabel(Model.of("Order status")).setOutputMarkupId(true);
+        steps.setLabel(Model.of("Order status"));
         add(steps);
         add(new AjaxLink<Void>("nextStage") {
             @Override

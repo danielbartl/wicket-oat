@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,6 +68,26 @@ class OatStepsTest {
 
         tester.clickLink(links.get(1));
         assertThat(selected).containsExactly(1);
+    }
+
+    @Test
+    void theTitlesAreReadOncePerRequest() {
+        AtomicInteger reads = new AtomicInteger();
+        tester.startComponentInPage(new OatSteps("steps", () -> {
+            reads.incrementAndGet();
+            return ORDER;
+        }, Model.of(1)));
+
+        assertThat(steps()).hasSize(4);
+        assertThat(reads).hasValue(1);
+        assertThat(tester.getTagByWicketId("steps").getAttribute("id")).isNotBlank();
+    }
+
+    @Test
+    void missingTitlesAreNoSteps() {
+        tester.startComponentInPage(new OatSteps("steps", () -> null, Model.of(0)));
+
+        assertThat(steps()).isEmpty();
     }
 
     @Test

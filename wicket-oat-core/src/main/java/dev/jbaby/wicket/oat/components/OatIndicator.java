@@ -5,10 +5,8 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import java.util.Objects;
 
@@ -31,10 +29,16 @@ import java.util.Objects;
  * add(presence);
  * }</pre>
  * A count shows as a small badge on the top corner at the end, hidden while it is
- * {@code null}, 0 or empty, so it can also be a word like "New". Screen readers read it
- * after what it marks ("Inbox 3"). A status is an {@link OatStatus} dot on the bottom
- * corner at the end; {@link #setCorner} moves either. The tag gets a markup id, so
- * {@code target.add(inbox)} updates the count.
+ * {@code null}, 0 or empty, so it can also be a word like "New". It comes after what it
+ * marks, so screen readers reading the page read "Inbox 3", but a link focused with the
+ * Tab key is announced by its own name only. To read the count there too, have the
+ * link described by the badge, which always has a markup id:
+ * <pre>{@code
+ * link.add(AttributeModifier.replace("aria-describedby", () -> inbox.getItem().getMarkupId()));
+ * }</pre>
+ * A status is an {@link OatStatus} dot on the bottom corner at the end;
+ * {@link #setCorner} moves either. The tag gets a markup id, so {@code target.add(inbox)}
+ * updates the count.
  */
 public class OatIndicator extends Border {
 
@@ -60,15 +64,13 @@ public class OatIndicator extends Border {
     /** @param badge the count or short text in the badge, read on every render */
     public OatIndicator(String id, IModel<?> badge) {
         this(id, Corner.TOP_END);
-        Label count = new Label(ITEM_ID, Objects.requireNonNull(badge)) {
+        OatBadge count = new OatBadge(ITEM_ID, Objects.requireNonNull(badge), (IModel<OatVariant>) () -> variant) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(OatAppLayout.isShownBadge(getDefaultModelObject()));
+                setVisible(OatBadge.isShown(getDefaultModelObject()));
             }
         };
-        count.add(AttributeAppender.append("class", "badge"));
-        count.add(AttributeModifier.replace("data-variant", (IModel<String>) () -> variant.getValue()));
         addItem(count);
     }
 
@@ -96,6 +98,7 @@ public class OatIndicator extends Border {
      * tags stand between it and the indicator's tag, so CSS can't rely on the parent.
      */
     private void addItem(Component item) {
+        item.setOutputMarkupId(true);
         item.add(AttributeAppender.append("class", "oat-indicator-item"));
         item.add(AttributeModifier.replace("data-corner", (IModel<String>) () -> corner.value));
         addToBorder(item);
@@ -106,8 +109,16 @@ public class OatIndicator extends Border {
         return this;
     }
 
-    /** The badge's color, e.g. {@code DANGER} for unread messages; the primary color by default. */
+    /**
+     * The badge's color, e.g. {@code DANGER} for unread messages; the primary color by
+     * default. A status dot has the color of the variant given to {@link #status}.
+     *
+     * @throws IllegalStateException for an indicator with a status dot
+     */
     public OatIndicator setVariant(OatVariant variant) {
+        if (getItem() instanceof OatStatus) {
+            throw new IllegalStateException("A status dot has the color of the variant given to OatIndicator.status(...)");
+        }
         this.variant = Objects.requireNonNull(variant);
         return this;
     }

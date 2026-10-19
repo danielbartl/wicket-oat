@@ -4,6 +4,12 @@
  * Policy, which blocks inline styles.
  */
 /*
+ * Oat's cascade layers, in Oat's order. The first file to name a layer fixes its place,
+ * so this keeps the order also where this file is loaded before oat.min.css.
+ */
+@layer theme, base, components, animations, utilities;
+
+/*
  * Wicket renders a hidden component that's updated over Ajax as an empty placeholder
  * with the hidden attribute. Oat's display rules for buttons and the like would
  * otherwise beat the browser's [hidden] rule and show it.
@@ -507,6 +513,29 @@ menu.buttons > li:first-child ot-dropdown > button {
     border-end-start-radius: var(--radius-medium);
 }
 
+/*
+ * OatDropdown, OatSplitButton and OatPopover open without the zoom Oat 1.0 gives them.
+ * Oat places a menu as it opens, measuring it at 97% of its size: one aligned to the
+ * end of its button stuck out past it, and one that fit only at 97% opened past the
+ * window's edge. In Oat's layer, so your own rules win. Drop this once Oat measures
+ * the menu at full size (https://github.com/knadh/oat/issues/189).
+ */
+@layer components {
+    ot-dropdown [popover]:not(.ot-tooltip) {
+        transform: translateY(-4px);
+    }
+
+    ot-dropdown [popover]:not(.ot-tooltip):popover-open {
+        transform: translateY(0);
+    }
+
+    @starting-style {
+        ot-dropdown [popover]:not(.ot-tooltip):popover-open {
+            transform: translateY(-4px);
+        }
+    }
+}
+
 /* OatPopover: room around its content */
 ot-dropdown > .oat-popover {
     padding: var(--space-4);
@@ -535,10 +564,10 @@ fieldset.oat-range-field fieldset.group {
 
 /* OatAutoCompleteField: Wicket's suggestion list, looking like Oat's dropdown menu */
 .wicket-aa-container.oat-autocomplete {
-    background-color: var(--background);
+    background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-medium);
-    box-shadow: var(--shadow-small);
+    box-shadow: var(--shadow-medium);
 }
 
 /* In a dialog or popover, wicket-oat.js shows the list as a popover; keep Wicket's position and size */
@@ -930,10 +959,10 @@ fieldset.oat-range-field fieldset.group {
     margin: 0;
     min-width: 12rem;
     padding: var(--space-1);
-    background-color: var(--background);
+    background-color: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-medium);
-    box-shadow: var(--shadow-small);
+    box-shadow: var(--shadow-medium);
 }
 
 .oat-context-menu [role="menuitem"] {

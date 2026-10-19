@@ -26,6 +26,32 @@
 
 - Built and tested with Wicket 10.11.0 (was 10.8.0), which fixes a thread leak in
   Wicket's file cleaner (WICKET-7186) and autocomplete fields (WICKET-7182).
+- Oat UI 1.0.0 (was 0.8.3). Its script is unchanged, so nothing changes for your code, but
+  the CSS gives everything a new look:
+  - Light and Dark, and pages without a theme, get Oat's new neutral palette: buttons are
+    near-black instead of brown in Light and light grey instead of white in Dark, text is
+    a little softer, and borders and inputs are subtler. A component pinned to Light or
+    Dark (`Oat.Behaviors.theme(...)`) follows.
+  - Every theme gets smaller corners (`--radius-medium` .25rem, `--radius-large` .5rem;
+    Business keeps its own), new shadows (Business light keeps its own), slower and
+    smoother animations (`--transition` 300ms), tighter badges, a 3px focus ring, and no
+    shadow under the sidebar and the top bar. In a dark theme a button darkens on hover
+    instead of lightening.
+  - Toasts stack: several show as one, the newest in front and the others peeking out
+    behind it, until the pointer or focus is on them. While stacked, Oat's toast container
+    is `display: grid` and the older toasts' content is hidden, which your own CSS for
+    `.toast` may notice.
+  - Fix: a tooltip on an item in an `OatDropdown` or `OatPopover` (also an
+    `OatSplitButton`'s menu) no longer hides the item. Oat 0.8.3 also styled the tooltip
+    as a menu, a white box over the item it was about.
+  - `OatDropdown`, `OatSplitButton` and `OatPopover` open without the slight zoom Oat 1.0
+    gives them. Oat places a menu while it is still zoomed out, so a menu aligned to the
+    end of its button stuck out past it, and one that only just fit opened past the
+    window's edge.
+- `Oat.Behaviors.feedbackToasts()` shows a request's messages in order of their level, the
+  most severe last, so it is the one of them in front of Oat's stack.
+- The suggestion list of `OatAutoCompleteField` and the menu of `ContextMenuBehavior` look
+  like Oat 1.0's dropdown menu: the card's background and a stronger shadow.
 - `OatSelectionColumn` selecting by key can load the selected rows by their keys:
   `new OatSelectionColumn<>(selectedIds, Invoice::getId, ids -> invoices.findAllById(ids))`,
   with any `Iterable` the loader returns, as Spring Data's repositories do. Bulk actions

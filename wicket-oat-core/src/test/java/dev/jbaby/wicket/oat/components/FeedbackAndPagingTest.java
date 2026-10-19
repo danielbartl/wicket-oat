@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +68,15 @@ class FeedbackAndPagingTest {
                 public void onClick(AjaxRequestTarget target) {
                 }
             });
+            add(new AjaxLink<Void>("several") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    fatal("Fatal.");
+                    error("Failed.");
+                    warn("Careful.");
+                    info("Noted.");
+                }
+            });
         }
 
         @Override
@@ -74,7 +84,7 @@ class FeedbackAndPagingTest {
             return new StringResourceStream("<html><body>"
                     + "<div wicket:id='feedback'></div>"
                     + "<form wicket:id='form'><div wicket:id='name'></div><button wicket:id='submit'>Go</button></form>"
-                    + "<a wicket:id='success'>success</a><a wicket:id='nothing'>nothing</a>"
+                    + "<a wicket:id='success'>success</a><a wicket:id='nothing'>nothing</a><a wicket:id='several'>several</a>"
                     + "</body></html>");
         }
     }
@@ -144,6 +154,31 @@ class FeedbackAndPagingTest {
         assertThat(tester.getLastResponseAsString())
                 .contains("ot.toast(\"Info message\", null, {})")
                 .contains("ot.toast(\"Error message\", null, {variant: \"danger\"})");
+    }
+
+    @Test
+    void feedbackToastsShowTheMostSevereMessageLastSoItIsInFrontOfOatsStack() {
+        FeedbackPage page = new FeedbackPage(true);
+        page.error("First error");
+        page.success("Saved.");
+        page.info("Info message");
+        page.error("Second error");
+        tester.startPage(page);
+
+        assertThat(toastMessages()).containsExactly("Info message", "Saved.", "First error", "Second error");
+    }
+
+    @Test
+    void feedbackToastsShowAnAjaxRequestsMessagesByLevelTheMostSevereLast() {
+        tester.startPage(new FeedbackPage(true));
+
+        tester.clickLink("several");
+        assertThat(toastMessages()).containsExactly("Noted.", "Careful.", "Failed.", "Fatal.");
+    }
+
+    private List<String> toastMessages() {
+        return Pattern.compile("ot\\.toast\\(\"([^\"]*)\"").matcher(tester.getLastResponseAsString())
+                .results().map(match -> match.group(1)).toList();
     }
 
     @Test

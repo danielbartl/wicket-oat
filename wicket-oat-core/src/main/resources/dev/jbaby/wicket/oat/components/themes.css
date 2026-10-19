@@ -1,5 +1,5 @@
 /**
- * Oat 0.8's built-in palette uses the CSS light-dark() function driven purely by
+ * Oat's built-in palette uses the CSS light-dark() function driven purely by
  * the `color-scheme` property, which otherwise just follows the OS/browser's
  * prefers-color-scheme -- Oat's own CSS ships no [data-theme="light"] or
  * [data-theme="dark"] rule. Without forcing color-scheme here, selecting "Light"
@@ -17,19 +17,19 @@
 /**
  * A component pinned to Light or Dark (Oat.Behaviors.theme(...)) inside a page using
  * another theme would otherwise inherit that theme's variables, since Oat defines its
- * own palette only on :root. Re-declare Oat 0.8.1's defaults (keep them in sync with
+ * own palette only on :root. Re-declare Oat 1.0.0's defaults (keep them in sync with
  * oat.min.css when updating Oat), including the shape tokens the Business themes change.
  **/
 [data-theme="light"],
 [data-theme="dark"] {
     --background: light-dark(#fff, #09090b);
-    --foreground: light-dark(#09090b, #fafafa);
+    --foreground: light-dark(#262626, #e5e5e5);
     --card: light-dark(#fff, #18181b);
-    --card-foreground: light-dark(#09090b, #fafafa);
-    --primary: light-dark(#574747, #fafafa);
+    --card-foreground: light-dark(#262626, #e5e5e5);
+    --primary: light-dark(#262626, #e5e5e5);
     --primary-foreground: light-dark(#fafafa, #18181b);
     --secondary: light-dark(#f4f4f5, #27272a);
-    --secondary-foreground: light-dark(#574747, #fafafa);
+    --secondary-foreground: light-dark(#262626, #fafafa);
     --muted: light-dark(#f4f4f5, #27272a);
     --muted-foreground: light-dark(#71717a, #a1a1aa);
     --faint: light-dark(#fafafa, #1e1e21);
@@ -41,15 +41,15 @@
     --success-foreground: light-dark(#fafafa, #18181b);
     --warning: light-dark(#a65b00, #f0a030);
     --warning-foreground: #09090b;
-    --border: light-dark(#d4d4d8, #52525b);
-    --input: light-dark(#d4d4d8, #52525b);
-    --ring: light-dark(#574747, #d4d4d8);
+    --border: light-dark(#e4e4e7, #303036);
+    --input: light-dark(#e4e4e7, #3f3f46);
+    --ring: light-dark(#71717a, #a1a1aa);
     --radius-small: .125rem;
-    --radius-medium: .375rem;
-    --radius-large: .75rem;
-    --shadow-small: 0 1px 2px 0 rgb(0 0 0 / .05);
-    --shadow-medium: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-    --shadow-large: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+    --radius-medium: .25rem;
+    --radius-large: .5rem;
+    --shadow-small: 0 1px 2px rgb(0 0 0 / .06);
+    --shadow-medium: 0 1px 2px rgb(0 0 0 / .08), 0 3px 6px -2px rgb(0 0 0 / .12);
+    --shadow-large: 0 2px 4px -1px rgb(0 0 0 / .1), 0 10px 20px -8px rgb(0 0 0 / .22);
 }
 
 /*

@@ -511,7 +511,8 @@ menu.buttons > li:first-child ot-dropdown > button {
  * OatDropdown, OatSplitButton and OatPopover open without the zoom Oat 1.0 gives them.
  * Oat places a menu as it opens, measuring it at 97% of its size: one aligned to the
  * end of its button stuck out past it, and one that fit only at 97% opened past the
- * window's edge. In Oat's layer, so your own rules win.
+ * window's edge. In Oat's layer, so your own rules win. Drop this once Oat measures
+ * the menu at full size (https://github.com/knadh/oat/issues/189).
  */
 @layer components {
     ot-dropdown [popover]:not(.ot-tooltip) {

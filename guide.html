@@ -16,8 +16,8 @@
 <meta name="twitter:title" content="Wicket Oat User Guide">
 <meta name="twitter:description" content="The complete guide to Wicket Oat: installing it, its concepts, forms, data tables, CRUD, trees, page building blocks, charts, theming, translations, security, accessibility and testing.">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.3/oat.min.css"
-      integrity="sha384-/A9LW2ziQPR2sphPEFhOKH2gC5Ymkr3aYOf1Er7GliGwkR3UYO2DjNWCPn/cU2MI" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@1.0.0/oat.min.css"
+      integrity="sha384-W8Z3f/RFchsEaPcbktneR+q+yniOOmbyw/5T4SLu439RBvA92XMmMoZWdjkpDQhH" crossorigin="anonymous">
 <link rel="stylesheet" href="assets/themes.css">
 <link rel="stylesheet" href="assets/wicket-oat.css">
 <link rel="stylesheet" href="assets/style.css">
@@ -109,10 +109,10 @@
 <ol><li><a href="#tree">A tree</a></li><li><a href="#table-tree">A tree grid</a></li></ol>
 </li>
 <li><a href="#page-blocks">Page building blocks</a>
-<ol><li><a href="#page-header">Page header</a></li><li><a href="#stat-cards">Key figures</a></li><li><a href="#description-list">Record details</a></li><li><a href="#buttons">Buttons and menus</a></li><li><a href="#tabs">Tabs and accordions</a></li><li><a href="#wizard">Steps</a></li><li><a href="#master-detail">List and details</a></li><li><a href="#timeline">Histories and notes</a></li><li><a href="#small-pieces">Smaller pieces</a></li></ol>
+<ol><li><a href="#page-header">Page header</a></li><li><a href="#stat-cards">Key figures</a></li><li><a href="#description-list">Record details</a></li><li><a href="#buttons">Buttons and menus</a></li><li><a href="#tabs">Tabs and accordions</a></li><li><a href="#wizard">Steps</a></li><li><a href="#master-detail">List and details</a></li><li><a href="#timeline">Histories and notes</a></li><li><a href="#small-pieces">Smaller pieces</a></li><li><a href="#indicators">Counts and status dots</a></li><li><a href="#ratings">Ratings</a></li><li><a href="#radial-progress">Progress rings</a></li></ol>
 </li>
 <li><a href="#navigation">Navigation and lists</a>
-<ol><li><a href="#menu-bar">Menu bar</a></li><li><a href="#context-menu">Context menu</a></li><li><a href="#split-layout">Split layout</a></li><li><a href="#load-more">Long lists</a></li></ol>
+<ol><li><a href="#menu-bar">Menu bar</a></li><li><a href="#context-menu">Context menu</a></li><li><a href="#split-layout">Split layout</a></li><li><a href="#list">Lists of things</a></li><li><a href="#load-more">Long lists</a></li></ol>
 </li>
 <li><a href="#charts">Charts</a>
 </li>
@@ -134,7 +134,7 @@
 </li>
 <li><a href="#ai-skill">AI skill</a>
 </li>
-<li><a href="#whats-new">What's new in 0.3.0</a>
+<li><a href="#whats-new">What's new in 0.4.0</a>
 </li>
 </ol>
         </details>
@@ -144,14 +144,14 @@
 <h2 id="getting-started">Getting started <a class="guide-anchor" href="#getting-started" aria-label="Link to this section">#</a></h2>
 <p>Wicket Oat is a UI component library for Apache Wicket, built on the <a href="https://oat.ink" target="_blank" rel="noopener">Oat UI</a> design system. It gives you styled, accessible, translated components that you use exactly like Wicket's own: plain Java classes, models, <code>.properties</code> files and Ajax, with no JavaScript framework and no CSS framework to learn.</p>
 <h3 id="requirements">Requirements <a class="guide-anchor" href="#requirements" aria-label="Link to this section">#</a></h3>
-<ul><li>Java 17 or newer</li><li>Apache Wicket 10.8 or newer (<code>wicket-core</code> and <code>wicket-extensions</code>)</li><li>Maven or Gradle</li></ul>
+<ul><li>Java 17 or newer</li><li>Apache Wicket 10.11 or newer (<code>wicket-core</code> and <code>wicket-extensions</code>)</li><li>Maven or Gradle</li></ul>
 <h3 id="dependency">Add the dependency <a class="guide-anchor" href="#dependency" aria-label="Link to this section">#</a></h3>
 <pre class="guide-code" data-lang="Maven"><code>&lt;dependency&gt;
     &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
     &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
-    &lt;version&gt;0.3.0&lt;/version&gt;
+    &lt;version&gt;0.4.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
-<aside class="guide-note" role="note"><p>Sections marked <span class="badge new-badge" data-variant="success">New in 0.3.0</span> describe what this release added. Upgrading from 0.2.x? See <a href="#whats-new">What's new in 0.3.0</a>.</p></aside>
+<aside class="guide-note" role="note"><p>Sections marked <span class="badge new-badge" data-variant="success">New in 0.4.0</span> describe what this release added. Upgrading from 0.3.x? See <a href="#whats-new">What's new in 0.4.0</a>.</p></aside>
 <h3 id="install">Install it in your application <a class="guide-anchor" href="#install" aria-label="Link to this section">#</a></h3>
 <p>Call <code>WicketOats.install(this)</code> in your application's <code>init()</code>. It adds Oat's CSS and JavaScript to every page, registers the themes, hooks the busy indicator into Ajax requests, and adds the one CSP source Oat needs.</p>
 <pre class="guide-code" data-lang="Java"><code>public class MyApplication extends WebApplication {
@@ -226,7 +226,7 @@ add(OatAccordion.of("faq", Model.ofList(faqs), (item, faq) -&gt; {
 
 // Components without abstract methods: just the constructor
 add(new OatBadge("status", "Paid", OatVariant.SUCCESS));</code></pre>
-<p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> The factories are <code>OatButton.onClick</code>, <code>OatSubmitButton.onSubmit</code>, <code>OatWizard.onFinish</code>, <code>OatLoginForm.signIn</code>, and <code>of(...)</code> on <code>OatAccordion</code>, <code>OatTabs</code>, <code>OatDropdown</code>, <code>OatButtonGroup</code>, <code>OatBreadcrumb</code>, <code>OatPagination</code>, <code>OatAvatarGroup</code> and <code>OatLazyLoadPanel</code>. <code>Oat.Components</code> has the same ones in one place (<code>Oat.Components.button(...)</code>, <code>accordion(...)</code>, ...), and <code>Oat.Behaviors</code> creates the behaviors. Overridable hooks are named <code>newXxx(id)</code>, as in Wicket, and setters taking a callback <code>setOnXxx(...)</code>, such as <code>OatCrud.setOnSave(...)</code>.</p>
+<p>The factories are <code>OatButton.onClick</code>, <code>OatSubmitButton.onSubmit</code>, <code>OatWizard.onFinish</code>, <code>OatLoginForm.signIn</code>, and <code>of(...)</code> on <code>OatAccordion</code>, <code>OatTabs</code>, <code>OatDropdown</code>, <code>OatButtonGroup</code>, <code>OatBreadcrumb</code>, <code>OatPagination</code>, <code>OatAvatarGroup</code> and <code>OatLazyLoadPanel</code>. <code>Oat.Components</code> has the same ones in one place (<code>Oat.Components.button(...)</code>, <code>accordion(...)</code>, ...), and <code>Oat.Behaviors</code> creates the behaviors. Overridable hooks are named <code>newXxx(id)</code>, as in Wicket, and setters taking a callback <code>setOnXxx(...)</code>, such as <code>OatCrud.setOnSave(...)</code>.</p>
 <h3 id="ids">Ids passed to factories <a class="guide-anchor" href="#ids" aria-label="Link to this section">#</a></h3>
 <p>Many components ask you for a part of themselves: a dialog's content, a table's toolbar, a popover's content, a master-detail's detail. They pass you the id to use, and check that you used it:</p>
 <pre class="guide-code" data-lang="Java"><code>table.setToolbar(id -&gt; new SearchPanel(id, search));          // "toolbar"
@@ -253,9 +253,9 @@ form.add(new OatEmailField("email"));</code></pre>
 <h2 id="app-shell">App shell <a class="guide-anchor" href="#app-shell" aria-label="Link to this section">#</a></h2>
 <h3 id="app-layout">The layout <a class="guide-anchor" href="#app-layout" aria-label="Link to this section">#</a></h3>
 <p><code>OatAppLayout</code> is an abstract <code>WebPage</code> with a top bar, a collapsible sidebar (a menu button on phones) and your page in the main area. It applies the current theme and density to <code>&lt;html&gt;</code>. Override these to fill it:</p>
-<div class="table"><table class="guide-table"><thead><tr><th scope="col">Method</th><th scope="col">What it gives</th></tr></thead><tbody><tr><td><code>sidebarMenuItemsModel()</code></td><td>The sidebar's <code>MenuItem</code>s</td></tr><tr><td><code>appTitleModel()</code> / <code>appNameModel()</code></td><td>The browser title and the name in the top bar (or <code>OatAppLayout.title</code> / <code>.name</code> in your <code>.properties</code>)</td></tr><tr><td><code>newTopNavExtra(id)</code></td><td>Anything on the right of the top bar, such as a user menu</td></tr><tr><td><code>newSidebarFooter(id)</code></td><td>A footer under the sidebar, such as a theme switcher</td></tr><tr><td><code>newMenuLink(id, item)</code> <span class="badge new-badge" data-variant="success">New in 0.3.0</span></td><td>A menu entry's link: a <code>BookmarkablePageLink</code> by default, or e.g. an <code>AjaxLink</code></td></tr></tbody></table></div>
+<div class="table"><table class="guide-table"><thead><tr><th scope="col">Method</th><th scope="col">What it gives</th></tr></thead><tbody><tr><td><code>sidebarMenuItemsModel()</code></td><td>The sidebar's <code>MenuItem</code>s</td></tr><tr><td><code>appTitleModel()</code> / <code>appNameModel()</code></td><td>The browser title and the name in the top bar (or <code>OatAppLayout.title</code> / <code>.name</code> in your <code>.properties</code>)</td></tr><tr><td><code>newTopNavExtra(id)</code></td><td>Anything on the right of the top bar, such as a user menu</td></tr><tr><td><code>newSidebarFooter(id)</code></td><td>A footer under the sidebar, such as a theme switcher</td></tr><tr><td><code>newMenuLink(id, item)</code></td><td>A menu entry's link: a <code>BookmarkablePageLink</code> by default, or e.g. an <code>AjaxLink</code></td></tr></tbody></table></div>
 <p>The constructors take nothing, <code>PageParameters</code> or a model, like any page.</p>
-<p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>&lt;html&gt;</code> gets the page's <code>lang</code> from its locale, so screen readers pronounce the content in the right language, and the page starts with a "Skip to content" link, shown only while it has keyboard focus, that moves focus past the navigation to <code>&lt;main id="oat-main"&gt;</code>. A base page of your own that doesn't extend <code>OatAppLayout</code> gets the theme, density and language from an <code>OatHtml</code> on its <code>&lt;html wicket:id="html"&gt;</code>:</p>
+<p><code>&lt;html&gt;</code> gets the page's <code>lang</code> from its locale, so screen readers pronounce the content in the right language, and the page starts with a "Skip to content" link, shown only while it has keyboard focus, that moves focus past the navigation to <code>&lt;main id="oat-main"&gt;</code>. A base page of your own that doesn't extend <code>OatAppLayout</code> gets the theme, density and language from an <code>OatHtml</code> on its <code>&lt;html wicket:id="html"&gt;</code>:</p>
 <pre class="guide-code" data-lang="Java"><code>public abstract class BasePage extends WebPage {
     protected BasePage() {
         add(new OatHtml("html"));
@@ -273,7 +273,7 @@ protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {
             MenuItem.of("Settings", SettingsPage.class)));
 }</code></pre>
 <ul><li>A badge is read on every render and hidden while it is <code>null</code>, empty or zero. The sidebar has a markup id, so <code>target.add(getSidebar())</code> updates it over Ajax.</li><li>Pages the user isn't authorized to open are left out, and so is a group left empty.</li><li>Groups can't contain groups. Labels can be <code>IModel&lt;String&gt;</code>s, such as a <code>ResourceModel</code>.</li></ul>
-<h3 id="mobile">Phone apps <span class="badge new-badge" data-variant="success">New in 0.3.0</span> <a class="guide-anchor" href="#mobile" aria-label="Link to this section">#</a></h3>
+<h3 id="mobile">Phone apps <a class="guide-anchor" href="#mobile" aria-label="Link to this section">#</a></h3>
 <p><code>OatMobileLayout</code> is a base page for phone-first apps: the content in <code>&lt;main&gt;</code> and an <code>OatBottomNav</code> under it, a tab bar fixed to the bottom of the screen with three to five tabs, each an icon above a short label:</p>
 <pre class="guide-code" data-lang="Java"><code>public abstract class TimeOffPage extends OatMobileLayout {
 
@@ -299,6 +299,7 @@ add(new OatFeedbackPanel("feedback"));
 // Then, anywhere:
 success("Invoice sent.");</code></pre>
 <p>Both update themselves in Ajax requests, so a handler just calls <code>success(...)</code>, with no <code>target.add(...)</code>. Toasts also show session messages, so <code>getSession().success(...)</code> before <code>setResponsePage(...)</code> appears on the next page. Both leave out errors that a form field already shows next to itself (<code>NotShownInlineFilter</code>); pass your own <code>IFeedbackMessageFilter</code> to change that. To show a toast directly: <code>Oat.toast(target, "Copied", OatVariant.SUCCESS)</code>.</p>
+<p><span class="badge new-badge" data-variant="success">New in 0.4.0</span> Oat shows several toasts as a stack, the newest in front, until the pointer or the focus is on them. The messages of a request come in order of their level, so the most severe of them is in front.</p>
 <h3 id="busy">Busy buttons <a class="guide-anchor" href="#busy" aria-label="Link to this section">#</a></h3>
 <p>For slow actions, <code>setBusyIndicator(true)</code> on an <code>OatButton</code>, <code>OatSubmitButton</code> or <code>OatDialog</code> shows a spinner while the Ajax request runs and ignores further clicks, so the action can't run twice. <code>Oat.Behaviors.ajaxBusy()</code> does the same for any other Ajax link or button. It's off by default.</p>
 <pre class="guide-code" data-lang="Java"><code>form.add(OatSubmitButton.onSubmit("pay", "Pay now", target -&gt; pay(target)).setBusyIndicator(true));</code></pre>
@@ -347,7 +348,7 @@ form.add(OatSubmitButton.onSubmit("save", "Save", target -&gt; save(target), tar
     &lt;div wicket:id="country"&gt;&lt;/div&gt;
     &lt;footer class="hstack justify-end"&gt;&lt;button wicket:id="save"&gt;&lt;/button&gt;&lt;/footer&gt;
 &lt;/form&gt;</code></pre>
-<ul><li><strong>Required</strong> fields get an asterisk and <code>aria-required</code>. The browser's own <code>required</code> check is left off, so Wicket can show its translated message inline.</li><li><strong>Errors</strong> show under the field, which gets <code>aria-invalid</code> and <code>aria-describedby</code> pointing at the message; a hint shows there while there's no error.</li><li><strong>Behaviors:</strong> validators and Ajax form-component behaviors you <code>add(...)</code> go to the wrapped input, as they only work there; other behaviors go to the field's own tag, as with any component. <span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>addToInput(...)</code> puts any behavior on the input, such as <code>AttributeModifier.replace("autocomplete", "email")</code>.</li><li><strong>The input:</strong> <span class="badge new-badge" data-variant="success">New in 0.3.0</span> the wrapped <code>FormComponent</code> is the field's child <code>input</code>, so a test reaches it at <code>"email:input"</code>, and <code>getInput()</code> returns it, e.g. for <code>setNullValid(true)</code> or <code>new EqualPasswordInputValidator(password.getInput(), repeat.getInput())</code>.</li><li><strong>Hints:</strong> pass an <code>IModel&lt;String&gt;</code> label and a hint model: <code>new OatTextField&lt;&gt;("iban", Model.of("IBAN"), model, Model.of("Starts with your country code."))</code>.</li></ul>
+<ul><li><strong>Required</strong> fields get an asterisk and <code>aria-required</code>. The browser's own <code>required</code> check is left off, so Wicket can show its translated message inline.</li><li><strong>Errors</strong> show under the field, which gets <code>aria-invalid</code> and <code>aria-describedby</code> pointing at the message; a hint shows there while there's no error.</li><li><strong>Behaviors:</strong> validators and Ajax form-component behaviors you <code>add(...)</code> go to the wrapped input, as they only work there; other behaviors go to the field's own tag, as with any component. <code>addToInput(...)</code> puts any behavior on the input, such as <code>AttributeModifier.replace("autocomplete", "email")</code>.</li><li><strong>The input:</strong> the wrapped <code>FormComponent</code> is the field's child <code>input</code>, so a test reaches it at <code>"email:input"</code>, and <code>getInput()</code> returns it, e.g. for <code>setNullValid(true)</code> or <code>new EqualPasswordInputValidator(password.getInput(), repeat.getInput())</code>.</li><li><strong>Hints:</strong> pass an <code>IModel&lt;String&gt;</code> label and a hint model: <code>new OatTextField&lt;&gt;("iban", Model.of("IBAN"), model, Model.of("Starts with your country code."))</code>.</li></ul>
 <h3 id="field-types">The fields <a class="guide-anchor" href="#field-types" aria-label="Link to this section">#</a></h3>
 <div class="table"><table class="guide-table"><thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Notes</th></tr></thead><tbody><tr><td><code>OatTextField</code>, <code>OatPasswordField</code>, <code>OatEmailField</code>, <code>OatUrlField</code>, <code>OatSearchField</code>, <code>OatTelField</code></td><td><code>String</code></td><td>HTML5 input types</td></tr><tr><td><code>OatNumberField&lt;N&gt;</code>, <code>OatRangeField</code></td><td>a <code>Number</code></td><td><code>setMin</code>, <code>setMax</code></td></tr><tr><td><code>OatMoneyField</code>, <code>OatPercentField</code></td><td><code>BigDecimal</code></td><td>in the user's locale, see below</td></tr><tr><td><code>OatDateField</code>, <code>OatDateTimeLocalField</code>, <code>OatTimeField</code></td><td><code>LocalDate</code>, <code>LocalDateTime</code>, <code>LocalTime</code></td><td>native pickers</td></tr><tr><td><code>OatMonthField</code>, <code>OatWeekField</code></td><td><code>String</code></td><td>as the browser sends it: <code>2026-10</code>, <code>2026-W41</code></td></tr><tr><td><code>OatDateRangeField</code></td><td><code>DateRange</code></td><td>two dates, either end open</td></tr><tr><td><code>OatTextArea</code></td><td><code>String</code></td><td></td></tr><tr><td><code>OatCheckBox</code>, <code>OatSwitch</code></td><td><code>Boolean</code></td><td>a switch is a toggle-styled checkbox</td></tr><tr><td><code>OatDropdownChoice</code>, <code>OatRadioChoice</code></td><td>one choice</td><td><code>setInline(true)</code> for a row of radios</td></tr><tr><td><code>OatCheckBoxMultipleChoice</code>, <code>OatListMultipleChoice</code></td><td>a <code>Collection</code></td><td></td></tr><tr><td><code>OatTagInput</code></td><td><code>List&lt;String&gt;</code></td><td>free-form tags as chips</td></tr><tr><td><code>OatAutoCompleteField&lt;T&gt;</code></td><td><code>T</code></td><td>looked up on the server as you type</td></tr><tr><td><code>OatMultiSelectField&lt;T&gt;</code></td><td><code>List&lt;T&gt;</code></td><td>several values, chips</td></tr><tr><td><code>OatFileUpload</code>, <code>OatFileDropzone</code></td><td><code>List&lt;FileUpload&gt;</code></td><td>a dropzone accepts dragged files</td></tr><tr><td><code>OatColorField</code></td><td><code>String</code></td><td></td></tr><tr><td><code>OatCustomField&lt;T&gt;</code></td><td><code>T</code></td><td>your own input made of several inputs</td></tr></tbody></table></div>
 <h3 id="addons">Addons and suggestions <a class="guide-anchor" href="#addons" aria-label="Link to this section">#</a></h3>
@@ -419,18 +420,19 @@ add(edit);
 
 // From any Ajax handler:
 edit.open(target);</code></pre>
-<ul><li><span class="badge new-badge" data-variant="success">New in 0.3.0</span> The server knows whether the dialog is open (<code>isOpen()</code>). Cancel, Escape and a click on the backdrop close it in the browser and tell the server, and <code>onClose(target)</code> runs once however it closed, also after a confirm or <code>close(target)</code>.</li><li><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>target.add(dialog)</code> re-renders it and keeps an open dialog open. <code>open(content, target)</code> sets content that is removed again when the dialog closes, e.g. the fields for the row that was clicked.</li><li><span class="badge new-badge" data-variant="success">New in 0.3.0</span> A dialog can sit inside a page's form: submitting that form leaves the dialog's fields out.</li></ul>
+<ul><li>The server knows whether the dialog is open (<code>isOpen()</code>). Cancel, Escape and a click on the backdrop close it in the browser and tell the server, and <code>onClose(target)</code> runs once however it closed, also after a confirm or <code>close(target)</code>.</li><li><code>target.add(dialog)</code> re-renders it and keeps an open dialog open. <code>open(content, target)</code> sets content that is removed again when the dialog closes, e.g. the fields for the row that was clicked.</li><li>A dialog can sit inside a page's form: submitting that form leaves the dialog's fields out.</li></ul>
+<p><span class="badge new-badge" data-variant="success">New in 0.4.0</span> Inside a page's form, the dialog's buttons render as <code>type="button"</code>, so Enter in a page field can't click them; <code>NestedFormButtonBehavior</code> does the same for an Ajax submit button of your own, and <code>OatSubmitButton</code> has it already. A dialog opened again in <code>onConfirm</code>, e.g. for the next record, stays open.</p>
 <p><code>setConfirmLabel</code>, <code>setConfirmVariant</code> and <code>setBusyIndicator</code> adjust the confirm button. For a whole create/edit/delete screen, see <a href="#crud">CRUD</a>.</p>
 </section>
 <section class="guide-section" aria-labelledby="tables">
 <h2 id="tables">Data tables <a class="guide-anchor" href="#tables" aria-label="Link to this section">#</a></h2>
 <h3 id="data-table">OatDataTable <a class="guide-anchor" href="#data-table" aria-label="Link to this section">#</a></h3>
-<p><code>OatDataTable</code> is Wicket's <code>DataTable</code> with Oat styling and sortable headers that show the order (and set <code>aria-sort</code>). <span class="badge new-badge" data-variant="success">New in 0.3.0</span> Sorting and paging re-render only the table over Ajax, like Wicket's <code>AjaxFallbackDefaultDataTable</code>, with plain links as the fallback without JavaScript. You give it columns and an <code>ISortableDataProvider</code>, as usual:</p>
+<p><code>OatDataTable</code> is Wicket's <code>DataTable</code> with Oat styling and sortable headers that show the order (and set <code>aria-sort</code>). Sorting and paging re-render only the table over Ajax, like Wicket's <code>AjaxFallbackDefaultDataTable</code>, with plain links as the fallback without JavaScript. You give it columns and an <code>ISortableDataProvider</code>, as usual:</p>
 <pre class="guide-code" data-lang="Java"><code>OatDataTable&lt;Invoice, String&gt; table = new OatDataTable&lt;&gt;("invoices", columns, provider, 10);
 table.setToolbar(id -&gt; new InvoiceSearchPanel(id, search));
 table.setEmptyState(id -&gt; new OatEmptyState(id, "No invoices found"));
 add(table);</code></pre>
-<p>The table has a markup id, so <code>target.add(table)</code> re-renders it after an action. <span class="badge new-badge" data-variant="success">New in 0.3.0</span> It is pageable like a <code>DataTable</code> (<code>IPageableItems</code>): <code>setCurrentPage(...)</code>, <code>getPageCount()</code>, <code>setItemsPerPage(...)</code>, and a navigator of your own can page it. <code>addTopToolbar(...)</code> and <code>addBottomToolbar(...)</code> add toolbars, and <code>getTable()</code> returns the inner <code>DataTable</code>.</p>
+<p>The table has a markup id, so <code>target.add(table)</code> re-renders it after an action. It is pageable like a <code>DataTable</code> (<code>IPageableItems</code>): <code>setCurrentPage(...)</code>, <code>getPageCount()</code>, <code>setItemsPerPage(...)</code>, and a navigator of your own can page it. <code>addTopToolbar(...)</code> and <code>addBottomToolbar(...)</code> add toolbars, and <code>getTable()</code> returns the inner <code>DataTable</code>.</p>
 <h3 id="columns">Columns <a class="guide-anchor" href="#columns" aria-label="Link to this section">#</a></h3>
 <p>The columns in <code>dev.jbaby.wicket.oat.components.table</code> cover the common cells. Each takes a header model, an optional sort property and a lambda for the value:</p>
 <pre class="guide-code" data-lang="Java"><code>List&lt;IColumn&lt;Invoice, String&gt;&gt; columns = new ArrayList&lt;&gt;();
@@ -461,9 +463,10 @@ columns.add(0, new OatSelectionColumn&lt;&gt;(selected));
 table.addBulkAction("Export", (target, rows) -&gt; { exports.export(rows); table.clearSelection(target); });
 table.addBulkAction(Model.of("Delete"), OatVariant.DANGER, (target, rows) -&gt; confirm.ask(...));</code></pre>
 <p>While rows are selected, a bar above the table shows how many, the bulk actions and "Clear selection". The selection lasts across pages and sorting. It keeps the rows themselves, compared with <code>equals</code>, which suits records.</p>
-<p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> For entities, select by key, so the page keeps only their ids instead of serializing the entities. Bulk actions then get the selected rows looked up through the data provider, current and in the table's sort order:</p>
+<p>For entities, select by key, so the page keeps only their ids instead of serializing the entities. <span class="badge new-badge" data-variant="success">New in 0.4.0</span> Give it a loader, and bulk actions get the selected rows loaded by their keys, with any <code>Iterable</code> the loader returns, as Spring Data's repositories do:</p>
 <pre class="guide-code" data-lang="Java"><code>IModel&lt;Set&lt;Long&gt;&gt; selectedIds = new SetModel&lt;&gt;(new HashSet&lt;&gt;());
-columns.add(0, new OatSelectionColumn&lt;&gt;(selectedIds, Invoice::getId));</code></pre>
+columns.add(0, new OatSelectionColumn&lt;&gt;(selectedIds, Invoice::getId, ids -&gt; invoices.findAllById(ids)));</code></pre>
+<p>That also finds the rows a search hides at the time. Without the loader, <code>new OatSelectionColumn&lt;&gt;(selectedIds, Invoice::getId)</code> looks them up through the data provider, which reads every row and finds only those it returns.</p>
 <h3 id="search">Searching <a class="guide-anchor" href="#search" aria-label="Link to this section">#</a></h3>
 <p>Have the provider read a search model, and in the search field's Ajax handler go back to the first page:</p>
 <pre class="guide-code" data-lang="Java"><code>search.add(new AjaxFormComponentUpdatingBehavior("input") {
@@ -491,6 +494,9 @@ table.setCsvExport("invoices.csv");    // "Export CSV"</code></pre>
 <h3 id="paging">Paging other lists <a class="guide-anchor" href="#paging" aria-label="Link to this section">#</a></h3>
 <p><code>OatPagingNavigator</code> and <code>OatAjaxPagingNavigator</code> render Wicket's navigators as Oat pagination, for any <code>IPageable</code> (<code>DataView</code>, <code>PageableListView</code>, <code>DataTable</code>, <code>OatDataTable</code>):</p>
 <pre class="guide-code" data-lang="Java"><code>add(new OatAjaxPagingNavigator("navigator", dataView));   // the view or a parent needs a markup id</code></pre>
+<p><span class="badge new-badge" data-variant="success">New in 0.4.0</span> For a <code>DataTable</code> of your own, <code>OatNavigationToolbar</code> and <code>OatHeadersToolbar</code> (in <code>components.table</code>) are <code>OatDataTable</code>'s paging row and column headers: over Ajax with plain links as the fallback, the headers with <code>aria-sort</code>:</p>
+<pre class="guide-code" data-lang="Java"><code>table.addTopToolbar(new OatHeadersToolbar&lt;&gt;(table, provider));
+table.addBottomToolbar(new OatNavigationToolbar(table));</code></pre>
 </section>
 <section class="guide-section" aria-labelledby="crud">
 <h2 id="crud">CRUD <a class="guide-anchor" href="#crud" aria-label="Link to this section">#</a></h2>
@@ -596,6 +602,8 @@ wizard.addStep("Customer", id -&gt; new CustomerStep(id, order));
 wizard.addStep("Items", id -&gt; new ItemsStep(id, order));
 wizard.addStep("Review", id -&gt; new ReviewStep(id, order));</code></pre>
 <p>Each step is created when shown, so keep the data in an object all steps share. <code>onNext(step, target)</code> can check a step further and keep the user on it.</p>
+<p><span class="badge new-badge" data-variant="success">New in 0.4.0</span> The wizard's numbered steps are an <code>OatSteps</code>, which also shows on its own where any process stands, such as an order. The steps before the current one are done, and <code>setOnSelect(...)</code> makes those links back:</p>
+<pre class="guide-code" data-lang="Java"><code>add(new OatSteps("progress", List.of("Ordered", "Paid", "Shipped", "Delivered"), () -&gt; order.stage().ordinal()));</code></pre>
 <h3 id="master-detail">List and details <a class="guide-anchor" href="#master-detail" aria-label="Link to this section">#</a></h3>
 <p><code>OatMasterDetail</code> shows a list next to the selected item's details, one at a time on phones with a Back button:</p>
 <pre class="guide-code" data-lang="Java"><code>OatMasterDetail&lt;Customer&gt; customers = new OatMasterDetail&lt;&gt;("customers", new Model&lt;&gt;());
@@ -613,6 +621,34 @@ add(new OatMessageInput("addNote", (target, text) -&gt; { save(customer, text); 
 <h3 id="small-pieces">Smaller pieces <a class="guide-anchor" href="#small-pieces" aria-label="Link to this section">#</a></h3>
 <div class="table"><table class="guide-table"><thead><tr><th scope="col">Component</th><th scope="col">Use</th></tr></thead><tbody><tr><td><code>OatAlert</code></td><td>a message in the page, colored by variant</td></tr><tr><td><code>OatBadge</code></td><td>a short label or count</td></tr><tr><td><code>OatCard</code></td><td>a container with Oat's card styling</td></tr><tr><td><code>OatAvatar</code>, <code>OatAvatarGroup</code></td><td>a picture or initials, singly or overlapping</td></tr><tr><td><code>OatEmptyState</code></td><td>a placeholder for an empty list or search</td></tr><tr><td><code>OatProgress</code>, <code>OatMeter</code></td><td><code>&lt;progress&gt;</code> and <code>&lt;meter&gt;</code></td></tr><tr><td><code>OatSpinner</code>, <code>OatSkeleton</code></td><td>loading indicators</td></tr><tr><td><code>OatBreadcrumb</code></td><td>a trail of links</td></tr></tbody></table></div>
 <p>Behaviors such as <code>Oat.Behaviors.tooltip(text)</code>, <code>card()</code>, <code>badge()</code> and <code>alert()</code> give your own components the same looks.</p>
+<h3 id="indicators">Counts and status dots <span class="badge new-badge" data-variant="success">New in 0.4.0</span> <a class="guide-anchor" href="#indicators" aria-label="Link to this section">#</a></h3>
+<p><code>OatIndicator</code> puts a count or a status dot on a corner of what you put in its tag, such as unread messages on a link or a person's presence on their avatar. A count is hidden while it is 0, and <code>target.add(indicator)</code> updates it. <code>OatStatus</code> is the dot on its own, named for screen readers:</p>
+<pre class="guide-code" data-lang="Java"><code>// &lt;span wicket:id="inbox"&gt;&lt;a wicket:id="link"&gt;Inbox&lt;/a&gt;&lt;/span&gt;
+add(new OatIndicator("inbox", () -&gt; messages.countUnread()).setVariant(OatVariant.DANGER)
+        .add(new BookmarkablePageLink&lt;&gt;("link", InboxPage.class)));
+
+// &lt;span wicket:id="presence"&gt;&lt;div wicket:id="avatar"&gt;&lt;/div&gt;&lt;/span&gt;
+add(OatIndicator.status("presence", () -&gt; ada.isOnline() ? OatVariant.SUCCESS : OatVariant.SECONDARY,
+                () -&gt; ada.isOnline() ? "Online" : "Away")
+        .add(new OatAvatar("avatar", "AL")));
+
+// &lt;span wicket:id="api"&gt;&lt;/span&gt; API
+add(new OatStatus("api", () -&gt; api.isUp() ? OatVariant.SUCCESS : OatVariant.DANGER,
+        () -&gt; api.isUp() ? "Online" : "Down"));</code></pre>
+<p>A link's own name doesn't include the count. To have it read when the link is focused too, describe the link by the badge: <code>AttributeModifier.replace("aria-describedby", () -&gt; inbox.getItem().getMarkupId())</code>.</p>
+<h3 id="ratings">Ratings <span class="badge new-badge" data-variant="success">New in 0.4.0</span> <a class="guide-anchor" href="#ratings" aria-label="Link to this section">#</a></h3>
+<p><code>OatRatingField</code> chooses a rating from one to five stars, and <code>OatRating</code> shows one, such as a product's average. The field's stars are radio buttons, so the arrow keys move between them and screen readers read "3 stars"; its model holds the number of stars, <code>null</code> while none is chosen. <code>OatRating</code> rounds to half a star and is read as "4.5 out of 5 stars". Both take <code>setMax(n)</code> for up to 10 stars:</p>
+<pre class="guide-code" data-lang="Java"><code>form.add(new OatRatingField("rating", "How did we do?", Model.of()).setRequired(true));
+
+// &lt;span wicket:id="score"&gt;&lt;/span&gt;
+add(new OatRating("score", () -&gt; reviews.averageFor(product)));</code></pre>
+<p>The stars use the theme's warning color; <code>--oat-rating-color</code> changes it.</p>
+<h3 id="radial-progress">Progress rings <span class="badge new-badge" data-variant="success">New in 0.4.0</span> <a class="guide-anchor" href="#radial-progress" aria-label="Link to this section">#</a></h3>
+<p><code>OatRadialProgress</code> is a ring that fills up, with the percentage or a text of yours in the middle, as a <code>progressbar</code> for screen readers. Name it in the markup, and give it a variant for its color:</p>
+<pre class="guide-code" data-lang="Java"><code>// &lt;div wicket:id="storage" aria-label="Storage used"&gt;&lt;/div&gt;
+add(new OatRadialProgress("storage", () -&gt; account.usedGigabytes(), () -&gt; account.quotaGigabytes())
+        .setVariant(() -&gt; account.isNearlyFull() ? OatVariant.DANGER : OatVariant.DEFAULT));
+add(new OatRadialProgress("profile", Model.of(3), Model.of(5)).setText(Model.of("3/5")));</code></pre>
 </section>
 <section class="guide-section" aria-labelledby="navigation">
 <h2 id="navigation">Navigation and lists <a class="guide-anchor" href="#navigation" aria-label="Link to this section">#</a></h2>
@@ -633,6 +669,15 @@ add(commands);</code></pre>
 <pre class="guide-code" data-lang="Java"><code>add(new OatSplitLayout("inbox", id -&gt; new MailList(id), id -&gt; new MailView(id))
         .setSplit(40));                                     // the first pane's starting share, 20-80</code></pre>
 <p>The first pane is resizable by dragging its corner (the browser's own resize handle, no script). <code>setOrientation(VERTICAL)</code> stacks the panes; below 768px they are always stacked. Each pane scrolls on its own.</p>
+<h3 id="list">Lists of things <span class="badge new-badge" data-variant="success">New in 0.4.0</span> <a class="guide-anchor" href="#list" aria-label="Link to this section">#</a></h3>
+<p><code>OatList</code> shows rows the way a phone app lists things: a title and a line under it, with room for an avatar or icon in front and a badge or button at the end. With <code>setOnClick(...)</code> the whole row is a link, and buttons at the end stay clickable on their own:</p>
+<pre class="guide-code" data-lang="Java"><code>add(new OatList&lt;&gt;("team", () -&gt; people.all(), Person::name)
+        .setSubtitle(Person::role)
+        .setLeading((id, person) -&gt; new OatAvatar(id, person.getObject().initials()))
+        .setTrailing((id, person) -&gt; new OatBadge(id, person.getObject().status()))
+        .setOnClick((target, person) -&gt; setResponsePage(PersonPage.class, PersonPage.parameters(person)))
+        .setEmptyState(id -&gt; new OatEmptyState(id, "No one here yet")));</code></pre>
+<p>The parts in front and at the end are on a <code>&lt;div&gt;</code>, so a button goes in a <code>Fragment</code> or panel of yours, on a <code>&lt;button&gt;</code> tag. The rows are read once per request, and each row's model finds its row by position, as in a <code>ListView</code>; <code>setReuseItems(true)</code> keeps form fields in the rows across a failed validation.</p>
 <h3 id="load-more">Long lists <a class="guide-anchor" href="#load-more" aria-label="Link to this section">#</a></h3>
 <p><code>OatLoadMoreList</code> shows a batch of items and appends the next one with "Load more", without re-rendering the rest:</p>
 <pre class="guide-code" data-lang="Java"><code>add(new OatLoadMoreList&lt;&gt;("mail", provider, 20, (id, mail) -&gt; new MailRow(id, mail))
@@ -676,6 +721,9 @@ OatIcon.register("brand", "&lt;path d=\"...\"/&gt;");              // your own, 
     &lt;article wicket:id="average" class="col-4"&gt;&lt;/article&gt;
 &lt;/div&gt;</code></pre>
 <p>For anything else, write your own CSS with Oat's variables (<code>var(--space-4)</code>, <code>var(--primary)</code>, <code>var(--border)</code>, ...), so it follows the theme.</p>
+<p><span class="badge new-badge" data-variant="success">New in 0.4.0</span> <code>wicket-oat.css</code> adds two things of its own: a <code>&lt;kbd&gt;</code> looks like a key to press, and <code>oat-divider</code> draws a line with a word in the middle, such as "or" between two ways to sign in:</p>
+<pre class="guide-code" data-lang="HTML"><code>&lt;p&gt;Press &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;K&lt;/kbd&gt; to search.&lt;/p&gt;
+&lt;div class="oat-divider"&gt;or&lt;/div&gt;</code></pre>
 </section>
 <section class="guide-section" aria-labelledby="theming">
 <h2 id="theming">Theming <a class="guide-anchor" href="#theming" aria-label="Link to this section">#</a></h2>
@@ -760,6 +808,7 @@ AjaxCheckBox first = rowChecks.get(1);                  // 0 is "select all"
 tester.getRequest().getPostParameters().setParameterValue(first.getInputName(), "on");
 tester.executeBehavior(first.getBehaviors(AjaxFormComponentUpdatingBehavior.class).get(0));</code></pre>
 <p>Install Wicket Oat in the tester's application as in your own, e.g. a <code>MockApplication</code> whose <code>init()</code> calls <code>WicketOats.install(this)</code>; the busy indicator and the page resources depend on it. A data table's sorting and paging links are Ajax links, so <code>tester.clickLink(...)</code> runs them over Ajax.</p>
+<p><span class="badge new-badge" data-variant="success">New in 0.4.0</span> In an <code>OatWizard</code>, a finished step's link is at <code>"steps:list:items:0:link"</code>, and an <code>OatRatingField</code> is set like any field, to its number of stars: <code>form.setValue("rating:input", "4")</code>.</p>
 </section>
 <section class="guide-section" aria-labelledby="ai-skill">
 <h2 id="ai-skill">AI skill <a class="guide-anchor" href="#ai-skill" aria-label="Link to this section">#</a></h2>
@@ -768,11 +817,11 @@ tester.executeBehavior(first.getBehaviors(AjaxFormComponentUpdatingBehavior.clas
 <p>The agent then understands requests like "add an Oat data table of invoices with a search toolbar and a delete action".</p>
 </section>
 <section class="guide-section" aria-labelledby="whats-new">
-<h2 id="whats-new">What's new in 0.3.0 <a class="guide-anchor" href="#whats-new" aria-label="Link to this section">#</a></h2>
-<p>0.3.0 makes Wicket Oat work the way Wicket users expect:</p>
-<ul><li><strong>Dialogs</strong> like Wicket's <code>ModalDialog</code>: <code>setContent</code>, <code>isOpen()</code>, <code>onClose</code>, and <code>target.add(dialog)</code>. See <a href="#dialog-forms">Forms in dialogs</a>.</li><li><strong>Data tables</strong> sort and page over Ajax, are pageable like a <code>DataTable</code>, and can keep a selection by key. See <a href="#data-table">OatDataTable</a> and <a href="#selection">Selection</a>.</li><li><strong>Form fields</strong> have their input at <code>"email:input"</code>, with <code>getInput()</code> and <code>addToInput(...)</code>. See <a href="#fields">How fields work</a>.</li><li><strong>Lambda factories</strong> on the component classes, <code>newXxx</code> hooks and <code>setOnXxx</code> callback setters. See <a href="#factories">Constructors and lambda factories</a>.</li><li><strong>Phone apps</strong> with <code>OatMobileLayout</code> and <code>OatBottomNav</code>, a skip link and the page's language in the layouts, and <code>OatHtml</code> for a base page of your own. See <a href="#mobile">Phone apps</a> and <a href="#app-layout">The layout</a>.</li><li><strong>Fixes:</strong> signing in returns to the page the user was going to, and a dialog inside a form no longer blocks that form's submit.</li></ul>
-<h3 id="upgrading">Upgrading from 0.2.x <a class="guide-anchor" href="#upgrading" aria-label="Link to this section">#</a></h3>
-<ul><li><strong>Fields:</strong> <code>"email:container:field"</code> is now <code>"email:input"</code>, <code>getField()</code> is <code>getInput()</code>, and a subclass implements <code>newInput(id, model)</code> instead of <code>createFormComponent</code>.</li><li><strong>Dialogs:</strong> <code>setBody</code> and <code>BODY_ID</code> are <code>setContent</code> and <code>CONTENT_ID</code>, so a field in a dialog is at <code>"content:name:input"</code>; <code>open</code>, <code>close</code> and <code>OatConfirmDialog.ask</code> take an <code>AjaxRequestTarget</code>.</li><li><strong>Factories:</strong> <code>Oat.Components</code> keeps only the factories for components driven by a callback; create the others with <code>new</code> and the same arguments, e.g. <code>new OatAlert(...)</code>.</li><li><strong>Hooks and setters:</strong> <code>createTopNavExtra</code>, <code>createFooter</code> and <code>createBottomNav</code> are <code>newTopNavExtra</code>, <code>newSidebarFooter</code> and <code>newBottomNav</code>; <code>onSave</code>, <code>onDelete</code>, <code>onSelect</code> and <code>onAnswer</code> are <code>setOnSave</code>, <code>setOnDelete</code>, <code>setOnSelect</code> and <code>setOnAnswer</code>; the <code>sidebar</code> and <code>bottomNav</code> fields are <code>getSidebar()</code> and <code>getBottomNav()</code>.</li><li><strong>Tables:</strong> sorting and paging are Ajax, so a test clicking those links gets an Ajax response.</li></ul>
+<h2 id="whats-new">What's new in 0.4.0 <a class="guide-anchor" href="#whats-new" aria-label="Link to this section">#</a></h2>
+<p>0.4.0 adds components for where things stand, moves to Oat UI 1.0 and Wicket 10.11, and fixes dialogs and the Enter key inside forms:</p>
+<ul><li><strong>Steps</strong> with <code>OatSteps</code>, which <code>OatWizard</code> now draws its steps with. See <a href="#wizard">Steps</a>.</li><li><strong>Lists</strong> like a phone app's with <code>OatList</code>. See <a href="#list">Lists of things</a>.</li><li><strong>Counts, status dots, ratings and progress rings:</strong> <code>OatIndicator</code>, <code>OatStatus</code>, <code>OatRatingField</code>, <code>OatRating</code> and <code>OatRadialProgress</code>. See <a href="#indicators">Counts and status dots</a>, <a href="#ratings">Ratings</a> and <a href="#radial-progress">Progress rings</a>.</li><li><strong>Keys and dividers:</strong> <code>&lt;kbd&gt;</code> and <code>oat-divider</code>. See <a href="#layout">Layout</a>.</li><li><strong>Data tables:</strong> selected rows loaded by their keys, and the paging row and column headers for a <code>DataTable</code> of your own. See <a href="#selection">Selection</a> and <a href="#paging">Paging other lists</a>.</li><li><strong>Oat UI 1.0:</strong> a neutral look for Light and Dark, smaller corners, new shadows and motion in every theme, and toasts that stack, with a request's most severe message in front. See <a href="#feedback">Feedback messages</a>.</li><li><strong>Fixes:</strong> a dialog opened again in <code>onConfirm</code> stays open, Enter in a page's field can't click a hidden button of a dialog, wizard or editable cell, a double click can't answer two questions of an <code>OatConfirmDialog</code>, and a tooltip inside a dropdown no longer covers its item.</li></ul>
+<h3 id="upgrading">Upgrading from 0.3.x <a class="guide-anchor" href="#upgrading" aria-label="Link to this section">#</a></h3>
+<ul><li><strong>Wicket 10.11</strong> or newer is required.</li><li><strong>Wizard tests:</strong> a finished step's link is at <code>"steps:list:items:0:link"</code> instead of <code>"steps:0:link"</code>.</li><li><strong>Looks:</strong> Oat UI 1.0 gives Light and Dark near-black and light grey buttons instead of brown and white, and every theme smaller corners and new shadows. While stacked, the toasts' container is a grid and the older toasts' content is hidden, which your own CSS for <code>.toast</code> may notice.</li><li><strong>Feedback toasts</strong> come in order of their level, the most severe last.</li><li><strong>Nested forms:</strong> an <code>OatSubmitButton</code> in a form inside another renders as <code>type="button"</code>, so Enter in the outer form can't click it. For Enter in its own form's fields, make it that form's default button (<code>form.setDefaultButton(button)</code>).</li></ul>
 <p>The <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a> lists every change.</p>
 </section>
         <p class="guide-end">Something missing or unclear? <a href="https://github.com/danielbartl/wicket-oat/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>.</p>
@@ -790,7 +839,7 @@ tester.executeBehavior(first.getBehaviors(AjaxFormComponentUpdatingBehavior.clas
     <p>Wicket Oat is an independent project and is not affiliated with the Apache Software Foundation.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.3/oat.min.js"
+<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@1.0.0/oat.min.js"
         integrity="sha384-B7BWnR9iweAQqxw9E/GN0wt6R0dLYlYgdKORx9xBm08I53qjsQuLuHEXhNAVbadP" crossorigin="anonymous"></script>
 <script>
 (function () {

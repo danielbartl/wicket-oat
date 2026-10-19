@@ -16,8 +16,8 @@
 <meta name="twitter:title" content="Wicket Oat — UI Components for Apache Wicket">
 <meta name="twitter:description" content="A modern, themeable and accessible UI component library for Apache Wicket, built on Oat's ultra-lightweight, semantic CSS and JS.">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.3/oat.min.css"
-      integrity="sha384-/A9LW2ziQPR2sphPEFhOKH2gC5Ymkr3aYOf1Er7GliGwkR3UYO2DjNWCPn/cU2MI" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@knadh/oat@1.0.0/oat.min.css"
+      integrity="sha384-W8Z3f/RFchsEaPcbktneR+q+yniOOmbyw/5T4SLu439RBvA92XMmMoZWdjkpDQhH" crossorigin="anonymous">
 <link rel="stylesheet" href="assets/themes.css">
 <link rel="stylesheet" href="assets/wicket-oat.css">
 <link rel="stylesheet" href="assets/style.css">
@@ -84,17 +84,14 @@
             understand. No utility-class soup, no client framework, just Wicket the way you
             already write it.</p>
         <div class="badges">
-            <span class="badge" data-variant="secondary">Wicket 10.8+</span>
+            <span class="badge" data-variant="secondary">Wicket 10.11+</span>
             <span class="badge" data-variant="secondary">Java 17+</span>
-            <span class="badge" data-variant="secondary">Oat 0.8.3</span>
+            <span class="badge" data-variant="secondary">Oat 1.0</span>
             <span class="badge" data-variant="success">MIT Licensed</span>
         </div>
-        <p class="announce"><a href="#wicket-way"><span class="badge new-badge" data-variant="success">New in 0.3.0</span></a> Dialogs that work like Wicket's <code>ModalDialog</code>,
-            data tables over Ajax, shorter form field paths, a bottom tab bar for phone apps and an API closer to
-            plain Wicket are <a href="#wicket-way">out now in 0.3.0</a>.</p>
-        <p class="announce"><a href="#next"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span></a> Steps, lists like a phone app's,
+        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.4.0</span></a> Steps, lists like a phone app's,
             count badges and status dots, star ratings and a progress ring are
-            <a href="#next">coming with the next release</a>, built on Wicket 10.11.</p>
+            <a href="#new">out now in 0.4.0</a>, on Oat UI 1.0 and Wicket 10.11.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -195,9 +192,9 @@
                     Menus and context menus work with the arrow keys, Shift+F10 or the Menu key and
                     give focus back when they close. Tree nodes expand with real buttons, and cells
                     edited in place save with Enter and cancel with Escape.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>OatAppLayout</code> starts with a
+                <p class="mt-2"><code>OatAppLayout</code> starts with a
                     &ldquo;Skip to content&rdquo; link past the navigation.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> The stars of <code>OatRatingField</code>
+                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> The stars of <code>OatRatingField</code>
                     are radio buttons, so the arrow keys move between them.</p>
             </article>
             <article class="card">
@@ -206,7 +203,7 @@
                     pagination, <code>aria-sort</code> the sorted column, <code>aria-expanded</code>
                     an open tree node, and <code>aria-busy</code> a button whose Ajax request is
                     still running.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> A rating is read as &ldquo;4.5 out of
+                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> A rating is read as &ldquo;4.5 out of
                     5 stars&rdquo;, a status dot by its name, such as &ldquo;Online&rdquo;, and a progress
                     ring as a <code>progressbar</code> with its value.</p>
             </article>
@@ -227,7 +224,7 @@
                 <p>The texts only screen readers hear, such as &ldquo;Toggle menu&rdquo; or
                     &ldquo;Expand&rdquo;, come in eight languages and follow each user's locale, like
                     every other text the library renders.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>OatAppLayout</code> sets the page's
+                <p class="mt-2"><code>OatAppLayout</code> sets the page's
                     <code>lang</code>, so screen readers pronounce it in the right language.</p>
             </article>
         </div>
@@ -251,7 +248,7 @@
                     <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
     &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
-    &lt;version&gt;0.3.0&lt;/version&gt;
+    &lt;version&gt;0.4.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
                 </div>
             </div>
@@ -345,12 +342,12 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                 <p>Menu items can be grouped into collapsible sections, open while
                     one of their pages is shown, and carry a badge such as a count, which
                     <code>target.add(getSidebar())</code> updates over Ajax.</p>
-                <p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> <code>&lt;html&gt;</code> gets the page's <code>lang</code>
+                <p><code>&lt;html&gt;</code> gets the page's <code>lang</code>
                     from its locale, and a &ldquo;Skip to content&rdquo; link, shown only while it has
                     keyboard focus, jumps past the navigation to <code>&lt;main&gt;</code>. For
                     phone-first apps, <code>OatMobileLayout</code> puts a
                     <a href="#bottom-nav">bottom tab bar</a> under the content instead.</p>
-                <p><span class="badge new-badge" data-variant="success">New in 0.3.0</span> The hooks follow Wicket's
+                <p>The hooks follow Wicket's
                     <code>newXxx(id)</code> naming, and <code>newMenuLink(id, item)</code> can make a
                     menu entry an <code>AjaxLink</code>. An app with a base page of its own gets the
                     theme, density and language from <code>add(new OatHtml("html"))</code>.</p>
@@ -407,17 +404,12 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
         <div class="section-header">
             <p class="eyebrow">Component Showcase</p>
             <h2>Everything below is real, live Oat markup</h2>
-            <p>Not screenshots &mdash; this page loads the same Oat 0.8.3 build the library
+            <p>Not screenshots &mdash; this page loads the same Oat 1.0 build the library
                 vendors, so what you see here is exactly what renders in your app.</p>
-            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.3.0</span> Cards with this label show components
-                added in 0.3.0, the current release. The
+            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> Cards with this label show components
+                added in 0.4.0, the current release. The
                 <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
-                lists everything new, including notes on upgrading from 0.2.x.</p>
-            <p class="release-note" id="next"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> Cards with this label show components
-                coming with the next release, 0.4.0. Their source is on
-                <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already,
-                and the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
-                lists everything coming.</p>
+                lists everything new, including notes on upgrading from 0.3.x.</p>
         </div>
 
         <div class="showcase-group">
@@ -518,7 +510,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             <li><span class="oat-status" data-variant="danger" aria-hidden="true"></span> Mail down</li>
                         </ul>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatIndicator / OatStatus</strong><code>new OatIndicator(id, () -&gt; unread) &middot; OatIndicator.status(id, variant, label) &middot; new OatStatus(...)</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatIndicator / OatStatus</strong><code>new OatIndicator(id, () -&gt; unread) &middot; OatIndicator.status(id, variant, label) &middot; new OatStatus(...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
@@ -529,7 +521,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             <button type="button">Sign in with email</button>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>Keys and divider</strong><code>&lt;kbd&gt;Ctrl&lt;/kbd&gt; &middot; &lt;div class="oat-divider"&gt;or&lt;/div&gt;</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>Keys and divider</strong><code>&lt;kbd&gt;Ctrl&lt;/kbd&gt; &middot; &lt;div class="oat-divider"&gt;or&lt;/div&gt;</code></div>
                 </div>
             </div>
         </div>
@@ -635,7 +627,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             <li data-state="upcoming"><a class="unstyled"><span class="oat-step-number">4</span><span>Delivered</span></a></li>
                         </ol>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatSteps</strong><code>new OatSteps(id, titles, () -&gt; order.stage().ordinal()) &middot; .setOnSelect(...)</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatSteps</strong><code>new OatSteps(id, titles, () -&gt; order.stage().ordinal()) &middot; .setOnSelect(...)</code></div>
                 </div>
                 <div class="showcase-card wide">
                     <div class="showcase-preview block">
@@ -718,7 +710,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             </nav>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.3.0</span><strong>OatBottomNav / OatMobileLayout</strong><code>BottomNavItem.of("Team", TeamPage.class).withIcon(Icon.sprite("team")).withBadge(() -&gt; open) &middot; .asPrimary()</code></div>
+                    <div class="showcase-footer"><strong>OatBottomNav / OatMobileLayout</strong><code>BottomNavItem.of("Team", TeamPage.class).withIcon(Icon.sprite("team")).withBadge(() -&gt; open) &middot; .asPrimary()</code></div>
                 </div>
             </div>
         </div>
@@ -1073,14 +1065,14 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             </li>
                         </ul>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatList</strong><code>new OatList&lt;&gt;(id, people, Person::name).setSubtitle(Person::role).setLeading(...).setOnClick(...)</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatList</strong><code>new OatList&lt;&gt;(id, people, Person::name).setSubtitle(Person::role).setLeading(...).setOnClick(...)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview block">
                         <p>Oat Granola <span class="oat-rating" role="img" aria-label="4.5 out of 5 stars"><span data-fill="full"></span><span data-fill="full"></span><span data-fill="full"></span><span data-fill="full"></span><span data-fill="half"></span></span><br><small class="text-light">4.3 from 128 reviews</small></p>
                         <p class="mt-4">Oat Milk <span class="oat-rating" role="img" aria-label="Not rated yet"><span data-fill="empty"></span><span data-fill="empty"></span><span data-fill="empty"></span><span data-fill="empty"></span><span data-fill="empty"></span></span><br><small class="text-light">No reviews yet</small></p>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatRating</strong><code>new OatRating(id, () -&gt; reviews.averageFor(product))</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatRating</strong><code>new OatRating(id, () -&gt; reviews.averageFor(product))</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -1097,7 +1089,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             <span class="oat-radial-progress-text">93%</span>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatRadialProgress</strong><code>new OatRadialProgress(id, used, quota).setVariant(OatVariant.DANGER) &middot; .setText(Model.of("3/5"))</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatRadialProgress</strong><code>new OatRadialProgress(id, used, quota).setVariant(OatVariant.DANGER) &middot; .setText(Model.of("3/5"))</code></div>
                 </div>
             </div>
         </div>
@@ -1258,7 +1250,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             <div role="status" data-hint>Click a star, or use the arrow keys.</div>
                         </fieldset>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span><strong>OatRatingField</strong><code>new OatRatingField("rating", "How did we do?", Model.of()).setRequired(true)</code></div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatRatingField</strong><code>new OatRatingField("rating", "How did we do?", Model.of()).setRequired(true)</code></div>
                 </div>
             </div>
         </div>
@@ -1303,9 +1295,9 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
 <section id="wicket-way" class="section section-alt">
     <div class="container">
         <div class="section-header">
-            <p class="eyebrow"><span class="badge new-badge" data-variant="success">New in 0.3.0</span></p>
+            <p class="eyebrow">The Wicket way</p>
             <h2>Wicket the way you already write it</h2>
-            <p>0.3.0 brings the library closer to how Wicket itself works: dialogs like
+            <p>Wicket Oat works the way Wicket itself does: dialogs like
                 <code>ModalDialog</code>, data tables like <code>AjaxFallbackDefaultDataTable</code>,
                 lambda factories like <code>AjaxLink.onClick</code>, and tests that read like the
                 markup.</p>
@@ -1317,7 +1309,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     <code>OatDialog.CONTENT_ID</code>. The server knows whether the dialog is open,
                     <code>onClose</code> runs however it closed &mdash; Cancel, Escape, the backdrop
                     or a confirm &mdash; and <code>target.add(dialog)</code> keeps an open dialog open.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> A dialog opened again in
+                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> A dialog opened again in
                     <code>onConfirm</code>, such as a second question, stays open, and Enter in a
                     page's field can't click a button of a closed dialog.</p>
             </article>
@@ -1327,7 +1319,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     JavaScript. <code>OatDataTable</code> is pageable like a <code>DataTable</code>,
                     so <code>table.setCurrentPage(0)</code> works, and a selection can keep just ids:
                     <code>new OatSelectionColumn&lt;&gt;(selectedIds, Invoice::getId)</code>.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.4.0</span> The selected rows can be loaded by
+                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> The selected rows can be loaded by
                     their ids, so bulk actions also get those a search hides.</p>
             </article>
             <article class="card">
@@ -1357,12 +1349,6 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     to, and a dialog inside a page's form no longer blocks that form's submit.</p>
             </article>
         </div>
-        <p class="release-note">0.3.0 renames a few things on the way: <code>getField()</code> becomes
-            <code>getInput()</code>, <code>setBody(...)</code> becomes <code>setContent(...)</code>,
-            <code>onSave(...)</code> and the other callback setters become <code>setOnSave(...)</code>,
-            and <code>Oat.Components</code> keeps only the factories for components driven by a
-            callback. The <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">upgrade
-            notes in the changelog</a> list every change.</p>
     </div>
 </section>
 
@@ -1470,7 +1456,7 @@ form.add(Oat.Behaviors.density(OatDensity.DEFAULT));</code></pre>
     <p>Wicket Oat is an independent project and is not affiliated with the Apache Software Foundation.</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@0.8.3/oat.min.js"
+<script src="https://cdn.jsdelivr.net/npm/@knadh/oat@1.0.0/oat.min.js"
         integrity="sha384-B7BWnR9iweAQqxw9E/GN0wt6R0dLYlYgdKORx9xBm08I53qjsQuLuHEXhNAVbadP" crossorigin="anonymous"></script>
 <script>
 (function () {

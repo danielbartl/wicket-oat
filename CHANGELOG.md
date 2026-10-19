@@ -48,8 +48,8 @@
     gives them. Oat places a menu while it is still zoomed out, so a menu aligned to the
     end of its button stuck out past it, and one that only just fit opened past the
     window's edge.
-- `Oat.Behaviors.feedbackToasts()` shows a request's messages in order of their level, an
-  error last, so the most severe one is the toast in front of Oat's stack.
+- `Oat.Behaviors.feedbackToasts()` shows a request's messages in order of their level, the
+  most severe last, so it is the one of them in front of Oat's stack.
 - The suggestion list of `OatAutoCompleteField` and the menu of `ContextMenuBehavior` look
   like Oat 1.0's dropdown menu: the card's background and a stronger shadow.
 - `OatSelectionColumn` selecting by key can load the selected rows by their keys:

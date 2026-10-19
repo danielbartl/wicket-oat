@@ -4,6 +4,12 @@
  * Policy, which blocks inline styles.
  */
 /*
+ * Oat's cascade layers, in Oat's order. The first file to name a layer fixes its place,
+ * so this keeps the order also where this file is loaded before oat.min.css.
+ */
+@layer theme, base, components, animations, utilities;
+
+/*
  * Wicket renders a hidden component that's updated over Ajax as an empty placeholder
  * with the hidden attribute. Oat's display rules for buttons and the like would
  * otherwise beat the browser's [hidden] rule and show it.

@@ -29,9 +29,9 @@ import java.util.List;
  * {@code AjaxRequestTarget}. By default, errors that Oat form fields already show
  * inline are left out ({@link NotShownInlineFilter}).
  * <p>
- * Oat shows several toasts as a stack, the newest in front, until the pointer is on
- * them. So the messages are shown in order of their level, an error last, and the
- * most severe one is the one in front.
+ * Oat shows several toasts as a stack, the newest in front, until the pointer or the
+ * focus is on them. So the messages of a request are shown in order of their level,
+ * the most severe last, and it is the one of them in front.
  * <p>
  * Each message is shown once: it is marked rendered, so a feedback panel showing all
  * messages would display it too, but a second toast behavior would not.
@@ -73,7 +73,8 @@ public class FeedbackToastsBehavior extends Behavior {
     }
 
     private String consumeMessages(Component component) {
-        // Oat stacks toasts with the newest in front, so the most severe message comes last
+        // Oat stacks toasts with the newest in front, so the most severe message comes last.
+        // A copy: collect() doesn't promise a list that can be sorted.
         List<FeedbackMessage> messages = new ArrayList<>(new FeedbackCollector(component, true).collect(this::accept));
         messages.sort(Comparator.comparingInt(FeedbackMessage::getLevel));
         StringBuilder script = new StringBuilder();

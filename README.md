@@ -6,6 +6,22 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 
 **[Live demo](https://wicket-oat-production.up.railway.app/)** &middot; **[Website](https://danielbartl.github.io/wicket-oat/)** &middot; **[User guide](https://danielbartl.github.io/wicket-oat/guide.html)** &middot; **[Step-by-step tutorial](https://danielbartl.github.io/wicket-oat/tutorial.html)**
 
+<table>
+  <tr>
+    <td width="77%"><a href="docs/screenshots/customer.png"><img src="docs/screenshots/customer.png" alt="A customer page in the Business theme: a page header with a breadcrumb and a split button, key figures, the customer's details and a timeline of recent activity"></a><br><sub>A detail page: header, key figures, details and a timeline (Business theme)</sub></td>
+    <td width="23%"><a href="docs/screenshots/phone.png"><img src="docs/screenshots/phone.png" alt="A phone app listing who is out today and who is away soon, with a bottom tab bar"></a><br><sub>A phone app with a bottom tab bar</sub></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td width="33%"><a href="docs/screenshots/reports.png"><img src="docs/screenshots/reports.png" alt="A reports page with stat cards and sparklines, a bar chart and a line chart"></a><br><sub>Charts and key figures, rendered on the server</sub></td>
+    <td width="33%"><a href="docs/screenshots/products-dark.png"><img src="docs/screenshots/products-dark.png" alt="A products table in the Business Dark theme with search, New, Columns and Export CSV, sortable columns, expandable rows and paging"></a><br><sub>A CRUD data table (Business Dark theme)</sub></td>
+    <td width="33%"><a href="docs/screenshots/inbox-midnight.png"><img src="docs/screenshots/inbox-midnight.png" alt="An inbox in the Midnight theme with a menu bar, a list of messages and the open message beside it"></a><br><sub>A menu bar and a split layout (Midnight theme)</sub></td>
+  </tr>
+</table>
+
+<sub>Screens from the examples app, which runs as the [live demo](https://wicket-oat-production.up.railway.app/).</sub>
+
 ## Features
 
 - **Wicket-Style API:** Plain Wicket components, created with `new` and bound to models. Components driven by a callback also have lambda factories, like Wicket's own `AjaxLink.onClick(...)`: `OatButton.onClick("save", "Save", target -> ...)`.

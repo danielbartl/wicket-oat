@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.5.0 (unreleased)
+
 ## 0.4.0 (2026-10-19)
 
 A release with components for where things stand: steps, lists like a phone app's, counts

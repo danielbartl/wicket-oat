@@ -1,6 +1,29 @@
 # Changelog
 
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-10-19)
+
+A release with components for where things stand: steps, lists like a phone app's, counts
+and status dots on a corner, star ratings and progress rings. It moves to Oat UI 1.0, with
+a neutral look for Light and Dark and toasts that stack, and to Wicket 10.11, and fixes
+dialogs and the Enter key in forms inside a page's form. Existing code compiles unchanged;
+the notes below say what can still change for an app.
+
+### Upgrading from 0.3.x
+
+- Wicket 10.11.0 or newer is required.
+- `OatWizard` draws its steps with `OatSteps`, so in a test a finished step's link is at
+  `"steps:list:items:0:link"` instead of `"steps:0:link"`.
+- Oat UI 1.0 changes the looks: Light and Dark get a neutral palette, and every theme
+  smaller corners, new shadows and slower animations. Toasts stack while the pointer or
+  focus isn't on them; your own CSS for `.toast` may notice that their container is then a
+  grid and the older toasts' content hidden. The Oat UI entry below has the details.
+- `Oat.Behaviors.feedbackToasts()` shows a request's messages by level, the most severe
+  last, instead of in the order they were reported.
+- An `OatSubmitButton` in a form nested in another renders as `type="button"`, so Enter in
+  the outer form can't click it. For Enter in its own form's fields, make it that form's
+  default button (`form.setDefaultButton(button)`).
+
+### Changes
 
 - `OatSteps`: where a process stands, as numbered steps joined by a line - done,
   current and still to come - such as an order from "Ordered" to "Delivered". The

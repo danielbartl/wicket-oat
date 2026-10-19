@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -144,6 +145,20 @@ class FeedbackAndPagingTest {
         assertThat(tester.getLastResponseAsString())
                 .contains("ot.toast(\"Info message\", null, {})")
                 .contains("ot.toast(\"Error message\", null, {variant: \"danger\"})");
+    }
+
+    @Test
+    void feedbackToastsShowTheMostSevereMessageLastSoItIsInFrontOfOatsStack() {
+        FeedbackPage page = new FeedbackPage(true);
+        page.error("First error");
+        page.success("Saved.");
+        page.info("Info message");
+        page.error("Second error");
+        tester.startPage(page);
+
+        List<String> toasts = Pattern.compile("ot\\.toast\\(\"([^\"]*)\"").matcher(tester.getLastResponseAsString())
+                .results().map(match -> match.group(1)).toList();
+        assertThat(toasts).containsExactly("Info message", "Saved.", "First error", "Second error");
     }
 
     @Test

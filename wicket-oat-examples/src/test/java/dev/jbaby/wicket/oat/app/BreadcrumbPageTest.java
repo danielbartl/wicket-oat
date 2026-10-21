@@ -33,4 +33,15 @@ class BreadcrumbPageTest {
 
         tester.assertLabel("breadcrumb:list:items:0:link:label", "Home");
     }
+
+    @Test
+    void aLongTrailLeavesTheMiddleLevelsToAMenu() {
+        tester.startPage(BreadcrumbPage.class);
+
+        tester.assertLabel("longBreadcrumb:list:items:0:link:label", "Home");
+        tester.assertLabel("longBreadcrumb:list:more:menu:hidden:0:link:label", "Projects");
+        tester.assertLabel("longBreadcrumb:list:more:menu:hidden:3:link:label", "Docs");
+        tester.assertLabel("longBreadcrumb:list:tail:0:link:label", "Components");
+        tester.assertLabel("longBreadcrumb:list:tail:1:link:label", "Breadcrumb");
+    }
 }

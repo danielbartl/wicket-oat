@@ -6,14 +6,12 @@
         <h1>Oat Breadcrumb Demo</h1>
         <p>Breadcrumbs use a semantic <code>&lt;nav&gt;</code> with an ordered list. <code>OatBreadcrumb</code> automatically marks the last item as the current page and hides its trailing separator.</p>
 
-        <nav wicket:id="breadcrumb">
-            <ol wicket:id="list">
-                <li wicket:id="items">
-                    <a wicket:id="link" class="unstyled"><span wicket:id="label"></span></a>
-                    <span wicket:id="separator" aria-hidden="true">/</span>
-                </li>
-            </ol>
-        </nav>
+        <nav wicket:id="breadcrumb"></nav>
+
+        <h3 class="mt-6">A long trail</h3>
+        <p>With <code>setMaxItems(3)</code>, a trail of seven levels shows the first, a "…" button whose menu has the ones in
+            between, and the last two. <code>OatPageHeader</code> does the same with <code>setBreadcrumbMaxItems(...)</code>.</p>
+        <nav wicket:id="longBreadcrumb"></nav>
 
         <div class="mt-6">
             <h3>How to use</h3>
@@ -22,17 +20,10 @@ add(OatBreadcrumb.of("breadcrumb", Model.ofList(crumbs), (item, label) -&gt; {
     Link&lt;Void&gt; link = new Link&lt;&gt;("link") { public void onClick() {} };
     link.add(new Label("label", label));
     item.add(link);
-}));</code></pre>
+}).setMaxItems(3)); // optional: leave out levels in the middle of a long trail</code></pre>
 
             <pre><code>&lt;!-- HTML --&gt;
-&lt;nav wicket:id="breadcrumb"&gt;
-    &lt;ol wicket:id="list"&gt;
-        &lt;li wicket:id="items"&gt;
-            &lt;a wicket:id="link" class="unstyled"&gt;&lt;span wicket:id="label"&gt;&lt;/span&gt;&lt;/a&gt;
-            &lt;span wicket:id="separator" aria-hidden="true"&gt;/&lt;/span&gt;
-        &lt;/li&gt;
-    &lt;/ol&gt;
-&lt;/nav&gt;</code></pre>
+&lt;nav wicket:id="breadcrumb"&gt;&lt;/nav&gt;</code></pre>
         </div>
     </section>
 </wicket:extend>

@@ -2,6 +2,23 @@
 
 ## 0.5.0 (unreleased)
 
+### Upgrading from 0.4.x
+
+- `OatBreadcrumb` brings its own markup, like other Oat components: write
+  `<nav wicket:id="breadcrumb"></nav>`. Markup inside the tag is no longer allowed;
+  Wicket reports "Close tag not found" for it. The paths of its parts stay the same
+  (`"breadcrumb:list:items:0:link"`), and its separators look like `OatPageHeader`'s.
+
+### Changes
+
+- A long breadcrumb can leave levels out. `OatBreadcrumb.setMaxItems(n)` and
+  `OatPageHeader.setBreadcrumbMaxItems(n)` show at most n levels, counting the current
+  page: the first, a "…" button whose menu has the levels in between, and the last ones.
+  `OatBreadcrumb.setCurrent(model)` ends a trail with the current page as text, as
+  `OatPageHeader`, which now uses `OatBreadcrumb`, does with its title. The trail reads its
+  levels once per request, and its `<nav>` is named by the translated
+  `OatBreadcrumb.label` resource instead of an English "Breadcrumb".
+
 ## 0.4.0 (2026-10-19)
 
 A release with components for where things stand: steps, lists like a phone app's, counts

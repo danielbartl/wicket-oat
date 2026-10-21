@@ -40,10 +40,7 @@ class NewComponentsTest {
                 item.add(link);
             }
         };
-        tester.startComponentInPage(breadcrumb, Markup.of(
-                "<nav wicket:id=\"breadcrumb\"><ol wicket:id=\"list\"><li wicket:id=\"items\">"
-                        + "<a wicket:id=\"link\"><span wicket:id=\"label\"></span></a>"
-                        + "<span wicket:id=\"separator\"></span></li></ol></nav>"));
+        tester.startComponentInPage(breadcrumb, Markup.of("<nav wicket:id=\"breadcrumb\"></nav>"));
 
         TagTester nav = tester.getTagByWicketId("breadcrumb");
         assertThat(nav.getAttribute("aria-label")).isEqualTo("Breadcrumb");

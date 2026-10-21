@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <ol wicket:id="list" class="unstyled hstack oat-breadcrumb">
+        <li wicket:id="items"><a wicket:id="link" class="unstyled"><span wicket:id="label"></span></a><span wicket:id="separator" class="oat-crumb-separator" aria-hidden="true">/</span></li>
+        <li wicket:id="more" class="oat-crumb-more">
+            <ot-dropdown>
+                <button wicket:id="button" type="button" class="ghost small"><svg wicket:id="icon"></svg></button>
+                <menu wicket:id="menu" popover="">
+                    <wicket:container wicket:id="hidden"><a wicket:id="link"><span wicket:id="label"></span></a></wicket:container>
+                </menu>
+            </ot-dropdown><span class="oat-crumb-separator" aria-hidden="true">/</span>
+        </li>
+        <li wicket:id="tail"><a wicket:id="link" class="unstyled"><span wicket:id="label"></span></a><span wicket:id="separator" class="oat-crumb-separator" aria-hidden="true">/</span></li>
+        <li wicket:id="currentItem"><span wicket:id="current" aria-current="page"></span></li>
+    </ol>
+</wicket:panel>
+</html>

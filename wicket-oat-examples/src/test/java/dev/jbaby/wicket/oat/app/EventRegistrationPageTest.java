@@ -39,10 +39,13 @@ class EventRegistrationPageTest {
         formTester.setValue("fullName:input", "");
         tester.executeAjaxEvent("registrationForm:submit", "click");
 
-        tester.assertComponentOnAjaxResponse("registrationForm");
+        // The field and the form's feedback panel show the errors without the form being re-rendered
+        tester.assertComponentOnAjaxResponse("registrationForm:fullName:feedback");
+        tester.assertComponentOnAjaxResponse("registrationForm:formFeedback");
         assertThat(tester.getLastResponseAsString())
-                .contains("data-field=\"error\"")
-                .contains("&#039;Full Name&#039; is required.");
+                .contains("&#039;Full Name&#039; is required.")
+                .contains("Please fix the errors in the form.")
+                .doesNotContain("ot.toast(");
     }
 
     @Test
@@ -55,6 +58,6 @@ class EventRegistrationPageTest {
         tester.executeAjaxEvent("registrationForm:submit", "click");
 
         tester.assertNoErrorMessage();
-        assertThat(tester.getLastResponseAsString()).contains("Registration successful for Ada Lovelace!");
+        assertThat(tester.getLastResponseAsString()).contains("ot.toast(\"Registration successful for Ada Lovelace!\"");
     }
 }

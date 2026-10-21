@@ -3,8 +3,10 @@ package dev.jbaby.wicket.oat.components.form;
 import dev.jbaby.wicket.oat.behaviors.HintBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -16,6 +18,8 @@ import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.validation.IValidator;
+
+import java.util.Objects;
 
 /**
  * Base class for every Oat form field: wraps a label, the underlying Wicket
@@ -31,8 +35,11 @@ import org.apache.wicket.validation.IValidator;
  * <li>Leave the label out to look it up in the {@code .properties} files with the id
  * as the key (falling back to the id itself), as Wicket does for {@code ${label}} in
  * validation messages.</li>
+ * <li>After an Ajax request, e.g. a submit, it shows an error that appeared, changed or
+ * went away by itself, without {@code target.add(field)}: it updates its message and
+ * the error state in place, so the input keeps its focus and what the user typed.</li>
  * <li>The panel renders its own tag with a markup id, so it can be re-rendered with
- * {@code target.add(field)}, e.g. to show validation errors after an Ajax submit.</li>
+ * {@code target.add(field)} too.</li>
  * <li>The wrapped form component is the panel's child {@code input}, so a test sets its
  * value with {@code formTester.setValue("email:input", ...)}; {@link #getInput()}
  * returns it.</li>
@@ -55,6 +62,9 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     protected final IModel<String> helperText;
     private final Label label;
     private final Label feedback;
+    // The error the feedback message showed when it was last rendered, null for the hint
+    private String shownError;
+    private boolean feedbackRendered;
 
     /**
      * @param id the component id, also the resource key for a missing label
@@ -133,12 +143,36 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     }
 
     private String getFeedbackContent() {
+        feedbackRendered = true;
         FeedbackMessage error = getInput().getFeedbackMessages().first(FeedbackMessage.ERROR);
+        shownError = error != null ? String.valueOf(error.getMessage()) : null;
         if (error != null) {
             error.markRendered();
-            return String.valueOf(error.getMessage());
+            return shownError;
         }
         return (helperText != null) ? helperText.getObject() : "";
+    }
+
+    @Override
+    public void onEvent(IEvent<?> event) {
+        super.onEvent(event);
+        // Wicket broadcasts the AjaxRequestTarget to every component before responding
+        if (event.getPayload() instanceof AjaxRequestTarget target && feedbackRendered && isVisibleInHierarchy()) {
+            FeedbackMessage error = getInput().getFeedbackMessages().first(FeedbackMessage.ERROR);
+            if (Objects.equals(error != null ? String.valueOf(error.getMessage()) : null, shownError)) {
+                if (error != null) {
+                    error.markRendered(); // the same error is still shown
+                }
+                return;
+            }
+            // Not the whole field: re-rendering the input would lose its focus, what the
+            // user typed since, a chosen file or a password. Skipped if an ancestor is added.
+            target.add(feedback);
+            target.appendJavaScript("(function(f,e){if(f){var c=f.querySelector('[data-field]');if(c)c.setAttribute('data-field',e?'error':'');"
+                    + "f.querySelectorAll('[aria-describedby~=\"" + feedback.getMarkupId() + "\"]').forEach(function(i){"
+                    + "i.setAttribute('aria-invalid',e?'true':'false');});}})(document.getElementById('" + getMarkupId() + "'),"
+                    + (error != null) + ")");
+        }
     }
 
     /**

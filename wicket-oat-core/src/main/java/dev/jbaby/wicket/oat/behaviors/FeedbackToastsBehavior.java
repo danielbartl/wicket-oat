@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.behaviors;
 
 import dev.jbaby.wicket.oat.OatVariant;
+import dev.jbaby.wicket.oat.components.OatFeedbackPanel;
 import dev.jbaby.wicket.oat.components.form.NotShownInlineFilter;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,7 +28,8 @@ import java.util.List;
  * {@code setResponsePage(...)} appears on the next page. Messages are shown on a full
  * page render and during Ajax requests, without adding anything to the
  * {@code AjaxRequestTarget}. By default, errors that Oat form fields already show
- * inline are left out ({@link NotShownInlineFilter}).
+ * inline are left out ({@link NotShownInlineFilter}), and so are the messages of a
+ * container that an {@link OatFeedbackPanel} shows, its fence.
  * <p>
  * Oat shows several toasts as a stack, the newest in front, until the pointer or the
  * focus is on them. So the messages of a request are shown in order of their level,
@@ -75,7 +77,12 @@ public class FeedbackToastsBehavior extends Behavior {
     private String consumeMessages(Component component) {
         // Oat stacks toasts with the newest in front, so the most severe message comes last.
         // A copy: collect() doesn't promise a list that can be sorted.
-        List<FeedbackMessage> messages = new ArrayList<>(new FeedbackCollector(component, true).collect(this::accept));
+        List<FeedbackMessage> messages = new ArrayList<>(new FeedbackCollector(component, true) {
+            @Override
+            protected boolean shouldRecurseInto(Component child) {
+                return !OatFeedbackPanel.isFence(child);
+            }
+        }.collect(this::accept));
         messages.sort(Comparator.comparingInt(FeedbackMessage::getLevel));
         StringBuilder script = new StringBuilder();
         for (FeedbackMessage message : messages) {

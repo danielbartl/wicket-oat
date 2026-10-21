@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <ot-dropdown wicket:id="dropdown" class="oat-user-menu">
+        <button wicket:id="trigger" type="button" class="ghost oat-user-menu-trigger">
+            <wicket:container wicket:id="avatar"></wicket:container>
+            <span wicket:id="name" class="oat-user-menu-name"></span>
+        </button>
+        <menu wicket:id="menu" popover="">
+            <div class="oat-user-menu-header">
+                <strong wicket:id="menuName"></strong>
+                <span wicket:id="detail" class="oat-user-menu-detail"></span>
+            </div>
+            <hr>
+            <wicket:container wicket:id="links">
+                <a wicket:id="link" role="menuitem"><svg wicket:id="icon"></svg><span wicket:id="label"></span></a>
+            </wicket:container>
+            <hr wicket:id="linksEnd">
+            <a wicket:id="signOut" role="menuitem"><svg wicket:id="icon"></svg><span wicket:id="label"></span></a>
+        </menu>
+    </ot-dropdown>
+    <a wicket:id="signIn" class="button outline small"></a>
+</wicket:panel>
+</html>

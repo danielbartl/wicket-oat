@@ -184,7 +184,7 @@ public class OatList<T> extends Panel {
      * switch at the end of each, so that what the user entered survives a failed
      * validation. Off by default. Rows are matched by their position, so the parts in
      * front and at the end must read the row through its model on every render, e.g.
-     * {@code new OatAvatar(id, person.map(Person::initials))}, not
+     * {@code OatAvatar.initials(id, person.map(Person::initials))}, not
      * {@code person.getObject().initials()} once.
      */
     public OatList<T> setReuseItems(boolean reuseItems) {

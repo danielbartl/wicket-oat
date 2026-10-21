@@ -4,10 +4,15 @@ import dev.jbaby.wicket.oat.OatVariant;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import dev.jbaby.wicket.oat.behaviors.SpinnerBehavior;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.Markup;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +69,72 @@ class GeneralComponentsTest {
         assertThat(container.getAttribute("class")).contains("large");
         tester.assertInvisible("avatar:container:img");
         tester.assertLabel("avatar:container:initials", "JB");
+    }
+
+    @Test
+    void anAvatarsPictureCoversItsInitialsWhichScreenReadersRead() {
+        tester.startComponentInPage(new OatAvatar("avatar", Model.of("/ada.png"), Model.of("AL"), OatAvatar.Size.DEFAULT));
+
+        assertThat(tester.getTagByWicketId("img").getAttribute("alt")).isEmpty();
+        tester.assertLabel("avatar:container:initials", "AL");
+    }
+
+    @Test
+    void anAvatarWithAPictureOnlyHasNoInitials() {
+        tester.startComponentInPage(new OatAvatar("avatar", Model.of("/ada.png")));
+
+        assertThat(tester.getTagByWicketId("img").getAttribute("alt")).isNull();
+        tester.assertInvisible("avatar:container:initials");
+    }
+
+    /** A page with a head, for header contributions. */
+    public static class AvatarPage extends WebPage implements IMarkupResourceStreamProvider {
+
+        public AvatarPage(OatAvatar avatar) {
+            add(avatar);
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><head></head><body><div wicket:id='avatar'></div></body></html>");
+        }
+    }
+
+    @Test
+    void onlyAnAvatarWithAPictureLoadsTheScriptThatHidesAFailedOne() {
+        tester.startPage(new AvatarPage(new OatAvatar("avatar", Model.of("/ada.png"), Model.of("AL"), OatAvatar.Size.DEFAULT)));
+        assertThat(tester.getLastResponseAsString()).contains("wicket-oat.js");
+
+        tester.startPage(new AvatarPage(new OatAvatar("avatar", "AL")));
+        assertThat(tester.getLastResponseAsString()).doesNotContain("wicket-oat.js");
+    }
+
+    @Test
+    void anAvatarFollowsItsModelsOnEveryRender() {
+        Model<String> picture = Model.of((String) null);
+        Model<String> initials = Model.of("AL");
+        OatAvatar avatar = OatAvatar.initials("avatar", initials);
+        OatAvatar withPicture = new OatAvatar("avatar", picture, initials, OatAvatar.Size.DEFAULT);
+        tester.startComponentInPage(withPicture);
+        tester.assertInvisible("avatar:container:img");
+
+        picture.setObject("/grace.png");
+        initials.setObject("GH");
+        tester.startComponentInPage(withPicture);
+
+        assertThat(tester.getTagByWicketId("img").getAttribute("src")).isEqualTo("/grace.png");
+        tester.assertLabel("avatar:container:initials", "GH");
+        tester.startComponentInPage(avatar);
+        tester.assertLabel("avatar:container:initials", "GH");
+    }
+
+    @Test
+    void initialsComeFromTheFirstAndLastWordOfAName() {
+        assertThat(OatAvatar.initialsOf("Jordan Lee")).isEqualTo("JL");
+        assertThat(OatAvatar.initialsOf(" ada  augusta lovelace ")).isEqualTo("AL");
+        assertThat(OatAvatar.initialsOf("ada")).isEqualTo("A");
+        assertThat(OatAvatar.initialsOf(" ")).isEqualTo("?");
+        assertThat(OatAvatar.initialsOf(null)).isEqualTo("?");
     }
 
     @Test

@@ -2,6 +2,24 @@
 
 ## 0.5.0 (unreleased)
 
+### Changes
+
+- `OatUserMenu`: the signed-in user's menu for the top bar of an `OatAppLayout`. Their
+  picture, or initials, and name open a menu with their name, a second line such as their
+  email, links of yours with icons, and "Sign out". While nobody is signed in it is a
+  "Sign in" link, hidden on the sign-in page. "Sign out" invalidates the session and shows
+  the home page; `signOut()` and `onSignedOut()` change that, e.g. for Spring Security. It
+  keeps a page stateless, shows only the picture on phones, and its button is named
+  "Account: " and the name for screen readers. The examples' sign-in page now signs in a
+  demo user, whose menu appears in the top bar.
+- `OatAvatar` reads its models on every render, so it follows them, e.g. in a reused list
+  row or after a sign-in. With a picture and initials, the initials show under the picture
+  while it loads and if it can't be loaded, instead of a broken image, and the picture's
+  `alt` is empty, as the initials name it. `OatAvatar.initials(id, model)` makes an avatar
+  from initials in a model (`new OatAvatar(id, model)` takes a picture URL), and
+  `OatAvatar.initialsOf(name)` turns "Ada Lovelace" into "AL". Initials are no longer
+  underlined.
+
 ## 0.4.0 (2026-10-19)
 
 A release with components for where things stand: steps, lists like a phone app's, counts

@@ -543,6 +543,56 @@ ot-dropdown > .oat-popover {
     max-width: min(28rem, 100vw - 2rem);
 }
 
+/* OatAvatar: a picture covers the initials, which show while it loads or if it can't */
+figure[data-variant="avatar"]:has(> img) {
+    position: relative;
+}
+
+figure[data-variant="avatar"]:has(> abbr) > img {
+    position: absolute;
+    inset: 0;
+}
+
+/* Initials are an <abbr title>, which browsers underline */
+figure[data-variant="avatar"] > abbr {
+    text-decoration: none;
+}
+
+/* OatUserMenu: picture and name in the top bar; name, detail, links and Sign out in the menu */
+.oat-user-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.oat-user-menu-header {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-3);
+}
+
+.oat-user-menu-header strong {
+    font-weight: var(--font-medium);
+}
+
+.oat-user-menu-detail {
+    font-size: var(--text-8);
+    color: var(--muted-foreground);
+}
+
+.oat-user-menu a[role="menuitem"] {
+    align-items: center;
+    gap: var(--space-2);
+    color: inherit;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .oat-user-menu-name {
+        display: none;
+    }
+}
+
 /*
  * OatDateRangeField: its label is a <legend> (it names two inputs), so its fieldset
  * drops Oat's fieldset frame and the legend looks like any field's label.

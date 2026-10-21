@@ -1,8 +1,9 @@
 /*
  * Wicket Oat's own script, for the few components that need one: context menus
  * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn), autocomplete
- * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField) and
- * loading more list items on scroll (OatLoadMoreList).
+ * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField),
+ * loading more list items on scroll (OatLoadMoreList) and avatar pictures that can't be
+ * loaded (OatAvatar).
  * It only reads data- attributes, so pages keep Wicket's strict, nonce-based CSP:
  * no inline scripts or event handlers.
  */
@@ -273,5 +274,30 @@
         if (window.Wicket && Wicket.Event) {
             Wicket.Event.subscribe('/dom/node/added', observe);
         }
+    }
+
+    // ---- Avatars: a picture that can't be loaded gives way to the initials under it ----
+
+    var AVATAR_PICTURE = 'figure[data-variant="avatar"] > img';
+
+    // Error events don't bubble, but they pass the document on their way to the image
+    document.addEventListener('error', function (event) {
+        if (event.target.matches && event.target.matches(AVATAR_PICTURE)) {
+            event.target.hidden = true;
+        }
+    }, true);
+
+    // Pictures that failed before this script ran
+    var hideFailedPictures = function () {
+        document.querySelectorAll(AVATAR_PICTURE).forEach(function (img) {
+            if (img.complete && img.naturalWidth === 0) {
+                img.hidden = true;
+            }
+        });
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideFailedPictures);
+    } else {
+        hideFailedPictures();
     }
 })();

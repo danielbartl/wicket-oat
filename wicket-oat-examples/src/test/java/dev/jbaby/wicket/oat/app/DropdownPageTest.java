@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class DropdownPageTest {
@@ -33,5 +34,17 @@ class DropdownPageTest {
         assertEquals(menu.getAttribute("id"), trigger.getAttribute("popovertarget"));
 
         tester.assertLabel("dropdown:menu:items:0:label", "Profile");
+    }
+
+    @Test
+    void theUserMenuDemoSaysWhatSignOutWouldDo() {
+        tester.startPage(DropdownPage.class);
+        tester.assertLabel("userMenu:dropdown:trigger:name", "Grace Hopper");
+        tester.assertLabel("userMenu:dropdown:menu:links:0:link:label", "Inbox");
+
+        tester.clickLink("userMenu:dropdown:menu:signOut");
+
+        tester.assertRenderedPage(DropdownPage.class);
+        assertTrue(tester.getLastResponseAsString().contains("Grace would be signed out now."));
     }
 }

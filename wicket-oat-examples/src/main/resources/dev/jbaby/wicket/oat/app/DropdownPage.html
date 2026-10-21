@@ -24,6 +24,26 @@ add(new OatDropdown&lt;String&gt;("dropdown", "Options", Model.ofList(items)) {
             <pre><code>&lt;!-- HTML --&gt;
 &lt;div wicket:id="dropdown"&gt;&lt;/div&gt;</code></pre>
         </div>
+
+        <h2 class="mt-6">User menu</h2>
+        <p><code>OatUserMenu</code> is the signed-in user's menu for the top bar: their picture (or initials) and name open their
+            name and email, links of yours and Sign out. While nobody is signed in it is a Sign in link - see the top bar, and
+            sign in as <strong>demo</strong> / <strong>demo</strong>.</p>
+
+        <div wicket:id="userMenu"></div>
+
+        <pre class="mt-4"><code>// Java, in your OatAppLayout subclass
+@Override
+protected Component newTopNavExtra(String id) {
+    OatUserMenu user = new OatUserMenu(id, () -&gt; MySession.get().getUserName()); // null while signed out
+    user.setDetail(() -&gt; MySession.get().getEmail());
+    user.setPicture(() -&gt; MySession.get().getPictureUrl());
+    user.addLink("Inbox", InboxPage.class).setIcon("mail");
+    user.setSignInPage(SignInPage.class);
+    return user;
+}
+// Sign out invalidates the session, then shows the home page;
+// override signOut() and onSignedOut() to change that</code></pre>
     </section>
 </wicket:extend>
 </body>

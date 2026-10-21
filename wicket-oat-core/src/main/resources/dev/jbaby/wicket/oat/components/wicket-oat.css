@@ -100,6 +100,98 @@ dialog > div.oat-dialog-form > footer {
     padding-block-start: 0;
 }
 
+/*
+ * OatDialog's "×" (setCloseButton): last in the markup, so opening focuses the first field
+ * instead, but drawn in the header's corner, the title kept clear of it
+ */
+.oat-dialog-close {
+    position: absolute;
+    inset-block-start: var(--space-4);
+    inset-inline-end: var(--space-4);
+}
+
+.oat-dialog-form:has(> .oat-dialog-close) > header {
+    padding-inline-end: calc(var(--space-6) + 2rem);
+}
+
+/* Without Cancel and Confirm (setFooterVisible(false)), the footer takes no room */
+.oat-dialog-form > footer:not(:has(> button)) {
+    display: none;
+}
+
+/*
+ * OatDrawer: an OatDialog as tall as the screen at its end or start, or as wide as it at
+ * the bottom, sliding in from that edge. Its content scrolls between header and footer.
+ */
+dialog.oat-drawer {
+    --oat-drawer-from: translateX(100%);
+    inset-block: 0;
+    inset-inline: auto 0;
+    width: min(24rem, 100% - 3rem);
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border-block: none;
+    border-inline-end: none;
+    border-radius: 0;
+    transform: var(--oat-drawer-from);
+}
+
+dialog.oat-drawer:dir(rtl),
+dialog.oat-drawer[data-side="start"] {
+    --oat-drawer-from: translateX(-100%);
+}
+
+dialog.oat-drawer[data-side="start"] {
+    inset-inline: 0 auto;
+    border-inline-start: none;
+    border-inline-end: 1px solid var(--border);
+}
+
+dialog.oat-drawer[data-side="start"]:dir(rtl) {
+    --oat-drawer-from: translateX(100%);
+}
+
+dialog.oat-drawer[data-side="bottom"] {
+    --oat-drawer-from: translateY(100%);
+    inset: auto 0 0;
+    width: 100%;
+    height: auto;
+    max-height: 85dvh;
+    border: none;
+    border-block-start: 1px solid var(--border);
+    border-start-start-radius: var(--radius-large);
+    border-start-end-radius: var(--radius-large);
+}
+
+dialog.oat-drawer[open] {
+    transform: none;
+}
+
+@starting-style {
+    dialog.oat-drawer[open] {
+        transform: var(--oat-drawer-from);
+    }
+}
+
+dialog.oat-drawer > .oat-dialog-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: inherit;
+}
+
+dialog.oat-drawer > .oat-dialog-form > :not(header, footer, .oat-dialog-close) {
+    flex: 1;
+    min-height: 0;
+}
+
+dialog.oat-drawer > .oat-dialog-form > footer {
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--border);
+}
+
 .oat-theme-switcher {
     display: flex;
     flex-wrap: wrap;

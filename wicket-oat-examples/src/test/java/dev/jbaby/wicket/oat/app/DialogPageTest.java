@@ -65,4 +65,29 @@ class DialogPageTest {
         assertTrue(response.contains("ot.toast(\"Saved Grace B. Hopper.\""));
         tester.assertComponentOnAjaxResponse("people");
     }
+
+    @Test
+    void theFiltersDrawerAppliesWhatWasChosen() {
+        tester.startPage(DialogPage.class);
+        tester.assertLabel("filtersDrawer:trigger:triggerLabel", "Filters");
+
+        FormTester formTester = tester.newFormTester("filtersDrawer:dialog:form");
+        formTester.select("content:status:input", 1);
+        formTester.setValue("content:overdueOnly:input", "true");
+        tester.executeAjaxEvent("filtersDrawer:dialog:form:confirm", "click");
+
+        assertTrue(tester.getLastResponseAsString().contains("ot.toast(\"Showing paid orders, overdue only.\""));
+    }
+
+    @Test
+    void aRowsDetailsOpenInADrawerWithoutCancelAndConfirm() {
+        tester.startPage(DialogPage.class);
+
+        tester.clickLink("people:rows:0:details");
+
+        tester.assertComponentOnAjaxResponse("detailsDrawer");
+        tester.assertLabel("detailsDrawer:dialog:form:header", "Ada Lovelace");
+        assertTrue(tester.getLastResponseAsString().contains("ada@example.com"));
+        tester.assertInvisible("detailsDrawer:dialog:form:confirm");
+    }
 }

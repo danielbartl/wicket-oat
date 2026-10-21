@@ -2,6 +2,19 @@
 
 ## 0.5.0 (unreleased)
 
+### Changes
+
+- `OatDrawer`: a side panel that slides in from an edge of the screen over the page, for
+  filters, a record's details or a form to edit a row. It is an `OatDialog`, opened,
+  confirmed and closed the same way, as tall as the screen at its end, or at its start
+  or bottom (`setSide`); start and end follow the text direction. An "×" in its corner
+  closes it, its content scrolls between header and footer, and with
+  `setFooterVisible(false)` it leaves out Cancel and Confirm. The examples' dialog page
+  has a filters drawer and one with a person's details.
+- `OatDialog.setCloseButton(true)` adds the "×" to a dialog (named by the new
+  `OatDialog.close` resource, in all 7 languages), and `setFooterVisible(false)` leaves out
+  its Cancel and Confirm buttons.
+
 ## 0.4.0 (2026-10-19)
 
 A release with components for where things stand: steps, lists like a phone app's, counts

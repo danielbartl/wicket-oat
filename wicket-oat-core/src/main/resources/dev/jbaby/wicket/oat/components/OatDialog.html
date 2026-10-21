@@ -13,6 +13,8 @@
                 <button wicket:id="cancel" type="button" command="close" class="outline"><span wicket:id="cancelLabel"></span></button>
                 <button wicket:id="confirm" type="submit"><span wicket:id="confirmLabel"></span></button>
             </footer>
+            <!-- Last, so opening focuses the first field rather than this; drawn in the corner -->
+            <button wicket:id="close" type="button" command="close" class="ghost small oat-dialog-close"><svg wicket:id="icon"></svg></button>
         </form>
     </dialog>
 </wicket:panel>

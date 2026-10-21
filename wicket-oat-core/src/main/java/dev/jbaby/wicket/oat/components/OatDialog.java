@@ -77,6 +77,8 @@ public class OatDialog extends Panel {
     private final WebMarkupContainer dialog;
     private final Form<Void> form;
     private final Label headerLabel;
+    private final WebMarkupContainer closeButton;
+    private final WebMarkupContainer cancel;
     private final Label cancelLabel;
     private final Label confirmLabel;
     private final ButtonBehavior confirmButton;
@@ -157,9 +159,16 @@ public class OatDialog extends Panel {
 
         headerLabel = new Label("header", header);
         form.add(headerLabel);
+        // An "×" in the corner, closing it in the browser like Cancel
+        closeButton = new WebMarkupContainer("close");
+        closeButton.add(AttributeModifier.replace("commandfor", (IModel<String>) dialog::getMarkupId));
+        closeButton.add(AttributeModifier.replace("aria-label", new StringResourceModel("OatDialog.close", this).setDefaultValue("Close")));
+        closeButton.add(new OatIcon("icon", "x"));
+        closeButton.setVisible(false);
+        form.add(closeButton);
         form.add(new WebMarkupContainer(CONTENT_ID));
 
-        WebMarkupContainer cancel = new WebMarkupContainer("cancel");
+        cancel = new WebMarkupContainer("cancel");
         cancelLabel = new Label("cancelLabel", new StringResourceModel("OatDialog.cancel", this).setDefaultValue("Cancel"));
         cancel.add(cancelLabel);
         cancel.add(AttributeModifier.replace("commandfor", (IModel<String>) dialog::getMarkupId));
@@ -290,6 +299,28 @@ public class OatDialog extends Panel {
         form.addOrReplace(content);
         removeContentOnClose = false;
         return this;
+    }
+
+    /** Whether an "×" in the header's corner closes the dialog, like Cancel; off by default. */
+    public OatDialog setCloseButton(boolean shown) {
+        closeButton.setVisible(shown);
+        return this;
+    }
+
+    /**
+     * Whether the Cancel and Confirm buttons show; on by default. Without them, e.g. for
+     * a dialog that only shows something, give it the {@link #setCloseButton "×"}; the
+     * Escape key and a click on the backdrop close it too.
+     */
+    public OatDialog setFooterVisible(boolean visible) {
+        cancel.setVisible(visible);
+        confirm.setVisible(visible);
+        return this;
+    }
+
+    /** The {@code <dialog>} element, e.g. for a subclass to style it. */
+    WebMarkupContainer dialogElement() {
+        return dialog;
     }
 
     /** The dialog's title, e.g. to reuse one dialog for different records. */

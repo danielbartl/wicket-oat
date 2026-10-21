@@ -2,6 +2,15 @@
 
 ## 0.5.0 (unreleased)
 
+### Changes
+
+- `OatFilter`: a row of chips above a list or table choosing one value, such as a category
+  or a status, the chosen chip filled. Choosing one sets the model and runs `onChange`
+  over Ajax (`OatFilter.onChange(id, model, choices, target -> ...)`). `setNullValid(true)`
+  adds a first "All" chip for no value, translated in all 7 languages. The chips are radio
+  buttons in a named `<fieldset>`, so the arrow keys move between them, and an
+  `IChoiceRenderer` gives their text. The examples' products page filters by category.
+
 ## 0.4.0 (2026-10-19)
 
 A release with components for where things stand: steps, lists like a phone app's, counts

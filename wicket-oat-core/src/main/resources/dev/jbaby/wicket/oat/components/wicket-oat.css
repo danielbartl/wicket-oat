@@ -1629,6 +1629,58 @@ a.oat-tree-label[aria-current] {
 }
 
 /*
+ * OatFilter: a row of chips choosing one value, the chosen one filled. Each chip is a
+ * <label> around a radio button, unseen but still there to click and to focus, so the
+ * arrow keys move between the chips.
+ */
+.oat-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.oat-filter-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-size: var(--text-7);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.oat-filter-chip:hover {
+    background-color: var(--accent);
+}
+
+.oat-filter-chip:has(:checked) {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.oat-filter-chip:has(:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.oat-filter-chip input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/*
  * OatBottomNav: a tab bar fixed to the bottom of a phone's screen, and OatMobileLayout's
  * content, which leaves room for it. Oat has no tab bar, so it is built from Oat's
  * variables only, and follows the theme, light or dark. Override the variables to line

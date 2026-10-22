@@ -1602,17 +1602,22 @@ a.oat-tree-label[aria-current] {
 }
 
 /* Not Oat's .badge, which hides buttons inside it and caps its width */
-.oat-chip {
+/* A chip: a value chosen in OatMultiSelectField (.oat-chip), or a choice of OatFilter's */
+.oat-chip,
+.oat-filter-chip {
     display: inline-flex;
     align-items: center;
+    border-radius: var(--radius-full);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+}
+
+.oat-chip {
     gap: var(--space-1);
     padding: 2px 2px 2px var(--space-3);
-    border-radius: var(--radius-full);
     background-color: var(--secondary);
     color: var(--secondary-foreground);
     font-size: var(--text-8);
-    font-weight: var(--font-medium);
-    white-space: nowrap;
 }
 
 .oat-chip button {
@@ -1631,7 +1636,7 @@ a.oat-tree-label[aria-current] {
 /*
  * OatFilter: a row of chips choosing one value, the chosen one filled. Each chip is a
  * <label> around a radio button, unseen but still there to click and to focus, so the
- * arrow keys move between the chips.
+ * arrow keys move between the chips. The chip's base is with .oat-chip's.
  */
 .oat-filter {
     display: flex;
@@ -1644,18 +1649,13 @@ a.oat-tree-label[aria-current] {
 
 .oat-filter-chip {
     position: relative;
-    display: inline-flex;
-    align-items: center;
     padding: var(--space-1) var(--space-3);
     border: 1px solid var(--border);
-    border-radius: var(--radius-full);
     font-size: var(--text-7);
-    font-weight: var(--font-medium);
-    white-space: nowrap;
     cursor: pointer;
 }
 
-.oat-filter-chip:hover {
+.oat-filter-chip:not(:has(:disabled)):hover {
     background-color: var(--accent);
 }
 
@@ -1670,6 +1670,12 @@ a.oat-tree-label[aria-current] {
     outline-offset: 2px;
 }
 
+/* A disabled filter (setEnabled(false)) doesn't look clickable */
+.oat-filter-chip:has(:disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .oat-filter-chip input {
     position: absolute;
     inset: 0;
@@ -1677,7 +1683,15 @@ a.oat-tree-label[aria-current] {
     height: 100%;
     margin: 0;
     opacity: 0;
-    cursor: pointer;
+    cursor: inherit;
+}
+
+/* With the system's colors (Windows High Contrast), the chosen chip is outlined, as its fill is gone */
+@media (forced-colors: active) {
+    .oat-filter-chip:has(:checked) {
+        outline: 2px solid CanvasText;
+        outline-offset: 1px;
+    }
 }
 
 /*

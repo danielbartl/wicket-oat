@@ -813,9 +813,12 @@ add(OatFilter.onChange("category", category, Model.ofList(CATEGORIES), target ->
 The chips are radio buttons in a `<fieldset>`, so screen readers know them as one
 choice and the arrow keys move between them. The group is named like a field's
 label, by the id in the `.properties` files or with `setLabel(...)`. An
-`IChoiceRenderer` gives the chips' text, e.g. `new EnumChoiceRenderer<>(this)`. It
-has a form of its own, so it works anywhere: in `setSearch(...)` beside the search
-field, or inside an `OatDrawer`.
+`IChoiceRenderer` gives the chips' text and ids, e.g. `new EnumChoiceRenderer<>(this)`
+or `new ChoiceRenderer<>("name", "id")`. Strings, numbers and enums are their own
+ids; give other values an id, so a chip still stands for the same value when the
+choices change between showing the chips and a click. It has a form of its own, so
+it works anywhere: in `setSearch(...)` beside the search field, or inside an
+`OatDrawer`.
 
 ## Trees
 

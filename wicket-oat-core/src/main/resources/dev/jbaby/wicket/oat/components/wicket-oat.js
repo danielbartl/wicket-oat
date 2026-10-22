@@ -1,8 +1,9 @@
 /*
  * Wicket Oat's own script, for the few components that need one: context menus
  * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn), autocomplete
- * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField) and
- * loading more list items on scroll (OatLoadMoreList).
+ * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField),
+ * Enter on a filter's chips (OatFilter) and loading more list items on scroll
+ * (OatLoadMoreList).
  * It only reads data- attributes, so pages keep Wicket's strict, nonce-based CSP:
  * no inline scripts or event handlers.
  */
@@ -169,6 +170,16 @@
         if (cancel) {
             event.preventDefault();
             cancel.click();
+        }
+    });
+
+    // ---- Enter on a chip of an OatFilter (.oat-filter) chooses nothing ----
+
+    // Some browsers submit a form when Enter is pressed on a radio button: a full page
+    // request that skips the filter's Ajax update
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && event.target.matches && event.target.matches('.oat-filter input')) {
+            event.preventDefault();
         }
     });
 

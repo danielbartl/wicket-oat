@@ -100,8 +100,8 @@ public class OatSubmitButton extends AjaxButton {
 
     /**
      * A button submitting its form over Ajax, running {@code onSubmit} when the form is
-     * valid and {@code onError} when it isn't, e.g. {@code target -> target.add(form)} to
-     * show the errors.
+     * valid and {@code onError} when it isn't, e.g. {@code target -> form.error("Please fix
+     * the errors.")}. Oat fields show their own errors without it.
      */
     public static OatSubmitButton onSubmit(String id, String label, SerializableConsumer<AjaxRequestTarget> onSubmit,
                                            SerializableConsumer<AjaxRequestTarget> onError) {

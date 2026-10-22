@@ -1,21 +1,33 @@
 package dev.jbaby.wicket.oat.components.form;
 
+import com.github.openjson.JSONObject;
+import dev.jbaby.wicket.oat.WicketOats;
 import dev.jbaby.wicket.oat.behaviors.HintBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.validation.IValidator;
+
+import java.util.Objects;
 
 /**
  * Base class for every Oat form field: wraps a label, the underlying Wicket
@@ -31,8 +43,12 @@ import org.apache.wicket.validation.IValidator;
  * <li>Leave the label out to look it up in the {@code .properties} files with the id
  * as the key (falling back to the id itself), as Wicket does for {@code ${label}} in
  * validation messages.</li>
+ * <li>After an Ajax request that validated it, e.g. a submit, it shows an error that
+ * appeared, changed or went away by itself, without {@code target.add(field)}: it updates
+ * its message and the error state in place, so the input keeps its focus and what the
+ * user typed. Other Ajax requests leave the error it shows alone.</li>
  * <li>The panel renders its own tag with a markup id, so it can be re-rendered with
- * {@code target.add(field)}, e.g. to show validation errors after an Ajax submit.</li>
+ * {@code target.add(field)} too.</li>
  * <li>The wrapped form component is the panel's child {@code input}, so a test sets its
  * value with {@code formTester.setValue("email:input", ...)}; {@link #getInput()}
  * returns it.</li>
@@ -55,6 +71,13 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     protected final IModel<String> helperText;
     private final Label label;
     private final Label feedback;
+    // What the page shows: the error in the feedback message (null for the hint), and
+    // whether a form component inside a multi-input input showed its own error
+    private String shownError;
+    private boolean shownInnerError;
+    private boolean feedbackRendered;
+    // Whether the input's model was updated in this request
+    private boolean inputUpdated;
 
     /**
      * @param id the component id, also the resource key for a missing label
@@ -89,7 +112,19 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
         });
         add(this.label);
 
-        feedback = new Label("feedback", this::getFeedbackContent);
+        feedback = new Label("feedback", this::getFeedbackContent) {
+            @Override
+            protected void onAfterRender() {
+                super.onAfterRender();
+                FeedbackMessage error = currentError();
+                if (error != null) {
+                    error.markRendered();
+                }
+                shownError = text(error);
+                shownInnerError = hasInnerError();
+                feedbackRendered = true;
+            }
+        };
         feedback.setOutputMarkupId(true);
         feedback.add(new HintBehavior()); // Add standard Oat hint styling
         add(feedback);
@@ -133,12 +168,107 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     }
 
     private String getFeedbackContent() {
-        FeedbackMessage error = getInput().getFeedbackMessages().first(FeedbackMessage.ERROR);
+        FeedbackMessage error = currentError();
+        return error != null ? text(error) : hint();
+    }
+
+    private FeedbackMessage currentError() {
+        return getInput().getFeedbackMessages().first(FeedbackMessage.ERROR);
+    }
+
+    private static String text(FeedbackMessage error) {
+        return error != null ? String.valueOf(error.getMessage()) : null;
+    }
+
+    private String hint() {
+        return helperText != null ? Objects.toString(helperText.getObject(), "") : "";
+    }
+
+    // Whether a form component inside the input, e.g. one of an OatCustomField's, has an error
+    private boolean hasInnerError() {
+        Boolean found = getInput().visitChildren(FormComponent.class, (Component inner, IVisit<Boolean> visit) -> {
+            if (inner.hasErrorMessage()) {
+                visit.stop(true);
+            }
+        });
+        return found != null;
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(JavaScriptHeaderItem.forReference(WicketOats.WICKET_OAT_JS)); // WicketOat.fieldFeedback
+    }
+
+    @Override
+    public void onEvent(IEvent<?> event) {
+        super.onEvent(event);
+        // Wicket broadcasts the AjaxRequestTarget to every component before responding,
+        // and maybe more than once, when a handler sends it on
+        if (!(event.getPayload() instanceof AjaxRequestTarget target) || !feedbackRendered || !isVisibleInHierarchy()) {
+            return;
+        }
+        FeedbackMessage error = currentError();
+        boolean innerError = hasInnerError();
+        if (error == null && !innerError) {
+            if (shownError == null && !shownInnerError) {
+                return;
+            }
+            // Wicket removes the messages it showed at the end of each request, so no error
+            // only means that the shown one went away if the input was validated in this one
+            if (!inputUpdated && !validatedByForm()) {
+                return;
+            }
+        }
+        if (innerError || shownInnerError) {
+            // Only a render sets aria-invalid on each inner input from its own error
+            target.add(this);
+            return;
+        }
+        String text = text(error);
+        if (Objects.equals(text, shownError) || isRenderedBy(target)) {
+            if (error != null) {
+                error.markRendered(); // the same error is still shown
+            }
+            return;
+        }
+        // Not a render: that would lose the input's focus, what the user typed since, a
+        // chosen file or a password
         if (error != null) {
             error.markRendered();
-            return String.valueOf(error.getMessage());
         }
-        return (helperText != null) ? helperText.getObject() : "";
+        shownError = text;
+        target.appendJavaScript("WicketOat.fieldFeedback(" + JSONObject.quote(getMarkupId()) + ","
+                + JSONObject.quote(feedback.getMarkupId()) + "," + JSONObject.quote(error != null ? text : hint()) + ","
+                + (error != null) + ")");
+    }
+
+    // Whether the input's form validated it in this request, which a button with
+    // setDefaultFormProcessing(false) skips. On its own, by an Ajax behavior, a valid
+    // input updates its model.
+    private boolean validatedByForm() {
+        Form<?> form = Form.findForm(getInput());
+        if (form == null || !form.isSubmitted()) {
+            return false;
+        }
+        IFormSubmittingComponent submitter = form.getRootForm().findSubmitter();
+        return submitter == null || submitter.getDefaultFormProcessing();
+    }
+
+    // Whether this field is rendered with a component the target has, e.g. its form
+    private boolean isRenderedBy(AjaxRequestTarget target) {
+        for (Component added : target.getComponents()) {
+            if (added == this || added instanceof MarkupContainer container && container.contains(this, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onDetach() {
+        inputUpdated = false;
+        super.onDetach();
     }
 
     /**
@@ -235,6 +365,7 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
                         + "to its constructor, or add it to a container with a CompoundPropertyModel");
             }
             model.setObject(object);
+            inputUpdated = true;
         }
 
         @Override

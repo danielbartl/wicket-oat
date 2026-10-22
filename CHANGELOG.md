@@ -2,6 +2,32 @@
 
 ## 0.5.0 (unreleased)
 
+### Upgrading from 0.4.x
+
+- `OatFeedbackPanel` extends Wicket's `FencedFeedbackPanel` (which extends
+  `FeedbackPanel`). `new OatFeedbackPanel(id, null)` no longer compiles, as `null` could
+  be a filter or a fence; write `(IFeedbackMessageFilter) null` for all messages.
+
+### Changes
+
+- Oat form fields show the errors of an Ajax request by themselves. A submit button
+  without an `onError` that adds the form, such as `OatSubmitButton.onSubmit(id, label,
+  onSubmit)`, used to show nothing for an invalid form: the fields weren't re-rendered,
+  and `OatFeedbackPanel` and the feedback toasts leave out the errors fields show. Now a
+  field validated in an Ajax request whose error appeared, changed or went away updates
+  its message and error state in place, without re-rendering its input, so the input
+  keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+  requests leave the errors shown alone. `target.add(field)` and `target.add(form)`
+  work as before.
+- `OatFeedbackPanel` can show one form's messages next to it, such as the form's own
+  errors from `form.error(...)`: `new OatFeedbackPanel("formFeedback", form)`. As with
+  Wicket's `FencedFeedbackPanel`, which it now extends, the form is its fence: a panel
+  without a fence and `Oat.Behaviors.feedbackToasts()` leave out the messages from inside
+  it, so each message shows once. A panel without messages takes no space, so it can sit
+  at the top of a stacked form without leaving a gap.
+- A field's error message is shown in the danger color, as Oat shows errors, instead of
+  the grey of a hint.
+
 ## 0.4.0 (2026-10-19)
 
 A release with components for where things stand: steps, lists like a phone app's, counts

@@ -87,7 +87,7 @@ add(OatButton.onClick("myButton", "Click Me", target ->                        /
 
 - **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatIndicator`, `OatStatus`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`, `OatIcon`, `OatCookieConsent`
 - **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatUserMenu`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatSteps`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
-- **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
+- **Overlays:** `OatDialog`, `OatDrawer`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
 - **Data Display:** `OatDataTable`, `OatList`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatRadialProgress`, `OatMeter`, `OatRating`, `OatSkeleton`, `OatSpinner`
 - **Records & Trees:** `OatCrud`, `OatTree`, `OatTableTree`; data table columns `OatRowDetailsColumn`, `OatEditableColumn`
@@ -199,6 +199,30 @@ again in `onConfirm` or `onClose`, e.g. for the next record, it stays open. Give
 a tag of its own, such as `<div wicket:id="editDialog"></div>`, which takes no room
 in the layout. On a `<wicket:container>`, which Wicket leaves out in deployment mode,
 `open` and `close` still work, but `target.add(dialog)` doesn't.
+
+`OatDrawer` is an `OatDialog` that slides in from the end of the screen, as tall
+as it, for what supports the page: filters, a record's details, a form to edit a
+row. It opens, confirms and closes as a dialog does, and an "×" in its corner
+closes it too:
+
+```java
+OatDrawer filters = new OatDrawer("filters", "Filters", "Filter orders") {   // with a trigger button
+    @Override
+    protected void onConfirm(AjaxRequestTarget target) {
+        target.add(orders);
+    }
+};
+filters.setContent(new OrderFilterPanel(OatDialog.CONTENT_ID, filter)).setConfirmLabel(Model.of("Apply"));
+
+OatDrawer details = new OatDrawer("details", Model.of("Details")).setSide(OatDrawer.Side.START);
+details.setFooterVisible(false);   // only shows something: no Cancel and Confirm
+```
+
+`setSide(START | END | BOTTOM)` picks the edge; start and end follow the text
+direction, and a bottom drawer is as wide as the screen. A dialog can have the
+"×" too (`setCloseButton(true)`), and `setFooterVisible(false)` on either leaves
+out Cancel and Confirm. Closed without confirming, a dialog or drawer shows its
+models again the next time, without the choices that weren't applied.
 
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,
@@ -950,7 +974,7 @@ getResourceSettings().getStringResourceLoaders()
 
 | Key | English |
 | :--- | :--- |
-| `OatDialog.cancel` / `OatDialog.confirm` | Cancel / Confirm |
+| `OatDialog.cancel` / `OatDialog.confirm` / `OatDialog.close` | Cancel / Confirm / Close |
 | `OatAppLayout.toggleMenu` | Toggle menu |
 | `OatAppLayout.skipToContent` | Skip to content |
 | `OatAppLayout.title` / `OatAppLayout.name` | Wicket Oat Application (not translated: meant to be overridden) |

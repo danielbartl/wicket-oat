@@ -1,6 +1,8 @@
 package dev.jbaby.wicket.oat.components;
 
+import com.github.openjson.JSONObject;
 import dev.jbaby.wicket.oat.OatVariant;
+import dev.jbaby.wicket.oat.WicketOats;
 import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.ButtonBehavior;
 import dev.jbaby.wicket.oat.behaviors.NestedFormButtonBehavior;
@@ -10,13 +12,16 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.ThrottlingSettings;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -25,6 +30,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -43,7 +49,10 @@ import java.util.Map;
  * and shows the errors; otherwise {@link #onConfirm} runs, and the dialog closes unless
  * an error was reported in it there.</li>
  * <li>Cancel, the Escape key and a click on the backdrop close it in the browser, which
- * tells the server. {@link #onClose} runs whenever it closes, however that happened.</li>
+ * tells the server. Once the dialog is out of sight, its fields show the models again,
+ * without what was changed but not confirmed. {@link #onClose} runs whenever it closes,
+ * however that happened.</li>
+ * <li>Its content scrolls between the header and the buttons, which stay in view.</li>
  * <li>It can sit inside a form of the page: submitting that form leaves the dialog's
  * fields out, so they are neither validated nor stored.</li>
  * <li>Give it a tag of its own, e.g. {@code <div wicket:id="dialog"></div>}, which takes
@@ -74,9 +83,15 @@ public class OatDialog extends Panel {
     /** Marks a close the server asked for, so the browser doesn't report it back. */
     private static final String CLOSING = "data-oat-closing";
 
+    /** How long the browser takes to close a dialog (Oat's transition), before telling the server. */
+    private static final Duration CLOSE_TRANSITION = Duration.ofMillis(300);
+
     private final WebMarkupContainer dialog;
     private final Form<Void> form;
     private final Label headerLabel;
+    private final WebMarkupContainer closeButton;
+    private final WebMarkupContainer footer;
+    private final WebMarkupContainer cancel;
     private final Label cancelLabel;
     private final Label confirmLabel;
     private final ButtonBehavior confirmButton;
@@ -85,6 +100,10 @@ public class OatDialog extends Panel {
     /** Set by {@link #open}, so a dialog reopened in {@link #onConfirm} isn't closed after it. */
     private boolean reopened;
     private boolean removeContentOnClose;
+    /** Set by {@link #open} on a closed dialog, which then slides or fades in; one open already shows at once. */
+    private boolean appearing;
+    /** The browser still shows content removed on a close the server asked for, until the form renders again. */
+    private boolean staleContent;
 
     /**
      * A dialog without a trigger button; open it with {@link #open}.
@@ -100,8 +119,11 @@ public class OatDialog extends Panel {
         this(id, Model.of(header));
     }
 
+    /**
+     * @param triggerLabel the label of a button that opens the dialog, or {@code null} for none
+     */
     public OatDialog(String id, String triggerLabel, String header) {
-        this(id, Model.of(triggerLabel), Model.of(header));
+        this(id, triggerLabel != null ? Model.of(triggerLabel) : null, Model.of(header));
     }
 
     /**
@@ -120,13 +142,21 @@ public class OatDialog extends Panel {
             public void renderHead(IHeaderResponse response) {
                 super.renderHead(response);
                 if (open) {
-                    response.render(OnDomReadyHeaderItem.forScript("(function(d){if(d&&!d.open)d.showModal();})"
-                            + "(document.getElementById('" + getMarkupId() + "'))"));
+                    response.render(JavaScriptHeaderItem.forReference(WicketOats.WICKET_OAT_JS));
+                    response.render(OnDomReadyHeaderItem.forScript("WicketOat.showDialog(" + JSONObject.quote(getMarkupId()) + ")"));
                 }
+            }
+
+            @Override
+            protected void onAfterRender() {
+                super.onAfterRender();
+                appearing = false;
             }
         };
         dialog.setOutputMarkupId(true);
         dialog.add(AttributeModifier.replace("closedby", "any"));
+        // Rendered again while open, it shows at once rather than sliding or fading in again
+        dialog.add(AttributeModifier.replace("data-oat-instant", (IModel<String>) () -> open && !appearing ? "" : null));
         dialog.add(new ClosedInBrowser());
         add(dialog);
 
@@ -138,6 +168,9 @@ public class OatDialog extends Panel {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
                 open = true;
+                if (staleContent) {
+                    target.add(form);
+                }
             }
         });
         trigger.setVisible(triggerLabel != null);
@@ -151,15 +184,33 @@ public class OatDialog extends Panel {
             protected boolean wantSubmitOnParentFormSubmit() {
                 return false;
             }
+
+            @Override
+            protected void onAfterRender() {
+                super.onAfterRender();
+                staleContent = false;
+            }
         };
         form.setOutputMarkupId(true);
         dialog.add(form);
 
         headerLabel = new Label("header", header);
         form.add(headerLabel);
+        // An "×" in the corner, closing it in the browser like Cancel. First in the markup, as it
+        // is shown; wicket-oat.js focuses the first field after it on opening.
+        closeButton = new WebMarkupContainer("close");
+        closeButton.add(AttributeModifier.replace("commandfor", (IModel<String>) dialog::getMarkupId));
+        closeButton.add(AttributeModifier.replace("aria-label", new StringResourceModel("OatDialog.close", this).setDefaultValue("Close")));
+        closeButton.add(new OatIcon("icon", "x"));
+        closeButton.setVisible(false);
+        form.add(closeButton);
         form.add(new WebMarkupContainer(CONTENT_ID));
 
-        WebMarkupContainer cancel = new WebMarkupContainer("cancel");
+        // Transparent, so the buttons keep their paths ("form:confirm"); hidden with them
+        footer = new TransparentWebMarkupContainer("footer");
+        form.add(footer);
+
+        cancel = new WebMarkupContainer("cancel");
         cancelLabel = new Label("cancelLabel", new StringResourceModel("OatDialog.cancel", this).setDefaultValue("Cancel"));
         cancel.add(cancelLabel);
         cancel.add(AttributeModifier.replace("commandfor", (IModel<String>) dialog::getMarkupId));
@@ -218,6 +269,7 @@ public class OatDialog extends Panel {
      */
     public OatDialog open(AjaxRequestTarget target) {
         form.clearInput();
+        appearing = !open;
         open = true;
         reopened = true;
         // The panel; on a <wicket:container>, which deployment mode leaves out, the <dialog>
@@ -254,7 +306,7 @@ public class OatDialog extends Panel {
                 }
             }
         });
-        closed(target);
+        closed(target, false);
         return this;
     }
 
@@ -264,7 +316,7 @@ public class OatDialog extends Panel {
     }
 
     /** Notes that the dialog closed, removes content set to go with it, and runs onClose once. */
-    private void closed(AjaxRequestTarget target) {
+    private void closed(AjaxRequestTarget target, boolean inBrowser) {
         if (!open) {
             return;
         }
@@ -272,7 +324,13 @@ public class OatDialog extends Panel {
         if (removeContentOnClose) {
             removeContentOnClose = false;
             form.replace(new WebMarkupContainer(CONTENT_ID));
-            // So the browser can't show or submit the old content's inputs anymore
+            // Not rendered yet, so the dialog doesn't close empty; opening it renders the form
+            staleContent = true;
+        }
+        if (inBrowser) {
+            // Out of sight by now (ClosedInBrowser waits): the fields show the models again,
+            // without input that wasn't confirmed or the errors of a failed confirm
+            form.clearInput();
             target.add(form);
         }
         onClose(target);
@@ -290,6 +348,30 @@ public class OatDialog extends Panel {
         form.addOrReplace(content);
         removeContentOnClose = false;
         return this;
+    }
+
+    /** Whether an "×" in the header's corner closes the dialog, like Cancel; off by default. */
+    public OatDialog setCloseButton(boolean shown) {
+        closeButton.setVisible(shown);
+        return this;
+    }
+
+    /**
+     * Whether the footer with the Cancel and Confirm buttons shows; on by default. Without
+     * them, e.g. for a dialog that only shows something, give it the
+     * {@link #setCloseButton "×"}; the Escape key and a click on the backdrop close it too,
+     * and Enter in a field submits nothing.
+     */
+    public OatDialog setFooterVisible(boolean visible) {
+        footer.setVisible(visible);
+        cancel.setVisible(visible);
+        confirm.setVisible(visible);
+        return this;
+    }
+
+    /** The {@code <dialog>} element, e.g. for a subclass to style it. */
+    protected final WebMarkupContainer getDialogElement() {
+        return dialog;
     }
 
     /** The dialog's title, e.g. to reuse one dialog for different records. */
@@ -333,6 +415,13 @@ public class OatDialog extends Panel {
         return form;
     }
 
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        // Focuses the first field on opening, and Enter in one does nothing without a footer
+        response.render(JavaScriptHeaderItem.forReference(WicketOats.WICKET_OAT_JS));
+    }
+
     private boolean hasErrorMessages() {
         return !new FeedbackCollector(this).collect(FeedbackMessage::isError).isEmpty();
     }
@@ -340,7 +429,9 @@ public class OatDialog extends Panel {
     /**
      * Tells the server when the dialog closed in the browser: by Cancel, the Escape key or
      * a click on the backdrop. Not for a close the server asked for, which it knows about,
-     * nor for a dialog element replaced by a re-render.
+     * nor for a dialog element replaced by a re-render. Once the dialog is out of sight, so
+     * re-rendering its form doesn't show while it slides or fades out; not at all if it was
+     * opened again by then.
      */
     private final class ClosedInBrowser extends AjaxEventBehavior {
 
@@ -351,16 +442,17 @@ public class OatDialog extends Panel {
         @Override
         protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
             super.updateAjaxAttributes(attributes);
+            attributes.setThrottlingSettings(new ThrottlingSettings(CLOSE_TRANSITION));
             // The element the event fired on: looked up by id, it would be the new one
             attributes.getAjaxCallListeners().add(new AjaxCallListener().onPrecondition(
                     "var d=attrs.event&&attrs.event.target;if(!d||!d.isConnected){return false;}"
                             + "if(d.hasAttribute('" + CLOSING + "')){d.removeAttribute('" + CLOSING + "');return false;}"
-                            + "return true;"));
+                            + "return !d.open;"));
         }
 
         @Override
         protected void onEvent(AjaxRequestTarget target) {
-            closed(target);
+            closed(target, true);
         }
     }
 }

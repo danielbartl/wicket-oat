@@ -254,7 +254,7 @@ class AppShellTest {
         tester.startPage(ConfirmPage.class);
         tester.executeAjaxEvent("delete", "click");
 
-        assertThat(tester.getLastResponseAsString()).contains("showModal()");
+        assertThat(tester.getLastResponseAsString()).contains("WicketOat.showDialog(");
         tester.assertLabel("confirm:dialog:form:header", "Delete invoice?");
         tester.assertLabel("confirm:dialog:form:content", "This can&#039;t be undone.");
         // The dialog's confirm button, not the dialog panel of the same id
@@ -318,7 +318,7 @@ class AppShellTest {
         tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");
         assertThat(page.confirm.isOpen()).isTrue();
         tester.assertLabel("confirm:dialog:form:header", "Really delete all 12 invoices?");
-        assertThat(tester.getLastResponseAsString()).contains("showModal()").doesNotContain(".close()");
+        assertThat(tester.getLastResponseAsString()).contains("WicketOat.showDialog(").doesNotContain(".close()");
         assertThat(page.deleted).isEmpty();
 
         tester.executeAjaxEvent("confirm:dialog:form:confirm", "click");

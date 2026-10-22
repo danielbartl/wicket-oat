@@ -70,6 +70,27 @@
   `aria-label` in the markup names it otherwise, e.g. a second trail on a page.
 - `OatDropdown`'s button says it opens a menu (`aria-haspopup="menu"`, and
   `aria-expanded="false"` before it first opens), and the menu is a `role="menu"`.
+- `OatDrawer`: a side panel that slides in from an edge of the screen over the page, for
+  filters, a record's details or a form to edit a row. It is an `OatDialog`, opened,
+  confirmed and closed the same way, as tall as the screen at its end, or at its start
+  or bottom (`setSide`); start and end follow the text direction. An "×" in its corner
+  closes it, its content scrolls between header and footer, and with
+  `setFooterVisible(false)` it leaves out Cancel and Confirm. The examples' dialog page
+  has a filters drawer and one with a person's details.
+- `OatDialog.setCloseButton(true)` adds the "×" to a dialog (named by the new
+  `OatDialog.close` resource, in all 7 languages), and `setFooterVisible(false)` leaves out
+  its footer with Cancel and Confirm; Enter in a field then submits nothing. The "×" comes
+  first, as it is drawn, and opening focuses the first field after it.
+- An `OatDialog`'s content scrolls between its header and its buttons, which stay in view,
+  as does the "×".
+- A dialog closed in the browser (Cancel, "×", Escape, the backdrop) shows its models
+  again the next time, without what was changed but not confirmed, or the errors of a
+  failed confirm. The server hears of the close once the dialog is out of sight, so this,
+  and content set with `open(content, target)` going away, doesn't show while it closes.
+- An open dialog rendered again, e.g. with `target.add(dialog)` or opened again for the
+  next record, shows at once instead of sliding or fading in again.
+- A `null` trigger label renders no trigger button with the `String` constructors too, and
+  `getDialogElement()` lets a subclass style the `<dialog>`.
 
 ## 0.4.0 (2026-10-19)
 

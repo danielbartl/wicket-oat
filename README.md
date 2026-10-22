@@ -89,7 +89,7 @@ add(OatButton.onClick("myButton", "Click Me", target ->                        /
 - **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatUserMenu`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatSteps`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatDrawer`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
-- **Data Display:** `OatDataTable`, `OatList`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatRadialProgress`, `OatMeter`, `OatRating`, `OatSkeleton`, `OatSpinner`
+- **Data Display:** `OatDataTable`, `OatList`, `OatFilter`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatRadialProgress`, `OatMeter`, `OatRating`, `OatSkeleton`, `OatSpinner`
 - **Records & Trees:** `OatCrud`, `OatTree`, `OatTableTree`; data table columns `OatRowDetailsColumn`, `OatEditableColumn`
 - **Forms:** `OatMultiSelectField`, `OatTextField`, `OatCheckBox`, `OatDropdownChoice`, `OatRadioChoice`, `OatCheckBoxMultipleChoice`, `OatListMultipleChoice`, `OatTextArea`, `OatSwitch`, `OatRatingField`, `OatTagInput`, `OatFileUpload`, `OatFileDropzone`, `OatMoneyField`, `OatPercentField`, `OatDateRangeField`, `OatAutoCompleteField`, `OatCustomField`, `OatLoginForm`, `OatMessageInput`, `OatFieldset`, and more specialized HTML5 fields.
 
@@ -883,6 +883,26 @@ entity to save. `setSearch(id -> ...)` puts a search field beside "New" (in its 
 handler, re-render just the rows: `target.add(crud.getDataTable().getTable())`), and
 `getDataTable()` gives the table for selection, the column chooser or CSV export.
 
+`OatFilter` is a row of chips above a list or table that chooses one value, such as
+a category or a status. The chosen chip is filled:
+
+```java
+add(OatFilter.onChange("category", category, Model.ofList(CATEGORIES), target -> {
+    table.setCurrentPage(0);
+    target.add(table);
+}).setNullValid(true));   // a first "All" chip for no value
+```
+
+The chips are radio buttons in a `<fieldset>`, so screen readers know them as one
+choice and the arrow keys move between them. The group is named like a field's
+label, by the id in the `.properties` files or with `setLabel(...)`. An
+`IChoiceRenderer` gives the chips' text and ids, e.g. `new EnumChoiceRenderer<>(this)`
+or `new ChoiceRenderer<>("name", "id")`. Strings, numbers and enums are their own
+ids; give other values an id, so a chip still stands for the same value when the
+choices change between showing the chips and a click. It has a form of its own, so
+it works anywhere: in `setSearch(...)` beside the search field, or inside an
+`OatDrawer`.
+
 ## Trees
 
 `OatTree` (a nested tree) and `OatTableTree` (a tree grid) are Wicket's
@@ -982,6 +1002,7 @@ getResourceSettings().getStringResourceLoaders()
 | `OatPagingNavigator.label` | Pagination |
 | `OatFileDropzone.choose` / `OatFileDropzone.hint` | Choose files / Drop files here or click to choose |
 | `OatTagInput.placeholder` | Add tags... |
+| `OatFilter.all` | All |
 | `IConverter.BigDecimal` on `OatMoneyField` / `OatPercentField` | The value of '${label}' is not a valid amount / percentage. |
 
 ## Resources

@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.app;
 import dev.jbaby.wicket.oat.Oat;
 import dev.jbaby.wicket.oat.components.OatCrud;
 import dev.jbaby.wicket.oat.components.OatDescriptionList;
+import dev.jbaby.wicket.oat.components.OatFilter;
 import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatMoneyField;
 import dev.jbaby.wicket.oat.components.form.OatMultiSelectField;
@@ -107,6 +108,7 @@ public class ProductsPage extends BasePage {
             new Product(8, "Antivirus, yearly", "Software", "39.00", 300, "Protection for up to three devices.")));
     private final AtomicLong nextId = new AtomicLong(100);
     private final IModel<String> search = new Model<>();
+    private final IModel<String> category = new Model<>();
 
     public ProductsPage() {
         add(Oat.Behaviors.feedbackToasts());
@@ -164,6 +166,11 @@ public class ProductsPage extends BasePage {
                             target.add(crud.getDataTable().getTable());
                         }
                     }));
+            // Chips choosing a category, "All" for any
+            toolbar.add(OatFilter.onChange("category", category, Model.ofList(CATEGORIES), target -> {
+                crud.getDataTable().setCurrentPage(0);
+                target.add(crud.getDataTable().getTable());
+            }).setNullValid(true).setLabel(Model.of("Category")));
             return toolbar;
         });
         crud.getDataTable().setColumnChooser(true).setCsvExport("products.csv");
@@ -193,8 +200,11 @@ public class ProductsPage extends BasePage {
 
         private List<Product> filtered() {
             String text = search.getObject() == null ? "" : search.getObject().strip().toLowerCase(Locale.ROOT);
-            return products.stream().filter(p -> text.isEmpty() || p.getName().toLowerCase(Locale.ROOT).contains(text)
-                    || p.getCategory().toLowerCase(Locale.ROOT).contains(text)).toList();
+            return products.stream()
+                    .filter(p -> category.getObject() == null || category.getObject().equals(p.getCategory()))
+                    .filter(p -> text.isEmpty() || p.getName().toLowerCase(Locale.ROOT).contains(text)
+                            || p.getCategory().toLowerCase(Locale.ROOT).contains(text))
+                    .toList();
         }
 
         @Override

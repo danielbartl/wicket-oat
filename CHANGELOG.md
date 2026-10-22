@@ -91,6 +91,16 @@
   next record, shows at once instead of sliding or fading in again.
 - A `null` trigger label renders no trigger button with the `String` constructors too, and
   `getDialogElement()` lets a subclass style the `<dialog>`.
+- `OatFilter`: a row of chips above a list or table choosing one value, such as a category
+  or a status, the chosen chip filled. Choosing one sets the model and runs `onChange`
+  over Ajax (`OatFilter.onChange(id, model, choices, target -> ...)`). `setNullValid(true)`
+  adds a first "All" chip for no value, translated in all 7 languages; without it, a value
+  must be chosen. The chips are the radio buttons of a Wicket `RadioChoice` in a named
+  `<fieldset>`, so the arrow keys move between them, and an `IChoiceRenderer` gives their
+  text and ids: strings, numbers and enums are their own ids, so a chip stands for its
+  value also when the choices change. The choices are read once per request, and without
+  a model the filter binds by its id to a `CompoundPropertyModel`. The examples' products
+  page filters by category.
 
 ## 0.4.0 (2026-10-19)
 

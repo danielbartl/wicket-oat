@@ -2,6 +2,7 @@ package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.components.tree.OatTreeNode;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -61,6 +62,22 @@ class TierCPagesTest {
         assertTrue(response.contains("Antivirus, yearly"));
         // Replacing the field would lose what's typed while the rows load
         assertFalse(response.contains("type=\"search\""));
+    }
+
+    @Test
+    void theCategoryChipsFilterTheProducts() {
+        tester.startPage(ProductsPage.class);
+        // A chip stands for its category by name
+        String chips = "products:table:toolbar:search:category:form:choice";
+        FormComponent<?> choice = (FormComponent<?>) tester.getComponentFromLastRenderedPage(chips);
+        tester.getRequest().getPostParameters().setParameterValue(choice.getInputName(), "Services");
+        tester.executeAjaxEvent(chips, "change");
+
+        tester.assertComponentOnAjaxResponse("products:table:table");
+        String response = tester.getLastResponseAsString();
+        assertTrue(response.contains("On-site setup"));
+        assertTrue(response.contains("Backup, 1 TB"));
+        assertFalse(response.contains("Docking station"));
     }
 
     @Test

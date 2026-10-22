@@ -86,7 +86,7 @@ add(OatButton.onClick("myButton", "Click Me", target ->                        /
 ## Available Components
 
 - **General:** `OatButton`, `OatSplitButton`, `OatBadge`, `OatIndicator`, `OatStatus`, `OatAvatar`, `OatAvatarGroup`, `OatAlert`, `OatCard`, `OatStatCard`, `OatEmptyState`, `OatFeedbackPanel`, `OatIcon`, `OatCookieConsent`
-- **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatSteps`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
+- **Navigation/Layout:** `OatAppLayout`, `OatMobileLayout`, `OatBottomNav`, `OatUserMenu`, `OatPageHeader`, `OatMenuBar`, `OatWizard`, `OatSteps`, `OatMasterDetail`, `OatSplitLayout`, `OatAccordion`, `OatButtonGroup`, `OatBreadcrumb`, `OatPagingNavigator`, `OatAjaxPagingNavigator`, `OatPagination`
 - **Overlays:** `OatDialog`, `OatConfirmDialog`, `OatDropdown`, `OatPopover`, `OatTabbedPanel`, `OatTabs`
 - **Charts:** `OatBarChart`, `OatColumnChart`, `OatLineChart`, `OatDonutChart`, `OatSparkline`
 - **Data Display:** `OatDataTable`, `OatList`, `OatDescriptionList`, `OatTimeline`, `OatMessageList`, `OatLoadMoreList`, `OatLazyLoadPanel`, `OatProgress`, `OatRadialProgress`, `OatMeter`, `OatRating`, `OatSkeleton`, `OatSpinner`
@@ -143,8 +143,8 @@ takes a lambda instead:
 // The factory implements onClick() for you
 add(OatButton.onClick("id", "Click Me", target -> ...));                   // <a wicket:id="id"></a>
 
-// A form's submit button: onSubmit when valid, onError when not
-form.add(OatSubmitButton.onSubmit("save", "Save", target -> ..., target -> target.add(form)));
+// A form's submit button: onSubmit when valid; Oat fields show their errors themselves
+form.add(OatSubmitButton.onSubmit("save", "Save", target -> ...));
 
 // List components fill each item from its object
 add(OatAccordion.of("faq", Model.ofList(faqs), (item, faq) -> {
@@ -387,6 +387,21 @@ also pick up session messages, so a `getSession().success(...)` before
 Oat form fields already show inline; pass your own `IFeedbackMessageFilter` to
 change what they show.
 
+To show a form's messages next to it, such as its own errors from
+`form.error(...)`, give a panel the form as its fence, as with Wicket's
+`FencedFeedbackPanel` (which `OatFeedbackPanel` extends):
+
+```java
+form.add(new OatFeedbackPanel("formFeedback", form));
+```
+
+It shows the messages of the form and the components in it, and a panel without
+a fence and the toasts leave those out, so each message shows once. A message
+reported by a component in the form, such as `success(...)` in its submit
+button's `onSubmit`, belongs to the form too; report it on the page
+(`getPage().success(...)`) to show it with the page's messages. A panel without
+messages takes no space, so it can sit at the top of a stacked form.
+
 ## Tabs
 
 `OatTabbedPanel` is Wicket's `AjaxTabbedPanel` with Oat styling: tabs are
@@ -543,6 +558,34 @@ A failed attempt shows "Wrong username or password." without saying which was
 wrong, and clears the password. After a successful one the session gets a new
 id (against session fixation) and the user continues to the page they were
 going to. The fields carry `autocomplete` hints for password managers.
+
+`OatUserMenu` is the signed-in user's menu for the top bar of an `OatAppLayout`:
+their picture (or initials) and name open a menu with their name and email, links
+of yours and "Sign out". While nobody is signed in it is a "Sign in" link, which
+hides itself on the sign-in page:
+
+```java
+@Override
+protected Component newTopNavExtra(String id) {
+    OatUserMenu user = new OatUserMenu(id, () -> MySession.get().getUserName());   // null while signed out
+    user.setDetail(() -> MySession.get().getEmail());
+    user.setPicture(() -> MySession.get().getPictureUrl());
+    user.addLink("Profile", ProfilePage.class).setIcon("user");
+    user.addLink("Settings", SettingsPage.class).setIcon("settings");
+    user.setSignInPage(SignInPage.class);
+    return user;
+}
+```
+
+"Sign out" invalidates the session, which also signs out of wicket-auth-roles'
+`AuthenticatedWebSession`, and shows the home page. Override `signOut()` and
+`onSignedOut()` to do otherwise, e.g. to sign out of Spring Security too.
+"Sign out" is a POST, which another site can't make with the user's session, and
+it works on a page left open after the session expired. The menu opens in the
+browser and its links and "Sign out" form are stateless, so a stateless page,
+such as a sign-in page, stays stateless. On phones it shows only the picture. The
+initials show while the picture loads and if it can't be loaded, as in any
+`OatAvatar` with both.
 
 `OatMasterDetail` shows a list next to the selected item's details, and one at a
 time on phones, with a Back button. The master is any component that calls
@@ -946,7 +989,6 @@ meant to be used like the plain Wicket components they wrap:
 
 ```java
 Form<Person> form = new Form<>("form", new CompoundPropertyModel<>(person));
-form.setOutputMarkupId(true);
 add(form);
 
 // Model inherited from the CompoundPropertyModel by id ("name" -> person.name),
@@ -960,14 +1002,21 @@ form.add(new OatDropdownChoice<String>("country", Model.ofList(countries)));
 
 form.add(new AjaxButton("save") {
     @Override
-    protected void onError(AjaxRequestTarget target) {
-        target.add(form); // fields render their own tag, so they can be re-rendered to show inline errors
+    protected void onSubmit(AjaxRequestTarget target) {
+        ...
     }
-});
+}); // no onError needed to show the fields' errors
 ```
 
 You can still pass a model and a label explicitly
 (`new OatTextField<>("name", "Full name", model)`).
+
+After an Ajax request that validates it, such as a submit, each field shows an error
+that appeared, changed or went away by itself, without `target.add(...)`. It updates
+its message and error state in place rather than re-rendering its input, so the input
+keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+requests leave the errors shown alone. A field renders its own tag, so
+`target.add(field)` or `target.add(form)` re-renders it too.
 
 The wrapped form component is the field's child `input`, so a test reaches it at
 `"name:input"`, and `getInput()` returns it for anything the field doesn't offer

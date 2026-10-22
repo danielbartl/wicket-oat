@@ -4,6 +4,9 @@
 
 ### Upgrading from 0.4.x
 
+- `OatFeedbackPanel` extends Wicket's `FencedFeedbackPanel` (which extends
+  `FeedbackPanel`). `new OatFeedbackPanel(id, null)` no longer compiles, as `null` could
+  be a filter or a fence; write `(IFeedbackMessageFilter) null` for all messages.
 - `OatBreadcrumb` brings its own markup, like other Oat components: write
   `<nav wicket:id="breadcrumb"></nav>`. Markup inside the tag is no longer allowed;
   Wicket reports "Close tag not found" for it. Its separators look like `OatPageHeader`'s.
@@ -20,6 +23,43 @@
 
 ### Changes
 
+- Oat form fields show the errors of an Ajax request by themselves. A submit button
+  without an `onError` that adds the form, such as `OatSubmitButton.onSubmit(id, label,
+  onSubmit)`, used to show nothing for an invalid form: the fields weren't re-rendered,
+  and `OatFeedbackPanel` and the feedback toasts leave out the errors fields show. Now a
+  field validated in an Ajax request whose error appeared, changed or went away updates
+  its message and error state in place, without re-rendering its input, so the input
+  keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+  requests leave the errors shown alone. `target.add(field)` and `target.add(form)`
+  work as before.
+- `OatFeedbackPanel` can show one form's messages next to it, such as the form's own
+  errors from `form.error(...)`: `new OatFeedbackPanel("formFeedback", form)`. As with
+  Wicket's `FencedFeedbackPanel`, which it now extends, the form is its fence: a panel
+  without a fence and `Oat.Behaviors.feedbackToasts()` leave out the messages from inside
+  it, so each message shows once. A panel without messages takes no space, so it can sit
+  at the top of a stacked form without leaving a gap.
+- A field's error message is shown in the danger color, as Oat shows errors, instead of
+  the grey of a hint.
+- `OatUserMenu`: the signed-in user's menu for the top bar of an `OatAppLayout`. Their
+  picture, or initials, and name open a menu with their name, a second line such as their
+  email, links of yours with icons, and "Sign out". While nobody is signed in it is a
+  "Sign in" link, hidden on the sign-in page. "Sign out" invalidates the session and shows
+  the home page; `signOut()` and `onSignedOut()` change that, e.g. for Spring Security. It
+  is a POST, so another site can't sign users out, and it works on a page still open
+  after the session expired. Someone is signed in while the name isn't `null`, or as
+  `isSignedIn()` says. It keeps a page stateless, reads its models once per request,
+  shows only the picture on phones, and its button is named "Account: " and the name for
+  screen readers. The examples' sign-in page now signs in a demo user, whose menu appears
+  in the top bar.
+- `OatAvatar` reads its models once on every render, so it follows them, e.g. in a reused
+  list row or after a sign-in. With a picture and initials, the initials show under the
+  picture while it loads and if it can't be loaded, instead of a broken image, and the
+  picture's `alt` is empty, as the initials name it. A blank picture URL counts as none.
+  `OatAvatar.initials(id, model)` makes an avatar from initials in a model
+  (`new OatAvatar(id, model)` takes a picture URL), and `OatAvatar.initialsOf(name)` turns
+  "Ada Lovelace" into "AL", also for names apart by an ideographic space. Initials are no
+  longer underlined.
+- `OatIcon.ofNullable(id, name)` makes an icon, or for a `null` name a hidden placeholder.
 - A long breadcrumb can leave levels out. `OatBreadcrumb.setMaxItems(n)` and
   `OatPageHeader.setBreadcrumbMaxItems(n)` show at most n levels, counting the current
   page: the first, a "…" button whose menu has the levels in between, and the last ones.

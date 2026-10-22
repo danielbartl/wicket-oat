@@ -23,7 +23,7 @@ Use `Oat.Behaviors` for the "Power Path" to style existing Wicket components via
 - `theme()`: Allows programmatic theme application to a component.
 - `density()` / `density(OatDensity)`: Applies the configured or a given density (`data-density`), e.g. a compact table, or `DEFAULT` spacing for one part of a compact app.
 - `clientSideClick(javascript)`: Efficiently runs JS on click while maintaining CSP.
-- `feedbackToasts(filter?)`: Add to a page (or base page) to show `info()`/`success()`/`warn()`/`error()` feedback messages - including session messages - as Oat toasts, on full renders and during Ajax requests without touching the `AjaxRequestTarget`. By default leaves out errors Oat form fields already show inline.
+- `feedbackToasts(filter?)`: Add to a page (or base page) to show `info()`/`success()`/`warn()`/`error()` feedback messages - including session messages - as Oat toasts, on full renders and during Ajax requests without touching the `AjaxRequestTarget`. By default leaves out errors Oat form fields already show inline, and the messages of a container that an `OatFeedbackPanel` with a fence shows.
 
 ## Composition Example
 ```java

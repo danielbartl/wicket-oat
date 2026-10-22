@@ -126,8 +126,8 @@ public record BottomNavItem(
         public Icon {
             Objects.requireNonNull(kind, "kind");
             Objects.requireNonNull(value, "value");
-            if (kind == Kind.NAMED && !OatIcon.names().contains(value)) {
-                throw new IllegalArgumentException("No icon \"" + value + "\"; the icons are " + OatIcon.names());
+            if (kind == Kind.NAMED) {
+                OatIcon.requireKnown(value);
             }
         }
 

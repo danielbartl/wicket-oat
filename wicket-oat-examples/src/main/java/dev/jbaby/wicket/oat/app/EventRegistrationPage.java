@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat.app;
 
 import dev.jbaby.wicket.oat.Oat;
+import dev.jbaby.wicket.oat.components.OatFeedbackPanel;
 import dev.jbaby.wicket.oat.components.OatSubmitButton;
 import dev.jbaby.wicket.oat.components.form.OatDropdownChoice;
 import dev.jbaby.wicket.oat.components.form.OatEmailField;
@@ -35,8 +36,9 @@ public class EventRegistrationPage extends BasePage {
         // Fields take their model from the CompoundPropertyModel by id, and their label
         // from EventRegistrationPage.properties by id - just like plain Wicket components.
         Form<RegistrationData> form = new Form<>("registrationForm", new CompoundPropertyModel<>(data));
-        form.setOutputMarkupId(true);
         add(form);
+        // The form's own messages, shown above its fields; the toasts leave them out
+        form.add(new OatFeedbackPanel("formFeedback", form));
 
         form.add(new OatTextField<String>("fullName")
                 .setRequired(true)
@@ -59,17 +61,17 @@ public class EventRegistrationPage extends BasePage {
         form.add(new OatSwitch("subscribeNewsletter"));
 
         form.add(new OatSubmitButton("submit") {
+            // Oat fields show and clear their errors themselves, so neither adds the form
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 RegistrationData submittedData = form.getModelObject();
-                success("Registration successful for " + submittedData.fullName + "!");
-                target.add(form); // clear any inline errors from a previous attempt
+                // On the page, outside the form's fence, so it shows as a toast
+                getPage().success("Registration successful for " + submittedData.fullName + "!");
             }
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                error("Please fix the errors in the form."); // field errors themselves show inline
-                target.add(form); // show the inline validation errors
+                form.error("Please fix the errors in the form.");
             }
         });
     }

@@ -62,10 +62,11 @@ No other sizes exist (no `gap-3`, `mt-5`, `px-4`, ...). For anything else, write
 Oat form fields work like plain Wicket form components: with a `CompoundPropertyModel` on the form, leave out the model (it is inherited by id) and the label (looked up by id in the `.properties` file).
 ```java
 Form<MyData> form = new Form<>("form", new CompoundPropertyModel<>(data));
-form.setOutputMarkupId(true);
 form.add(new OatTextField<String>("name").setRequired(true)); // MyPage.properties: name=Name
-// In an AjaxButton's onError: target.add(form) shows the inline validation errors
+form.add(OatSubmitButton.onSubmit("save", "Save", target -> ...));
+// After an Ajax submit the fields show (and clear) their errors themselves: no target.add(form) needed
 ```
+For the form's own messages next to it, e.g. `form.error("...")`, add `form.add(new OatFeedbackPanel("formFeedback", form))`; page-wide feedback and toasts then leave them out.
 
 ### Toasts & Notifications
 Prefer Wicket's own feedback messages and let Oat display them - as toasts with `add(Oat.Behaviors.feedbackToasts())` on the (base) page, or as alerts with `add(new OatFeedbackPanel("feedback"))`. Both update during Ajax requests on their own:

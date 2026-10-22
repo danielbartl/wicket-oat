@@ -92,6 +92,9 @@
         <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.4.0</span></a> Steps, lists like a phone app's,
             count badges and status dots, star ratings and a progress ring are
             <a href="#new">out now in 0.4.0</a>, on Oat UI 1.0 and Wicket 10.11.</p>
+        <p class="announce"><a href="#next"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span></a> A user menu for the top bar, drawers,
+            filter chips, breadcrumbs that fold their middle levels into a menu and form errors that
+            show after any Ajax submit are <a href="#next">coming with the next release</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -185,6 +188,9 @@
                 <p>Labels belong to their inputs, required fields are marked, and a validation
                     error appears next to its field in a <code>role="status"</code> region, linked
                     through <code>aria-describedby</code> with <code>aria-invalid</code> set.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> After an Ajax submit, a field's error appears in place:
+                    the text of its <code>role="status"</code> region changes, so screen readers announce
+                    it, and the input keeps its focus and what was typed.</p>
             </article>
             <article class="card">
                 <h3>Keyboard all the way</h3>
@@ -196,6 +202,8 @@
                     &ldquo;Skip to content&rdquo; link past the navigation.</p>
                 <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> The stars of <code>OatRatingField</code>
                     are radio buttons, so the arrow keys move between them.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> So are the chips of <code>OatFilter</code>, and a
+                    drawer opens with its first field focused.</p>
             </article>
             <article class="card">
                 <h3>States a screen reader can announce</h3>
@@ -206,6 +214,9 @@
                 <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> A rating is read as &ldquo;4.5 out of
                     5 stars&rdquo;, a status dot by its name, such as &ldquo;Online&rdquo;, and a progress
                     ring as a <code>progressbar</code> with its value.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> Buttons that open a menu say so
+                    (<code>aria-haspopup</code>), and the user menu's button is named
+                    &ldquo;Account:&rdquo; and the user's name.</p>
             </article>
             <article class="card">
                 <h3>Charts you can read without seeing them</h3>
@@ -351,6 +362,10 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     <code>newXxx(id)</code> naming, and <code>newMenuLink(id, item)</code> can make a
                     menu entry an <code>AjaxLink</code>. An app with a base page of its own gets the
                     theme, density and language from <code>add(new OatHtml("html"))</code>.</p>
+                <p><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> <code>OatUserMenu</code> fills the top bar's corner
+                    (<code>newTopNavExtra(id)</code>): the user's picture or initials and name open a
+                    menu with their email, links of yours and &ldquo;Sign out&rdquo;, or it is a
+                    &ldquo;Sign in&rdquo; link while nobody is signed in.</p>
             </div>
 
             <div class="applayout-demo-wrap">
@@ -410,6 +425,11 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                 added in 0.4.0, the current release. The
                 <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
                 lists everything new, including notes on upgrading from 0.3.x.</p>
+            <p class="release-note" id="next"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> Cards with this label show components
+                coming with the next release, 0.5.0. Their source is on
+                <a href="https://github.com/danielbartl/wicket-oat" target="_blank" rel="noopener">GitHub</a> already,
+                and the <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
+                lists everything coming, including notes on upgrading from 0.4.x.</p>
         </div>
 
         <div class="showcase-group">
@@ -559,6 +579,50 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                         </nav>
                     </div>
                     <div class="showcase-footer"><strong>OatBreadcrumb</strong><code>OatBreadcrumb.of(id, model, populateItem)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <nav aria-label="Folders">
+                            <ol class="unstyled hstack oat-breadcrumb">
+                                <li><a href="#components" class="unstyled">Home</a><span class="oat-crumb-separator" aria-hidden="true">/</span></li>
+                                <li class="oat-crumb-more">
+                                    <ot-dropdown>
+                                        <button type="button" class="ghost small" aria-haspopup="menu" aria-expanded="false" popovertarget="demo-crumbs" aria-label="Show more levels"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+                                        <menu popover role="menu" id="demo-crumbs">
+                                            <a href="#components" role="menuitem">Projects</a><a href="#components" role="menuitem">2026</a><a href="#components" role="menuitem">Wicket Oat</a>
+                                        </menu>
+                                    </ot-dropdown><span class="oat-crumb-separator" aria-hidden="true">/</span>
+                                </li>
+                                <li><a href="#components" class="unstyled">Docs</a><span class="oat-crumb-separator" aria-hidden="true">/</span></li>
+                                <li><a href="#components" class="unstyled" aria-current="page">Breadcrumb</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span><strong>OatBreadcrumb, collapsed</strong><code>OatBreadcrumb.of(id, folders, populateItem).setMaxItems(3)</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <ot-dropdown class="oat-user-menu">
+                            <button type="button" class="ghost oat-user-menu-trigger" aria-haspopup="menu" aria-expanded="false" popovertarget="demo-user-menu" aria-label="Account: Grace Hopper">
+                                <figure data-variant="avatar" class="small"><abbr title="Grace Hopper">GH</abbr></figure>
+                                <span class="oat-user-menu-name">Grace Hopper</span>
+                            </button>
+                            <menu popover role="menu" id="demo-user-menu">
+                                <div class="oat-user-menu-header">
+                                    <strong>Grace Hopper</strong>
+                                    <span class="oat-user-menu-detail">grace@example.com</span>
+                                </div>
+                                <hr>
+                                <a role="menuitem" href="#components"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><span>Inbox</span></a>
+                                <a role="menuitem" href="#components"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></a>
+                                <hr>
+                                <form>
+                                    <button type="button" role="menuitem" class="ghost"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg><span>Sign out</span></button>
+                                </form>
+                            </menu>
+                        </ot-dropdown>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span><strong>OatUserMenu</strong><code>new OatUserMenu(id, () -&gt; session.userName()).addLink("Inbox", InboxPage.class).setIcon("mail")</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -796,6 +860,31 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                         </ot-dropdown>
                     </div>
                     <div class="showcase-footer"><strong>OatPopover</strong><code>new OatPopover(id, "Quick note", id -&gt; new NotePanel(id))</code></div>
+                </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview">
+                        <button type="button" command="show-modal" commandfor="demo-drawer" class="outline">Filters</button>
+                        <dialog id="demo-drawer" closedby="any" class="oat-drawer" data-side="end">
+                            <form method="dialog" class="oat-dialog-form">
+                                <button type="button" command="close" commandfor="demo-drawer" class="ghost small icon oat-dialog-close" aria-label="Close"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+                                <header><h3>Filter orders</h3></header>
+                                <div>
+                                    <div class="vstack gap-4">
+                                        <section data-field>
+                                            <label for="demo-drawer-status">Status</label>
+                                            <select id="demo-drawer-status" autofocus><option>Open</option><option>Paid</option><option>Cancelled</option></select>
+                                        </section>
+                                        <div data-field><label><input type="checkbox" role="switch"> Overdue only</label></div>
+                                    </div>
+                                </div>
+                                <footer>
+                                    <button type="button" command="close" commandfor="demo-drawer" class="outline">Cancel</button>
+                                    <button type="button" command="close" commandfor="demo-drawer">Apply</button>
+                                </footer>
+                            </form>
+                        </dialog>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span><strong>OatDrawer</strong><code>new OatDrawer(id, "Filters", "Filter orders").setSide(OatDrawer.Side.END)</code></div>
                 </div>
             </div>
         </div>
@@ -1091,6 +1180,15 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatRadialProgress</strong><code>new OatRadialProgress(id, used, quota).setVariant(OatVariant.DANGER) &middot; .setText(Model.of("3/5"))</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <form>
+                            <fieldset class="oat-filter" aria-label="Status"><label class="oat-filter-chip"><input name="demo-filter" type="radio" value=""> All</label><label class="oat-filter-chip"><input name="demo-filter" type="radio" value="open" checked> Open</label><label class="oat-filter-chip"><input name="demo-filter" type="radio" value="paid"> Paid</label><label class="oat-filter-chip"><input name="demo-filter" type="radio" value="overdue"> Overdue</label></fieldset>
+                        </form>
+                        <p class="mt-4"><small class="text-light">Click a chip, or move between them with the arrow keys.</small></p>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span><strong>OatFilter</strong><code>OatFilter.onChange(id, status, statuses, target -&gt; target.add(orders)).setNullValid(true)</code></div>
+                </div>
             </div>
         </div>
 
@@ -1252,6 +1350,24 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     </div>
                     <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.4.0</span><strong>OatRatingField</strong><code>new OatRatingField("rating", "How did we do?", Model.of()).setRequired(true)</code></div>
                 </div>
+                <div class="showcase-card">
+                    <div class="showcase-preview block">
+                        <div class="vstack gap-4">
+                            <div class="oat-feedback"><div class="vstack gap-2"><div role="alert" data-variant="danger"><span>Please fix the errors in the form.</span></div></div></div>
+                            <section data-field="error" data-required>
+                                <label for="demo-fb-name">Full name</label>
+                                <input id="demo-fb-name" type="text" aria-describedby="demo-fb-name-msg" aria-invalid="true" aria-required="true">
+                                <div id="demo-fb-name-msg" role="status" data-hint>&#039;Full name&#039; is required.</div>
+                            </section>
+                            <section data-field data-required>
+                                <label for="demo-fb-email">Email</label>
+                                <input id="demo-fb-email" type="email" value="ada@example.com" aria-describedby="demo-fb-email-msg" aria-invalid="false" aria-required="true">
+                                <div id="demo-fb-email-msg" role="status" data-hint>Your ticket goes here.</div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="showcase-footer"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span><strong>Form errors after any Ajax submit</strong><code>OatSubmitButton.onSubmit(id, label, onSubmit) &middot; new OatFeedbackPanel("formFeedback", form)</code></div>
+                </div>
             </div>
         </div>
 
@@ -1309,6 +1425,8 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     <code>OatDialog.CONTENT_ID</code>. The server knows whether the dialog is open,
                     <code>onClose</code> runs however it closed &mdash; Cancel, Escape, the backdrop
                     or a confirm &mdash; and <code>target.add(dialog)</code> keeps an open dialog open.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> <code>OatDrawer</code> is a dialog that slides in from an
+                    edge, and a dialog closed without confirming shows its models again the next time.</p>
                 <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.4.0</span> A dialog opened again in
                     <code>onConfirm</code>, such as a second question, stays open, and Enter in a
                     page's field can't click a button of a closed dialog.</p>
@@ -1329,6 +1447,9 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     posted name. <code>getInput()</code> returns it, and
                     <code>addToInput(...)</code> puts an <code>autocomplete</code> or
                     <code>maxlength</code> right on the <code>&lt;input&gt;</code>.</p>
+                <p class="mt-2"><span class="badge new-badge" data-variant="warning">Coming in 0.5.0</span> No <code>onError</code> that adds the form: fields show the
+                    errors of an Ajax submit themselves, and <code>new OatFeedbackPanel(id, form)</code>
+                    shows the form's own errors next to it, once.</p>
             </article>
             <article class="card">
                 <h3>Lambdas where Wicket uses them</h3>

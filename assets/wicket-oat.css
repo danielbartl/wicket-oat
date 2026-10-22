@@ -22,6 +22,20 @@
     padding-inline: var(--space-6);
 }
 
+/*
+ * An Oat field's message is its hint or, while it has one, its error. Oat colors only a
+ * separate .error element, so the message takes the danger color with the field's state.
+ * Only the field's own message: not a hint inside its input, such as the dropzone's.
+ */
+[data-field="error"] > [data-hint] {
+    color: var(--danger);
+}
+
+/* An OatFeedbackPanel without messages takes no space, e.g. no gap in a stacked form */
+.oat-feedback:not(:has([role="alert"])) {
+    display: none;
+}
+
 /* The skip link moves focus to <main>; it needs no focus ring of its own */
 .oat-app-main:focus {
     outline: none;
@@ -55,6 +69,7 @@
 
 .oat-breadcrumb {
     font-size: var(--text-7);
+    gap: var(--space-2);
 }
 
 /*
@@ -98,6 +113,107 @@ dialog > div.oat-dialog-form > footer {
     gap: var(--space-2);
     padding: var(--space-6);
     padding-block-start: 0;
+}
+
+/*
+ * An OatDialog's content scrolls between its header and footer, so the buttons and the "×"
+ * stay in view: the dialog itself doesn't scroll.
+ */
+dialog[open]:has(> .oat-dialog-form) {
+    display: flex;
+    flex-direction: column;
+}
+
+dialog > .oat-dialog-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+dialog > .oat-dialog-form > :not(header, footer, .oat-dialog-close) {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* OatDialog's "×" (setCloseButton), a square in the header's corner, the title kept clear of it */
+.oat-dialog-close {
+    position: absolute;
+    inset-block-start: var(--space-4);
+    inset-inline-end: var(--space-4);
+    aspect-ratio: 1;
+}
+
+.oat-dialog-form:has(> .oat-dialog-close) > header {
+    padding-inline-end: calc(var(--space-6) + 2rem);
+}
+
+/* An open dialog rendered again shows at once, without sliding or fading in again (wicket-oat.js) */
+dialog[data-oat-instant],
+dialog[data-oat-instant]::backdrop {
+    transition: none;
+}
+
+/*
+ * OatDrawer: an OatDialog as tall as the screen at its end or start, or as wide as it at
+ * the bottom, sliding in from that edge. The start and the end follow the text direction,
+ * in rules of their own: a browser without :dir() leaves out only those for right-to-left.
+ */
+dialog.oat-drawer {
+    --oat-drawer-from: translateX(100%);
+    inset-block: 0;
+    inset-inline: auto 0;
+    width: min(24rem, 100% - 3rem);
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border-block: none;
+    border-inline-end: none;
+    border-radius: 0;
+    transform: var(--oat-drawer-from);
+}
+
+dialog.oat-drawer[data-side="start"] {
+    --oat-drawer-from: translateX(-100%);
+    inset-inline: 0 auto;
+    border-inline-start: none;
+    border-inline-end: 1px solid var(--border);
+}
+
+dialog.oat-drawer:dir(rtl) {
+    --oat-drawer-from: translateX(-100%);
+}
+
+dialog.oat-drawer[data-side="start"]:dir(rtl) {
+    --oat-drawer-from: translateX(100%);
+}
+
+dialog.oat-drawer[data-side="bottom"] {
+    --oat-drawer-from: translateY(100%);
+    inset: auto 0 0;
+    width: 100%;
+    height: auto;
+    max-height: 85dvh;
+    border: none;
+    border-block-start: 1px solid var(--border);
+    border-start-start-radius: var(--radius-large);
+    border-start-end-radius: var(--radius-large);
+}
+
+dialog.oat-drawer[open] {
+    transform: none;
+}
+
+@starting-style {
+    dialog.oat-drawer[open] {
+        transform: var(--oat-drawer-from);
+    }
+}
+
+dialog.oat-drawer > .oat-dialog-form > footer {
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--border);
 }
 
 .oat-theme-switcher {
@@ -408,7 +524,6 @@ input[type="checkbox"].oat-readonly:disabled {
 }
 
 .oat-page-header nav ol {
-    gap: var(--space-2);
     margin: 0 0 var(--space-2);
     color: var(--muted-foreground);
 }
@@ -416,6 +531,27 @@ input[type="checkbox"].oat-readonly:disabled {
 .oat-crumb-separator {
     margin-inline-start: var(--space-2);
     color: var(--faint-foreground);
+}
+
+/*
+ * OatBreadcrumb: "…" for the levels left out of a long trail, opening a menu of them.
+ * Centered on the line and spaced like a level; its padding only widens what takes a click.
+ */
+.oat-crumb-more,
+.oat-crumb-more ot-dropdown {
+    display: inline-flex;
+    align-items: center;
+}
+
+.oat-crumb-more button {
+    padding: 0 var(--space-1);
+    margin-inline: calc(var(--space-1) * -1);
+    color: inherit; /* as the levels around it, e.g. muted in OatPageHeader */
+}
+
+.oat-crumb-more a[role="menuitem"] {
+    color: inherit;
+    text-decoration: none;
 }
 
 .oat-page-header-main {
@@ -514,7 +650,8 @@ menu.buttons > li:first-child ot-dropdown > button {
 }
 
 /*
- * OatDropdown, OatSplitButton and OatPopover open without the zoom Oat 1.0 gives them.
+ * OatDropdown, OatSplitButton, OatPopover and OatBreadcrumb's "…" menu open without the
+ * zoom Oat 1.0 gives them.
  * Oat places a menu as it opens, measuring it at 97% of its size: one aligned to the
  * end of its button stuck out past it, and one that fit only at 97% opened past the
  * window's edge. In Oat's layer, so your own rules win. Drop this once Oat measures
@@ -541,6 +678,61 @@ ot-dropdown > .oat-popover {
     padding: var(--space-4);
     min-width: 16rem;
     max-width: min(28rem, 100vw - 2rem);
+}
+
+/* OatAvatar: a picture covers the initials, which show while it loads or if it can't */
+figure[data-variant="avatar"]:has(> img) {
+    position: relative;
+}
+
+figure[data-variant="avatar"]:has(> abbr) > img {
+    position: absolute;
+    inset: 0;
+}
+
+/* Once loaded (wicket-oat.js), so the initials don't show through its transparent parts */
+figure[data-variant="avatar"] > img[data-loaded] {
+    background-color: inherit;
+}
+
+/* Initials are an <abbr title>, which browsers underline */
+figure[data-variant="avatar"] > abbr {
+    text-decoration: none;
+}
+
+/* OatUserMenu: picture and name in the top bar; name, detail, links and Sign out in the menu */
+.oat-user-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.oat-user-menu-header {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-3);
+}
+
+.oat-user-menu-header strong {
+    font-weight: var(--font-medium);
+}
+
+.oat-user-menu-detail {
+    font-size: var(--text-8);
+    color: var(--muted-foreground);
+}
+
+.oat-user-menu [role="menuitem"] {
+    align-items: center;
+    gap: var(--space-2);
+    color: inherit;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .oat-user-menu-name {
+        display: none;
+    }
 }
 
 /*
@@ -1602,17 +1794,22 @@ a.oat-tree-label[aria-current] {
 }
 
 /* Not Oat's .badge, which hides buttons inside it and caps its width */
-.oat-chip {
+/* A chip: a value chosen in OatMultiSelectField (.oat-chip), or a choice of OatFilter's */
+.oat-chip,
+.oat-filter-chip {
     display: inline-flex;
     align-items: center;
+    border-radius: var(--radius-full);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+}
+
+.oat-chip {
     gap: var(--space-1);
     padding: 2px 2px 2px var(--space-3);
-    border-radius: var(--radius-full);
     background-color: var(--secondary);
     color: var(--secondary-foreground);
     font-size: var(--text-8);
-    font-weight: var(--font-medium);
-    white-space: nowrap;
 }
 
 .oat-chip button {
@@ -1626,6 +1823,67 @@ a.oat-tree-label[aria-current] {
 
 .oat-chip button:hover {
     background-color: var(--accent);
+}
+
+/*
+ * OatFilter: a row of chips choosing one value, the chosen one filled. Each chip is a
+ * <label> around a radio button, unseen but still there to click and to focus, so the
+ * arrow keys move between the chips. The chip's base is with .oat-chip's.
+ */
+.oat-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.oat-filter-chip {
+    position: relative;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--border);
+    font-size: var(--text-7);
+    cursor: pointer;
+}
+
+.oat-filter-chip:not(:has(:disabled)):hover {
+    background-color: var(--accent);
+}
+
+.oat-filter-chip:has(:checked) {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.oat-filter-chip:has(:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* A disabled filter (setEnabled(false)) doesn't look clickable */
+.oat-filter-chip:has(:disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.oat-filter-chip input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+}
+
+/* With the system's colors (Windows High Contrast), the chosen chip is outlined, as its fill is gone */
+@media (forced-colors: active) {
+    .oat-filter-chip:has(:checked) {
+        outline: 2px solid CanvasText;
+        outline-offset: 1px;
+    }
 }
 
 /*

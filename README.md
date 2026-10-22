@@ -463,6 +463,22 @@ add(new OatDescriptionList("details", new CompoundPropertyModel<>(customer))
 Numbers and dates in stat cards and description lists follow the user's
 locale (`1,234`, `Mar 1, 2019`), and an empty value shows as "—".
 
+A long breadcrumb can leave levels out: with `header.setBreadcrumbMaxItems(3)`,
+a trail of more levels (counting the page itself) shows the first, a "…" button
+whose menu has the ones in between, and the last two. `OatBreadcrumb`, the trail
+on its own, has `setMaxItems(n)` and brings its own markup:
+
+```java
+add(OatBreadcrumb.of("breadcrumb", Model.ofList(folders), (item, folder) ->
+        item.add(new BookmarkablePageLink<>("link", FolderPage.class, folder.parameters())
+                .add(new Label("label", folder.name()))))
+        .setMaxItems(4));
+```
+
+```html
+<nav wicket:id="breadcrumb"></nav>
+```
+
 Fields that render a single input can also suggest values as the user types,
 from a native `<datalist>`: `field.setSuggestions(List.of("Call", "Meeting", "Email"))`.
 

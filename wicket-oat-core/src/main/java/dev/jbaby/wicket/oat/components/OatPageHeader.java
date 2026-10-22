@@ -1,12 +1,10 @@
 package dev.jbaby.wicket.oat.components;
 
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
@@ -33,15 +31,18 @@ import java.util.List;
  * header.add(Oat.Components.button("newInvoice", "New invoice", target -> ...));
  * add(header);
  * }</pre>
- * The breadcrumb links to the given pages and ends with the title, marked as the
- * current page; its {@code <nav>} is named by the {@code OatPageHeader.breadcrumb}
- * resource ("Breadcrumb").
+ * The breadcrumb, an {@link OatBreadcrumb}, links to the given pages and ends with the
+ * title, marked as the current page; its {@code <nav>} is named as any breadcrumb
+ * ({@code OatBreadcrumb.label}, "Breadcrumb"), or by {@code OatPageHeader.breadcrumb} if
+ * your application defines it. A long one can leave levels out
+ * ({@link #setBreadcrumbMaxItems}).
  */
 public class OatPageHeader extends Border {
 
     private final Label title;
     private final Label subtitle;
     private IModel<List<MenuItem>> breadcrumb = Model.ofList(List.of());
+    private final OatBreadcrumb<MenuItem> trail;
 
     /** Title looked up by {@code id} in the {@code .properties} files (falling back to the id). */
     public OatPageHeader(String id) {
@@ -72,15 +73,7 @@ public class OatPageHeader extends Border {
         };
         addToBorder(subtitle);
 
-        WebMarkupContainer nav = new WebMarkupContainer("breadcrumb") {
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setVisible(!breadcrumb.getObject().isEmpty());
-            }
-        };
-        addToBorder(nav);
-        nav.add(new ListView<>("crumbs", (IModel<List<MenuItem>>) () -> breadcrumb.getObject()) {
+        trail = new OatBreadcrumb<MenuItem>("breadcrumb", (IModel<List<MenuItem>>) () -> breadcrumb.getObject()) {
             @Override
             protected void populateItem(ListItem<MenuItem> item) {
                 MenuItem crumb = item.getModelObject();
@@ -88,9 +81,13 @@ public class OatPageHeader extends Border {
                 link.add(new Label("label", crumb.label()));
                 item.add(link);
             }
-        });
+        };
         // The trail ends with this page, by its title
-        nav.add(new Label("current", (IModel<String>) () -> getTitle().getObject()));
+        trail.setCurrent(() -> getTitle().getObject());
+        // Named as any breadcrumb, unless the application still defines OatPageHeader.breadcrumb
+        trail.setLabel(new StringResourceModel("OatPageHeader.breadcrumb", this)
+                .setDefaultValue(new StringResourceModel("OatBreadcrumb.label", trail)));
+        addToBorder(trail);
     }
 
     /** A line under the title, e.g. a summary of the page's data; {@code null} hides it. */
@@ -111,6 +108,19 @@ public class OatPageHeader extends Border {
      */
     public OatPageHeader setBreadcrumb(List<MenuItem> crumbs) {
         return setBreadcrumb(Model.ofList(crumbs));
+    }
+
+    /**
+     * Shows at most this many levels of the breadcrumb, counting this page: with more, it
+     * shows the first, a "…" button whose menu has the levels in between, and the last
+     * ones ({@link OatBreadcrumb#setMaxItems}).
+     *
+     * @param maxItems at least 2, the first level and this page
+     * @throws IllegalArgumentException for less than 2
+     */
+    public OatPageHeader setBreadcrumbMaxItems(int maxItems) {
+        trail.setMaxItems(maxItems);
+        return this;
     }
 
     /** The pages above this one, from the top, read on every render. */

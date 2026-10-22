@@ -44,7 +44,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>dev.jbaby</groupId>
     <artifactId>wicket-oat-core</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 

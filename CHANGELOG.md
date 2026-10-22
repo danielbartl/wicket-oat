@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.5.0 (unreleased)
+## 0.5.0 (2026-10-22)
+
+A release for the frame around an app's pages and the forms in them: a user menu for the
+top bar, drawers that slide in from an edge, filter chips above a list, and breadcrumbs
+that fold their middle levels into a menu. Form fields now show the errors of any Ajax
+submit by themselves, and a form's own messages can show next to it, once. `OatBreadcrumb`
+brings its own markup now; the notes below say what else can change for an app.
 
 ### Upgrading from 0.4.x
 
@@ -20,6 +26,11 @@
   but still uses it if your application defines it.
 - `BreadcrumbBehavior` is deprecated, as `OatBreadcrumb` no longer uses it: write the
   `aria-label` of a `<nav>` of your own in its markup.
+- An open `OatDialog` is a flex column whose content scrolls between its header and its
+  buttons; CSS of your own on the dialog's parts may notice that.
+- A dialog closed in the browser (Cancel, Escape, the backdrop) renders its form again
+  once it is out of sight, from the models: input left in it, e.g. by a failed confirm,
+  is gone the next time it opens.
 
 ### Changes
 

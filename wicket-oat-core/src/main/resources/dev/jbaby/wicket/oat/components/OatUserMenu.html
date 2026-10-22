@@ -2,11 +2,11 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <ot-dropdown wicket:id="dropdown" class="oat-user-menu">
-        <button wicket:id="trigger" type="button" class="ghost oat-user-menu-trigger">
+        <button wicket:id="trigger" type="button" class="ghost oat-user-menu-trigger" aria-haspopup="menu" aria-expanded="false">
             <wicket:container wicket:id="avatar"></wicket:container>
             <span wicket:id="name" class="oat-user-menu-name"></span>
         </button>
-        <menu wicket:id="menu" popover="">
+        <menu wicket:id="menu" popover="" role="menu">
             <div class="oat-user-menu-header">
                 <strong wicket:id="menuName"></strong>
                 <span wicket:id="detail" class="oat-user-menu-detail"></span>

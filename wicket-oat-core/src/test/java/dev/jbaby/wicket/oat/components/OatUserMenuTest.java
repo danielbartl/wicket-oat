@@ -106,6 +106,9 @@ class OatUserMenuTest {
         TagTester trigger = tester.getTagByWicketId("trigger");
         assertThat(trigger.getAttribute("aria-label")).isEqualTo("Account: Ada Lovelace");
         assertThat(trigger.getAttribute("popovertarget")).isEqualTo(tester.getTagByWicketId("menu").getAttribute("id"));
+        assertThat(trigger.getAttribute("aria-haspopup")).isEqualTo("menu");
+        assertThat(trigger.getAttribute("aria-expanded")).isEqualTo("false");
+        assertThat(tester.getTagByWicketId("menu").getAttribute("role")).isEqualTo("menu");
         tester.assertLabel("user:dropdown:trigger:avatar:container:initials", "AL");
         tester.assertLabel("user:dropdown:trigger:name", "Ada Lovelace");
     }

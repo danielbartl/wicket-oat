@@ -945,7 +945,6 @@ meant to be used like the plain Wicket components they wrap:
 
 ```java
 Form<Person> form = new Form<>("form", new CompoundPropertyModel<>(person));
-form.setOutputMarkupId(true);
 add(form);
 
 // Model inherited from the CompoundPropertyModel by id ("name" -> person.name),
@@ -968,10 +967,11 @@ form.add(new AjaxButton("save") {
 You can still pass a model and a label explicitly
 (`new OatTextField<>("name", "Full name", model)`).
 
-After an Ajax request, such as a submit, each field shows an error that appeared,
-changed or went away by itself, without `target.add(...)`. It updates its message and
-error state in place rather than re-rendering its input, so the input keeps its focus
-and what the user typed, a chosen file or a password. A field renders its own tag, so
+After an Ajax request that validates it, such as a submit, each field shows an error
+that appeared, changed or went away by itself, without `target.add(...)`. It updates
+its message and error state in place rather than re-rendering its input, so the input
+keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+requests leave the errors shown alone. A field renders its own tag, so
 `target.add(field)` or `target.add(form)` re-renders it too.
 
 The wrapped form component is the field's child `input`, so a test reaches it at

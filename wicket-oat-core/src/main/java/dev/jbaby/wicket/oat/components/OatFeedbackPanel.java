@@ -27,6 +27,10 @@ import org.apache.wicket.model.IModel;
  * shows those reported by the form and the components in it, such as the form's own
  * errors from {@code form.error(...)}, next to the form. Then a panel without a fence and
  * {@code Oat.Behaviors.feedbackToasts()} leave them out, so each message shows once.
+ * That holds for a panel without a fence that has a filter too, as in Wicket: to show the
+ * messages of one component inside a fence, fence that component instead of filtering by
+ * it, {@code new OatFeedbackPanel("nameFeedback", name)}. The fence is set when the panel
+ * is created, so it holds while the panel is hidden too.
  * <p>
  * During an Ajax request it adds itself to the response whenever it has messages to
  * show, or still shows messages from an earlier request, so there's no need to call
@@ -51,6 +55,9 @@ public class OatFeedbackPanel extends FencedFeedbackPanel {
     }
 
     /**
+     * A panel for the messages of the whole page that {@code filter} accepts, other than
+     * those a panel with a fence shows.
+     *
      * @param filter the messages to show, or {@code null} for all messages
      */
     public OatFeedbackPanel(String id, IFeedbackMessageFilter filter) {

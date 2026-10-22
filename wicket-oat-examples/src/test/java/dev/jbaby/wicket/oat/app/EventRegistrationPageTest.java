@@ -39,11 +39,12 @@ class EventRegistrationPageTest {
         formTester.setValue("fullName:input", "");
         tester.executeAjaxEvent("registrationForm:submit", "click");
 
-        // The field and the form's feedback panel show the errors without the form being re-rendered
-        tester.assertComponentOnAjaxResponse("registrationForm:fullName:feedback");
+        // The field and the form's feedback panel show the errors without the form being re-rendered:
+        // the field sets its message and error state in place
+        String fullName = tester.getComponentFromLastRenderedPage("registrationForm:fullName").getMarkupId();
         tester.assertComponentOnAjaxResponse("registrationForm:formFeedback");
         assertThat(tester.getLastResponseAsString())
-                .contains("&#039;Full Name&#039; is required.")
+                .containsPattern("WicketOat\\.fieldFeedback\\(\"" + fullName + "\",\"[^\"]+\",\"'Full Name' is required\\.\",true\\)")
                 .contains("Please fix the errors in the form.")
                 .doesNotContain("ot.toast(");
     }

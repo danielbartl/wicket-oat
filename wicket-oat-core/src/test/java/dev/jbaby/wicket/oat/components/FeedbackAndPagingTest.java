@@ -120,7 +120,7 @@ class FeedbackAndPagingTest {
         String response = tester.getLastResponseAsString();
         assertThat(response).contains("Please fix the errors.");
         // The field shows the required error itself, so it appears once
-        tester.assertComponentOnAjaxResponse("form:name:feedback");
+        assertThat(response).contains("WicketOat.fieldFeedback(");
         assertThat(response.split("is required", -1)).hasSize(2);
     }
 
@@ -314,6 +314,38 @@ class FeedbackAndPagingTest {
 
         page.form.get("formFeedback").remove();
         assertThat(OatFeedbackPanel.isFence(page.form)).isFalse();
+    }
+
+    /** The whole page is the fence of its feedback panel, and has the toasts too. */
+    public static class PageFencePage extends WebPage implements IMarkupResourceStreamProvider {
+
+        public PageFencePage() {
+            add(Oat.Behaviors.feedbackToasts());
+            add(new OatFeedbackPanel("feedback", this));
+            add(new AjaxLink<Void>("save") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    success("Saved.");
+                    getSession().info("Welcome back.");
+                }
+            });
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><div wicket:id='feedback'></div><a wicket:id='save'>save</a></body></html>");
+        }
+    }
+
+    @Test
+    void feedbackToastsOnAFenceShowOnlyTheSessionsMessages() {
+        tester.startPage(new PageFencePage());
+
+        tester.clickLink("save");
+
+        tester.assertComponentOnAjaxResponse("feedback");
+        assertThat(count("Saved.")).isEqualTo(1);
+        assertThat(toastMessages()).containsExactly("Welcome back.");
     }
 
     /** 25 items, 10 per page, with a plain and an Ajax navigator. */

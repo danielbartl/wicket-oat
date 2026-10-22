@@ -25,8 +25,9 @@
 /*
  * An Oat field's message is its hint or, while it has one, its error. Oat colors only a
  * separate .error element, so the message takes the danger color with the field's state.
+ * Only the field's own message: not a hint inside its input, such as the dropzone's.
  */
-[data-field="error"] [data-hint] {
+[data-field="error"] > [data-hint] {
     color: var(--danger);
 }
 

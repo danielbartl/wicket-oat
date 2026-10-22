@@ -29,7 +29,10 @@ import java.util.List;
  * page render and during Ajax requests, without adding anything to the
  * {@code AjaxRequestTarget}. By default, errors that Oat form fields already show
  * inline are left out ({@link NotShownInlineFilter}), and so are the messages of a
- * container that an {@link OatFeedbackPanel} shows, its fence.
+ * container that an {@link OatFeedbackPanel} shows, its fence: all but the session
+ * messages when the toasts are added to the fence or inside it. Fences of Wicket's own
+ * {@code FencedFeedbackPanel} aren't known to the toasts, and a fenced panel that is
+ * hidden still fences its container.
  * <p>
  * Oat shows several toasts as a stack, the newest in front, until the pointer or the
  * focus is on them. So the messages of a request are shown in order of their level,
@@ -75,14 +78,16 @@ public class FeedbackToastsBehavior extends Behavior {
     }
 
     private String consumeMessages(Component component) {
-        // Oat stacks toasts with the newest in front, so the most severe message comes last.
-        // A copy: collect() doesn't promise a list that can be sorted.
-        List<FeedbackMessage> messages = new ArrayList<>(new FeedbackCollector(component, true) {
+        // Inside a fence, an OatFeedbackPanel shows the components' messages
+        FeedbackCollector collector = isInFence(component) ? new FeedbackCollector() : new FeedbackCollector(component, true) {
             @Override
             protected boolean shouldRecurseInto(Component child) {
                 return !OatFeedbackPanel.isFence(child);
             }
-        }.collect(this::accept));
+        };
+        // Oat stacks toasts with the newest in front, so the most severe message comes last.
+        // A copy: collect() doesn't promise a list that can be sorted.
+        List<FeedbackMessage> messages = new ArrayList<>(collector.collect(this::accept));
         messages.sort(Comparator.comparingInt(FeedbackMessage::getLevel));
         StringBuilder script = new StringBuilder();
         for (FeedbackMessage message : messages) {
@@ -91,6 +96,15 @@ public class FeedbackToastsBehavior extends Behavior {
                     OatVariant.forFeedback(message), null)).append(';');
         }
         return script.toString();
+    }
+
+    private static boolean isInFence(Component component) {
+        for (Component c = component; c != null; c = c.getParent()) {
+            if (OatFeedbackPanel.isFence(c)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean accept(FeedbackMessage message) {

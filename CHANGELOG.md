@@ -14,9 +14,10 @@
   without an `onError` that adds the form, such as `OatSubmitButton.onSubmit(id, label,
   onSubmit)`, used to show nothing for an invalid form: the fields weren't re-rendered,
   and `OatFeedbackPanel` and the feedback toasts leave out the errors fields show. Now a
-  field whose error appeared, changed or went away updates its message and error state
-  in place, without re-rendering its input, so the input keeps its focus and what the
-  user typed, a chosen file or a password. `target.add(field)` and `target.add(form)`
+  field validated in an Ajax request whose error appeared, changed or went away updates
+  its message and error state in place, without re-rendering its input, so the input
+  keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+  requests leave the errors shown alone. `target.add(field)` and `target.add(form)`
   work as before.
 - `OatFeedbackPanel` can show one form's messages next to it, such as the form's own
   errors from `form.error(...)`: `new OatFeedbackPanel("formFeedback", form)`. As with

@@ -1,6 +1,6 @@
 ---
 name: wicket-oat
-description: Support for the Wicket Oat UI library — a themeable Java/Apache Wicket component library (buttons, forms, cards, dialogs, tabs, toasts, badges, dark/light themes, etc.). Use whenever writing or modifying Apache Wicket pages/components in this project: adding UI elements, building forms, styling an existing Wicket component, showing toasts or alerts, or switching/defining themes — even if the user doesn't mention "Oat" by name. Covers the components (constructors, and lambda factories like OatButton.onClick for callback-driven ones) and Oat.Behaviors (Oat styling for any Wicket component), plus the full built-in theme list and how to switch or define custom themes.
+description: Support for the Wicket Oat UI library — a themeable Java/Apache Wicket component library (buttons, forms, cards, dialogs, drawers, tabs, toasts, badges, filter chips, a user menu, dark/light themes, etc.). Use whenever writing or modifying Apache Wicket pages/components in this project: adding UI elements, building forms, styling an existing Wicket component, showing toasts or alerts, or switching/defining themes — even if the user doesn't mention "Oat" by name. Covers the components (constructors, and lambda factories like OatButton.onClick for callback-driven ones) and Oat.Behaviors (Oat styling for any Wicket component), plus the full built-in theme list and how to switch or define custom themes.
 ---
 
 # Wicket Oat Support
@@ -16,7 +16,7 @@ WicketOats.install(this);
 ```
 
 ### 2. Base Layout
-Extend `OatAppLayout` for your main pages to get the sidebar and topnav structure, or `OatMobileLayout` for a phone-first app with a bottom tab bar (`OatBottomNav`).
+Extend `OatAppLayout` for your main pages to get the sidebar and topnav structure, or `OatMobileLayout` for a phone-first app with a bottom tab bar (`OatBottomNav`). For the signed-in user's menu in the top bar, return an `OatUserMenu` from `newTopNavExtra(id)`: picture or initials and name, a menu with your links and "Sign out", or a "Sign in" link while nobody is signed in.
 
 ### 3. Creating UI
 Oat components are plain Wicket components, created with `new`; those driven by a callback have a static factory taking a lambda, like Wicket's `AjaxLink.onClick(...)`:

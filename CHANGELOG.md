@@ -6,8 +6,17 @@
 
 - `OatBreadcrumb` brings its own markup, like other Oat components: write
   `<nav wicket:id="breadcrumb"></nav>`. Markup inside the tag is no longer allowed;
-  Wicket reports "Close tag not found" for it. The paths of its parts stay the same
-  (`"breadcrumb:list:items:0:link"`), and its separators look like `OatPageHeader`'s.
+  Wicket reports "Close tag not found" for it. Its separators look like `OatPageHeader`'s.
+  The levels are numbered by their index among all of them, also after a "…" menu:
+  `"breadcrumb:list:items:0:link"`, and `"breadcrumb:list:tail:4:link"` for the fifth
+  level of a long trail. A trail without levels is no longer shown.
+- `OatPageHeader`'s breadcrumb is an `OatBreadcrumb`, so a test reaches its parts at
+  `"header:breadcrumb:list:items:0:link"` (was `"header:breadcrumb:crumbs:0:link"`) and
+  `"header:breadcrumb:list:currentItem:current"` (was `"header:breadcrumb:current"`). It is
+  named by `OatBreadcrumb.label`; Wicket Oat no longer ships `OatPageHeader.breadcrumb`,
+  but still uses it if your application defines it.
+- `BreadcrumbBehavior` is deprecated, as `OatBreadcrumb` no longer uses it: write the
+  `aria-label` of a `<nav>` of your own in its markup.
 
 ### Changes
 
@@ -17,7 +26,10 @@
   `OatBreadcrumb.setCurrent(model)` ends a trail with the current page as text, as
   `OatPageHeader`, which now uses `OatBreadcrumb`, does with its title. The trail reads its
   levels once per request, and its `<nav>` is named by the translated
-  `OatBreadcrumb.label` resource instead of an English "Breadcrumb".
+  `OatBreadcrumb.label` resource instead of an English "Breadcrumb"; `setLabel(...)` or an
+  `aria-label` in the markup names it otherwise, e.g. a second trail on a page.
+- `OatDropdown`'s button says it opens a menu (`aria-haspopup="menu"`, and
+  `aria-expanded="false"` before it first opens), and the menu is a `role="menu"`.
 
 ## 0.4.0 (2026-10-19)
 

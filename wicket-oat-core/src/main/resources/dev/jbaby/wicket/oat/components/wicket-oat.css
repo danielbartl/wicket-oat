@@ -409,7 +409,6 @@ input[type="checkbox"].oat-readonly:disabled {
 }
 
 .oat-page-header nav ol {
-    gap: var(--space-2);
     margin: 0 0 var(--space-2);
     color: var(--muted-foreground);
 }
@@ -432,6 +431,7 @@ input[type="checkbox"].oat-readonly:disabled {
 .oat-crumb-more button {
     padding: 0 var(--space-1);
     margin-inline: calc(var(--space-1) * -1);
+    color: inherit; /* as the levels around it, e.g. muted in OatPageHeader */
 }
 
 .oat-crumb-more a[role="menuitem"] {
@@ -535,7 +535,8 @@ menu.buttons > li:first-child ot-dropdown > button {
 }
 
 /*
- * OatDropdown, OatSplitButton and OatPopover open without the zoom Oat 1.0 gives them.
+ * OatDropdown, OatSplitButton, OatPopover and OatBreadcrumb's "…" menu open without the
+ * zoom Oat 1.0 gives them.
  * Oat places a menu as it opens, measuring it at 97% of its size: one aligned to the
  * end of its button stuck out past it, and one that fit only at 97% opened past the
  * window's edge. In Oat's layer, so your own rules win. Drop this once Oat measures

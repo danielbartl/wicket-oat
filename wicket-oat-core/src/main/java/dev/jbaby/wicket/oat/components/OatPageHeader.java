@@ -1,6 +1,5 @@
 package dev.jbaby.wicket.oat.components;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
@@ -33,9 +32,10 @@ import java.util.List;
  * add(header);
  * }</pre>
  * The breadcrumb, an {@link OatBreadcrumb}, links to the given pages and ends with the
- * title, marked as the current page; its {@code <nav>} is named by the
- * {@code OatPageHeader.breadcrumb} resource ("Breadcrumb"). A long one can leave levels
- * out ({@link #setBreadcrumbMaxItems}).
+ * title, marked as the current page; its {@code <nav>} is named as any breadcrumb
+ * ({@code OatBreadcrumb.label}, "Breadcrumb"), or by {@code OatPageHeader.breadcrumb} if
+ * your application defines it. A long one can leave levels out
+ * ({@link #setBreadcrumbMaxItems}).
  */
 public class OatPageHeader extends Border {
 
@@ -81,16 +81,12 @@ public class OatPageHeader extends Border {
                 link.add(new Label("label", crumb.label()));
                 item.add(link);
             }
-
-            @Override
-            protected void onConfigure() {
-                super.onConfigure();
-                setVisible(!breadcrumb.getObject().isEmpty());
-            }
         };
         // The trail ends with this page, by its title
         trail.setCurrent(() -> getTitle().getObject());
-        trail.add(AttributeModifier.replace("aria-label", new StringResourceModel("OatPageHeader.breadcrumb", this).setDefaultValue("Breadcrumb")));
+        // Named as any breadcrumb, unless the application still defines OatPageHeader.breadcrumb
+        trail.setLabel(new StringResourceModel("OatPageHeader.breadcrumb", this)
+                .setDefaultValue(new StringResourceModel("OatBreadcrumb.label", trail)));
         addToBorder(trail);
     }
 
@@ -118,6 +114,9 @@ public class OatPageHeader extends Border {
      * Shows at most this many levels of the breadcrumb, counting this page: with more, it
      * shows the first, a "…" button whose menu has the levels in between, and the last
      * ones ({@link OatBreadcrumb#setMaxItems}).
+     *
+     * @param maxItems at least 2, the first level and this page
+     * @throws IllegalArgumentException for less than 2
      */
     public OatPageHeader setBreadcrumbMaxItems(int maxItems) {
         trail.setMaxItems(maxItems);

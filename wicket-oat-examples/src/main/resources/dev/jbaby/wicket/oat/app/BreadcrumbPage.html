@@ -10,8 +10,9 @@
 
         <h3 class="mt-6">A long trail</h3>
         <p>With <code>setMaxItems(3)</code>, a trail of seven levels shows the first, a "…" button whose menu has the ones in
-            between, and the last two. <code>OatPageHeader</code> does the same with <code>setBreadcrumbMaxItems(...)</code>.</p>
-        <nav wicket:id="longBreadcrumb"></nav>
+            between, and the last two. <code>OatPageHeader</code> does the same with <code>setBreadcrumbMaxItems(...)</code>.
+            A second trail on a page needs a name of its own for screen readers, here an <code>aria-label</code> in the markup.</p>
+        <nav wicket:id="longBreadcrumb" aria-label="Folders"></nav>
 
         <div class="mt-6">
             <h3>How to use</h3>

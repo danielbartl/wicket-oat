@@ -39,9 +39,10 @@ class BreadcrumbPageTest {
         tester.startPage(BreadcrumbPage.class);
 
         tester.assertLabel("longBreadcrumb:list:items:0:link:label", "Home");
-        tester.assertLabel("longBreadcrumb:list:more:menu:hidden:0:link:label", "Projects");
-        tester.assertLabel("longBreadcrumb:list:more:menu:hidden:3:link:label", "Docs");
-        tester.assertLabel("longBreadcrumb:list:tail:0:link:label", "Components");
-        tester.assertLabel("longBreadcrumb:list:tail:1:link:label", "Breadcrumb");
+        tester.assertLabel("longBreadcrumb:list:more:menu:hidden:1:link:label", "Projects");
+        tester.assertLabel("longBreadcrumb:list:more:menu:hidden:4:link:label", "Docs");
+        tester.assertLabel("longBreadcrumb:list:tail:5:link:label", "Components");
+        tester.assertLabel("longBreadcrumb:list:tail:6:link:label", "Breadcrumb");
+        assertEquals("Folders", tester.getTagByWicketId("longBreadcrumb").getAttribute("aria-label"));
     }
 }

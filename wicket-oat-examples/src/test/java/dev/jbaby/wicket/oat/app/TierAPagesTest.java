@@ -47,7 +47,7 @@ class TierAPagesTest {
 
         tester.startPage(HomePage.class);
         tester.assertLabel("topNav:topNavExtra:user:dropdown:trigger:name", "Ada Lovelace");
-        tester.clickLink("topNav:topNavExtra:user:dropdown:menu:signOut");
+        tester.submitForm("topNav:topNavExtra:user:dropdown:menu:signOut");
         tester.assertRenderedPage(HomePage.class);
         tester.assertInvisible("topNav:topNavExtra:user:dropdown");
         tester.assertVisible("topNav:topNavExtra:user:signIn");

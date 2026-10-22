@@ -9,15 +9,19 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Renders as an Oat Avatar: {@code <figure data-variant="avatar">} with an {@code <img>},
  * text initials in an {@code <abbr>}, or both. With both, the picture covers the
  * initials, which show while it loads and if it can't be loaded (Wicket Oat's script,
- * {@link WicketOats#WICKET_OAT_JS}, hides a picture that fails). The models are read on
- * every render, so an avatar follows them, e.g. in a reused list row.
+ * {@link WicketOats#WICKET_OAT_JS}, hides a picture that fails, and makes one that loaded
+ * opaque, so the initials don't show through it). The models are read once on every
+ * render, so an avatar follows them, e.g. in a reused list row.
  * <pre>{@code
  * new OatAvatar("avatar", "AL");                                        // initials
  * new OatAvatar("avatar", person.map(Person::pictureUrl));              // a picture
@@ -27,6 +31,9 @@ import java.util.Locale;
  * }</pre>
  */
 public class OatAvatar extends Panel {
+
+    // Any space, such as the ideographic space in Japanese names
+    private static final Pattern SPACES = Pattern.compile("[\\s\\p{Z}]+");
 
     public enum Size {
         SMALL("small"),
@@ -53,14 +60,15 @@ public class OatAvatar extends Panel {
     }
 
     /**
-     * @param imageUrl the picture's URL, or {@code null} (or a model of {@code null}) for none
+     * @param imageUrl the picture's URL, or {@code null} (or a model of {@code null} or a
+     *                 blank URL) for none
      * @param initials the initials, shown without a picture or under it; or {@code null}
      */
     public OatAvatar(String id, IModel<String> imageUrl, IModel<String> initials, Size size) {
         super(id);
         setRenderBodyOnly(true);
-        this.imageUrl = imageUrl;
-        this.initials = initials;
+        this.imageUrl = OncePerRequestModel.of(imageUrl);
+        this.initials = OncePerRequestModel.of(initials);
 
         WebMarkupContainer container = new WebMarkupContainer("container");
         add(container);
@@ -88,17 +96,23 @@ public class OatAvatar extends Panel {
 
     /** Initials for a name: "Jordan Lee" gives "JL", "ada" gives "A", no name "?". */
     public static String initialsOf(String name) {
-        if (name == null || name.isBlank()) {
+        List<String> words = SPACES.splitAsStream(name != null ? name : "").filter(word -> !word.isEmpty()).toList();
+        if (words.isEmpty()) {
             return "?";
         }
-        String[] words = name.strip().split("\\s+");
-        String first = words[0].substring(0, 1);
-        String last = words.length > 1 ? words[words.length - 1].substring(0, 1) : "";
+        String first = firstCharacter(words.get(0));
+        String last = words.size() > 1 ? firstCharacter(words.get(words.size() - 1)) : "";
         return (first + last).toUpperCase(Locale.ROOT);
     }
 
+    // Whole, also when it is outside the Basic Multilingual Plane (two chars)
+    private static String firstCharacter(String word) {
+        return word.substring(0, word.offsetByCodePoints(0, 1));
+    }
+
     private String getImageUrl() {
-        return imageUrl != null ? imageUrl.getObject() : null;
+        String url = imageUrl != null ? imageUrl.getObject() : null;
+        return Strings.isEmpty(url) ? null : url;
     }
 
     private String getInitials() {

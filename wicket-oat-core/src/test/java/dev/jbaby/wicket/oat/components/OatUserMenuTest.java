@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -57,6 +58,10 @@ class OatUserMenuTest {
     public static class ProfilePage extends MenuPage {
     }
 
+    /** The application's own sign-in page, built on another one. */
+    public static class ThemedSignInPage extends SignInPage {
+    }
+
     private void signIn(String name) {
         tester.getSession().setMetaData(USER, name);
     }
@@ -79,6 +84,9 @@ class OatUserMenuTest {
 
         tester.assertInvisible("user:signIn");
         tester.assertInvisible("user:dropdown");
+
+        tester.startPage(ThemedSignInPage.class);
+        tester.assertInvisible("user:signIn");
     }
 
     @Test
@@ -133,10 +141,32 @@ class OatUserMenuTest {
         signIn("Ada Lovelace");
         tester.startPage(MenuPage.class);
 
-        tester.clickLink("user:dropdown:menu:signOut");
+        tester.submitForm("user:dropdown:menu:signOut");
 
         tester.assertRenderedPage(MockHomePage.class);
         assertThat(tester.getSession().getMetaData(USER)).isNull();
+    }
+
+    @Test
+    void signOutIsAPost() {
+        signIn("Ada Lovelace");
+        tester.startPage(MenuPage.class);
+
+        TagTester form = tester.getTagByWicketId("signOut");
+        assertThat(form.getName()).isEqualTo("form");
+        assertThat(form.getAttribute("method")).isEqualTo("post");
+    }
+
+    @Test
+    void signOutWorksOnAPageStillOpenAfterTheSessionExpired() {
+        signIn("Ada Lovelace");
+        tester.startPage(MenuPage.class);
+        // Signed out meanwhile: the stateless page is built again, without the menu
+        signIn(null);
+
+        tester.submitForm("user:dropdown:menu:signOut");
+
+        tester.assertRenderedPage(MockHomePage.class);
     }
 
     @Test
@@ -154,7 +184,7 @@ class OatUserMenuTest {
             }
         });
 
-        tester.clickLink("user:dropdown:menu:signOut");
+        tester.submitForm("user:dropdown:menu:signOut");
 
         assertThat(calls).hasToString("signOut onSignedOut");
     }
@@ -177,6 +207,36 @@ class OatUserMenuTest {
 
         tester.assertLabel("user:dropdown:trigger:name", "Grace Hopper");
         tester.assertLabel("user:dropdown:trigger:avatar:container:initials", "GH");
+    }
+
+    @Test
+    void someoneSignedInWithoutANameGetsTheMenu() {
+        tester.startComponentInPage(new OatUserMenu("user", Model.of((String) null)) {
+            @Override
+            protected boolean isSignedIn() {
+                return true;
+            }
+        });
+
+        tester.assertVisible("user:dropdown");
+        assertThat(tester.getTagByWicketId("trigger").getAttribute("aria-label")).startsWith("Account:").doesNotContain("null");
+        tester.assertLabel("user:dropdown:trigger:avatar:container:initials", "?");
+    }
+
+    @Test
+    void theModelsAreReadOncePerRequest() {
+        AtomicInteger nameReads = new AtomicInteger();
+        AtomicInteger pictureReads = new AtomicInteger();
+        tester.startComponentInPage(new OatUserMenu("user", () -> {
+            nameReads.incrementAndGet();
+            return "Ada Lovelace";
+        }).setPicture(() -> {
+            pictureReads.incrementAndGet();
+            return "/ada.png";
+        }));
+
+        assertThat(nameReads).hasValue(1);
+        assertThat(pictureReads).hasValue(1);
     }
 
     @Test

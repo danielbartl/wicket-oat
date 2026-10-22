@@ -553,6 +553,11 @@ figure[data-variant="avatar"]:has(> abbr) > img {
     inset: 0;
 }
 
+/* Once loaded (wicket-oat.js), so the initials don't show through its transparent parts */
+figure[data-variant="avatar"] > img[data-loaded] {
+    background-color: inherit;
+}
+
 /* Initials are an <abbr title>, which browsers underline */
 figure[data-variant="avatar"] > abbr {
     text-decoration: none;
@@ -580,7 +585,7 @@ figure[data-variant="avatar"] > abbr {
     color: var(--muted-foreground);
 }
 
-.oat-user-menu a[role="menuitem"] {
+.oat-user-menu [role="menuitem"] {
     align-items: center;
     gap: var(--space-2);
     color: inherit;

@@ -42,7 +42,7 @@ class DropdownPageTest {
         tester.assertLabel("userMenu:dropdown:trigger:name", "Grace Hopper");
         tester.assertLabel("userMenu:dropdown:menu:links:0:link:label", "Inbox");
 
-        tester.clickLink("userMenu:dropdown:menu:signOut");
+        tester.submitForm("userMenu:dropdown:menu:signOut");
 
         tester.assertRenderedPage(DropdownPage.class);
         assertTrue(tester.getLastResponseAsString().contains("Grace would be signed out now."));

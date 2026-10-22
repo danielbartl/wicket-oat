@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -110,6 +111,31 @@ class GeneralComponentsTest {
     }
 
     @Test
+    void aBlankPictureUrlIsNoPicture() {
+        tester.startPage(new AvatarPage(new OatAvatar("avatar", Model.of(" "), Model.of("AL"), OatAvatar.Size.DEFAULT)));
+
+        tester.assertInvisible("avatar:container:img");
+        tester.assertLabel("avatar:container:initials", "AL");
+        assertThat(tester.getLastResponseAsString()).doesNotContain("wicket-oat.js");
+    }
+
+    @Test
+    void anAvatarReadsItsModelsOncePerRender() {
+        AtomicInteger pictureReads = new AtomicInteger();
+        AtomicInteger initialsReads = new AtomicInteger();
+        tester.startPage(new AvatarPage(new OatAvatar("avatar", () -> {
+            pictureReads.incrementAndGet();
+            return "/ada.png";
+        }, () -> {
+            initialsReads.incrementAndGet();
+            return "AL";
+        }, OatAvatar.Size.DEFAULT)));
+
+        assertThat(pictureReads).hasValue(1);
+        assertThat(initialsReads).hasValue(1);
+    }
+
+    @Test
     void anAvatarFollowsItsModelsOnEveryRender() {
         Model<String> picture = Model.of((String) null);
         Model<String> initials = Model.of("AL");
@@ -135,6 +161,10 @@ class GeneralComponentsTest {
         assertThat(OatAvatar.initialsOf("ada")).isEqualTo("A");
         assertThat(OatAvatar.initialsOf(" ")).isEqualTo("?");
         assertThat(OatAvatar.initialsOf(null)).isEqualTo("?");
+        // Any space, and characters outside the Basic Multilingual Plane, kept whole
+        assertThat(OatAvatar.initialsOf("山田\u3000太郎")).isEqualTo("山太");
+        assertThat(OatAvatar.initialsOf("\u00a0Ada\u00a0Lovelace\u00a0")).isEqualTo("AL");
+        assertThat(OatAvatar.initialsOf("\ud842\udfb7田 太郎")).isEqualTo("\ud842\udfb7太");
     }
 
     @Test

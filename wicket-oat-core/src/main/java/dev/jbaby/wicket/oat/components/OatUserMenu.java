@@ -1,12 +1,12 @@
 package dev.jbaby.wicket.oat.components;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.IFormSubmitter;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -38,8 +38,14 @@ import java.util.Objects;
  * }</pre>
  * "Sign out" invalidates the session and then shows the home page; override
  * {@link #signOut()} and {@link #onSignedOut()} to do otherwise, e.g. to sign out of
- * Spring Security too. The menu opens in the browser and its links are stateless, so it
- * keeps a page stateless, such as a sign-in page, where the "Sign in" link hides itself.
+ * Spring Security too. It is a POST, which another site can't make with the user's
+ * session cookie (as browsers send it by default), and it works on a page that is
+ * still open after the session expired. The menu opens in the browser and its links and
+ * Sign out form are stateless, so it keeps a page stateless, such as a sign-in page,
+ * where the "Sign in" link hides itself.
+ * <p>
+ * Someone is signed in while the name isn't {@code null}; override {@link #isSignedIn()}
+ * for a user without a name. The name and the other models are read once per request.
  * <p>
  * Screen readers name the button "Account: " and the name. On phones it shows only the
  * picture. The texts are the {@code OatUserMenu.*} resources. It renders its own tag with
@@ -54,11 +60,11 @@ public class OatUserMenu extends Panel {
 
     /**
      * @param name the signed-in user's name, or a model of {@code null} while nobody is
-     *             signed in; read on every render
+     *             signed in; read on every request
      */
     public OatUserMenu(String id, IModel<String> name) {
         super(id);
-        this.name = Objects.requireNonNull(name);
+        this.name = OncePerRequestModel.of(Objects.requireNonNull(name));
         setOutputMarkupId(true);
 
         WebMarkupContainer dropdown = new WebMarkupContainer("dropdown") {
@@ -77,12 +83,12 @@ public class OatUserMenu extends Panel {
         WebMarkupContainer trigger = new WebMarkupContainer("trigger");
         trigger.add(AttributeModifier.replace("popovertarget", (IModel<String>) menu::getMarkupId));
         trigger.add(AttributeModifier.replace("aria-label", new StringResourceModel("OatUserMenu.account", this)
-                .setParameters(name).setDefaultValue("Account: {0}")));
-        trigger.add(new OatAvatar("avatar", this::getPicture, () -> OatAvatar.initialsOf(name.getObject()), OatAvatar.Size.SMALL));
-        trigger.add(new Label("name", name));
+                .setParameters((IModel<String>) () -> Objects.toString(this.name.getObject(), "")).setDefaultValue("Account: {0}")));
+        trigger.add(new OatAvatar("avatar", this::getPicture, () -> OatAvatar.initialsOf(this.name.getObject()), OatAvatar.Size.SMALL));
+        trigger.add(new Label("name", this.name));
         dropdown.add(trigger);
 
-        menu.add(new Label("menuName", name));
+        menu.add(new Label("menuName", this.name));
         menu.add(new Label("detail", (IModel<String>) this::getDetail) {
             @Override
             protected void onConfigure() {
@@ -98,7 +104,7 @@ public class OatUserMenu extends Panel {
                 if (CurrentPage.isLinkedBy(getPage(), link.page, link.parameters)) {
                     anchor.add(AttributeModifier.replace("aria-current", "page"));
                 }
-                anchor.add(icon("icon", link.icon));
+                anchor.add(OatIcon.ofNullable("icon", link.icon));
                 anchor.add(new Label("label", link.label));
                 item.add(anchor);
             }
@@ -111,25 +117,32 @@ public class OatUserMenu extends Panel {
             }
         });
 
-        StatelessLink<Void> signOut = new StatelessLink<>("signOut") {
+        StatelessForm<Void> signOut = new StatelessForm<>("signOut") {
+            // Also on a page built again after the session expired, which hides the menu
             @Override
-            public void onClick() {
+            public boolean canCallListener() {
+                return true;
+            }
+
+            // Instead of processing: the form has no fields, and processing skips a hidden form
+            @Override
+            public void process(IFormSubmitter submitter) {
                 signOut();
                 onSignedOut();
             }
         };
-        signOut.add(icon("icon", "log-out"));
+        signOut.add(OatIcon.ofNullable("icon", "log-out"));
         signOut.add(new Label("label", new StringResourceModel("OatUserMenu.signOut", this).setDefaultValue("Sign out")));
         menu.add(signOut);
 
         add(new WebMarkupContainer("signIn").setVisible(false));
     }
 
-    private static Component icon(String id, String name) {
-        return name != null ? new OatIcon(id, name) : new WebMarkupContainer(id).setVisible(false);
-    }
-
-    private boolean isSignedIn() {
+    /**
+     * Whether someone is signed in, which shows the menu rather than the "Sign in" link.
+     * By default while the name isn't {@code null}.
+     */
+    protected boolean isSignedIn() {
         return name.getObject() != null;
     }
 
@@ -143,13 +156,13 @@ public class OatUserMenu extends Panel {
 
     /** A second line under the name in the menu, such as the user's email. */
     public OatUserMenu setDetail(IModel<String> detail) {
-        this.detail = detail;
+        this.detail = OncePerRequestModel.of(detail);
         return this;
     }
 
     /** The URL of the user's picture; without one, or while it loads, the initials show. */
     public OatUserMenu setPicture(IModel<String> url) {
-        this.picture = url;
+        this.picture = OncePerRequestModel.of(url);
         return this;
     }
 
@@ -176,7 +189,7 @@ public class OatUserMenu extends Panel {
 
     /**
      * Shows a "Sign in" link to this page while nobody is signed in, except on the page
-     * itself.
+     * itself or a subclass of it.
      */
     public OatUserMenu setSignInPage(Class<? extends Page> page) {
         Objects.requireNonNull(page);
@@ -184,7 +197,7 @@ public class OatUserMenu extends Panel {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
-                setVisible(!isSignedIn() && !getPage().getClass().equals(page));
+                setVisible(!isSignedIn() && !page.isInstance(getPage()));
             }
         };
         signIn.setBody(new StringResourceModel("OatUserMenu.signIn", this).setDefaultValue("Sign in"));
@@ -194,13 +207,19 @@ public class OatUserMenu extends Panel {
 
     /**
      * Signs the user out when they choose "Sign out". By default invalidates the session,
-     * which signs out of wicket-auth-roles' {@code AuthenticatedWebSession} too.
+     * which signs out of wicket-auth-roles' {@code AuthenticatedWebSession} too. Wicket
+     * invalidates it at the end of the request, so the session still has the user until
+     * then.
      */
     protected void signOut() {
         getSession().invalidate();
     }
 
-    /** Called after {@link #signOut()}. By default shows the application's home page. */
+    /**
+     * Called after {@link #signOut()}. By default shows the application's home page. Show
+     * a page with {@code setResponsePage(SomePage.class)}, which Wicket shows in a new
+     * request: a page rendered in this one would still see the user in the session.
+     */
     protected void onSignedOut() {
         setResponsePage(getApplication().getHomePage());
     }
@@ -208,6 +227,7 @@ public class OatUserMenu extends Panel {
     @Override
     protected void onDetach() {
         super.onDetach();
+        name.detach();
         if (detail != null) {
             detail.detach();
         }
@@ -232,10 +252,7 @@ public class OatUserMenu extends Panel {
 
         /** An {@link OatIcon} before the label, e.g. {@code "settings"}; {@code null} for none. */
         public MenuLink setIcon(String icon) {
-            if (icon != null && !OatIcon.names().contains(icon)) {
-                throw new IllegalArgumentException("No icon \"" + icon + "\"; the icons are " + OatIcon.names());
-            }
-            this.icon = icon;
+            this.icon = OatIcon.requireKnown(icon);
             return this;
         }
     }

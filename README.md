@@ -548,9 +548,11 @@ protected Component newTopNavExtra(String id) {
 
 "Sign out" invalidates the session, which also signs out of wicket-auth-roles'
 `AuthenticatedWebSession`, and shows the home page. Override `signOut()` and
-`onSignedOut()` to do otherwise, e.g. to sign out of Spring Security too. The
-menu opens in the browser and its links are stateless, so a stateless page, such
-as a sign-in page, stays stateless. On phones it shows only the picture. The
+`onSignedOut()` to do otherwise, e.g. to sign out of Spring Security too.
+"Sign out" is a POST, which another site can't make with the user's session, and
+it works on a page left open after the session expired. The menu opens in the
+browser and its links and "Sign out" form are stateless, so a stateless page,
+such as a sign-in page, stays stateless. On phones it shows only the picture. The
 initials show while the picture loads and if it can't be loaded, as in any
 `OatAvatar` with both.
 

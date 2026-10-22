@@ -16,7 +16,9 @@
                 <a wicket:id="link" role="menuitem"><svg wicket:id="icon"></svg><span wicket:id="label"></span></a>
             </wicket:container>
             <hr wicket:id="linksEnd">
-            <a wicket:id="signOut" role="menuitem"><svg wicket:id="icon"></svg><span wicket:id="label"></span></a>
+            <form wicket:id="signOut">
+                <button type="submit" role="menuitem" class="ghost"><svg wicket:id="icon"></svg><span wicket:id="label"></span></button>
+            </form>
         </menu>
     </ot-dropdown>
     <a wicket:id="signIn" class="button outline small"></a>

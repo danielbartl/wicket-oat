@@ -1,8 +1,10 @@
 package dev.jbaby.wicket.oat.components;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -47,9 +49,27 @@ public class OatIcon extends WebComponent {
     /** @param name an icon's name, read on every render, e.g. to switch between icons */
     public OatIcon(String id, IModel<String> name) {
         super(id, name);
-        if (name.getObject() != null && !ICONS.containsKey(name.getObject())) {
-            throw new IllegalArgumentException("No icon \"" + name.getObject() + "\"; the icons are " + names());
+        requireKnown(name.getObject());
+    }
+
+    /**
+     * An icon, or for a {@code null} name nothing: a hidden component in its place, so
+     * the markup can always have the icon's tag.
+     */
+    public static Component ofNullable(String id, String name) {
+        return name != null ? new OatIcon(id, name) : new WebMarkupContainer(id).setVisible(false);
+    }
+
+    // The constructors' check, for components that keep an icon's name for later
+    static String requireKnown(String name) {
+        if (name != null && !ICONS.containsKey(name)) {
+            throw new IllegalArgumentException(noIcon(name));
         }
+        return name;
+    }
+
+    private static String noIcon(String name) {
+        return "No icon \"" + name + "\"; the icons are " + names();
     }
 
     /** A name for screen readers, for an icon that stands on its own; {@code null} makes it decorative. */
@@ -80,7 +100,7 @@ public class OatIcon extends WebComponent {
         String name = getDefaultModelObjectAsString();
         String shapes = ICONS.get(name);
         if (shapes == null) {
-            throw new IllegalStateException("No icon \"" + name + "\"; the icons are " + names());
+            throw new IllegalStateException(noIcon(name));
         }
         return shapes;
     }

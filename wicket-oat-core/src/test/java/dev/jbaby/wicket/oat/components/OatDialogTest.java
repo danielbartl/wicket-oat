@@ -5,6 +5,7 @@ import dev.jbaby.wicket.oat.components.form.OatTextField;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.feedback.DefaultCleanupFeedbackMessageFilter;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -138,6 +139,10 @@ class OatDialogTest {
         assertThat(tester.getLastResponseAsString()).doesNotContain("command=\"show-modal\"");
     }
 
+    private TagTester dialogTag() {
+        return TagTester.createTagByName(tester.getLastResponseAsString(), "dialog");
+    }
+
     @Test
     void openReRendersTheContentAndShowsTheDialog() {
         DialogPage page = tester.startPage(new DialogPage(false));
@@ -149,7 +154,7 @@ class OatDialogTest {
         tester.assertComponentOnAjaxResponse("dialog");
         String response = tester.getLastResponseAsString();
         assertThat(response).contains("value=\"Grace\"");
-        assertThat(response).contains(".showModal()");
+        assertThat(response).contains("WicketOat.showDialog(");
     }
 
     @Test
@@ -162,7 +167,7 @@ class OatDialogTest {
         assertThat(page.closed).isEqualTo(1);
         assertThat(page.dialog.isOpen()).isTrue();
         // The browser isn't told to close it after showing it again
-        assertThat(tester.getLastResponseAsString()).contains(".showModal()").doesNotContain(".close()");
+        assertThat(tester.getLastResponseAsString()).contains("WicketOat.showDialog(").doesNotContain(".close()");
     }
 
     @Test
@@ -180,11 +185,11 @@ class OatDialogTest {
         tester.startPage(new DialogPage(false));
         tester.clickLink("refresh");
         tester.assertComponentOnAjaxResponse("dialog");
-        assertThat(tester.getLastResponseAsString()).doesNotContain(".showModal()");
+        assertThat(tester.getLastResponseAsString()).doesNotContain("WicketOat.showDialog(");
 
         tester.clickLink("open");
         tester.clickLink("refresh");
-        assertThat(tester.getLastResponseAsString()).contains(".showModal()");
+        assertThat(tester.getLastResponseAsString()).contains("WicketOat.showDialog(");
     }
 
     @Test
@@ -232,6 +237,58 @@ class OatDialogTest {
     }
 
     @Test
+    void closedByTheServerTheDialogKeepsItsContentInSightUntilItOpensAgain() {
+        DialogPage page = tester.startPage(new DialogPage(false));
+        tester.clickLink("openOnce");
+
+        tester.clickLink("close");
+        assertThat(page.dialog.getForm().get(OatDialog.CONTENT_ID)).isNotInstanceOf(Label.class);
+        // Not rendered now, so the content slides or fades out with the dialog
+        assertThat(tester.getLastResponseAsString()).doesNotContain("<component id=\"" + page.dialog.getForm().getMarkupId() + "\"");
+
+        tester.clickLink("open");
+        assertThat(tester.getLastResponseAsString()).doesNotContain("Just this once");
+    }
+
+    @Test
+    void closingInTheBrowserShowsTheModelsAgain() {
+        // As in production, where Wicket removes the messages it showed
+        tester.getApplication().getApplicationSettings().setFeedbackMessageCleanupFilter(new DefaultCleanupFeedbackMessageFilter());
+        DialogPage page = tester.startPage(new DialogPage(false));
+        tester.clickLink("open");
+        tester.newFormTester("dialog:dialog:form").setValue("content:name:input", "");
+        tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
+        assertThat(page.nameField.getInput().hasRawInput()).isTrue();
+
+        tester.executeAjaxEvent("dialog:dialog", "close");
+
+        // Without the input that wasn't confirmed, nor its error
+        tester.assertComponentOnAjaxResponse("dialog:dialog:form");
+        assertThat(page.nameField.getInput().hasRawInput()).isFalse();
+        assertThat(tester.getLastResponseAsString()).contains("value=\"Ada\"").doesNotContain("is required");
+    }
+
+    @Test
+    void theBrowserTellsTheServerOnceTheDialogIsOutOfSight() {
+        tester.startPage(new DialogPage(false));
+
+        // After Oat's 0.3s transition, and not if it was opened again by then
+        assertThat(tester.getLastResponseAsString()).contains("\"tr\":{").contains("\"d\":300").contains("return !d.open;");
+    }
+
+    @Test
+    void anOpenDialogRenderedAgainShowsAtOnce() {
+        tester.startPage(new DialogPage(false));
+        tester.clickLink("open");
+        assertThat(dialogTag().getAttribute("data-oat-instant")).isNull();
+
+        tester.clickLink("refresh");
+        assertThat(dialogTag().hasAttribute("data-oat-instant")).isTrue();
+        tester.clickLink("open");
+        assertThat(dialogTag().hasAttribute("data-oat-instant")).isTrue();
+    }
+
+    @Test
     void theTriggerTellsTheServerTheDialogIsOpen() {
         OatDialog dialog = new OatDialog("dialog", "Open", "Title");
         tester.startComponentInPage(dialog);
@@ -268,7 +325,7 @@ class OatDialogTest {
         assertThat(page.confirmed).isEqualTo(1);
         assertThat(page.closed).isZero();
         assertThat(page.dialog.isOpen()).isTrue();
-        assertThat(tester.getLastResponseAsString()).contains(".showModal()").doesNotContain(".close()");
+        assertThat(tester.getLastResponseAsString()).contains("WicketOat.showDialog(").doesNotContain(".close()");
     }
 
     @Test
@@ -375,7 +432,7 @@ class OatDialogTest {
 
         // The <dialog> inside, by an id the page has
         tester.assertComponentOnAjaxResponse(page.dialog.get("dialog"));
-        assertThat(tester.getLastResponseAsString()).contains(".showModal()");
+        assertThat(tester.getLastResponseAsString()).contains("WicketOat.showDialog(");
     }
 
     @Test

@@ -12,7 +12,6 @@ import org.apache.wicket.model.Model;
 import java.io.Serializable;
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A list of messages - comments on an invoice, notes on a customer, a support ticket's
@@ -48,7 +47,7 @@ public class OatMessageList<T> extends Panel {
                 T message = item.getModelObject();
                 String name = author.apply(message);
                 String image = avatar != null ? avatar.apply(message) : null;
-                item.add(new OatAvatar("avatar", image != null ? Model.of(image) : null, Model.of(initials(name)),
+                item.add(new OatAvatar("avatar", image != null ? Model.of(image) : null, Model.of(OatAvatar.initialsOf(name)),
                         OatAvatar.Size.SMALL));
                 item.add(new Label("author", Model.of(name)));
 
@@ -68,16 +67,5 @@ public class OatMessageList<T> extends Panel {
     public OatMessageList<T> setAvatar(SerializableFunction<T, String> imageUrl) {
         this.avatar = imageUrl;
         return this;
-    }
-
-    /** "Jordan Lee" gives "JL", "ada" gives "A". */
-    static String initials(String name) {
-        if (name == null || name.isBlank()) {
-            return "?";
-        }
-        String[] words = name.strip().split("\\s+");
-        String first = words[0].substring(0, 1);
-        String last = words.length > 1 ? words[words.length - 1].substring(0, 1) : "";
-        return (first + last).toUpperCase(Locale.ROOT);
     }
 }

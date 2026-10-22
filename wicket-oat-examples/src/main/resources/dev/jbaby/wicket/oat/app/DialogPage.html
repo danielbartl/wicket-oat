@@ -30,7 +30,7 @@ add(new OatDialog("deleteDialog", Model.of("Delete item"), Model.of("Delete item
             <tr wicket:id="rows">
                 <td wicket:id="name"></td>
                 <td wicket:id="email"></td>
-                <td><a wicket:id="edit">Edit</a></td>
+                <td><a wicket:id="edit">Edit</a> <a wicket:id="details">Details</a></td>
             </tr>
             </tbody>
         </table>
@@ -58,6 +58,36 @@ editDialog.setContent(fields);
 // in a row's AjaxLink
 selected.setObject(person);
 editDialog.open(target);</code></pre>
+
+        <h3 class="mt-6">Drawers</h3>
+        <p><code>OatDrawer</code> is a dialog that slides in from the end of the screen - or its start or bottom, with
+            <code>setSide(...)</code> - and is as tall as it, for what supports the page: filters, a record's details. It opens,
+            confirms and closes as a dialog does, and the × in its corner closes it too.</p>
+        <div wicket:id="filtersDrawer"></div>
+        <div wicket:id="detailsDrawer"></div>
+        <p class="text-light small mt-2">Click <strong>Details</strong> in a row above for a drawer that only shows something.</p>
+
+        <wicket:fragment wicket:id="filterFields">
+            <div class="vstack gap-4">
+                <div wicket:id="status"></div>
+                <div wicket:id="overdueOnly"></div>
+            </div>
+        </wicket:fragment>
+        <wicket:fragment wicket:id="personDetails"><dl wicket:id="list"></dl></wicket:fragment>
+
+        <pre class="mt-4"><code>// Java
+OatDrawer filters = new OatDrawer("filtersDrawer", "Filters", "Filter orders") {
+    @Override
+    protected void onConfirm(AjaxRequestTarget target) {
+        target.add(orders); // the fields have updated the filter's models
+    }
+};
+filters.setContent(new OrderFilterPanel(OatDialog.CONTENT_ID, filter)).setConfirmLabel(Model.of("Apply"));
+
+// Only showing something: no Cancel and Confirm, opened with a row's details
+OatDrawer details = new OatDrawer("detailsDrawer", Model.of("Details"));
+details.setFooterVisible(false);
+details.open(new PersonDetails(OatDialog.CONTENT_ID, person), target);</code></pre>
     </section>
 </wicket:extend>
 </body>

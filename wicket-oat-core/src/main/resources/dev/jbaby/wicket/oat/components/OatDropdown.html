@@ -3,8 +3,8 @@
 <body>
 <wicket:panel>
     <ot-dropdown>
-        <button wicket:id="trigger" type="button" class="outline"><span wicket:id="triggerLabel"></span></button>
-        <menu wicket:id="menu" popover="">
+        <button wicket:id="trigger" type="button" class="outline" aria-haspopup="menu" aria-expanded="false"><span wicket:id="triggerLabel"></span></button>
+        <menu wicket:id="menu" popover="" role="menu">
             <button wicket:id="items" type="button" role="menuitem" class="ghost"><span wicket:id="label"></span></button>
         </menu>
     </ot-dropdown>

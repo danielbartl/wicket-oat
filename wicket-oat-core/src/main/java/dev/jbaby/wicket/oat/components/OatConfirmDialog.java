@@ -112,6 +112,18 @@ public class OatConfirmDialog extends OatDialog {
         return this;
     }
 
+    @Override
+    public OatConfirmDialog setCloseButton(boolean shown) {
+        super.setCloseButton(shown);
+        return this;
+    }
+
+    @Override
+    public OatConfirmDialog setFooterVisible(boolean visible) {
+        super.setFooterVisible(visible);
+        return this;
+    }
+
     /** Runs the action asked about, once; a stale or repeated confirm does nothing. */
     @Override
     protected void onConfirm(AjaxRequestTarget target) {

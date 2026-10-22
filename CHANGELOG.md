@@ -2,8 +2,95 @@
 
 ## 0.5.0 (unreleased)
 
+### Upgrading from 0.4.x
+
+- `OatFeedbackPanel` extends Wicket's `FencedFeedbackPanel` (which extends
+  `FeedbackPanel`). `new OatFeedbackPanel(id, null)` no longer compiles, as `null` could
+  be a filter or a fence; write `(IFeedbackMessageFilter) null` for all messages.
+- `OatBreadcrumb` brings its own markup, like other Oat components: write
+  `<nav wicket:id="breadcrumb"></nav>`. Markup inside the tag is no longer allowed;
+  Wicket reports "Close tag not found" for it. Its separators look like `OatPageHeader`'s.
+  The levels are numbered by their index among all of them, also after a "…" menu:
+  `"breadcrumb:list:items:0:link"`, and `"breadcrumb:list:tail:4:link"` for the fifth
+  level of a long trail. A trail without levels is no longer shown.
+- `OatPageHeader`'s breadcrumb is an `OatBreadcrumb`, so a test reaches its parts at
+  `"header:breadcrumb:list:items:0:link"` (was `"header:breadcrumb:crumbs:0:link"`) and
+  `"header:breadcrumb:list:currentItem:current"` (was `"header:breadcrumb:current"`). It is
+  named by `OatBreadcrumb.label`; Wicket Oat no longer ships `OatPageHeader.breadcrumb`,
+  but still uses it if your application defines it.
+- `BreadcrumbBehavior` is deprecated, as `OatBreadcrumb` no longer uses it: write the
+  `aria-label` of a `<nav>` of your own in its markup.
+
 ### Changes
 
+- Oat form fields show the errors of an Ajax request by themselves. A submit button
+  without an `onError` that adds the form, such as `OatSubmitButton.onSubmit(id, label,
+  onSubmit)`, used to show nothing for an invalid form: the fields weren't re-rendered,
+  and `OatFeedbackPanel` and the feedback toasts leave out the errors fields show. Now a
+  field validated in an Ajax request whose error appeared, changed or went away updates
+  its message and error state in place, without re-rendering its input, so the input
+  keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+  requests leave the errors shown alone. `target.add(field)` and `target.add(form)`
+  work as before.
+- `OatFeedbackPanel` can show one form's messages next to it, such as the form's own
+  errors from `form.error(...)`: `new OatFeedbackPanel("formFeedback", form)`. As with
+  Wicket's `FencedFeedbackPanel`, which it now extends, the form is its fence: a panel
+  without a fence and `Oat.Behaviors.feedbackToasts()` leave out the messages from inside
+  it, so each message shows once. A panel without messages takes no space, so it can sit
+  at the top of a stacked form without leaving a gap.
+- A field's error message is shown in the danger color, as Oat shows errors, instead of
+  the grey of a hint.
+- `OatUserMenu`: the signed-in user's menu for the top bar of an `OatAppLayout`. Their
+  picture, or initials, and name open a menu with their name, a second line such as their
+  email, links of yours with icons, and "Sign out". While nobody is signed in it is a
+  "Sign in" link, hidden on the sign-in page. "Sign out" invalidates the session and shows
+  the home page; `signOut()` and `onSignedOut()` change that, e.g. for Spring Security. It
+  is a POST, so another site can't sign users out, and it works on a page still open
+  after the session expired. Someone is signed in while the name isn't `null`, or as
+  `isSignedIn()` says. It keeps a page stateless, reads its models once per request,
+  shows only the picture on phones, and its button is named "Account: " and the name for
+  screen readers. The examples' sign-in page now signs in a demo user, whose menu appears
+  in the top bar.
+- `OatAvatar` reads its models once on every render, so it follows them, e.g. in a reused
+  list row or after a sign-in. With a picture and initials, the initials show under the
+  picture while it loads and if it can't be loaded, instead of a broken image, and the
+  picture's `alt` is empty, as the initials name it. A blank picture URL counts as none.
+  `OatAvatar.initials(id, model)` makes an avatar from initials in a model
+  (`new OatAvatar(id, model)` takes a picture URL), and `OatAvatar.initialsOf(name)` turns
+  "Ada Lovelace" into "AL", also for names apart by an ideographic space. Initials are no
+  longer underlined.
+- `OatIcon.ofNullable(id, name)` makes an icon, or for a `null` name a hidden placeholder.
+- A long breadcrumb can leave levels out. `OatBreadcrumb.setMaxItems(n)` and
+  `OatPageHeader.setBreadcrumbMaxItems(n)` show at most n levels, counting the current
+  page: the first, a "…" button whose menu has the levels in between, and the last ones.
+  `OatBreadcrumb.setCurrent(model)` ends a trail with the current page as text, as
+  `OatPageHeader`, which now uses `OatBreadcrumb`, does with its title. The trail reads its
+  levels once per request, and its `<nav>` is named by the translated
+  `OatBreadcrumb.label` resource instead of an English "Breadcrumb"; `setLabel(...)` or an
+  `aria-label` in the markup names it otherwise, e.g. a second trail on a page.
+- `OatDropdown`'s button says it opens a menu (`aria-haspopup="menu"`, and
+  `aria-expanded="false"` before it first opens), and the menu is a `role="menu"`.
+- `OatDrawer`: a side panel that slides in from an edge of the screen over the page, for
+  filters, a record's details or a form to edit a row. It is an `OatDialog`, opened,
+  confirmed and closed the same way, as tall as the screen at its end, or at its start
+  or bottom (`setSide`); start and end follow the text direction. An "×" in its corner
+  closes it, its content scrolls between header and footer, and with
+  `setFooterVisible(false)` it leaves out Cancel and Confirm. The examples' dialog page
+  has a filters drawer and one with a person's details.
+- `OatDialog.setCloseButton(true)` adds the "×" to a dialog (named by the new
+  `OatDialog.close` resource, in all 7 languages), and `setFooterVisible(false)` leaves out
+  its footer with Cancel and Confirm; Enter in a field then submits nothing. The "×" comes
+  first, as it is drawn, and opening focuses the first field after it.
+- An `OatDialog`'s content scrolls between its header and its buttons, which stay in view,
+  as does the "×".
+- A dialog closed in the browser (Cancel, "×", Escape, the backdrop) shows its models
+  again the next time, without what was changed but not confirmed, or the errors of a
+  failed confirm. The server hears of the close once the dialog is out of sight, so this,
+  and content set with `open(content, target)` going away, doesn't show while it closes.
+- An open dialog rendered again, e.g. with `target.add(dialog)` or opened again for the
+  next record, shows at once instead of sliding or fading in again.
+- A `null` trigger label renders no trigger button with the `String` constructors too, and
+  `getDialogElement()` lets a subclass style the `<dialog>`.
 - `OatFilter`: a row of chips above a list or table choosing one value, such as a category
   or a status, the chosen chip filled. Choosing one sets the model and runs `onChange`
   over Ajax (`OatFilter.onChange(id, model, choices, target -> ...)`). `setNullValid(true)`

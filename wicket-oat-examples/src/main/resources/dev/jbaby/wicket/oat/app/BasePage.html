@@ -3,6 +3,12 @@
 <body>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
     <wicket:child/>
+    <wicket:fragment wicket:id="topBar">
+        <div class="hstack gap-2">
+            <div wicket:id="theme"></div>
+            <div wicket:id="user"></div>
+        </div>
+    </wicket:fragment>
 </wicket:extend>
 </body>
 </html>

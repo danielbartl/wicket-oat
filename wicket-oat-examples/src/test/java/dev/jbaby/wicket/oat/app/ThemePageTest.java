@@ -53,7 +53,7 @@ class ThemePageTest {
 
         assertEquals("business", htmlTheme());
         tester.assertLabel("currentTheme", "Business (business)");
-        tester.assertLabel("topNav:topNavExtra:link:theme", "💼 Business");
+        tester.assertLabel("topNav:topNavExtra:theme:link:theme", "💼 Business");
         assertEquals("light", tester.getTagByWicketId("pinnedCard").getAttribute("data-theme"));
         assertEquals("compact", org.apache.wicket.util.tester.TagTester
                 .createTagByName(tester.getLastResponseAsString(), "html").getAttribute("data-density"));
@@ -66,7 +66,7 @@ class ThemePageTest {
         tester.startPage(ThemePage.class);
 
         tester.clickLink("useMidnight");
-        tester.assertLabel("topNav:topNavExtra:link:theme", "🌌 Midnight");
+        tester.assertLabel("topNav:topNavExtra:theme:link:theme", "🌌 Midnight");
     }
 
     @Test

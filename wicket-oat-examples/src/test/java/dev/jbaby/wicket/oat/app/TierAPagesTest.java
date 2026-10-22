@@ -40,7 +40,17 @@ class TierAPagesTest {
         form.setValue("username:input", "demo");
         form.setValue("password:input", "demo");
         tester.executeAjaxEvent("card:login:form:signIn", "click");
-        assertTrue(tester.getLastResponseAsString().contains("Signed in as demo."));
+        assertTrue(tester.getLastResponseAsString().contains("Signed in as Ada Lovelace"));
+        // The top bar's user menu shows her from now on
+        tester.assertComponentOnAjaxResponse("topNav:topNavExtra:user");
+        tester.assertLabel("topNav:topNavExtra:user:dropdown:trigger:name", "Ada Lovelace");
+
+        tester.startPage(HomePage.class);
+        tester.assertLabel("topNav:topNavExtra:user:dropdown:trigger:name", "Ada Lovelace");
+        tester.submitForm("topNav:topNavExtra:user:dropdown:menu:signOut");
+        tester.assertRenderedPage(HomePage.class);
+        tester.assertInvisible("topNav:topNavExtra:user:dropdown");
+        tester.assertVisible("topNav:topNavExtra:user:signIn");
     }
 
     @Test

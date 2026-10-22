@@ -34,7 +34,7 @@ final class OatTreeNodeContent<T> extends Panel {
 
         MarkupContainer holder = onClick != null ? link : plain;
         String name = icon == null ? null : icon.apply(model.getObject());
-        holder.add(name == null ? new WebMarkupContainer("icon").setVisible(false) : new OatIcon("icon", name));
+        holder.add(OatIcon.ofNullable("icon", name));
         holder.add(new Label("label", () -> label.apply(model.getObject())));
         MarkupContainer other = onClick != null ? plain : link;
         other.add(new WebMarkupContainer("icon"), new WebMarkupContainer("label"));

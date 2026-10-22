@@ -119,8 +119,9 @@ class FeedbackAndPagingTest {
         tester.assertComponentOnAjaxResponse("feedback");
         String response = tester.getLastResponseAsString();
         assertThat(response).contains("Please fix the errors.");
-        // The field isn't re-rendered here, so the required error must not appear at all
-        assertThat(response).doesNotContain("is required");
+        // The field shows the required error itself, so it appears once
+        assertThat(response).contains("WicketOat.fieldFeedback(");
+        assertThat(response.split("is required", -1)).hasSize(2);
     }
 
     @Test
@@ -213,6 +214,138 @@ class FeedbackAndPagingTest {
         String response = tester.getLastResponseAsString();
         assertThat(response).contains("ot.toast(\"Please fix the errors.\", null, {variant: \"danger\"})");
         assertThat(response).doesNotContain("ot.toast(\"'Name' is required.\"");
+    }
+
+    /** A form with a panel for its own messages, beside a page-wide panel or toasts. */
+    public static class FencePage extends WebPage implements IMarkupResourceStreamProvider {
+
+        public final Form<Void> form;
+
+        public FencePage(boolean toasts) {
+            if (toasts) {
+                add(Oat.Behaviors.feedbackToasts());
+            }
+            add(new OatFeedbackPanel("feedback").setVisible(!toasts));
+
+            form = new Form<>("form") {
+                @Override
+                protected void onError() {
+                    error("Please fix the errors.");
+                }
+            };
+            add(form);
+            form.add(new OatFeedbackPanel("formFeedback", form));
+            form.add(new OatTextField<String>("name", "Name", Model.of("")).setRequired(true));
+            form.add(new AjaxButton("ajax") {
+            });
+            form.add(new org.apache.wicket.markup.html.form.Button("plain"));
+            add(new AjaxLink<Void>("outside") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    success("Saved.");
+                }
+            });
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body>"
+                    + "<div wicket:id='feedback'></div>"
+                    + "<form wicket:id='form'><div wicket:id='formFeedback'></div><div wicket:id='name'></div>"
+                    + "<button wicket:id='ajax'>Ajax</button><button wicket:id='plain'>Plain</button></form>"
+                    + "<a wicket:id='outside'>outside</a>"
+                    + "</body></html>");
+        }
+    }
+
+    private void submitEmptyName(String button) {
+        FormTester formTester = tester.newFormTester("form");
+        formTester.setValue("name:input", "");
+        if (button.equals("ajax")) {
+            tester.executeAjaxEvent("form:ajax", "click");
+        } else {
+            formTester.submit(button);
+        }
+    }
+
+    private int count(String text) {
+        return tester.getLastResponseAsString().split(Pattern.quote(text), -1).length - 1;
+    }
+
+    @Test
+    void aFencedPanelShowsItsFormsMessagesAndThePagePanelLeavesThemOut() {
+        for (String button : List.of("ajax", "plain")) {
+            tester.startPage(new FencePage(false));
+            submitEmptyName(button);
+
+            assertThat(count("Please fix the errors.")).as(button).isEqualTo(1);
+            if (button.equals("ajax")) {
+                tester.assertComponentOnAjaxResponse("form:formFeedback");
+            } else {
+                assertThat(tester.getTagByWicketId("formFeedback").getValue()).contains("Please fix the errors.");
+            }
+        }
+    }
+
+    @Test
+    void feedbackToastsLeaveOutTheMessagesOfAFencedPanel() {
+        for (String button : List.of("ajax", "plain")) {
+            tester.startPage(new FencePage(true));
+            submitEmptyName(button);
+
+            assertThat(count("Please fix the errors.")).as(button).isEqualTo(1);
+            assertThat(toastMessages()).as(button).isEmpty();
+        }
+    }
+
+    @Test
+    void messagesOutsideTheFenceGoToThePageWideFeedback() {
+        tester.startPage(new FencePage(true));
+
+        tester.clickLink("outside");
+        assertThat(toastMessages()).containsExactly("Saved.");
+    }
+
+    @Test
+    void removingAFencedPanelLiftsItsFence() {
+        FencePage page = new FencePage(true);
+        tester.startPage(page);
+        assertThat(OatFeedbackPanel.isFence(page.form)).isTrue();
+
+        page.form.get("formFeedback").remove();
+        assertThat(OatFeedbackPanel.isFence(page.form)).isFalse();
+    }
+
+    /** The whole page is the fence of its feedback panel, and has the toasts too. */
+    public static class PageFencePage extends WebPage implements IMarkupResourceStreamProvider {
+
+        public PageFencePage() {
+            add(Oat.Behaviors.feedbackToasts());
+            add(new OatFeedbackPanel("feedback", this));
+            add(new AjaxLink<Void>("save") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    success("Saved.");
+                    getSession().info("Welcome back.");
+                }
+            });
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><div wicket:id='feedback'></div><a wicket:id='save'>save</a></body></html>");
+        }
+    }
+
+    @Test
+    void feedbackToastsOnAFenceShowOnlyTheSessionsMessages() {
+        tester.startPage(new PageFencePage());
+
+        tester.clickLink("save");
+
+        tester.assertComponentOnAjaxResponse("feedback");
+        assertThat(count("Saved.")).isEqualTo(1);
+        assertThat(toastMessages()).containsExactly("Welcome back.");
     }
 
     /** 25 items, 10 per page, with a plain and an Ajax navigator. */

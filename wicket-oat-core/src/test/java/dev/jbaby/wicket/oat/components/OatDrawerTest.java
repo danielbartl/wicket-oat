@@ -76,9 +76,15 @@ class OatDrawerTest {
         assertThat(dialog.getAttribute("class")).isEqualTo("oat-drawer");
         assertThat(dialog.getAttribute("data-side")).isEqualTo("end");
         TagTester close = tester.getTagByWicketId("close");
+        assertThat(close.getAttribute("type")).isEqualTo("button");
         assertThat(close.getAttribute("command")).isEqualTo("close");
         assertThat(close.getAttribute("commandfor")).isEqualTo(dialog.getAttribute("id"));
         assertThat(close.getAttribute("aria-label")).isEqualTo("Close");
+        assertThat(close.getAttribute("class")).contains("icon");
+        // First in the markup, as it is drawn at the top; the script that focuses the first field comes along
+        String response = tester.getLastResponseAsString();
+        assertThat(response.indexOf("oat-dialog-close")).isLessThan(response.indexOf("<header"));
+        assertThat(response).contains("wicket-oat");
         // The trigger opens it in the browser
         assertThat(tester.getTagByWicketId("trigger").getAttribute("commandfor")).isEqualTo(dialog.getAttribute("id"));
     }
@@ -116,7 +122,7 @@ class OatDrawerTest {
     }
 
     @Test
-    void theXClosesItInTheBrowserWhichTellsTheServer() {
+    void closingItInTheBrowserTellsTheServer() {
         DrawerPage page = tester.startPage(new DrawerPage());
         tester.clickLink("open");
 
@@ -131,9 +137,31 @@ class OatDrawerTest {
         page.drawer.setFooterVisible(false);
         tester.startPage(page);
 
+        tester.assertInvisible("drawer:dialog:form:footer");
         tester.assertInvisible("drawer:dialog:form:cancel");
         tester.assertInvisible("drawer:dialog:form:confirm");
         tester.assertVisible("drawer:dialog:form:close");
+        // No footer at all, which also tells wicket-oat.js that Enter in a field submits nothing
+        assertThat(tester.getLastResponseAsString()).doesNotContain("<footer");
+    }
+
+    @Test
+    void withoutATriggerLabelThereIsNoTrigger() {
+        tester.startComponentInPage(new OatDrawer("drawer", (String) null, "Details"));
+        tester.assertInvisible("drawer:trigger");
+
+        tester.startComponentInPage(new OatDialog("drawer", (String) null, "Details"));
+        tester.assertInvisible("drawer:trigger");
+    }
+
+    @Test
+    void itsSettersChainWithSetSide() {
+        OatDrawer drawer = new OatDrawer("drawer", "Details")
+                .setContent(new Label(OatDialog.CONTENT_ID, "ACME"))
+                .setFooterVisible(false)
+                .setSide(OatDrawer.Side.START);
+
+        assertThat(drawer.isOpen()).isFalse();
     }
 
     @Test

@@ -221,7 +221,8 @@ details.setFooterVisible(false);   // only shows something: no Cancel and Confir
 `setSide(START | END | BOTTOM)` picks the edge; start and end follow the text
 direction, and a bottom drawer is as wide as the screen. A dialog can have the
 "×" too (`setCloseButton(true)`), and `setFooterVisible(false)` on either leaves
-out Cancel and Confirm.
+out Cancel and Confirm. Closed without confirming, a dialog or drawer shows its
+models again the next time, without the choices that weren't applied.
 
 ### Going further: subclassing and composition
 Every component has a public constructor, so you can extend `OatButton`,

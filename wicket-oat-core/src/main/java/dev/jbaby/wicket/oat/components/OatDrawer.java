@@ -1,6 +1,8 @@
 package dev.jbaby.wicket.oat.components;
 
+import dev.jbaby.wicket.oat.OatVariant;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -55,8 +57,11 @@ public class OatDrawer extends OatDialog {
         this(id, null, header);
     }
 
+    /**
+     * @param triggerLabel the label of a button that opens the drawer, or {@code null} for none
+     */
     public OatDrawer(String id, String triggerLabel, String header) {
-        this(id, Model.of(triggerLabel), Model.of(header));
+        this(id, triggerLabel != null ? Model.of(triggerLabel) : null, Model.of(header));
     }
 
     /**
@@ -64,14 +69,64 @@ public class OatDrawer extends OatDialog {
      */
     public OatDrawer(String id, IModel<String> triggerLabel, IModel<String> header) {
         super(id, triggerLabel, header);
-        dialogElement().add(AttributeModifier.append("class", "oat-drawer"));
-        dialogElement().add(AttributeModifier.replace("data-side", (IModel<String>) () -> side.name().toLowerCase(Locale.ROOT)));
+        getDialogElement().add(AttributeModifier.append("class", "oat-drawer"));
+        getDialogElement().add(AttributeModifier.replace("data-side", (IModel<String>) () -> side.name().toLowerCase(Locale.ROOT)));
         setCloseButton(true);
     }
 
     /** The edge the drawer slides in from; {@link Side#END} by default. */
     public OatDrawer setSide(Side side) {
         this.side = Objects.requireNonNull(side);
+        return this;
+    }
+
+    // Fluent setters typed to this class, so they chain with setSide()
+
+    @Override
+    public OatDrawer setContent(Component content) {
+        super.setContent(content);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setCloseButton(boolean shown) {
+        super.setCloseButton(shown);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setFooterVisible(boolean visible) {
+        super.setFooterVisible(visible);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setHeader(IModel<String> header) {
+        super.setHeader(header);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setCancelLabel(IModel<String> label) {
+        super.setCancelLabel(label);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setConfirmLabel(IModel<String> label) {
+        super.setConfirmLabel(label);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setConfirmVariant(OatVariant variant) {
+        super.setConfirmVariant(variant);
+        return this;
+    }
+
+    @Override
+    public OatDrawer setBusyIndicator(boolean busyIndicator) {
+        super.setBusyIndicator(busyIndicator);
         return this;
     }
 }

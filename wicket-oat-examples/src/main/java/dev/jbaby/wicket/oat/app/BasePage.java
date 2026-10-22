@@ -3,9 +3,11 @@ package dev.jbaby.wicket.oat.app;
 import dev.jbaby.wicket.oat.components.MenuItem;
 import dev.jbaby.wicket.oat.components.OatAppLayout;
 import dev.jbaby.wicket.oat.components.OatThemeSwitcher;
+import dev.jbaby.wicket.oat.components.OatUserMenu;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -16,6 +18,8 @@ import java.util.List;
 public class BasePage extends OatAppLayout {
 
     private static final CssResourceReference EXAMPLES_CSS = new CssResourceReference(BasePage.class, "examples.css");
+
+    private OatUserMenu userMenu;
 
     @Override
     public void renderHead(IHeaderResponse response) {
@@ -35,7 +39,21 @@ public class BasePage extends OatAppLayout {
 
     @Override
     protected Component newTopNavExtra(String id) {
-        return new CurrentThemeLink(id);
+        Fragment topBar = new Fragment(id, "topBar", this);
+        topBar.add(new CurrentThemeLink("theme"));
+        // "Sign in" until you sign in as demo / demo, then Ada's menu
+        userMenu = new OatUserMenu("user", DemoUser::name);
+        userMenu.setDetail(Model.of(DemoUser.EMAIL));
+        userMenu.addLink("Inbox", InboxPage.class).setIcon("mail");
+        userMenu.addLink("Theme", ThemePage.class).setIcon("settings");
+        userMenu.setSignInPage(SignInPage.class);
+        topBar.add(userMenu);
+        return topBar;
+    }
+
+    /** The user menu in the top bar, e.g. to update it after a sign-in over Ajax. */
+    protected OatUserMenu getUserMenu() {
+        return userMenu;
     }
 
     @Override

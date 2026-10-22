@@ -2,8 +2,8 @@
  * Wicket Oat's own script, for the few components that need one: context menus
  * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn), autocomplete
  * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField),
- * loading more list items on scroll (OatLoadMoreList) and form fields showing an
- * error after an Ajax request (BaseOatField).
+ * loading more list items on scroll (OatLoadMoreList), form fields showing an error
+ * after an Ajax request (BaseOatField) and avatar pictures, loaded or not (OatAvatar).
  * It only reads data- attributes, so pages keep Wicket's strict, nonce-based CSP:
  * no inline scripts or event handlers.
  */
@@ -295,5 +295,51 @@
         if (window.Wicket && Wicket.Event) {
             Wicket.Event.subscribe('/dom/node/added', observe);
         }
+    }
+
+    // ---- Avatars: a picture covers the initials under it once it has loaded, and one
+    // that can't be loaded gives way to them ----
+
+    var AVATAR_PICTURE = 'figure[data-variant="avatar"] > img';
+
+    function pictureLoaded(img) {
+        // Opaque from now on (wicket-oat.css)
+        img.setAttribute('data-loaded', '');
+    }
+
+    // Load and error events don't bubble, but they pass the document on their way to the image
+    document.addEventListener('load', function (event) {
+        if (event.target.matches && event.target.matches(AVATAR_PICTURE)) {
+            pictureLoaded(event.target);
+        }
+    }, true);
+    document.addEventListener('error', function (event) {
+        if (event.target.matches && event.target.matches(AVATAR_PICTURE)) {
+            event.target.hidden = true;
+        }
+    }, true);
+
+    // Pictures that loaded or failed before this script ran
+    var checkPictures = function () {
+        document.querySelectorAll(AVATAR_PICTURE).forEach(function (img) {
+            if (!img.complete) {
+                return;
+            }
+            if (img.naturalWidth > 0) {
+                pictureLoaded(img);
+            } else {
+                // Failed, or an SVG without a size of its own: only decoding tells
+                img.decode().then(function () {
+                    pictureLoaded(img);
+                }, function () {
+                    img.hidden = true;
+                });
+            }
+        });
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkPictures);
+    } else {
+        checkPictures();
     }
 })();

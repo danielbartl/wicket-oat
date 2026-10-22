@@ -19,22 +19,26 @@ public class SignInPage extends BasePage {
         card.setOutputMarkupId(true);
         add(card);
 
-        OatAlert signedIn = new OatAlert("signedIn", "Signed in as demo. A real application would now continue "
-                + "to the page you came from.", OatVariant.SUCCESS);
+        OatAlert signedIn = new OatAlert("signedIn", "Signed in as Ada Lovelace: her menu, with Sign out, is in "
+                + "the top bar. A real application would now continue to the page you came from.", OatVariant.SUCCESS);
         signedIn.setVisible(false);
         card.add(signedIn);
 
         card.add(new OatLoginForm("login") {
             @Override
             protected boolean signIn(String username, String password, boolean rememberMe) {
-                return "demo".equals(username) && "demo".equals(password);
+                if ("demo".equals(username) && "demo".equals(password)) {
+                    DemoUser.signIn();
+                    return true;
+                }
+                return false;
             }
 
             @Override
             protected void onSignedIn(AjaxRequestTarget target) {
                 setVisible(false);
                 signedIn.setVisible(true);
-                target.add(card);
+                target.add(card, getUserMenu());
             }
         }.setRememberMe(true).setForgotPasswordLink(HomePage.class));
     }

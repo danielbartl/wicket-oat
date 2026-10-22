@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.6.0 (unreleased)
+
 ## 0.5.0 (2026-10-22)
 
 A release for the frame around an app's pages and the forms in them: a user menu for the

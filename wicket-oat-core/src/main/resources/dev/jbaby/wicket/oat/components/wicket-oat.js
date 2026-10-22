@@ -2,8 +2,8 @@
  * Wicket Oat's own script, for the few components that need one: context menus
  * (ContextMenuBehavior), Escape in inline editors (OatEditableColumn), autocomplete
  * lists inside dialogs and popovers (OatAutoCompleteField, OatMultiSelectField),
- * loading more list items on scroll (OatLoadMoreList) and avatar pictures, loaded or
- * not (OatAvatar).
+ * loading more list items on scroll (OatLoadMoreList), form fields showing an error
+ * after an Ajax request (BaseOatField) and avatar pictures, loaded or not (OatAvatar).
  * It only reads data- attributes, so pages keep Wicket's strict, nonce-based CSP:
  * no inline scripts or event handlers.
  */
@@ -17,6 +17,27 @@
     function ajax(url, params) {
         new Wicket.Ajax.Call().ajax({ u: url, ep: params || {} });
     }
+
+    // ---- Form fields: an error that appeared, changed or went away (BaseOatField) ----
+
+    // Sets the text of the message rather than replacing it, so screen readers announce the
+    // change in its role="status" region, and leaves the inputs, their focus and what the
+    // user typed alone
+    WicketOat.fieldFeedback = function (fieldId, feedbackId, text, invalid) {
+        var field = document.getElementById(fieldId);
+        var feedback = document.getElementById(feedbackId);
+        if (!field || !feedback) {
+            return;
+        }
+        feedback.textContent = text;
+        var container = field.querySelector('[data-field]');
+        if (container) {
+            container.setAttribute('data-field', invalid ? 'error' : '');
+        }
+        field.querySelectorAll('[aria-describedby~="' + feedbackId + '"]').forEach(function (input) {
+            input.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+        });
+    };
 
     // ---- Context menus: [data-oat-context-menu] holds the entries as JSON ----
 

@@ -143,8 +143,8 @@ takes a lambda instead:
 // The factory implements onClick() for you
 add(OatButton.onClick("id", "Click Me", target -> ...));                   // <a wicket:id="id"></a>
 
-// A form's submit button: onSubmit when valid, onError when not
-form.add(OatSubmitButton.onSubmit("save", "Save", target -> ..., target -> target.add(form)));
+// A form's submit button: onSubmit when valid; Oat fields show their errors themselves
+form.add(OatSubmitButton.onSubmit("save", "Save", target -> ...));
 
 // List components fill each item from its object
 add(OatAccordion.of("faq", Model.ofList(faqs), (item, faq) -> {
@@ -386,6 +386,21 @@ also pick up session messages, so a `getSession().success(...)` before
 `setResponsePage(...)` appears on the next page. Both leave out the errors that
 Oat form fields already show inline; pass your own `IFeedbackMessageFilter` to
 change what they show.
+
+To show a form's messages next to it, such as its own errors from
+`form.error(...)`, give a panel the form as its fence, as with Wicket's
+`FencedFeedbackPanel` (which `OatFeedbackPanel` extends):
+
+```java
+form.add(new OatFeedbackPanel("formFeedback", form));
+```
+
+It shows the messages of the form and the components in it, and a panel without
+a fence and the toasts leave those out, so each message shows once. A message
+reported by a component in the form, such as `success(...)` in its submit
+button's `onSubmit`, belongs to the form too; report it on the page
+(`getPage().success(...)`) to show it with the page's messages. A panel without
+messages takes no space, so it can sit at the top of a stacked form.
 
 ## Tabs
 
@@ -958,7 +973,6 @@ meant to be used like the plain Wicket components they wrap:
 
 ```java
 Form<Person> form = new Form<>("form", new CompoundPropertyModel<>(person));
-form.setOutputMarkupId(true);
 add(form);
 
 // Model inherited from the CompoundPropertyModel by id ("name" -> person.name),
@@ -972,14 +986,21 @@ form.add(new OatDropdownChoice<String>("country", Model.ofList(countries)));
 
 form.add(new AjaxButton("save") {
     @Override
-    protected void onError(AjaxRequestTarget target) {
-        target.add(form); // fields render their own tag, so they can be re-rendered to show inline errors
+    protected void onSubmit(AjaxRequestTarget target) {
+        ...
     }
-});
+}); // no onError needed to show the fields' errors
 ```
 
 You can still pass a model and a label explicitly
 (`new OatTextField<>("name", "Full name", model)`).
+
+After an Ajax request that validates it, such as a submit, each field shows an error
+that appeared, changed or went away by itself, without `target.add(...)`. It updates
+its message and error state in place rather than re-rendering its input, so the input
+keeps its focus and what the user typed, a chosen file or a password. Other Ajax
+requests leave the errors shown alone. A field renders its own tag, so
+`target.add(field)` or `target.add(form)` re-renders it too.
 
 The wrapped form component is the field's child `input`, so a test reaches it at
 `"name:input"`, and `getInput()` returns it for anything the field doesn't offer

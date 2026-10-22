@@ -22,6 +22,20 @@
     padding-inline: var(--space-6);
 }
 
+/*
+ * An Oat field's message is its hint or, while it has one, its error. Oat colors only a
+ * separate .error element, so the message takes the danger color with the field's state.
+ * Only the field's own message: not a hint inside its input, such as the dropzone's.
+ */
+[data-field="error"] > [data-hint] {
+    color: var(--danger);
+}
+
+/* An OatFeedbackPanel without messages takes no space, e.g. no gap in a stacked form */
+.oat-feedback:not(:has([role="alert"])) {
+    display: none;
+}
+
 /* The skip link moves focus to <main>; it needs no focus ring of its own */
 .oat-app-main:focus {
     outline: none;

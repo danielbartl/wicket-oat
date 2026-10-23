@@ -24,6 +24,14 @@
   scroll when an Oat form field or an `OatAvatar` picture came before it on the page.
   Their script, `wicket-oat.js`, then loaded before Wicket's Ajax script and missed the
   "Load more" button re-rendered after each batch. It now waits for the page to load.
+- Fix: `OatTagInput` gave its label, hint or error and required state to the hidden input
+  that holds the tags. The box the user types in had no accessible name besides its
+  placeholder, screen readers never heard that it was required or invalid, and a click on
+  the label focused nothing. They are on the text box now, and so is `setPlaceholder(...)`.
+  For a field of your own whose input is hidden behind a widget, `BaseOatField` has
+  `getLabelTarget()`.
+- Fix: text typed in an `OatTagInput` without pressing Enter or a comma was dropped on
+  submit. It is submitted as one more tag.
 
 ## 0.5.0 (2026-10-22)
 

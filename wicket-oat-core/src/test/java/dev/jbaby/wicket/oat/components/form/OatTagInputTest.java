@@ -6,6 +6,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,33 @@ class OatTagInputTest {
         formTester.setValue("tags:input", "");
         formTester.submit();
         tester.assertErrorMessages("'Tags' is required.");
+    }
+
+    @Test
+    void theLabelHintAndErrorBelongToTheBoxTheUserTypesIn() {
+        IModel<List<String>> tags = Model.ofList(new ArrayList<>());
+        FormTester formTester = formWith(new OatTagInput("tags", Model.of("Tags"), tags, Model.of("Up to five")).setRequired(true));
+        TagTester text = tester.getTagByWicketId("text");
+        String feedbackId = tester.getTagByWicketId("feedback").getAttribute("id");
+
+        assertThat(text.getAttribute("type")).isEqualTo("text");
+        assertThat(tester.getTagByWicketId("label").getAttribute("for")).isEqualTo(text.getAttribute("id"));
+        assertThat(text.getAttribute("aria-describedby")).isEqualTo(feedbackId);
+        assertThat(text.getAttribute("aria-required")).isEqualTo("true");
+        assertThat(text.getAttribute("aria-invalid")).isEqualTo("false");
+
+        formTester.setValue("tags:input", "");
+        formTester.submit();
+
+        assertThat(tester.getTagByWicketId("text").getAttribute("aria-invalid")).isEqualTo("true");
+    }
+
+    @Test
+    void thePlaceholderIsTheTextBoxs() {
+        formWith(new OatTagInput("tags", "Tags", Model.ofList(new ArrayList<>())).setPlaceholder("Add a topic"));
+
+        assertThat(tester.getTagByWicketId("text").getAttribute("placeholder")).isEqualTo("Add a topic");
+        assertThat(tester.getTagByWicketId("input").getAttribute("placeholder")).isNull();
     }
 
     public static class Article implements Serializable {

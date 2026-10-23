@@ -106,7 +106,7 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
             public void onComponentTag(Component component, ComponentTag tag) {
                 // Only a <label> takes "for"; group fields label themselves with a <legend>
                 if ("label".equalsIgnoreCase(tag.getName())) {
-                    tag.put("for", getInput().getMarkupId());
+                    tag.put("for", getLabelTarget().getMarkupId());
                 }
             }
         });
@@ -159,6 +159,15 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
             add(input);
         }
         return input;
+    }
+
+    /**
+     * What the {@code <label>} is for: the input, unless the user types somewhere else,
+     * e.g. in the text box of a widget that keeps its value in a hidden input. Its markup
+     * id must be rendered.
+     */
+    protected Component getLabelTarget() {
+        return getInput();
     }
 
     @Override

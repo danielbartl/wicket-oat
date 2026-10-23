@@ -35,8 +35,13 @@ import java.util.List;
  * }</pre>
  * Each action runs over Ajax with the row and closes the menu. Actions can be shown
  * only for some rows ({@link RowAction#setVisibleWhen}); a row without any shows no
- * button. The button is named by the {@code OatActionsColumn.actions} resource
- * ("Actions") for screen readers.
+ * button. The row is checked again when an action is clicked: one it no longer shows
+ * for, e.g. because someone else changed the row since, doesn't run, and the menu is
+ * rendered again with the row's current actions. That needs a row model that loads the
+ * row again, such as a {@code LoadableDetachableModel} from the data provider's
+ * {@code model(...)}; {@code Model.of(row)} keeps the row as it was rendered. The
+ * button is named by the {@code OatActionsColumn.actions} resource ("Actions") for
+ * screen readers.
  *
  * @param <T> the row type
  * @param <S> the sort property type
@@ -94,8 +99,18 @@ public class OatActionsColumn<T, S> extends AbstractColumn<T, S> implements ISty
                     menuItem.add(AttributeModifier.replace("data-variant", action.variant.getValue()));
                 }
                 menuItem.add(AjaxEventBehavior.onEvent("click", target -> {
-                    action.onClick.accept(target, rowModel.getObject());
-                    close(target);
+                    T row = rowModel.getObject();
+                    if (action.isVisibleFor(row)) {
+                        action.onClick.accept(target, row);
+                        close(target);
+                        return;
+                    }
+                    // Not for the row any more, e.g. changed by someone else since the menu
+                    // was rendered: show the actions it has now instead
+                    target.add(item);
+                    if (actions.stream().anyMatch(other -> other.isVisibleFor(row))) {
+                        target.focusComponent(getTrigger());
+                    }
                 }));
             }
 
@@ -108,6 +123,9 @@ public class OatActionsColumn<T, S> extends AbstractColumn<T, S> implements ISty
         menu.getTrigger().add(AttributeModifier.replace("class", "ghost small icon"));
         menu.getTrigger().add(AttributeModifier.replace("aria-label",
                 new StringResourceModel("OatActionsColumn.actions", menu).setDefaultValue("Actions")));
+        menu.getTrigger().setOutputMarkupId(true);
+        // The cell, as the menu renders only its body
+        item.setOutputMarkupId(true);
         item.add(menu);
     }
 

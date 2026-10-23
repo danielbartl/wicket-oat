@@ -15,6 +15,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.cookies.CookieUtils;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -108,7 +109,8 @@ public class OatCookieConsent extends Panel {
         cookie.setMaxAge((int) Duration.ofDays(365).toSeconds());
         cookie.setHttpOnly(true);
         cookie.setSecure(getRequest().getContainerRequest() instanceof HttpServletRequest http && http.isSecure());
-        cookie.setAttribute("SameSite", "Lax");
+        // Only on Servlet 6, which Cookie.setAttribute came with; Wicket 10 also runs on 5
+        CookieUtils.setAttribute(cookie, "SameSite", "Lax");
         ((WebResponse) getResponse()).addCookie(cookie);
     }
 

@@ -4,6 +4,7 @@ import dev.jbaby.wicket.oat.components.OatAppLayout;
 import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPHeaderConfiguration;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -38,7 +39,8 @@ public class WicketOats {
     /**
      * Installs Wicket Oat UI into the given application.
      * This registers global CSS/JS contributors and adds the one Content Security
-     * Policy source Oat needs on top of Wicket's strict default.
+     * Policy source Oat needs on top of Wicket's strict default. A policy the
+     * application turned off ({@code getCspSettings().blocking().disabled()}) stays off.
      * 
      * @param app the application to configure
      * @return the application's {@link OatSettings}, to configure themes
@@ -56,8 +58,12 @@ public class WicketOats {
         // (element.style.top = ...), which CSP doesn't restrict. The one addition is
         // img-src data:, for the SVG icons oat.min.css embeds as data: URLs (checkbox
         // tick, radio dot, select arrow). Anything else, such as image hosts for your own
-        // content, is up to the application to add.
-        app.getCspSettings().blocking().add(CSPDirective.IMG_SRC, "data:");
+        // content, is up to the application to add. Not to a policy without directives:
+        // that is one turned off, and img-src alone would block every other image.
+        CSPHeaderConfiguration csp = app.getCspSettings().blocking();
+        if (csp.isSet()) {
+            csp.add(CSPDirective.IMG_SRC, "data:");
+        }
 
         // Busy state for Ajax buttons with an AjaxBusyBehavior (once, even if installed twice:
         // a second listener would make every click look like a repeated one)

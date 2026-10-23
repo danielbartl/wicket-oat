@@ -8,6 +8,8 @@ import dev.jbaby.wicket.oat.components.tree.OatTree;
 import dev.jbaby.wicket.oat.components.tree.OatTreeNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
@@ -18,10 +20,14 @@ import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -405,5 +411,130 @@ class TierCComponentsTest {
         submit.submit();
         assertThat(members.getInput().hasErrorMessage()).isTrue(); // required
         assertThat(model.getObject()).containsExactly("Jordan Lee", "Sam Rivera");
+    }
+
+    /** A value without equals(), as an entity can be. */
+    static final class Tag implements Serializable {
+        final String name;
+
+        Tag(String name) {
+            this.name = name;
+        }
+    }
+
+    /** Loads new tags in each request, as from a database. */
+    static final class TagsModel extends LoadableDetachableModel<List<Tag>> {
+        final List<String> saved = new ArrayList<>(List.of("red", "blue"));
+
+        @Override
+        protected List<Tag> load() {
+            return saved.stream().map(Tag::new).toList();
+        }
+
+        @Override
+        public void setObject(List<Tag> tags) {
+            saved.clear();
+            tags.forEach(tag -> saved.add(tag.name));
+            super.setObject(tags);
+        }
+    }
+
+    @Test
+    void aMultiSelectRemovesTheChipOfAValueLoadedAgain() {
+        TagsModel model = new TagsModel();
+        Form<Void> form = new Form<>("form");
+        form.add(new OatMultiSelectField<Tag>("tags", "Tags", model).setDisplay(tag -> tag.name));
+        tester.startComponentInPage(form, Markup.of("<form wicket:id='form'><div wicket:id='tags'></div></form>"));
+
+        tester.clickLink("form:tags:input:chips:chip:0:remove");
+        tester.newFormTester("form").submit();
+
+        assertThat(model.saved).containsExactly("blue");
+    }
+
+    /** One dialog editing the tags of whichever record's Edit link was clicked. */
+    public static class TagsDialogPage extends WebPage implements IMarkupResourceStreamProvider {
+
+        public final List<List<String>> records = new ArrayList<>(List.of(new ArrayList<>(List.of("red")), new ArrayList<>(List.of("blue"))));
+        private int editing;
+        private final OatDialog dialog = new OatDialog("dialog", "Tags");
+
+        public TagsDialogPage() {
+            Fragment body = new Fragment(OatDialog.CONTENT_ID, "fields", this);
+            body.add(new OatMultiSelectField<String>("tags", "Tags",
+                    LambdaModel.of(() -> records.get(editing), tags -> records.set(editing, tags)))
+                    .setChoices(text -> List.of("red", "blue", "green")));
+            dialog.setContent(body);
+            add(dialog);
+            add(edit("edit0", 0), edit("edit1", 1));
+        }
+
+        private AjaxLink<Void> edit(String id, int record) {
+            return new AjaxLink<>(id) {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    editing = record;
+                    dialog.open(target);
+                }
+            };
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><div wicket:id='dialog'></div><a wicket:id='edit0'></a><a wicket:id='edit1'></a>"
+                    + "<wicket:fragment wicket:id='fields'><div wicket:id='tags'></div></wicket:fragment></body></html>");
+        }
+    }
+
+    private List<Object> chips() {
+        return List.copyOf(((ListView<?>) tester.getComponentFromLastRenderedPage("dialog:dialog:form:content:tags:input:chips:chip")).getList());
+    }
+
+    private void addChip(String text) {
+        Component search = tester.getComponentFromLastRenderedPage("dialog:dialog:form:content:tags:input:search");
+        tester.getRequest().getPostParameters().setParameterValue(((FormComponent<?>) search).getInputName(), text);
+        tester.executeAjaxEvent(search, "change");
+    }
+
+    @Test
+    void aMultiSelectShowsTheValueOfTheRecordItIsOpenedFor() {
+        TagsDialogPage page = tester.startPage(TagsDialogPage.class);
+        tester.clickLink("edit0");
+        assertThat(chips()).containsExactly("red");
+
+        tester.clickLink("edit1");
+
+        assertThat(chips()).containsExactly("blue");
+        assertThat(html()).contains(">blue<").doesNotContain(">red<");
+        tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
+        assertThat(page.records).containsExactly(List.of("red"), List.of("blue"));
+    }
+
+    @Test
+    void aMultiSelectDropsChipsThatWerentConfirmed() {
+        TagsDialogPage page = tester.startPage(TagsDialogPage.class);
+        tester.clickLink("edit1");
+        addChip("green");
+        assertThat(chips()).containsExactly("blue", "green");
+
+        tester.executeAjaxEvent("dialog:dialog", "close"); // Cancel
+        tester.clickLink("edit1");
+
+        assertThat(chips()).containsExactly("blue");
+        assertThat(page.records.get(1)).containsExactly("blue");
+    }
+
+    @Test
+    void aMultiSelectConfirmedSavesItsChipsToTheRecordItIsOpenedFor() {
+        TagsDialogPage page = tester.startPage(TagsDialogPage.class);
+        tester.clickLink("edit0");
+        tester.clickLink("edit1");
+        addChip("green");
+
+        tester.executeAjaxEvent("dialog:dialog:form:confirm", "click");
+
+        assertThat(page.records).containsExactly(List.of("red"), List.of("blue", "green"));
+        tester.clickLink("edit0");
+        assertThat(chips()).containsExactly("red");
     }
 }

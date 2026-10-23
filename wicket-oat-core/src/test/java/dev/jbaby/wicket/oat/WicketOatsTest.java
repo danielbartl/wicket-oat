@@ -46,6 +46,23 @@ class WicketOatsTest {
     }
 
     @Test
+    void installLeavesAPolicyTheApplicationTurnedOffOff() {
+        WicketTester withoutCsp = new WicketTester(new MockApplication() {
+            @Override
+            protected void init() {
+                super.init(); // turns the policy off, as an application can
+                WicketOats.install(this);
+                getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
+            }
+        });
+        withoutCsp.startPage(LayoutTestPage.class);
+
+        // Not img-src data: alone, which would block every other image
+        assertThat(withoutCsp.getLastResponse().getHeader("Content-Security-Policy")).isNull();
+        withoutCsp.destroy();
+    }
+
+    @Test
     void layoutBreadcrumbAndThemeSwitcherRenderNoInlineStyles() {
         tester.startPage(LayoutTestPage.class);
         String html = tester.getLastResponseAsString();

@@ -30,7 +30,8 @@ import java.util.List;
  * its action over Ajax. To open it from the keyboard the component needs to be
  * focusable, e.g. a link or an element with {@code tabindex="0"}. On touch screens
  * it opens on a long press where the browser supports that (not iOS Safari), so
- * offer the actions another way too, e.g. in an {@code OatActionsColumn}.
+ * offer the actions another way too, e.g. in an {@code OatActionsColumn}. It works
+ * inside an {@code OatDialog}, {@code OatDrawer} or {@code OatPopover} too.
  * <p>
  * It uses Wicket Oat's small script ({@link WicketOats#WICKET_OAT_JS}), which it adds to
  * the page; the entries' labels are passed as data, never as script.

@@ -24,6 +24,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.util.string.Strings;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +41,10 @@ import java.util.Objects;
  * }</pre>
  * Choosing a suggestion adds it and empties the box, ready for the next one; values
  * already chosen aren't suggested again. The model is a {@code List} in the order they
- * were chosen; {@link #setRequired required} needs at least one. Built on Wicket's
+ * were chosen; {@link #setRequired required} needs at least one. Chips added or removed
+ * are like typed input: they reach the model when the form is submitted, and until then
+ * {@code form.clearInput()} drops them, as an {@code OatDialog} does when it opens or is
+ * cancelled. Without them the field shows the model's current value. Built on Wicket's
  * {@link AutoCompleteTextField}, like {@link OatAutoCompleteField}; the chips are
  * Oat badges, the box is named by the field's label and each remove button by
  * {@code OatMultiSelectField.remove} ("Remove {0}").
@@ -90,10 +94,11 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
         return this;
     }
 
-    /** The chips and the search box; the chosen values are kept on the server until the form is submitted. */
+    /** The chips and the search box; chips added or removed are kept on the server until the form is submitted. */
     static final class ChipsInput<T> extends FormComponentPanel<List<T>> {
 
-        private List<T> chosen;
+        /** The values after the user added or removed chips, like a field's raw input; null while there are none. */
+        private List<T> edited;
         private final WebMarkupContainer chips;
         private final AutoCompleteTextField<String> search;
 
@@ -110,7 +115,12 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
                     AjaxLink<Void> remove = new AjaxLink<>("remove") {
                         @Override
                         public void onClick(AjaxRequestTarget target) {
-                            chosen().remove(value);
+                            List<T> values = edited();
+                            // Or by its place, for a value read again since that doesn't equal the
+                            // one shown, such as an entity without equals() loaded in each request
+                            if (!values.remove(value) && item.getIndex() < values.size()) {
+                                values.remove(item.getIndex());
+                            }
                             target.add(chips);
                             target.focusComponent(search);
                         }
@@ -155,7 +165,7 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
                     String text = search.getModelObject();
                     T match = Strings.isEmpty(text) ? null : lookUp(text.strip());
                     if (match != null) {
-                        chosen().add(match);
+                        edited().add(match);
                         search.setModelObject("");
                         target.add(chips, search);
                         target.focusComponent(search);
@@ -176,13 +186,21 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
             return findParent(OatMultiSelectField.class);
         }
 
-        /** The chosen values, read from the model once and then changed by the chips and the box. */
+        /** The chosen values: the edited ones, or else the model's, read again each time. */
         List<T> chosen() {
-            if (chosen == null) {
-                List<T> current = getModelObject();
-                chosen = current == null ? new ArrayList<>() : new ArrayList<>(current);
+            if (edited != null) {
+                return edited;
             }
-            return chosen;
+            List<T> current = getModelObject();
+            return current == null ? List.of() : Collections.unmodifiableList(current);
+        }
+
+        /** The chosen values for the chips and the box to change, starting from the model's. */
+        private List<T> edited() {
+            if (edited == null) {
+                edited = new ArrayList<>(chosen());
+            }
+            return edited;
         }
 
         private List<T> suggestions(String input) {
@@ -220,9 +238,15 @@ public class OatMultiSelectField<T> extends OatCustomField<List<T>> {
         }
 
         @Override
+        public void clearInput() {
+            super.clearInput();
+            edited = null; // show the model's value again
+        }
+
+        @Override
         protected void onModelChanged() {
             super.onModelChanged();
-            chosen = null; // read the new value
+            edited = null; // show the new value
         }
     }
 

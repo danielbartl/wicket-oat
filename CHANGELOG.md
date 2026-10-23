@@ -1,6 +1,30 @@
 # Changelog
 
-## 0.6.0 (unreleased)
+## 0.6.0 (2026-10-23)
+
+A release of fixes, from a review of the whole library: a multi-select field that saved
+one record's values into another, a sign-out that another site's page could send, a date
+column and a donut chart that could fail the page or count wrong, a lazy-load panel that
+polled ten times a second, and fields and menus that didn't work inside dialogs or for
+screen readers. Nothing is removed; the notes below say what an app may notice.
+
+### Upgrading from 0.5.x
+
+- `OatLazyLoadPanel.getUpdateInterval()` is a second again, as in Wicket's
+  `AjaxLazyLoadPanel` (it was 0.1 seconds). The content still loads 0.1 seconds after
+  the page, now really; a panel waiting on `isContentReady()` checks every second.
+- `OatTagInput`'s label, hint, error and `setPlaceholder(...)` belong to the text box
+  the user types in, which is a component now: `"tags:taginput:text"` in a test. The
+  tags are still submitted in the hidden `getInput()` (`"tags:input"`).
+- `OatUserMenu`'s "Sign out" answers 403 Forbidden when the browser says another site's
+  page sent it (`Sec-Fetch-Site`).
+- `WicketOats.install` leaves a Content Security Policy the application turned off off.
+- An `OatActionsColumn` action is checked against `setVisibleWhen` again when it is
+  clicked; that needs a row model that loads the row again, not `Model.of(row)`. Its
+  cells and buttons have markup ids.
+- `OatMultiSelectField` reads the model in each request; chips added or removed but not
+  submitted stay until `form.clearInput()`, like typed input.
+- New for fields of your own: `BaseOatField.getLabelTarget()`, what the `<label>` is for.
 
 ### Changes
 

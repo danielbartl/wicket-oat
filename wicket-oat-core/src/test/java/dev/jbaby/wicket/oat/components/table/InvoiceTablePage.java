@@ -9,6 +9,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.SetModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -98,7 +99,9 @@ public class InvoiceTablePage extends WebPage implements IMarkupResourceStreamPr
 
         @Override
         public IModel<Invoice> model(Invoice object) {
-            return Model.of(object);
+            // Loaded again in each request, as from a database
+            long id = object.id();
+            return LoadableDetachableModel.of(() -> invoices.stream().filter(invoice -> invoice.id() == id).findFirst().orElseThrow());
         }
     }
 }

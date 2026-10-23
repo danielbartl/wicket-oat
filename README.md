@@ -832,6 +832,11 @@ table.setEmptyState(id -> new OatEmptyState(id, "No invoices found"));
   row and finds only those it returns. Call `clearSelection(target)` when done. Each change also sends an `OatSelectionColumn.SelectionChanged` event.
   `OatRowDetailsColumn` remembers expanded rows the same way, by `equals` or by key.
 - The table has a markup id: `target.add(table)` re-renders it after an action.
+- A row action's `setVisibleWhen` is checked again when the action is clicked: one
+  the row no longer shows, e.g. after someone else changed the row, doesn't run, and
+  the row's menu shows its current actions. That needs a row model that loads the row
+  again, such as a `LoadableDetachableModel` from the provider's `model(...)`;
+  `Model.of(row)` keeps the row as it was rendered.
 - Like a `DataTable` it is pageable (`IPageableItems`): `setCurrentPage(...)`,
   `getPageCount()`, `setItemsPerPage(...)`, and a navigator of your own can page it.
   `addTopToolbar(...)`/`addBottomToolbar(...)` add toolbars, and `getTable()` is the

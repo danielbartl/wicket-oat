@@ -32,6 +32,12 @@
   `getLabelTarget()`.
 - Fix: text typed in an `OatTagInput` without pressing Enter or a comma was dropped on
   submit. It is submitted as one more tag.
+- Fix: an `OatActionsColumn` action ran when clicked even if the row no longer met its
+  `setVisibleWhen`, e.g. "Mark as paid" on an invoice someone else had paid since the
+  page was rendered. It is checked again with the row the row model loads then: an
+  action the row no longer shows doesn't run, and the row's menu is rendered again with
+  its current actions. This needs a row model that loads the row again, such as a
+  `LoadableDetachableModel`; `Model.of(row)` keeps the row as it was rendered.
 
 ## 0.5.0 (2026-10-22)
 

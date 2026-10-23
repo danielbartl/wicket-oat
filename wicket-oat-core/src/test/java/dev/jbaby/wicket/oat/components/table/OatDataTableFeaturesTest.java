@@ -195,6 +195,22 @@ class OatDataTableFeaturesTest {
         assertThat(tester.getLastResponseAsString()).contains("hidePopover()");
     }
 
+    @Test
+    void anActionTheRowNoLongerShowsDoesntRun() {
+        // Someone else marks INV-2 as paid after the menu was rendered with "Mark as paid"
+        Invoice open = page.invoices.get(1);
+        page.invoices.set(1, new Invoice(open.id(), open.number(), open.customer(), InvoiceTablePage.Status.PAID,
+                open.total(), open.currency(), open.due(), open.exported()));
+
+        tester.executeAjaxEvent(page.get(ROWS + ":2:cells:8:cell:menu:items:1"), "click");
+
+        assertThat(page.log).isEmpty();
+        // The menu is rendered again with the actions the row has now, its button focused
+        tester.assertComponentOnAjaxResponse(ROWS + ":2:cells:8");
+        assertThat(tester.getLastResponseAsString()).doesNotContain("Mark as paid")
+                .contains("Wicket.Focus.setFocusOnId('" + page.get(ROWS + ":2:cells:8:cell:trigger").getMarkupId() + "')");
+    }
+
     // --- Selection and bulk actions ---
 
     @Test

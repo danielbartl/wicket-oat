@@ -89,9 +89,9 @@
             <span class="badge" data-variant="secondary">Oat 1.0</span>
             <span class="badge" data-variant="success">MIT Licensed</span>
         </div>
-        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.5.0</span></a> A user menu for the top bar, drawers,
-            filter chips, breadcrumbs that fold their middle levels into a menu and form errors that
-            show after any Ajax submit are <a href="#new">out now in 0.5.0</a>.</p>
+        <p class="announce"><a href="#new"><span class="badge new-badge" data-variant="success">New in 0.6.0</span></a> Out now: fixes from a review of the
+            whole library, for multi-select fields, sign-out, date columns, lazy loading and
+            fields and menus in dialogs. See <a href="#new">what changed</a>.</p>
         <div class="cta">
             <a class="button large" href="#quick-start">Get Started</a>
             <a class="button outline large" href="https://wicket-oat-production.up.railway.app/" target="_blank" rel="noopener">Try the Live Demo</a>
@@ -185,7 +185,7 @@
                 <p>Labels belong to their inputs, required fields are marked, and a validation
                     error appears next to its field in a <code>role="status"</code> region, linked
                     through <code>aria-describedby</code> with <code>aria-invalid</code> set.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.5.0</span> After an Ajax submit, a field's error appears in place:
+                <p class="mt-2">After an Ajax submit, a field's error appears in place:
                     the text of its <code>role="status"</code> region changes, so screen readers announce
                     it, and the input keeps its focus and what was typed.</p>
             </article>
@@ -199,7 +199,7 @@
                     &ldquo;Skip to content&rdquo; link past the navigation.</p>
                 <p class="mt-2">The stars of <code>OatRatingField</code>
                     are radio buttons, so the arrow keys move between them.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.5.0</span> So are the chips of <code>OatFilter</code>, and a
+                <p class="mt-2">So are the chips of <code>OatFilter</code>, and a
                     drawer opens with its first field focused.</p>
             </article>
             <article class="card">
@@ -211,7 +211,7 @@
                 <p class="mt-2">A rating is read as &ldquo;4.5 out of
                     5 stars&rdquo;, a status dot by its name, such as &ldquo;Online&rdquo;, and a progress
                     ring as a <code>progressbar</code> with its value.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.5.0</span> Buttons that open a menu say so
+                <p class="mt-2">Buttons that open a menu say so
                     (<code>aria-haspopup</code>), and the user menu's button is named
                     &ldquo;Account:&rdquo; and the user's name.</p>
             </article>
@@ -256,7 +256,7 @@
                     <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
     &lt;artifactId&gt;wicket-oat-core&lt;/artifactId&gt;
-    &lt;version&gt;0.5.0&lt;/version&gt;
+    &lt;version&gt;0.6.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
                 </div>
             </div>
@@ -359,7 +359,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     <code>newXxx(id)</code> naming, and <code>newMenuLink(id, item)</code> can make a
                     menu entry an <code>AjaxLink</code>. An app with a base page of its own gets the
                     theme, density and language from <code>add(new OatHtml("html"))</code>.</p>
-                <p><span class="badge new-badge" data-variant="success">New in 0.5.0</span> <code>OatUserMenu</code> fills the top bar's corner
+                <p><code>OatUserMenu</code> fills the top bar's corner
                     (<code>newTopNavExtra(id)</code>): the user's picture or initials and name open a
                     menu with their email, links of yours and &ldquo;Sign out&rdquo;, or it is a
                     &ldquo;Sign in&rdquo; link while nobody is signed in.</p>
@@ -418,10 +418,10 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
             <h2>Everything below is real, live Oat markup</h2>
             <p>Not screenshots &mdash; this page loads the same Oat 1.0 build the library
                 vendors, so what you see here is exactly what renders in your app.</p>
-            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.5.0</span> Cards with this label show components
-                added in 0.5.0, the current release. The
+            <p class="release-note" id="new"><span class="badge new-badge" data-variant="success">New in 0.6.0</span> 0.6.0, the current release, is a
+                release of fixes and adds no components. The
                 <a href="https://github.com/danielbartl/wicket-oat/blob/master/CHANGELOG.md" target="_blank" rel="noopener">changelog</a>
-                lists everything new, including notes on upgrading from 0.4.x.</p>
+                lists them, with notes on upgrading from 0.5.x.</p>
         </div>
 
         <div class="showcase-group">
@@ -590,7 +590,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             </ol>
                         </nav>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.5.0</span><strong>OatBreadcrumb, collapsed</strong><code>OatBreadcrumb.of(id, folders, populateItem).setMaxItems(3)</code></div>
+                    <div class="showcase-footer"><strong>OatBreadcrumb, collapsed</strong><code>OatBreadcrumb.of(id, folders, populateItem).setMaxItems(3)</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -614,7 +614,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             </menu>
                         </ot-dropdown>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.5.0</span><strong>OatUserMenu</strong><code>new OatUserMenu(id, () -&gt; session.userName()).addLink("Inbox", InboxPage.class).setIcon("mail")</code></div>
+                    <div class="showcase-footer"><strong>OatUserMenu</strong><code>new OatUserMenu(id, () -&gt; session.userName()).addLink("Inbox", InboxPage.class).setIcon("mail")</code></div>
                 </div>
                 <div class="showcase-card">
                     <div class="showcase-preview">
@@ -876,7 +876,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             </form>
                         </dialog>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.5.0</span><strong>OatDrawer</strong><code>new OatDrawer(id, "Filters", "Filter orders").setSide(OatDrawer.Side.END)</code></div>
+                    <div class="showcase-footer"><strong>OatDrawer</strong><code>new OatDrawer(id, "Filters", "Filter orders").setSide(OatDrawer.Side.END)</code></div>
                 </div>
             </div>
         </div>
@@ -1179,7 +1179,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                         </form>
                         <p class="mt-4"><small class="text-light">Click a chip, or move between them with the arrow keys.</small></p>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.5.0</span><strong>OatFilter</strong><code>OatFilter.onChange(id, status, statuses, target -&gt; target.add(orders)).setNullValid(true)</code></div>
+                    <div class="showcase-footer"><strong>OatFilter</strong><code>OatFilter.onChange(id, status, statuses, target -&gt; target.add(orders)).setNullValid(true)</code></div>
                 </div>
             </div>
         </div>
@@ -1358,7 +1358,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                             </section>
                         </div>
                     </div>
-                    <div class="showcase-footer"><span class="badge new-badge" data-variant="success">New in 0.5.0</span><strong>Form errors after any Ajax submit</strong><code>OatSubmitButton.onSubmit(id, label, onSubmit) &middot; new OatFeedbackPanel("formFeedback", form)</code></div>
+                    <div class="showcase-footer"><strong>Form errors after any Ajax submit</strong><code>OatSubmitButton.onSubmit(id, label, onSubmit) &middot; new OatFeedbackPanel("formFeedback", form)</code></div>
                 </div>
             </div>
         </div>
@@ -1417,7 +1417,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     <code>OatDialog.CONTENT_ID</code>. The server knows whether the dialog is open,
                     <code>onClose</code> runs however it closed &mdash; Cancel, Escape, the backdrop
                     or a confirm &mdash; and <code>target.add(dialog)</code> keeps an open dialog open.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.5.0</span> <code>OatDrawer</code> is a dialog that slides in from an
+                <p class="mt-2"><code>OatDrawer</code> is a dialog that slides in from an
                     edge, and a dialog closed without confirming shows its models again the next time.</p>
                 <p class="mt-2">A dialog opened again in
                     <code>onConfirm</code>, such as a second question, stays open, and Enter in a
@@ -1439,7 +1439,7 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                     posted name. <code>getInput()</code> returns it, and
                     <code>addToInput(...)</code> puts an <code>autocomplete</code> or
                     <code>maxlength</code> right on the <code>&lt;input&gt;</code>.</p>
-                <p class="mt-2"><span class="badge new-badge" data-variant="success">New in 0.5.0</span> No <code>onError</code> that adds the form: fields show the
+                <p class="mt-2">No <code>onError</code> that adds the form: fields show the
                     errors of an Ajax submit themselves, and <code>new OatFeedbackPanel(id, form)</code>
                     shows the form's own errors next to it, once.</p>
             </article>

@@ -227,58 +227,6 @@ a.unstyled, .site-nav a {
     margin-block-end: 0;
 }
 
-/* ---------- AppLayout demo ---------- */
-
-.applayout-intro {
-    display: grid;
-    /* minmax(0, ...): a long code line scrolls in its <pre> instead of widening the page */
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-8);
-}
-
-@media (min-width: 900px) {
-    .applayout-intro {
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-    }
-}
-
-.applayout-demo-wrap {
-    position: sticky;
-    top: 5rem;
-}
-
-.applayout-demo-caption {
-    font-size: var(--text-7);
-    color: var(--muted-foreground);
-    margin-block-start: var(--space-2);
-    text-align: center;
-}
-
-.applayout-demo {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-large);
-    box-shadow: var(--shadow-large);
-    overflow: hidden;
-}
-
-.applayout-demo [data-sidebar-layout] {
-    height: 420px;
-    --sidebar-width: 12rem;
-}
-
-.applayout-demo [data-sidebar] nav {
-    font-size: var(--text-8);
-}
-
-.applayout-demo main {
-    padding-inline: var(--space-5);
-}
-
-.applayout-demo main h3 {
-    margin-block-start: var(--space-4);
-}
-
 /* ---------- Component showcase ---------- */
 
 .showcase-group {
@@ -686,5 +634,480 @@ a.unstyled, .site-nav a {
 
     .guide-toc details[open] summary {
         padding-block-end: var(--space-3);
+    }
+}
+
+/* ---------- How it works: steps scrolling past a stage that shows the page ---------- */
+
+.walk-container {
+    max-width: 1280px;
+}
+
+.walk [hidden] {
+    display: none !important;
+}
+
+.walk-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+    max-width: 52rem;
+}
+
+.walk.is-js .walk-layout {
+    max-width: none;
+}
+
+.walk-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.walk-step {
+    padding-block: var(--space-6);
+}
+
+.walk-step h3 {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-block: 0 var(--space-3);
+}
+
+.walk-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-7);
+    color: var(--primary);
+}
+
+.walk-step p {
+    color: var(--muted-foreground);
+}
+
+.walk-caption {
+    font-size: var(--text-7);
+}
+
+.walk-file {
+    margin: var(--space-3) 0 0;
+}
+
+.walk-file figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--text-8);
+    margin-block-end: var(--space-1);
+}
+
+.walk-file figcaption span {
+    color: var(--muted-foreground);
+}
+
+.walk-file pre {
+    margin: 0;
+    font-size: var(--text-8);
+    overflow-x: auto;
+}
+
+/* One block per line, so a new line can be marked across the whole width */
+.walk-line {
+    display: block;
+    padding-inline: var(--space-2);
+    border-inline-start: 2px solid transparent;
+    white-space: pre;
+}
+
+.walk-line.is-new {
+    background-color: color-mix(in srgb, var(--primary) 12%, transparent);
+    border-inline-start-color: var(--primary);
+}
+
+.walk-stage-wrap {
+    display: none;
+}
+
+.walk.is-js .walk-stage-wrap {
+    display: block;
+}
+
+.walk-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "preview";
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow-large);
+    overflow: hidden;
+}
+
+.walk-stage-head {
+    grid-area: head;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--border);
+}
+
+.walk-count {
+    margin-inline-start: auto;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: var(--text-8);
+    color: var(--muted-foreground);
+}
+
+.walk-ajax {
+    font-family: var(--font-mono);
+    font-size: var(--text-8);
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-full);
+    background-color: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--primary);
+    animation: walk-pulse 1.6s ease-in-out infinite;
+}
+
+.walk-tree-pane,
+.walk-code-pane {
+    display: none;
+}
+
+.walk-tree {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-8);
+}
+
+.walk-node {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    padding: 2px var(--space-2) 2px calc(var(--depth, 0) * 0.75rem + var(--space-2));
+    border-radius: var(--radius-small);
+    white-space: nowrap;
+}
+
+/* The branch from the parent */
+.walk-node:not(.walk-root)::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(var(--depth) * 0.75rem - 0.3rem);
+    top: 0;
+    height: 50%;
+    width: 0.4rem;
+    border-inline-start: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.walk-type,
+.walk-tag {
+    color: var(--muted-foreground);
+}
+
+.walk-tag {
+    margin-inline-start: auto;
+    padding-inline-start: var(--space-2);
+}
+
+.walk-node.is-new,
+.walk-node.is-marked {
+    background-color: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.walk-node.is-new .walk-id,
+.walk-node.is-marked .walk-id {
+    color: var(--primary);
+}
+
+.walk-node.is-new {
+    animation: walk-in 0.4s ease;
+}
+
+.walk-stage-caption {
+    margin: auto 0 0;
+    padding-block-start: var(--space-3);
+    border-top: 1px solid var(--border);
+    font-size: var(--text-8);
+    color: var(--muted-foreground);
+}
+
+.walk-preview {
+    grid-area: preview;
+    padding: var(--space-3);
+}
+
+/* The page in the stage: Oat's own layout, at a small size, its sidebar shown at any width */
+.walk-app[data-sidebar-layout] {
+    --sidebar-width: 7.5rem;
+    position: relative;
+    height: 19rem;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    font-size: var(--text-8);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.walk-app > aside[data-sidebar] {
+    grid-column: auto;
+    width: auto;
+    transform: none;
+    box-shadow: none;
+}
+
+.walk-app > main {
+    grid-column: auto;
+    padding: var(--space-3);
+    overflow: hidden;
+}
+
+.walk-app [data-topnav] {
+    position: static;
+    padding: var(--space-2) var(--space-3);
+}
+
+.walk-app-name {
+    font-weight: var(--font-semibold);
+}
+
+.walk-app .oat-user-menu-trigger {
+    font-size: var(--text-8);
+}
+
+.walk-app [data-sidebar] nav a {
+    font-size: var(--text-8);
+}
+
+.walk-app .oat-page-header h1 {
+    font-size: var(--text-5);
+    margin: 0;
+}
+
+.walk-app .oat-page-header {
+    margin-block-end: var(--space-2);
+}
+
+.walk-app table {
+    font-size: var(--text-8);
+}
+
+.walk-app :is(th, td) {
+    padding-block: var(--space-1);
+}
+
+.walk-slot {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-medium);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+}
+
+.walk-switcher {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+}
+
+.walk-swatch {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--border);
+}
+
+.walk-swatch[data-swatch="light"] { background: #ffffff; }
+.walk-swatch[data-swatch="nord"] { background: #5e81ac; }
+.walk-swatch[data-swatch="catppuccin-mocha"] { background: #cba6f7; }
+.walk-swatch[data-swatch="rose-pine-dawn"] { background: #d7827e; }
+
+.walk-swatch.is-current {
+    border-color: var(--foreground);
+}
+
+/* The dialog over the page, inside the stage instead of the browser's top layer */
+.walk-dialog {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    display: grid;
+    place-items: center;
+    background-color: rgb(0 0 0 / 0.35);
+}
+
+.walk-dialog dialog {
+    position: static;
+    margin: 0;
+    width: min(90%, 16rem);
+    max-height: none;
+    opacity: 1;
+    transform: none;
+    font-size: var(--text-8);
+}
+
+.walk-dialog dialog h3 {
+    font-size: var(--text-6);
+    margin: 0;
+}
+
+.walk-dialog dialog > form > * {
+    padding: var(--space-3) var(--space-4);
+}
+
+.walk-dialog dialog [data-field] {
+    margin: 0;
+}
+
+.walk-preview .is-new {
+    animation: walk-flash 1.4s ease;
+}
+
+.walk-preview .is-marked {
+    animation: walk-flash 1.4s ease 0.6s;
+}
+
+@keyframes walk-in {
+    from { opacity: 0; transform: translateX(-0.25rem); }
+}
+
+@keyframes walk-flash {
+    0%, 40% { box-shadow: 0 0 0 2px var(--primary); }
+    100% { box-shadow: 0 0 0 2px transparent; }
+}
+
+@keyframes walk-pulse {
+    50% { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .walk-node.is-new,
+    .walk-preview .is-new,
+    .walk-preview .is-marked,
+    .walk-ajax {
+        animation: none;
+    }
+
+    .walk-app[data-sidebar-layout] {
+        transition: none;
+    }
+}
+
+.walk-more {
+    margin-block-start: var(--space-10);
+    display: grid;
+    gap: var(--space-4);
+    color: var(--muted-foreground);
+}
+
+/* Phones and narrow windows: the page alone, above the steps, while they scroll */
+@media (max-width: 959px) {
+    .walk.is-js .walk-stage-wrap {
+        position: sticky;
+        top: 5.25rem;
+        z-index: 2;
+        order: -1;
+    }
+
+    .walk-preview {
+        padding: var(--space-2);
+    }
+
+    .walk-app[data-sidebar-layout] {
+        --sidebar-width: 6rem;
+        height: 12.5rem;
+    }
+
+    .walk-app > main {
+        padding: var(--space-2);
+    }
+
+    .walk.is-js .walk-step {
+        min-height: 55vh;
+    }
+
+    .walk.is-js .walk-steps {
+        padding-block-end: 30vh;
+    }
+}
+
+/* Wide windows: the steps on the left, the stage with the tree, the page and the code beside them */
+@media (min-width: 960px) {
+    .walk.is-js .walk-layout {
+        grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+        gap: var(--space-8);
+        align-items: start;
+    }
+
+    .walk.is-js .walk-step {
+        min-height: 72vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        opacity: 0.4;
+        transition: opacity 0.3s ease;
+    }
+
+    .walk.is-js .walk-step.is-active {
+        opacity: 1;
+    }
+
+    .walk.is-js .walk-steps {
+        padding-block-end: 20vh;
+    }
+
+    /* The stage shows the step's code and caption */
+    .walk.is-js .walk-step .walk-code,
+    .walk.is-js .walk-step .walk-caption {
+        display: none;
+    }
+
+    .walk-stage-wrap {
+        position: sticky;
+        top: 5rem;
+    }
+
+    .walk-stage {
+        grid-template-columns: 21rem minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        grid-template-areas: "head head" "tree preview" "tree code";
+        height: min(calc(100vh - 6.5rem), 44rem);
+    }
+
+    .walk-tree-pane {
+        grid-area: tree;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        padding: var(--space-3);
+        border-inline-end: 1px solid var(--border);
+        overflow: auto;
+    }
+
+    .walk-preview {
+        border-bottom: 1px solid var(--border);
+    }
+
+    .walk-code-pane {
+        grid-area: code;
+        display: block;
+        padding: 0 var(--space-3) var(--space-3);
+        overflow: auto;
+    }
+}
+
+/* Phones: the page's table with its first two columns only */
+@media (max-width: 600px) {
+    .walk-app :is(th, td):nth-child(n+3),
+    .walk-ajax {
+        display: none;
     }
 }

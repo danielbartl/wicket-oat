@@ -56,7 +56,7 @@
     </a>
     <nav id="site-nav-links" class="site-nav-links" hidden>
         <a href="#features">Features</a>
-        <a href="#applayout">AppLayout</a>
+        <a href="#how-it-works">How it works</a>
         <a href="#components">Components</a>
         <a href="#theming">Theming</a>
         <a href="#ai-skill">AI Skill</a>
@@ -168,7 +168,182 @@
     </div>
 </section>
 
-<section id="accessibility" class="section section-alt">
+<section id="how-it-works" class="section section-alt walk" aria-labelledby="how-it-works-title">
+    <div class="container walk-container">
+        <div class="section-header">
+            <p class="eyebrow">How it works</p>
+            <h2 id="how-it-works-title">A page is an app frame full of components</h2>
+            <p>Wicket Oat components are Wicket components: a page is still a tree of them, and each renders
+                plain HTML that Oat's CSS styles. Build one invoices page in seven steps and watch the tree, the
+                code and the page grow. The page in the panel is live Oat markup.</p>
+        </div>
+
+        <div class="walk-layout">
+            <ol class="walk-steps">
+            <li class="walk-step" data-step="1">
+                <h3 id="applayout"><span class="walk-num">01</span> Extend <code>OatAppLayout</code></h3>
+                <p>A page of yours extends <code>OatAppLayout</code>, a Wicket <code>WebPage</code>.
+            Its markup is the frame: Oat's <code>data-sidebar-layout</code> grid with a top bar, a sidebar
+            and <code>&lt;main&gt;</code>, behind a &ldquo;Skip to content&rdquo; link. Your page's markup
+            goes into <code>&lt;main&gt;</code>, inside <code>&lt;wicket:extend&gt;</code>.</p>
+            <p>In an app, the hooks of the next steps sit in a base page of yours that every page extends.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>InvoicesPage.java</figcaption><pre><code><span class="walk-line is-new">public class InvoicesPage extends OatAppLayout {</span><span class="walk-line is-new"> </span><span class="walk-line is-new">    @Override</span><span class="walk-line is-new">    protected IModel&lt;String&gt; appNameModel() {</span><span class="walk-line is-new">        return Model.of(&quot;Acme Billing&quot;);</span><span class="walk-line is-new">    }</span><span class="walk-line is-new">}</span></code></pre></figure><figure class="walk-file"><figcaption>InvoicesPage.html</figcaption><pre><code><span class="walk-line is-new">&lt;wicket:extend&gt;</span><span class="walk-line is-new">    &lt;!-- rendered inside &lt;main&gt; --&gt;</span><span class="walk-line is-new">&lt;/wicket:extend&gt;</span></code></pre></figure></div>
+                <p class="walk-caption">The frame is <code>OatAppLayout</code>'s own markup, the grid Oat styles.</p>
+            </li>
+            <li class="walk-step" data-step="2">
+                <h3><span class="walk-num">02</span> Fill the sidebar</h3>
+                <p><code>sidebarMenuItemsModel()</code> lists the pages. Each <code>MenuItem</code> becomes
+            a link, and the current page's is marked <code>aria-current</code>. Groups fold into
+            <code>&lt;details&gt;</code>, a badge shows a count, and pages the user may not open are left out.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>InvoicesPage.java <span>/ sidebar</span></figcaption><pre><code><span class="walk-line is-new">@Override</span><span class="walk-line is-new">protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {</span><span class="walk-line is-new">    return Model.ofList(List.of(</span><span class="walk-line is-new">        MenuItem.of(&quot;Dashboard&quot;, DashboardPage.class),</span><span class="walk-line is-new">        MenuItem.of(&quot;Invoices&quot;, InvoicesPage.class)</span><span class="walk-line is-new">            .withBadge(() -&gt; invoices.countOpen()),</span><span class="walk-line is-new">        MenuItem.of(&quot;Customers&quot;, CustomersPage.class)));</span><span class="walk-line is-new">}</span></code></pre></figure></div>
+                <p class="walk-caption">One link per menu item; <code>aria-current</code> marks this page.</p>
+            </li>
+            <li class="walk-step" data-step="3">
+                <h3><span class="walk-num">03</span> Show who&rsquo;s signed in</h3>
+                <p><code>newTopNavExtra(id)</code> fills the top bar's corner. An <code>OatUserMenu</code>
+            shows the user's picture or initials and name, and opens a menu with their email, links of
+            yours and &ldquo;Sign out&rdquo;. While nobody is signed in, it is a &ldquo;Sign in&rdquo; link.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>InvoicesPage.java <span>/ top bar</span></figcaption><pre><code><span class="walk-line is-new">@Override</span><span class="walk-line is-new">protected Component newTopNavExtra(String id) {</span><span class="walk-line is-new">    OatUserMenu user = new OatUserMenu(id, () -&gt; session.userName());</span><span class="walk-line is-new">    user.setDetail(() -&gt; session.email());</span><span class="walk-line is-new">    user.addLink(&quot;Settings&quot;, SettingsPage.class).setIcon(&quot;settings&quot;);</span><span class="walk-line is-new">    return user;</span><span class="walk-line is-new">}</span></code></pre></figure></div>
+                <p class="walk-caption"><code>OatUserMenu</code> renders into the top bar's <code>topNavExtra</code>.</p>
+            </li>
+            <li class="walk-step" data-step="4">
+                <h3><span class="walk-num">04</span> Add the page&rsquo;s content</h3>
+                <p>The page adds its components with <code>add(...)</code>, as any Wicket page does.
+            <code>OatPageHeader</code> gives it a title and actions, <code>OatDataTable</code> a sortable,
+            pageable table with Oat columns. Each renders plain HTML that Oat's CSS styles, so there is no
+            CSS of your own to write.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>InvoicesPage.java <span>/ constructor</span></figcaption><pre><code><span class="walk-line">public InvoicesPage() {</span><span class="walk-line is-new">    add(new OatPageHeader(&quot;header&quot;, &quot;Invoices&quot;));</span><span class="walk-line is-new"> </span><span class="walk-line is-new">    List&lt;IColumn&lt;Invoice, String&gt;&gt; columns = List.of(</span><span class="walk-line is-new">        new LambdaColumn&lt;&gt;(Model.of(&quot;Number&quot;), Invoice::number),</span><span class="walk-line is-new">        new LambdaColumn&lt;&gt;(Model.of(&quot;Customer&quot;), Invoice::customer),</span><span class="walk-line is-new">        new OatBadgeColumn&lt;&gt;(Model.of(&quot;Status&quot;), Invoice::status, Invoice::variant),</span><span class="walk-line is-new">        new OatNumberColumn&lt;&gt;(Model.of(&quot;Total&quot;), Invoice::total));</span><span class="walk-line is-new">    add(table = new OatDataTable&lt;&gt;(&quot;invoices&quot;, columns, provider, 10));</span><span class="walk-line">}</span></code></pre></figure><figure class="walk-file"><figcaption>InvoicesPage.html</figcaption><pre><code><span class="walk-line">&lt;wicket:extend&gt;</span><span class="walk-line is-new">    &lt;header wicket:id=&quot;header&quot;&gt;&lt;/header&gt;</span><span class="walk-line is-new">    &lt;div wicket:id=&quot;invoices&quot;&gt;&lt;/div&gt;</span><span class="walk-line">&lt;/wicket:extend&gt;</span></code></pre></figure></div>
+                <p class="walk-caption">Plain <code>&lt;header&gt;</code> and <code>&lt;table&gt;</code>, styled by Oat.</p>
+            </li>
+            <li class="walk-step" data-step="5">
+                <h3><span class="walk-num">05</span> Edit in a dialog</h3>
+                <p>An <code>OatDialog</code> is a native <code>&lt;dialog&gt;</code> with a form in it.
+            A row's &ldquo;Edit&rdquo; points the dialog's model at that invoice and opens it over Ajax.
+            Its fields are Oat fields: a label, the input, and a hint or an error under it.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>InvoicesPage.java <span>/ constructor</span></figcaption><pre><code><span class="walk-line is-new">OatDialog edit = new OatDialog(&quot;edit&quot;, &quot;Edit invoice&quot;) {</span><span class="walk-line is-new">    @Override</span><span class="walk-line is-new">    protected void onConfirm(AjaxRequestTarget target) {</span><span class="walk-line is-new">        invoices.save(invoice.getObject());</span><span class="walk-line is-new">        target.add(table);</span><span class="walk-line is-new">    }</span><span class="walk-line is-new">};</span><span class="walk-line is-new">Fragment fields = new Fragment(OatDialog.CONTENT_ID, &quot;fields&quot;, this,</span><span class="walk-line is-new">        new CompoundPropertyModel&lt;&gt;(invoice));</span><span class="walk-line is-new">fields.add(new OatTextField&lt;String&gt;(&quot;customer&quot;).setRequired(true));</span><span class="walk-line is-new">add(edit.setContent(fields));</span><span class="walk-line is-new"> </span><span class="walk-line is-new">actions.addAction(&quot;Edit&quot;, (target, row) -&gt; {</span><span class="walk-line is-new">    invoice.setObject(row);</span><span class="walk-line is-new">    edit.open(target);</span><span class="walk-line is-new">});</span></code></pre></figure></div>
+                <p class="walk-caption">A native <code>&lt;dialog&gt;</code> with its own form, opened over Ajax.</p>
+            </li>
+            <li class="walk-step" data-step="6">
+                <h3><span class="walk-num">06</span> One Ajax round trip</h3>
+                <p>&ldquo;Confirm&rdquo; sends the dialog's form over Ajax, and Wicket validates it on the
+            server. With the customer left empty, the field shows its error by itself: the response sets the
+            message and <code>aria-invalid</code>, so the input keeps its focus and a screen reader announces
+            the message. A valid confirm saves and re-renders only the table: <code>target.add(table)</code>.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>The Ajax response <span>/ Customer left empty</span></figcaption><pre><code><span class="walk-line">&lt;ajax-response&gt;</span><span class="walk-line is-new">    &lt;evaluate&gt;WicketOat.fieldFeedback(&quot;customer7&quot;, &quot;feedback8&quot;,</span><span class="walk-line is-new">        &quot;&#x27;Customer&#x27; is required.&quot;, true)&lt;/evaluate&gt;</span><span class="walk-line">&lt;/ajax-response&gt;</span></code></pre></figure></div>
+                <p class="walk-caption">Only the message and <code>aria-invalid</code> change; the input keeps its focus.</p>
+            </li>
+            <li class="walk-step" data-step="7">
+                <h3><span class="walk-num">07</span> Switch the theme</h3>
+                <p>The look comes from Oat's CSS variables. <code>OatThemeSwitcher</code> in the sidebar's
+            footer sets one <code>data-theme</code> attribute on <code>&lt;html&gt;</code>, kept in a cookie,
+            and every component follows: 19 built-in themes, light and dark, or your own.</p>
+                <div class="walk-code"><figure class="walk-file"><figcaption>InvoicesPage.java <span>/ sidebar footer</span></figcaption><pre><code><span class="walk-line is-new">@Override</span><span class="walk-line is-new">protected Component newSidebarFooter(String id) {</span><span class="walk-line is-new">    return new OatThemeSwitcher(id);</span><span class="walk-line is-new">}</span></code></pre></figure></div>
+                <p class="walk-caption">One <code>data-theme</code> attribute; every component follows.</p>
+            </li>
+            </ol>
+
+            <div class="walk-stage-wrap">
+                <div class="walk-stage" data-step="1" aria-hidden="true" inert>
+                    <div class="walk-stage-head">
+                        <strong>InvoicesPage</strong>
+                        <span class="walk-ajax" data-only="6">Ajax &rarr; server &rarr; response</span>
+                        <span class="walk-count"><span data-walk-current>01</span> / 07</span>
+                    </div>
+                    <div class="walk-tree-pane">
+                        <ul class="walk-tree">
+                            <li class="walk-node walk-root"><span class="walk-id">InvoicesPage</span> <span class="walk-type">OatAppLayout</span></li><li class="walk-node" data-from="1" data-mark="" style="--depth:1"><span class="walk-id">"html"</span> <span class="walk-type">OatHtml</span><span class="walk-tag">&lt;html&gt;</span></li><li class="walk-node" data-from="1" data-mark="" style="--depth:1"><span class="walk-id">"topNav"</span> <span class="walk-type">WebMarkupContainer</span><span class="walk-tag">&lt;header&gt;</span></li><li class="walk-node" data-from="1" data-mark="" style="--depth:2"><span class="walk-id">"appName"</span> <span class="walk-type">Label</span><span class="walk-tag">&lt;span&gt;</span></li><li class="walk-node" data-from="3" data-mark="" style="--depth:2"><span class="walk-id">"topNavExtra"</span> <span class="walk-type">OatUserMenu</span><span class="walk-tag">&lt;div&gt;</span></li><li class="walk-node" data-from="1" data-mark="" style="--depth:1"><span class="walk-id">"sidebar"</span> <span class="walk-type">WebMarkupContainer</span><span class="walk-tag">&lt;aside&gt;</span></li><li class="walk-node" data-from="2" data-mark="" style="--depth:2"><span class="walk-id">"menuItems"</span> <span class="walk-type">ListView</span><span class="walk-tag">&lt;li&gt;</span></li><li class="walk-node" data-from="2" data-mark="" style="--depth:3"><span class="walk-id">"link" &times;3</span> <span class="walk-type">BookmarkablePageLink</span><span class="walk-tag">&lt;a&gt;</span></li><li class="walk-node" data-from="7" data-mark="" style="--depth:2"><span class="walk-id">"footer"</span> <span class="walk-type">OatThemeSwitcher</span><span class="walk-tag">&lt;footer&gt;</span></li><li class="walk-node" data-from="4" data-mark="" style="--depth:1"><span class="walk-id">"header"</span> <span class="walk-type">OatPageHeader</span><span class="walk-tag">&lt;header&gt;</span></li><li class="walk-node" data-from="4" data-mark="6" style="--depth:1"><span class="walk-id">"invoices"</span> <span class="walk-type">OatDataTable</span><span class="walk-tag">&lt;div&gt;</span></li><li class="walk-node" data-from="4" data-mark="" style="--depth:2"><span class="walk-id">"table"</span> <span class="walk-type">DataTable</span><span class="walk-tag">&lt;table&gt;</span></li><li class="walk-node" data-from="5" data-mark="" style="--depth:1"><span class="walk-id">"edit"</span> <span class="walk-type">OatDialog</span><span class="walk-tag">&lt;div&gt;</span></li><li class="walk-node" data-from="5" data-mark="" style="--depth:2"><span class="walk-id">"dialog"</span> <span class="walk-type">WebMarkupContainer</span><span class="walk-tag">&lt;dialog&gt;</span></li><li class="walk-node" data-from="5" data-mark="" style="--depth:3"><span class="walk-id">"form"</span> <span class="walk-type">Form</span><span class="walk-tag">&lt;form&gt;</span></li><li class="walk-node" data-from="5" data-mark="" style="--depth:4"><span class="walk-id">"content"</span> <span class="walk-type">Fragment</span><span class="walk-tag"></span></li><li class="walk-node" data-from="5" data-mark="6" style="--depth:5"><span class="walk-id">"customer"</span> <span class="walk-type">OatTextField</span><span class="walk-tag">&lt;section&gt;</span></li>
+                        </ul>
+                        <p class="walk-stage-caption" data-walk-caption></p>
+                    </div>
+                    <div class="walk-preview">
+                        <div class="walk-app" data-sidebar-layout>
+                            <header data-topnav>
+                                <span class="walk-app-name">Acme Billing</span>
+                                <div class="flex justify-end walk-topnav-extra" data-from="3">
+                                    <span class="oat-user-menu"><button type="button" class="ghost oat-user-menu-trigger">
+                                        <figure data-variant="avatar" class="small"><abbr title="Grace Hopper">GH</abbr></figure>
+                                        <span class="oat-user-menu-name">Grace Hopper</span>
+                                    </button></span>
+                                </div>
+                            </header>
+                            <aside data-sidebar>
+                                <nav data-from="2">
+                                    <ul>
+                                        <li><a>Dashboard</a></li>
+                                        <li><a aria-current="page">Invoices <span class="badge">3</span></a></li>
+                                        <li><a>Customers</a></li>
+                                    </ul>
+                                </nav>
+                                <footer class="walk-switcher" data-from="7">
+                                    <span class="walk-swatch" data-swatch="light" title="Light"></span>
+                                    <span class="walk-swatch" data-swatch="nord" title="Nord"></span>
+                                    <span class="walk-swatch" data-swatch="catppuccin-mocha" title="Catppuccin Mocha"></span>
+                                    <span class="walk-swatch" data-swatch="rose-pine-dawn" title="Rosé Pine Dawn"></span>
+                                </footer>
+                            </aside>
+                            <main>
+                                <div class="walk-slot" data-only="1,2,3">&lt;wicket:extend&gt; your page's markup</div>
+                                <header class="oat-page-header" data-from="4">
+                                    <div class="oat-page-header-main">
+                                        <div class="oat-page-header-title"><h1>Invoices</h1></div>
+                                        <div class="hstack oat-page-header-actions"><button type="button" class="small">New invoice</button></div>
+                                    </div>
+                                </header>
+                                <div class="table" data-from="4" data-mark="6">
+                                    <table class="w-100 align-left small">
+                                        <thead><tr><th>Number</th><th>Customer</th><th>Status</th><th class="align-right">Total</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>INV-1001</td><td>Globex</td><td><span class="badge" data-variant="secondary">Open</span></td><td class="align-right">$137.50</td></tr>
+                                            <tr><td>INV-1002</td><td>Initech</td><td><span class="badge" data-variant="success">Paid</span></td><td class="align-right">$275.00</td></tr>
+                                            <tr><td>INV-1005</td><td>Wayne Ent.</td><td><span class="badge" data-variant="danger">Overdue</span></td><td class="align-right">$687.50</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="walk-dialog" data-only="5,6">
+                                    <dialog open>
+                                        <form>
+                                            <header><h3>Edit invoice</h3></header>
+                                            <div>
+                                                <section data-field data-required data-only="5">
+                                                    <label>Customer</label>
+                                                    <input type="text" value="Globex" tabindex="-1">
+                                                </section>
+                                                <section data-field="error" data-required data-only="6">
+                                                    <label>Customer</label>
+                                                    <input type="text" value="" aria-invalid="true" tabindex="-1">
+                                                    <div data-hint>&#039;Customer&#039; is required.</div>
+                                                </section>
+                                            </div>
+                                            <footer>
+                                                <button type="button" class="outline small">Cancel</button>
+                                                <button type="button" class="small">Confirm</button>
+                                            </footer>
+                                        </form>
+                                    </dialog>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                    <div class="walk-code-pane" data-walk-code></div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="walk-more">
+            <li><strong>Menus:</strong> menu items can carry <code>PageParameters</code> and translated labels,
+                groups stay open while one of their pages is shown, and <code>target.add(getSidebar())</code>
+                updates a badge over Ajax. <code>newMenuLink(id, item)</code> can make an entry an <code>AjaxLink</code>.</li>
+            <li><strong>Phones:</strong> under 768px the sidebar becomes an off-canvas panel, opened with the
+                &#9776; button; Oat's own script does that. For phone-first apps, <code>OatMobileLayout</code>
+                puts a <a href="#bottom-nav">bottom tab bar</a> under the content instead.</li>
+            <li><strong>Pages of your own:</strong> a base page that isn't an <code>OatAppLayout</code> gets the
+                theme, density and language from <code>add(new OatHtml("html"))</code>; bookmarkable pages
+                pass their <code>PageParameters</code> to <code>super(...)</code>.</li>
+        </ul>
+    </div>
+</section>
+
+<section id="accessibility" class="section">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Accessibility</p>
@@ -242,7 +417,7 @@
     </div>
 </section>
 
-<section id="quick-start" class="section">
+<section id="quick-start" class="section section-alt">
     <div class="container">
         <div class="section-header">
             <p class="eyebrow">Get Started</p>
@@ -291,121 +466,6 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
                         <a href="tutorial.html">Build a Contact Form tutorial</a>, or read the
                         <a href="guide.html">user guide</a> for every component in detail.</p>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="applayout" class="section section-alt">
-    <div class="container">
-        <div class="section-header">
-            <p class="eyebrow">The Application Frame</p>
-            <h2>OatAppLayout: sidebar, topnav, and content &mdash; solved</h2>
-            <p>Most business applications share the same shell: a collapsible sidebar for
-                navigation, a top bar for identity and actions, and a content area in between.
-                <code>OatAppLayout</code> is a <code>WebPage</code> base class that gives you
-                exactly that, backed by Oat's <code>data-sidebar-layout</code> CSS grid &mdash;
-                no layout CSS to write yourself.</p>
-        </div>
-
-        <div class="applayout-intro">
-            <div>
-                <p>Extend <code>OatAppLayout</code> (or the ready-made <code>BasePage</code>
-                    pattern shown here) and override a handful of hook methods. The sidebar
-                    collapses to an off-canvas panel under 768px automatically, toggled by the
-                    <code>&#9776;</code> button &mdash; no extra JavaScript required, it's wired
-                    into Oat's vendored JS already.</p>
-                <pre><code>public class BasePage extends OatAppLayout {
-
-    &#64;Override
-    protected IModel&lt;String&gt; appNameModel() {
-        return Model.of("My Business App");
-    }
-
-    &#64;Override
-    protected IModel&lt;List&lt;MenuItem&gt;&gt; sidebarMenuItemsModel() {
-        return Model.ofList(List.of(
-            MenuItem.of("Dashboard", DashboardPage.class),
-            MenuItem.of("Customers", CustomersPage.class),
-            MenuItem.of("Invoices", InvoicesPage.class)
-                .withBadge(() -&gt; invoices.countOpen()),
-            MenuItem.group("Settings",
-                MenuItem.of("General", GeneralPage.class),
-                MenuItem.of("Billing", BillingPage.class))
-        ));
-    }
-
-    &#64;Override
-    protected Component newSidebarFooter(String id) {
-        // Any component works here - the built-in switcher is one option
-        return new OatThemeSwitcher(id);
-    }
-}</code></pre>
-                <p>Pages then simply extend <code>BasePage</code> and add their own content
-                    &mdash; the sidebar, top bar, active-link highlighting, responsive behavior and
-                    the user's theme are already handled. Bookmarkable pages pass their
-                    <code>PageParameters</code> to <code>super(...)</code>; menu items can carry
-                    parameters and translatable labels, and items for pages the user isn't
-                    authorized to open are left out.</p>
-                <p>Menu items can be grouped into collapsible sections, open while
-                    one of their pages is shown, and carry a badge such as a count, which
-                    <code>target.add(getSidebar())</code> updates over Ajax.</p>
-                <p><code>&lt;html&gt;</code> gets the page's <code>lang</code>
-                    from its locale, and a &ldquo;Skip to content&rdquo; link, shown only while it has
-                    keyboard focus, jumps past the navigation to <code>&lt;main&gt;</code>. For
-                    phone-first apps, <code>OatMobileLayout</code> puts a
-                    <a href="#bottom-nav">bottom tab bar</a> under the content instead.</p>
-                <p>The hooks follow Wicket's
-                    <code>newXxx(id)</code> naming, and <code>newMenuLink(id, item)</code> can make a
-                    menu entry an <code>AjaxLink</code>. An app with a base page of its own gets the
-                    theme, density and language from <code>add(new OatHtml("html"))</code>.</p>
-                <p><code>OatUserMenu</code> fills the top bar's corner
-                    (<code>newTopNavExtra(id)</code>): the user's picture or initials and name open a
-                    menu with their email, links of yours and &ldquo;Sign out&rdquo;, or it is a
-                    &ldquo;Sign in&rdquo; link while nobody is signed in.</p>
-            </div>
-
-            <div class="applayout-demo-wrap">
-                <div class="applayout-demo">
-                    <div data-sidebar-layout>
-                        <header data-topnav>
-                            <button data-sidebar-toggle aria-label="Toggle menu" class="outline small">&#9776;</button>
-                            <span>My Business App</span>
-                            <div class="flex justify-end" style="flex:1">
-                                <figure data-variant="avatar" class="small" aria-label="Jane Doe"><abbr title="Jane Doe">JD</abbr></figure>
-                            </div>
-                        </header>
-                        <aside data-sidebar>
-                            <nav>
-                                <ul>
-                                    <li><a href="#applayout" aria-current="page">Dashboard</a></li>
-                                    <li><a href="#applayout">Customers</a></li>
-                                    <li><a href="#applayout">Invoices <span class="badge">3</span></a></li>
-                                    <li>
-                                        <details open>
-                                            <summary>Settings</summary>
-                                            <ul>
-                                                <li><a href="#applayout">General</a></li>
-                                                <li><a href="#applayout">Billing</a></li>
-                                            </ul>
-                                        </details>
-                                    </li>
-                                </ul>
-                            </nav>
-                            <footer>
-                                <button class="outline small" style="width:100%">Logout</button>
-                            </footer>
-                        </aside>
-                        <main>
-                            <h3>Dashboard</h3>
-                            <p class="text-light">Your page content renders here, inside <code>&lt;wicket:child/&gt;</code>.</p>
-                            <article class="card">
-                                <p style="margin:0">Sample widget content&hellip;</p>
-                            </article>
-                        </main>
-                    </div>
-                </div>
-                <p class="applayout-demo-caption">Live demo &mdash; try the &#9776; toggle, and resize your window.</p>
             </div>
         </div>
     </div>
@@ -1648,6 +1708,82 @@ form.add(Oat.Behaviors.density(OatDensity.DEFAULT));</code></pre>
       setTimeout(function () { button.removeAttribute('aria-busy'); }, 2000);
     });
   });
+
+  // How it works: the step in the middle of the window sets what the stage shows
+  (function () {
+    var walk = document.querySelector('.walk');
+    if (!walk || !('IntersectionObserver' in window)) return;
+    var stage = walk.querySelector('.walk-stage');
+    var app = stage.querySelector('.walk-app');
+    var code = stage.querySelector('[data-walk-code]');
+    var caption = stage.querySelector('[data-walk-caption]');
+    var counter = stage.querySelector('[data-walk-current]');
+    var swatches = Array.prototype.slice.call(stage.querySelectorAll('[data-swatch]'));
+    var steps = Array.prototype.slice.call(walk.querySelectorAll('.walk-step'));
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var themes = ['nord', 'catppuccin-mocha', 'rose-pine-dawn', 'light'];
+    var themeTimer = null;
+    var shown = 0;
+
+    function inList(attribute, n) {
+      return attribute.split(',').indexOf(String(n)) >= 0;
+    }
+
+    function theme(index) {
+      app.setAttribute('data-theme', themes[index]);
+      swatches.forEach(function (swatch) {
+        swatch.classList.toggle('is-current', swatch.getAttribute('data-swatch') === themes[index]);
+      });
+    }
+
+    // The last step shows the themes in turn; motion reduced, it shows one
+    function cycleThemes(on) {
+      clearInterval(themeTimer);
+      themeTimer = null;
+      if (!on) {
+        app.removeAttribute('data-theme');
+        swatches.forEach(function (swatch) { swatch.classList.remove('is-current'); });
+        return;
+      }
+      var index = 0;
+      theme(index);
+      if (!reduced) {
+        themeTimer = setInterval(function () { theme(index = (index + 1) % themes.length); }, 2200);
+      }
+    }
+
+    function show(n) {
+      if (n === shown) return;
+      shown = n;
+      var step = steps[n - 1];
+      stage.setAttribute('data-step', n);
+      counter.textContent = (n < 10 ? '0' : '') + n;
+      steps.forEach(function (other) { other.classList.toggle('is-active', other === step); });
+      code.innerHTML = step.querySelector('.walk-code').innerHTML;
+      caption.innerHTML = step.querySelector('.walk-caption').innerHTML;
+      stage.querySelectorAll('[data-from]').forEach(function (el) {
+        var from = Number(el.getAttribute('data-from'));
+        el.hidden = n < from;
+        el.classList.toggle('is-new', n === from);
+      });
+      stage.querySelectorAll('[data-only]').forEach(function (el) {
+        el.hidden = !inList(el.getAttribute('data-only'), n);
+      });
+      stage.querySelectorAll('[data-mark]').forEach(function (el) {
+        el.classList.toggle('is-marked', inList(el.getAttribute('data-mark'), n));
+      });
+      cycleThemes(n === steps.length);
+    }
+
+    walk.classList.add('is-js');
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) show(steps.indexOf(entry.target) + 1);
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(function (step) { observer.observe(step); });
+    show(1);
+  })();
 
   document.querySelectorAll('[data-set-theme]').forEach(function (el) {
     el.addEventListener('click', function () {

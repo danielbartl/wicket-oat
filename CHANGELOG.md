@@ -42,6 +42,13 @@
   on the next Ajax request, whatever it was, e.g. a click on a link elsewhere on the
   page. Wicket sets a file input's model to null as it detaches it, after the field, and
   the field took that for an update in the next request.
+- Fix: `OatDateColumn` failed the page with a `DateTimeException` for several values:
+  a `LocalDateTime` or `OffsetDateTime` with a `LONG` or `FULL` time style
+  (`setStyle(...)`), a `LocalTime` with one, an `OffsetTime` in any style, and a
+  `YearMonth` or another value with neither a date nor a time of day. It now looks at
+  what a value has. A `LONG` or `FULL` time shows the zone, an `OffsetDateTime`'s
+  offset, or `MEDIUM` for a value without one. An `OffsetTime` is shown as a time, and a
+  `YearMonth` as its `toString()` (`2026-10`) unless a pattern is set.
 
 ## 0.5.0 (2026-10-22)
 

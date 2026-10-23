@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTester;
@@ -217,6 +218,33 @@ class TierBComponentsTest {
         assertThat(cookie.getValue()).isEqualTo("accepted");
         assertThat(cookie.getMaxAge()).isEqualTo(365 * 24 * 3600);
         assertThat(cookie.isHttpOnly()).isTrue();
+        assertThat(cookie.getAttribute("SameSite")).isEqualTo("Lax");
+    }
+
+    @Test
+    void cookieConsentKeepsTheAnswerOnServlet5() {
+        MockApplication app = new MockApplication();
+        // Tomcat 10.0 or Jetty 11, whose Cookie has no setAttribute yet
+        WicketTester servlet5 = new WicketTester(app, new MockServletContext(app, null) {
+            @Override
+            public int getMajorVersion() {
+                return 5;
+            }
+
+            @Override
+            public int getEffectiveMajorVersion() {
+                return 5;
+            }
+        });
+        servlet5.startComponentInPage(new OatCookieConsent("cookies"));
+
+        servlet5.clickLink("cookies:accept");
+
+        Cookie cookie = servlet5.getLastResponse().getCookies().stream()
+                .filter(c -> OatCookieConsent.COOKIE.equals(c.getName())).findFirst().orElseThrow();
+        assertThat(cookie.getValue()).isEqualTo("accepted");
+        assertThat(cookie.getAttribute("SameSite")).isNull();
+        servlet5.destroy();
     }
 
     @Test

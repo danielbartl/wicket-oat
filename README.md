@@ -755,7 +755,10 @@ add(new OatRadialProgress("profile", Model.of(3), Model.of(5)).setText(Model.of(
 ```
 
 `OatMultiSelectField` chooses several values, looked up on the server as the
-user types, and shows them as chips with a remove button. Like `OatAutoCompleteField`,
+user types, and shows them as chips with a remove button. Chips added or removed
+are like typed input: they reach the model when the form is submitted, and
+`form.clearInput()` drops them, as an `OatDialog` does when it opens or is
+cancelled. Like `OatAutoCompleteField`,
 it also works inside an `OatDialog` or `OatPopover`. Wicket adds the suggestion list
 to the page body, which a modal dialog would cover, so `wicket-oat.js` shows the
 list above the dialog instead. Escape then closes the list first, then the dialog.
@@ -962,8 +965,9 @@ getCspSettings().blocking()
         .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_INLINE);
 ```
 
-Call `install()` after any `strict()`/`clear()` of your own, since those reset
-the directives it adds.
+Call `install()` after any `strict()`/`unsafeInline()` of your own, since those
+reset the directives it adds. A policy you turned off with `disabled()` or
+`clear()` stays off.
 
 The context menu and a load-on-scroll `OatLoadMoreList` use a small script of the
 library's own, `wicket-oat.js`. Wicket renders it with the page's nonce, and it

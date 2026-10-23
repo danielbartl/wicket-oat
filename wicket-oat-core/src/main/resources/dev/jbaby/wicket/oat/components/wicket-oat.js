@@ -135,6 +135,13 @@
         }
         ensureMenu();
         closeMenu();
+        // Into the dialog or popover the element is in, as for autocomplete lists below:
+        // outside an open modal dialog or drawer the menu would be inert, and outside a
+        // popover a click on it would close the popover
+        var layer = target.closest('dialog, [popover]') || document.body;
+        if (menu.parentNode !== layer) {
+            layer.appendChild(menu);
+        }
         menu.replaceChildren();
         opener = target;
         entries.forEach(function (entry, index) {

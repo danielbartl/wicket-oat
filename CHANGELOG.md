@@ -2,6 +2,25 @@
 
 ## 0.6.0 (unreleased)
 
+### Changes
+
+- Fix: `OatMultiSelectField` kept the chips it read from the model the first time it
+  rendered. A form or an `OatDialog` reused for another record showed the first record's
+  chips and saved them into the other one, and a cancelled dialog showed the cancelled
+  chips again when it opened. It now shows the model's current value. Chips added or
+  removed are like typed input: they reach the model when the form is submitted, and
+  `form.clearInput()` drops them, as an `OatDialog` does when it opens or is cancelled.
+- Fix: `WicketOats.install` turned a Content Security Policy the application had turned
+  off (`getCspSettings().blocking().disabled()`) back on, as `img-src data:` alone,
+  which blocked every other image. It adds `data:` only to a policy that is set.
+- Fix: `OatCookieConsent` failed with `NoSuchMethodError` on a Servlet 5 container such
+  as Tomcat 10.0 or Jetty 11, which Wicket 10 runs on, so the answer was never stored
+  and the banner kept coming back. It sets `SameSite=Lax` through Wicket's `CookieUtils`,
+  on Servlet 6 only, as Wicket does for its own cookies.
+- Fix: a context menu (`Oat.Behaviors.contextMenu()`) in an open `OatDialog` or
+  `OatDrawer` couldn't be used: its entries took neither focus nor clicks. In an
+  `OatPopover`, choosing an entry closed the popover. The menu now opens inside them.
+
 ## 0.5.0 (2026-10-22)
 
 A release for the frame around an app's pages and the forms in them: a user menu for the

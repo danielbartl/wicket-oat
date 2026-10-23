@@ -351,6 +351,20 @@ class TierBComponentsTest {
     }
 
     @Test
+    void donutChartCountsEachOfEqualPartsOnce() {
+        // Three alike, one of them among the five largest
+        List<Region> regions = Arrays.asList(new Region("North", 50), new Region("South", 40), new Region("East", 30),
+                new Region("West", 20), new Region("N/A", 10), new Region("N/A", 10), new Region("N/A", 10), new Region("Central", 5));
+        tester.startComponentInPage(new OatDonutChart<>("regions", Model.ofList(regions), Region::name, Region::revenue));
+
+        assertThat(tags("class", "oat-donut-name")).extracting(TagTester::getValue)
+                .containsExactly("North", "South", "East", "West", "N/A", "Other");
+        String ring = tester.getTagByWicketId("ring").getValue();
+        assertThat(ring.split("oat-donut-segment").length - 1).isEqualTo(6);
+        assertThat(ring).contains(">175</text>").contains("<title>Other: 25 (14.3%)</title>");
+    }
+
+    @Test
     void chartsHaveADataTable() {
         tester.startComponentInPage(new OatColumnChart<>("columns", Model.ofList(MONTHS), Month::label, Month::revenue)
                 .setValueFormat((value, locale) -> "€" + value));

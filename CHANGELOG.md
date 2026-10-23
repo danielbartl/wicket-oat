@@ -38,6 +38,10 @@
   action the row no longer shows doesn't run, and the row's menu is rendered again with
   its current actions. This needs a row model that loads the row again, such as a
   `LoadableDetachableModel`; `Model.of(row)` keeps the row as it was rendered.
+- Fix: the error an `OatFileUpload` or `OatFileDropzone` showed after a submit went away
+  on the next Ajax request, whatever it was, e.g. a click on a link elsewhere on the
+  page. Wicket sets a file input's model to null as it detaches it, after the field, and
+  the field took that for an update in the next request.
 
 ## 0.5.0 (2026-10-22)
 

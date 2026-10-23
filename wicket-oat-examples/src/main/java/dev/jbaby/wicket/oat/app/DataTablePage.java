@@ -22,6 +22,7 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvid
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.SetModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -220,9 +221,14 @@ public class DataTablePage extends BasePage {
             return filtered().size();
         }
 
+        /**
+         * Loads the invoice again by its id in each request, as from a database, so a row
+         * action sees the invoice as it is now: "Mark as paid" doesn't run for one paid since.
+         */
         @Override
         public IModel<Invoice> model(Invoice object) {
-            return Model.of(object);
+            long id = object.id();
+            return LoadableDetachableModel.of(() -> invoices.stream().filter(invoice -> invoice.id() == id).findFirst().orElse(null));
         }
     }
 }

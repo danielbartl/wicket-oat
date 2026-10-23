@@ -14,7 +14,10 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 /**
  * How a whole divides into a few parts - revenue by region, tickets by channel - as a
@@ -57,19 +60,27 @@ public class OatDonutChart<T> extends OatChart<T> {
 
     /** The parts, largest first is up to the data; past {@link #MAX_SEGMENTS} the smallest become "Other". */
     private List<Part> parts() {
-        List<Part> parts = new ArrayList<>();
+        List<Part> all = new ArrayList<>();
         for (T item : items()) {
             Number value = series().get(0).value().apply(item);
-            parts.add(new Part(categoryOf(item), value == null ? 0 : Math.max(0, value.doubleValue()), 0));
+            all.add(new Part(categoryOf(item), value == null ? 0 : Math.max(0, value.doubleValue()), 0));
         }
-        if (parts.size() > MAX_SEGMENTS) {
-            List<Part> bySize = new ArrayList<>(parts);
-            bySize.sort(Comparator.comparingDouble(Part::value).reversed());
-            List<Part> kept = bySize.subList(0, MAX_SEGMENTS - 1);
-            double other = bySize.subList(MAX_SEGMENTS - 1, bySize.size()).stream().mapToDouble(Part::value).sum();
-            List<Part> folded = new ArrayList<>(parts.stream().filter(kept::contains).toList());
-            folded.add(new Part(new StringResourceModel("OatChart.other", this).setDefaultValue("Other").getObject(), other, 0));
-            parts = folded;
+        List<Part> parts = all;
+        if (all.size() > MAX_SEGMENTS) {
+            // By their place, not by equals: two parts can have the same name and value
+            List<Integer> bySize = new ArrayList<>(IntStream.range(0, all.size()).boxed().toList());
+            bySize.sort(Comparator.comparingDouble((Integer i) -> all.get(i).value()).reversed());
+            Set<Integer> kept = new HashSet<>(bySize.subList(0, MAX_SEGMENTS - 1));
+            parts = new ArrayList<>();
+            double other = 0;
+            for (int i = 0; i < all.size(); i++) {
+                if (kept.contains(i)) {
+                    parts.add(all.get(i));
+                } else {
+                    other += all.get(i).value();
+                }
+            }
+            parts.add(new Part(new StringResourceModel("OatChart.other", this).setDefaultValue("Other").getObject(), other, 0));
         }
         List<Part> numbered = new ArrayList<>();
         for (int i = 0; i < parts.size(); i++) {

@@ -56,6 +56,10 @@
   when the browser says another site's page sent it (`Sec-Fetch-Site`, which current
   browsers send), using Wicket's `FetchMetadataResourceIsolationPolicy`. For all of an
   application's requests, add Wicket's `ResourceIsolationRequestCycleListener`.
+- Fix: an `OatDonutChart` with more than six parts, some of them with the same name and
+  value, kept every such part as a segment when one of them was among the five largest,
+  and counted the others again in "Other". It showed more than six segments, and the
+  total and every share were too high. Each part is now either kept or in "Other".
 
 ## 0.5.0 (2026-10-22)
 

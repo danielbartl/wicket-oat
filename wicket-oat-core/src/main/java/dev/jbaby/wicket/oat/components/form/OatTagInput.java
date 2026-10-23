@@ -1,6 +1,8 @@
 package dev.jbaby.wicket.oat.components.form;
 
 import dev.jbaby.wicket.oat.behaviors.TagInputBehavior;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
@@ -18,9 +20,15 @@ import java.util.stream.Collectors;
  * A tag/chip input field backed by Oat's {@code ot-taginput} web component, bound to
  * a {@code List<String>} of tags. Tags are trimmed and de-duplicated; no tags is an
  * empty list (and fails {@link #setRequired(boolean) required}). As in Oat's widget,
- * a comma separates tags, so a tag can't contain one.
+ * a comma separates tags, so a tag can't contain one. Text typed but not yet made a
+ * tag with Enter or a comma is submitted as one too.
+ * <p>
+ * The tags are submitted in a hidden input, {@link #getInput()}; the label, the hint or
+ * error and {@link #setPlaceholder the placeholder} belong to the box the user types in.
  */
 public class OatTagInput extends BaseOatField<List<String>, TextField<List<String>>, OatTagInput> {
+
+    private final WebMarkupContainer text;
 
     /**
      * Label looked up by {@code id} in the {@code .properties} files, model inherited
@@ -49,6 +57,26 @@ public class OatTagInput extends BaseOatField<List<String>, TextField<List<Strin
         WebMarkupContainer taginput = new WebMarkupContainer("taginput");
         taginput.add(new TagInputBehavior(getInput()));
         add(taginput);
+
+        // The box the user types in, which screen readers announce, rather than the hidden input
+        text = new WebMarkupContainer("text");
+        text.setOutputMarkupId(true);
+        text.add(AttributeModifier.replace("aria-describedby", (IModel<String>) this::getFeedbackMarkupId));
+        text.add(AttributeModifier.replace("aria-invalid", (IModel<String>) () -> getInput().hasErrorMessage() ? "true" : "false"));
+        text.add(AttributeModifier.replace("aria-required", (IModel<String>) () -> getInput().isRequired() ? "true" : null));
+        taginput.add(text);
+    }
+
+    @Override
+    protected Component getLabelTarget() {
+        return text;
+    }
+
+    /** The text in the box while it is empty ({@code OatTagInput.placeholder}, "Add tags...", by default). */
+    @Override
+    public OatTagInput setPlaceholder(IModel<String> placeholder) {
+        text.add(AttributeModifier.replace("placeholder", placeholder));
+        return this;
     }
 
     @Override

@@ -83,6 +83,23 @@ class NewComponentsTest {
         tester.assertVisible("pagination:menu:items:2:link");
     }
 
+    private String paginationLabel(String navAttributes) {
+        OatPagination<String> pagination = OatPagination.of("pagination", Model.ofList(List.of("1")),
+                (item, page) -> item.add(new Label("label", page)));
+        tester.startComponentInPage(pagination, Markup.of("<nav wicket:id=\"pagination\"" + navAttributes + ">"
+                + "<menu wicket:id=\"menu\"><li wicket:id=\"items\"><span wicket:id=\"label\"></span></li></menu></nav>"));
+        return tester.getTagByWicketId("pagination").getAttribute("aria-label");
+    }
+
+    @Test
+    void paginationIsNamedInTheUsersLanguageUnlessTheMarkupNamesIt() {
+        tester.getSession().setLocale(java.util.Locale.GERMAN);
+        assertThat(paginationLabel("")).isEqualTo("Seitennavigation");
+
+        // Not "Seiten Pagination"
+        assertThat(paginationLabel(" aria-label=\"Seiten\"")).isEqualTo("Seiten");
+    }
+
     @Test
     void testOatDialog() {
         OatDialog dialog = new OatDialog("dialog", Model.of("Open dialog"), Model.of("Title"));

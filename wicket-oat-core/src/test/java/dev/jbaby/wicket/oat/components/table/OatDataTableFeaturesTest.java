@@ -293,6 +293,21 @@ class OatDataTableFeaturesTest {
     }
 
     @Test
+    void theSelectAllBoxDoesntQueryTheDataProviderAgain() {
+        page.rowQueries = 0;
+        tester.startPage(page);
+        assertThat(page.rowQueries).isEqualTo(1); // the table's own rows
+
+        page.rowQueries = 0;
+        check(rowChecks().get(0), true); // renders the select-all box again
+
+        assertThat(page.rowQueries).isZero();
+        check(selectAll(), true);
+        assertThat(page.selected.getObject()).extracting(Invoice::number).containsExactlyInAnyOrder("INV-1", "INV-2");
+        assertThat(page.rowQueries).isEqualTo(1); // the table, rendered again
+    }
+
+    @Test
     void clearSelectionEmptiesIt() {
         check(rowChecks().get(0), true);
         tester.executeAjaxEvent(page.get("table:bulkActions:clear"), "click");

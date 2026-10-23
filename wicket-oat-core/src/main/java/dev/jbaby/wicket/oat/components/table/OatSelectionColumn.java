@@ -3,6 +3,7 @@ package dev.jbaby.wicket.oat.components.table;
 import dev.jbaby.wicket.oat.util.SerializableFunction;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
@@ -20,7 +21,6 @@ import org.apache.wicket.model.StringResourceModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -217,16 +217,17 @@ public class OatSelectionColumn<T, S> extends AbstractColumn<T, S> implements IS
         selection.detach();
     }
 
-    /** The keys of the rows on the table's current page, as its data provider returns them. */
+    /**
+     * The keys of the rows on the table's current page: those it shows, from its rows' models.
+     * Asking the data provider again would query a database once more on each render.
+     */
     @SuppressWarnings("unchecked")
     private List<Object> currentPageKeys(Component inTable) {
         DataTable<T, S> table = inTable.findParent(DataTable.class);
-        long first = table.getCurrentPage() * table.getItemsPerPage();
-        long count = Math.min(table.getItemsPerPage(), table.getRowCount() - first);
         List<Object> keys = new ArrayList<>();
-        if (count > 0) {
-            Iterator<? extends T> iterator = table.getDataProvider().iterator(first, count);
-            iterator.forEachRemaining(row -> keys.add(key.apply(row)));
+        // The DataGridView of the rows, which DataTable adds as "rows"
+        for (Component row : (MarkupContainer) table.getBody().get("rows")) {
+            keys.add(key.apply(((Item<T>) row).getModelObject()));
         }
         return keys;
     }

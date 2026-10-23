@@ -40,6 +40,8 @@ public class InvoiceTablePage extends WebPage implements IMarkupResourceStreamPr
             new Invoice(2, "INV-2", "Globex", Status.OVERDUE, new BigDecimal("99"), Currency.getInstance("USD"), LocalDate.of(2026, 1, 31), false),
             new Invoice(3, "INV-3", "Initech", Status.OPEN, null, Currency.getInstance("JPY"), null, null)));
     public final List<String> log = new ArrayList<>();
+    /** How often the table's data provider was asked for rows, as a database would be queried. */
+    public int rowQueries;
     public final IModel<java.util.Set<Invoice>> selected = new SetModel<>(new HashSet<>());
     public final OatDataTable<Invoice, String> table;
 
@@ -84,6 +86,7 @@ public class InvoiceTablePage extends WebPage implements IMarkupResourceStreamPr
     private class Provider extends SortableDataProvider<Invoice, String> {
         @Override
         public Iterator<? extends Invoice> iterator(long first, long count) {
+            rowQueries++;
             List<Invoice> rows = new ArrayList<>(invoices);
             if (getSort() != null && "number".equals(getSort().getProperty())) {
                 Comparator<Invoice> byNumber = Comparator.comparing(Invoice::number);

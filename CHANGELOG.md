@@ -70,6 +70,10 @@
 - Fix: `OatPagination` named its `<nav>` "Pagination" in English in every language, and
   added it to an `aria-label` of the markup's own ("Seiten Pagination"). It is the
   translated `OatPagination.label` now, and an `aria-label` in the markup is kept as it is.
+- `OatSelectionColumn`'s "select all" box no longer asks the data provider for the
+  table's current page again each time it renders, which with a database meant one more
+  query on every render and every click on a row's box. It takes the rows the table
+  shows, which are also those a click on it selects.
 
 ## 0.5.0 (2026-10-22)
 

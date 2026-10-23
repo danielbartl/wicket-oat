@@ -2,6 +2,7 @@ package dev.jbaby.wicket.oat.components;
 
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
@@ -29,7 +30,8 @@ import java.util.Objects;
  * resemble the content, or uses Oat's square skeleton box, e.g. for a picture. Like Wicket's
  * {@link AjaxLazyLoadPanel}, which this extends, it can also wait for work running in
  * the background: override {@link #isContentReady()}, and it checks again every
- * {@link #getUpdateInterval()} until the content is ready.
+ * {@link #getUpdateInterval()} (a second) until the content is ready. All lazy-load panels
+ * of a page share one timer, which takes the shortest interval of those still waiting.
  *
  * @param <T> the type of the lazily loaded component
  */
@@ -67,13 +69,31 @@ public abstract class OatLazyLoadPanel<T extends Component> extends AjaxLazyLoad
     }
 
     /**
-     * Loads the content right after the page is shown (0.1 seconds), instead of the 1
-     * second {@link AjaxLazyLoadPanel} waits. With {@link #isContentReady()} overridden,
-     * this is also how often it checks; override this to check less often.
+     * Starts the page's timer, unless a panel has already, so that it loads the content
+     * right after the page is shown (0.1 seconds) instead of after the second
+     * {@link AjaxLazyLoadPanel} waits. Content that isn't ready then is checked again every
+     * {@link #getUpdateInterval()}, a second as in Wicket.
      */
     @Override
-    public Duration getUpdateInterval() {
-        return Duration.ofMillis(100);
+    protected void initTimer() {
+        if (getPage().getBehaviors(AjaxLazyLoadTimer.class).isEmpty()) {
+            AjaxLazyLoadTimer timer = new FirstLoadTimer();
+            getPage().add(timer);
+            // Not rendered with the page when this panel is added over Ajax
+            getRequestCycle().find(AjaxRequestTarget.class).ifPresent(timer::restart);
+        }
+    }
+
+    /**
+     * Wicket's timer for the page's lazy-load panels, first going off after 0.1 seconds.
+     * Each time it goes off it waits the shortest {@link #getUpdateInterval()} of the panels
+     * still waiting, so one panel checking often makes the whole page send requests.
+     */
+    static final class FirstLoadTimer extends AjaxLazyLoadTimer {
+
+        FirstLoadTimer() {
+            setUpdateInterval(Duration.ofMillis(100));
+        }
     }
 
     /** A number of skeleton lines or boxes. */

@@ -6,6 +6,7 @@ import dev.jbaby.wicket.oat.behaviors.AjaxBusyBehavior;
 import dev.jbaby.wicket.oat.behaviors.SkeletonBehavior;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -340,6 +342,44 @@ class AppShellTest {
         tester.executeAllTimerBehaviors(tester.getLastRenderedPage());
         assertThat(tester.getLastResponseAsString()).contains("Revenue: 42");
         assertThat(panel.isLoaded()).isTrue();
+    }
+
+    /** Content made in the background, e.g. a report; ready when the test says. */
+    static final class ReportPanel extends OatLazyLoadPanel<Component> {
+
+        boolean ready;
+
+        ReportPanel(String id) {
+            super(id);
+        }
+
+        @Override
+        public Component getLazyLoadComponent(String id) {
+            return new Label(id, "Report");
+        }
+
+        @Override
+        protected boolean isContentReady() {
+            return ready;
+        }
+    }
+
+    @Test
+    void lazyLoadLoadsRightAwayAndThenChecksEverySecondWhileTheContentIsntReady() {
+        ReportPanel panel = new ReportPanel("lazy");
+        tester.startComponentInPage(panel);
+        AbstractAjaxTimerBehavior timer = tester.getLastRenderedPage().getBehaviors(AbstractAjaxTimerBehavior.class).get(0);
+        assertThat(timer.getUpdateInterval()).isEqualTo(Duration.ofMillis(100));
+
+        tester.executeAllTimerBehaviors(tester.getLastRenderedPage());
+
+        // Not ten requests a second, each taking the page's lock, while the report runs
+        assertThat(timer.getUpdateInterval()).isEqualTo(Duration.ofSeconds(1));
+        assertThat(tester.getLastResponseAsString()).contains("}, 1000);").doesNotContain("Report");
+
+        panel.ready = true;
+        tester.executeAllTimerBehaviors(tester.getLastRenderedPage());
+        assertThat(tester.getLastResponseAsString()).contains("Report");
     }
 
     @Test

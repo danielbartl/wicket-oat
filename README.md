@@ -329,8 +329,10 @@ add(OatLazyLoadPanel.of("revenue", id -> new RevenuePanel(id, reports.revenueThi
         .setPlaceholder(SkeletonBehavior.Shape.LINE, 2));
 ```
 
-It extends Wicket's `AjaxLazyLoadPanel`, so it can also wait for background work:
-override `isContentReady()`.
+The content loads 0.1 seconds after the page is shown. It extends Wicket's
+`AjaxLazyLoadPanel`, so it can also wait for background work: override
+`isContentReady()`, which is checked again every second until it returns `true`
+(`getUpdateInterval()`).
 
 ## Bottom Navigation for Phones
 

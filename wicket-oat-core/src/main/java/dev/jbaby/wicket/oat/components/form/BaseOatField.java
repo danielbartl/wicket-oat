@@ -6,6 +6,7 @@ import dev.jbaby.wicket.oat.behaviors.HintBehavior;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
@@ -24,10 +25,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.validation.IValidator;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Base class for every Oat form field: wraps a label, the underlying Wicket
@@ -76,8 +80,11 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
     private String shownError;
     private boolean shownInnerError;
     private boolean feedbackRendered;
-    // Whether the input's model was updated in this request
-    private boolean inputUpdated;
+    // The fields whose input's model was updated in this request. Kept with the request,
+    // not in a field: a FileUploadField sets its model to null as it is detached, after
+    // this panel, which would count for the next request.
+    private static final MetaDataKey<Set<BaseOatField<?, ?, ?>>> INPUT_UPDATED = new MetaDataKey<>() {
+    };
 
     /**
      * @param id the component id, also the resource key for a missing label
@@ -225,7 +232,7 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
             }
             // Wicket removes the messages it showed at the end of each request, so no error
             // only means that the shown one went away if the input was validated in this one
-            if (!inputUpdated && !validatedByForm()) {
+            if (!isInputUpdated() && !validatedByForm()) {
                 return;
             }
         }
@@ -274,10 +281,23 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
         return false;
     }
 
-    @Override
-    protected void onDetach() {
-        inputUpdated = false;
-        super.onDetach();
+    private boolean isInputUpdated() {
+        RequestCycle cycle = RequestCycle.get();
+        Set<BaseOatField<?, ?, ?>> updated = cycle != null ? cycle.getMetaData(INPUT_UPDATED) : null;
+        return updated != null && updated.contains(this);
+    }
+
+    private void inputUpdated() {
+        RequestCycle cycle = RequestCycle.get();
+        if (cycle == null) {
+            return;
+        }
+        Set<BaseOatField<?, ?, ?>> updated = cycle.getMetaData(INPUT_UPDATED);
+        if (updated == null) {
+            updated = new HashSet<>();
+            cycle.setMetaData(INPUT_UPDATED, updated);
+        }
+        updated.add(this);
     }
 
     /**
@@ -374,7 +394,7 @@ public abstract class BaseOatField<T, C extends FormComponent<T>, F extends Base
                         + "to its constructor, or add it to a container with a CompoundPropertyModel");
             }
             model.setObject(object);
-            inputUpdated = true;
+            inputUpdated();
         }
 
         @Override

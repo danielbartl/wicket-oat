@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
@@ -187,6 +188,43 @@ class AjaxFieldErrorsTest {
 
         submit("save", "Ada");
         assertThat(tester.getLastResponseAsString()).contains(update(page.name, "", false));
+    }
+
+    /** A required file upload, a button whose handler adds nothing, and a link outside the form. */
+    public static class UploadPage extends WebPage implements IMarkupResourceStreamProvider {
+
+        public final OatFileUpload files;
+
+        public UploadPage() {
+            Form<Void> form = new Form<>("form");
+            add(form);
+            form.add(files = new OatFileUpload("files", "Files", new ListModel<>()).setRequired(true));
+            form.add(OatSubmitButton.onSubmit("save", Model.of("Save"), target -> {
+            }));
+            add(new AjaxLink<Void>("elsewhere") {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                }
+            });
+        }
+
+        @Override
+        public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+            return new StringResourceStream("<html><body><form wicket:id='form'><div wicket:id='files'></div>"
+                    + "<button wicket:id='save'></button></form><a wicket:id='elsewhere'>elsewhere</a></body></html>");
+        }
+    }
+
+    @Test
+    void anotherAjaxRequestLeavesAFileUploadsErrorAlone() {
+        UploadPage page = tester.startPage(new UploadPage());
+        tester.executeAjaxEvent("form:save", "click");
+        assertThat(tester.getLastResponseAsString()).contains(anyUpdate(page.files));
+
+        tester.clickLink("elsewhere");
+
+        // Not even after Wicket set the upload's model to null as it detached the input
+        assertThat(tester.getLastResponseAsString()).doesNotContain("WicketOat.fieldFeedback");
     }
 
     @Test

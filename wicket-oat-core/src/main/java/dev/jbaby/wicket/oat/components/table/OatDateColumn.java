@@ -11,10 +11,13 @@ import org.apache.wicket.util.convert.IConverter;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalQueries;
 import java.util.Locale;
 
 /**
@@ -28,7 +31,9 @@ import java.util.Locale;
  * }</pre>
  * Dates use {@link FormatStyle#MEDIUM} and times {@link FormatStyle#SHORT} by default;
  * {@link #setStyle} or {@link #setPattern} change that. Empty cells stay empty for a
- * {@code null} value.
+ * {@code null} value. A value with neither a date nor a time of day, such as a
+ * {@code YearMonth}, shows as its {@code toString()} ({@code 2026-10}) unless a pattern
+ * is set, e.g. {@code "MMMM yyyy"}.
  *
  * @param <T> the row type
  * @param <S> the sort property type
@@ -51,9 +56,10 @@ public class OatDateColumn<T, S> extends LambdaColumn<T, S> {
     }
 
     /**
-     * The locale's date and time styles, e.g. {@code (SHORT, SHORT)}. Zone-less values
-     * ({@code LocalDateTime}, {@code LocalTime}) can't use a {@code LONG} or {@code FULL}
-     * time style, which needs a zone.
+     * The locale's date and time styles, e.g. {@code (SHORT, SHORT)}. A {@code LONG} or
+     * {@code FULL} time style shows the zone, or an {@code OffsetDateTime}'s offset;
+     * values without one ({@code LocalDateTime}, {@code LocalTime}) show {@code MEDIUM},
+     * the same time to the second.
      */
     public OatDateColumn<T, S> setStyle(FormatStyle dateStyle, FormatStyle timeStyle) {
         this.dateStyle = dateStyle;
@@ -95,16 +101,26 @@ public class OatDateColumn<T, S> extends LambdaColumn<T, S> {
             }
             TemporalAccessor temporal = value instanceof Instant instant
                     ? instant.atZone(zone != null ? zone : ZoneId.systemDefault())
+                    // Its offset as the zone, which the LONG and FULL time styles show
+                    : value instanceof OffsetDateTime offset ? offset.toZonedDateTime()
                     : (TemporalAccessor) value;
-            DateTimeFormatter formatter;
             if (pattern != null) {
-                formatter = DateTimeFormatter.ofPattern(pattern);
-            } else if (temporal instanceof LocalDate) {
+                return DateTimeFormatter.ofPattern(pattern).withLocale(locale).format(temporal);
+            }
+            boolean hasDate = temporal.isSupported(ChronoField.EPOCH_DAY);
+            boolean hasTime = temporal.isSupported(ChronoField.NANO_OF_DAY);
+            // A value without a zone can't show one: MEDIUM is LONG and FULL without it
+            FormatStyle time = temporal.query(TemporalQueries.zoneId()) == null
+                    && (timeStyle == FormatStyle.LONG || timeStyle == FormatStyle.FULL) ? FormatStyle.MEDIUM : timeStyle;
+            DateTimeFormatter formatter;
+            if (hasDate && hasTime) {
+                formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, time);
+            } else if (hasDate) {
                 formatter = DateTimeFormatter.ofLocalizedDate(dateStyle);
-            } else if (temporal instanceof LocalTime) {
-                formatter = DateTimeFormatter.ofLocalizedTime(timeStyle);
+            } else if (hasTime) {
+                formatter = DateTimeFormatter.ofLocalizedTime(time);
             } else {
-                formatter = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+                return value.toString(); // e.g. a YearMonth, which has no style of its own
             }
             return formatter.withLocale(locale).format(temporal);
         }

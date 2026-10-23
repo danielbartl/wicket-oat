@@ -4,11 +4,13 @@ import dev.jbaby.wicket.oat.components.OatDataTable;
 import dev.jbaby.wicket.oat.components.table.InvoiceTablePage.Invoice;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
@@ -16,6 +18,15 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -102,6 +113,43 @@ class OatDataTableFeaturesTest {
         tester.getSession().setLocale(Locale.GERMANY);
         tester.startPage(page);
         assertThat(tester.getLastResponseAsString()).contains("1.234,50 €").contains("99,00 $").contains("09.10.2026");
+    }
+
+    /** What a date column's cell shows for the value, in the session's locale. */
+    private static String shown(OatDateColumn<TemporalAccessor, String> column, TemporalAccessor value) {
+        Item<ICellPopulator<TemporalAccessor>> cell = new Item<>("cell", 0, null);
+        column.populateItem(cell, "date", () -> value);
+        return cell.get("date").getDefaultModelObjectAsString();
+    }
+
+    private static OatDateColumn<TemporalAccessor, String> dateColumn() {
+        return new OatDateColumn<>(Model.of("When"), value -> value);
+    }
+
+    private static String localized(DateTimeFormatter formatter, TemporalAccessor value) {
+        return formatter.withLocale(Locale.US).format(value);
+    }
+
+    @Test
+    void dateColumnsShowEveryKindOfValueInEveryStyle() {
+        LocalDateTime local = LocalDateTime.of(2026, 10, 9, 15, 30);
+        ZonedDateTime vienna = local.atZone(ZoneId.of("Europe/Vienna"));
+        OffsetDateTime offset = local.atOffset(ZoneOffset.ofHours(2));
+
+        // A LONG or FULL time style shows the zone; a value without one shows the time to the second
+        assertThat(shown(dateColumn().setStyle(FormatStyle.LONG, FormatStyle.LONG), local))
+                .isEqualTo(localized(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.MEDIUM), local));
+        assertThat(shown(dateColumn().setStyle(FormatStyle.MEDIUM, FormatStyle.FULL), local.toLocalTime()))
+                .isEqualTo(localized(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM), local.toLocalTime()));
+        assertThat(shown(dateColumn().setStyle(FormatStyle.MEDIUM, FormatStyle.FULL), vienna))
+                .isEqualTo(localized(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.FULL), vienna));
+        assertThat(shown(dateColumn().setStyle(FormatStyle.MEDIUM, FormatStyle.LONG), offset)).endsWith("+02:00");
+        // A time with an offset is a time of day, not a date
+        assertThat(shown(dateColumn(), offset.toOffsetTime()))
+                .isEqualTo(localized(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT), offset.toOffsetTime()));
+        // A month has no style of its own
+        assertThat(shown(dateColumn(), YearMonth.of(2026, 10))).isEqualTo("2026-10");
+        assertThat(shown(dateColumn().setPattern("MMMM yyyy"), YearMonth.of(2026, 10))).isEqualTo("October 2026");
     }
 
     @Test

@@ -20,6 +20,10 @@
 - Fix: a context menu (`Oat.Behaviors.contextMenu()`) in an open `OatDialog` or
   `OatDrawer` couldn't be used: its entries took neither focus nor clicks. In an
   `OatPopover`, choosing an entry closed the popover. The menu now opens inside them.
+- Fix: an `OatLoadMoreList` with `setLoadOnScroll(true)` loaded only one more batch on
+  scroll when an Oat form field or an `OatAvatar` picture came before it on the page.
+  Their script, `wicket-oat.js`, then loaded before Wicket's Ajax script and missed the
+  "Load more" button re-rendered after each batch. It now waits for the page to load.
 
 ## 0.5.0 (2026-10-22)
 

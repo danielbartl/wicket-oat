@@ -357,14 +357,19 @@
                 }
             });
         };
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', observe);
-        } else {
+        // Buttons re-rendered over Ajax are new elements. Wicket's Ajax script can come after
+        // this one in <head>, e.g. when an Oat field above the list added this one first, so
+        // subscribe once the page has loaded
+        var start = function () {
             observe();
-        }
-        // Buttons re-rendered over Ajax are new elements
-        if (window.Wicket && Wicket.Event) {
-            Wicket.Event.subscribe('/dom/node/added', observe);
+            if (window.Wicket && Wicket.Event) {
+                Wicket.Event.subscribe('/dom/node/added', observe);
+            }
+        };
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start);
+        } else {
+            start();
         }
     }
 

@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.7.0 (unreleased)
+
 ## 0.6.0 (2026-10-23)
 
 A release of fixes, from a review of the whole library: a multi-select field that saved

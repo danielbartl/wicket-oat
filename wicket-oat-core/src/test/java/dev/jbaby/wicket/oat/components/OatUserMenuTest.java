@@ -151,6 +151,33 @@ class OatUserMenuTest {
     }
 
     @Test
+    void anotherSitesPageCantSignTheUserOut() {
+        signIn("Ada Lovelace");
+        tester.startPage(MenuPage.class);
+        // A form on another site posting here: the browser sends the session cookie along.
+        // In lower case, as WicketTester's request, unlike a servlet container, matches
+        // header names exactly.
+        tester.getRequest().addHeader("sec-fetch-site", "cross-site");
+
+        tester.submitForm("user:dropdown:menu:signOut");
+
+        assertThat(tester.getLastResponse().getStatus()).isEqualTo(403);
+        assertThat(tester.getSession().getMetaData(USER)).isEqualTo("Ada Lovelace");
+    }
+
+    @Test
+    void signOutFromTheApplicationsOwnPageWorks() {
+        signIn("Ada Lovelace");
+        tester.startPage(MenuPage.class);
+        tester.getRequest().addHeader("sec-fetch-site", "same-origin");
+
+        tester.submitForm("user:dropdown:menu:signOut");
+
+        tester.assertRenderedPage(MockHomePage.class);
+        assertThat(tester.getSession().getMetaData(USER)).isNull();
+    }
+
+    @Test
     void signOutIsAPost() {
         signIn("Ada Lovelace");
         tester.startPage(MenuPage.class);

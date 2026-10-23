@@ -1,5 +1,7 @@
 package dev.jbaby.wicket.oat.components;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -13,6 +15,11 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy;
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy;
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy.RequestType;
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy.ResourceIsolationOutcome;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.io.Serializable;
@@ -38,9 +45,12 @@ import java.util.Objects;
  * }</pre>
  * "Sign out" invalidates the session and then shows the home page; override
  * {@link #signOut()} and {@link #onSignedOut()} to do otherwise, e.g. to sign out of
- * Spring Security too. It is a POST, which another site can't make with the user's
- * session cookie (as browsers send it by default), and it works on a page that is
- * still open after the session expired. The menu opens in the browser and its links and
+ * Spring Security too. It is a POST, which is refused with 403 Forbidden when the browser
+ * says it comes from another site's page ({@code Sec-Fetch-Site}, which current browsers
+ * send), so another site can't sign the user out; Wicket's
+ * {@code ResourceIsolationRequestCycleListener} does the same for all of an application's
+ * requests. It works on a page that is still open after the session expired. The menu
+ * opens in the browser and its links and
  * Sign out form are stateless, so it keeps a page stateless, such as a sign-in page,
  * where the "Sign in" link hides itself.
  * <p>
@@ -52,6 +62,9 @@ import java.util.Objects;
  * a markup id, so {@code target.add(userMenu)} updates it after a sign-in over Ajax.
  */
 public class OatUserMenu extends Panel {
+
+    /** Refuses a request the browser says comes from another site's page (Sec-Fetch-Site). */
+    private static final IResourceIsolationPolicy FROM_ANOTHER_SITE = new FetchMetadataResourceIsolationPolicy();
 
     private final IModel<String> name;
     private final List<MenuLink> links = new ArrayList<>();
@@ -127,6 +140,12 @@ public class OatUserMenu extends Panel {
             // Instead of processing: the form has no fields, and processing skips a hidden form
             @Override
             public void process(IFormSubmitter submitter) {
+                // Not for another site's page: browsers send the session cookie with its POST
+                // unless the cookie is SameSite, which only Chromium assumes by default
+                if (getRequest().getContainerRequest() instanceof HttpServletRequest request
+                        && FROM_ANOTHER_SITE.isRequestAllowed(request, getPage(), RequestType.LISTENER) == ResourceIsolationOutcome.DISALLOWED) {
+                    throw new AbortWithHttpErrorCodeException(HttpServletResponse.SC_FORBIDDEN, "Sign out from another site");
+                }
                 signOut();
                 onSignedOut();
             }

@@ -49,6 +49,13 @@
   what a value has. A `LONG` or `FULL` time shows the zone, an `OffsetDateTime`'s
   offset, or `MEDIUM` for a value without one. An `OffsetTime` is shown as a time, and a
   `YearMonth` as its `toString()` (`2026-10`) unless a pattern is set.
+- Fix: a page on another site could sign the user out with a form posting to
+  `OatUserMenu`'s "Sign out" in Firefox and Safari, which send the session cookie along
+  unless it is `SameSite`. Only Chromium treats a cookie without `SameSite` as `Lax`,
+  which the documentation had relied on. "Sign out" is now refused with 403 Forbidden
+  when the browser says another site's page sent it (`Sec-Fetch-Site`, which current
+  browsers send), using Wicket's `FetchMetadataResourceIsolationPolicy`. For all of an
+  application's requests, add Wicket's `ResourceIsolationRequestCycleListener`.
 
 ## 0.5.0 (2026-10-22)
 

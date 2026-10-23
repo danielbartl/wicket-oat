@@ -60,6 +60,13 @@
   value, kept every such part as a segment when one of them was among the five largest,
   and counted the others again in "Other". It showed more than six segments, and the
   total and every share were too high. Each part is now either kept or in "Other".
+- Fix: an `OatLazyLoadPanel` waiting on `isContentReady()` made its page poll the server
+  every 0.1 seconds, ten requests a second, each holding the page's lock while the user
+  clicked. It also made Wicket's own `AjaxLazyLoadPanel`s on the page poll that often.
+  All of a page's lazy-load panels share one timer, at the shortest `getUpdateInterval()`
+  of those still waiting, and this one's was 0.1 seconds. It is a second now, as in
+  Wicket. The 0.1 seconds were meant for the first load, which still came after a
+  second: the panel now starts the page's timer at 0.1 seconds instead.
 
 ## 0.5.0 (2026-10-22)
 

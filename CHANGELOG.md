@@ -67,6 +67,9 @@
   of those still waiting, and this one's was 0.1 seconds. It is a second now, as in
   Wicket. The 0.1 seconds were meant for the first load, which still came after a
   second: the panel now starts the page's timer at 0.1 seconds instead.
+- Fix: `OatPagination` named its `<nav>` "Pagination" in English in every language, and
+  added it to an `aria-label` of the markup's own ("Seiten Pagination"). It is the
+  translated `OatPagination.label` now, and an `aria-label` in the markup is kept as it is.
 
 ## 0.5.0 (2026-10-22)
 

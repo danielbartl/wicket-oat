@@ -1013,7 +1013,7 @@ getResourceSettings().getStringResourceLoaders()
 | `OatAppLayout.skipToContent` | Skip to content |
 | `OatAppLayout.title` / `OatAppLayout.name` | Wicket Oat Application (not translated: meant to be overridden) |
 | `OatBottomNav.label` | Main |
-| `OatPagingNavigator.label` | Pagination |
+| `OatPagingNavigator.label` / `OatPagination.label` | Pagination |
 | `OatFileDropzone.choose` / `OatFileDropzone.hint` | Choose files / Drop files here or click to choose |
 | `OatTagInput.placeholder` | Add tags... |
 | `OatFilter.all` | All |

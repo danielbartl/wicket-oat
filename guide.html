@@ -132,7 +132,8 @@
 </li>
 <li><a href="#testing">Testing</a>
 </li>
-<li><a href="#ai-skill">AI skill</a>
+<li><a href="#ai-skill">Coding agents</a>
+<ol><li><a href="#agent-rules">Other agents</a></li></ol>
 </li>
 <li><a href="#whats-new">What's new in 0.6.0</a>
 </li>
@@ -855,10 +856,45 @@ tester.executeBehavior(first.getBehaviors(AjaxFormComponentUpdatingBehavior.clas
 <p>A field shows the error of an Ajax submit without being re-rendered, so its message is in a script of the response, <code>WicketOat.fieldFeedback(...)</code>. An <code>OatUserMenu</code> signs out with a form: <code>tester.submitForm("user:dropdown:menu:signOut")</code>. An <code>OatFilter</code> is chosen as the browser posts it: set the chip's value for the choice's input name, then fire <code>"change"</code> on <code>"status:form:choice"</code>. A breadcrumb's levels are at <code>"breadcrumb:list:items:0:link"</code>, numbered among all levels, also after a "…" menu.</p>
 </section>
 <section class="guide-section" aria-labelledby="ai-skill">
-<h2 id="ai-skill">AI skill <a class="guide-anchor" href="#ai-skill" aria-label="Link to this section">#</a></h2>
+<h2 id="ai-skill">Coding agents <a class="guide-anchor" href="#ai-skill" aria-label="Link to this section">#</a></h2>
 <p>Wicket Oat ships an Agent Skill in the repository's <code>wicket-oat/</code> folder: a <code>SKILL.md</code> and reference files describing every component and behavior. Copy it into your agent's skills folder, for example for Claude Code:</p>
 <pre class="guide-code" data-lang="Shell"><code>cp -r wicket-oat .claude/skills/wicket-oat</code></pre>
 <p>The agent then understands requests like "add an Oat data table of invoices with a search toolbar and a delete action".</p>
+<h3 id="agent-rules">Other agents <a class="guide-anchor" href="#agent-rules" aria-label="Link to this section">#</a></h3>
+<p>For Codex, Cursor, Copilot, Gemini CLI and any other agent, paste these rules into the instructions file it reads in every session: <code>AGENTS.md</code>, <code>CLAUDE.md</code> or <code>.github/copilot-instructions.md</code>. They are what agents most often get wrong, and they are short because they load every time:</p>
+<pre class="guide-code" data-lang="Markdown"><code>## Wicket Oat
+
+- Wicket Oat components are Apache Wicket components: Java objects bound to models, each
+  attached to a tag in the page's HTML by `wicket:id` and rendered on the server. Do not
+  write React, Thymeleaf or JSP.
+- Call `WicketOats.install(this)` in `WebApplication.init()`. Pages extend
+  `OatAppLayout` (sidebar and top bar) or `OatMobileLayout`, or put
+  `new OatHtml("html")` on `&lt;html wicket:id="html"&gt;`.
+- Give each component the tag its reference entry names (`OatButton` on `&lt;a&gt;` or
+  `&lt;button&gt;`). Most components bring their own inner markup, so the tag stays empty:
+  `&lt;a wicket:id="save"&gt;&lt;/a&gt;`.
+- Use the lambda factories instead of anonymous subclasses:
+  `OatButton.onClick(id, label, target -&gt; ...)`,
+  `OatSubmitButton.onSubmit(id, label, target -&gt; ...)`. `OatButton` never submits a
+  form; `OatSubmitButton` does.
+- Put a `CompoundPropertyModel` on the form; Oat fields take their model and their label
+  (from the page's `.properties` file) by id. After an Ajax submit the fields show and
+  clear their own errors, so don't add `target.add(form)`.
+- Show messages with Wicket's `success(...)`/`error(...)` and
+  `Oat.Behaviors.feedbackToasts()` on the page or an `OatFeedbackPanel`;
+  `Oat.toast(target, ...)` is for a one-off toast.
+- Style with semantic HTML and Oat's own classes only (`hstack`, `vstack`, `gap-2`,
+  `mt-4`, `row`, `col-6`); never Bootstrap or Tailwind classes. `Oat.Behaviors` styles
+  any Wicket component (`button()`, `badge(OatVariant.SUCCESS)`, `card()`).
+- Write no inline styles, `&lt;script&gt;` blocks or `on*` handlers: Wicket's strict
+  Content-Security-Policy stays on. Put CSS in the application's stylesheet, using Oat's
+  variables (`var(--space-4)`, `var(--primary)`).
+- An icon-only button needs an `aria-label` or a labelled `OatIcon`.
+- Render every changed page in a `WicketTester` test (`tester.startPage(MyPage.class)`):
+  Wicket fails when a `wicket:id` is missing from the markup or from the Java.
+- Docs: read https://danielbartl.github.io/wicket-oat/llms.txt, and the component's
+  entry in the components reference before using it.</code></pre>
+<p>The docs for agents follow the <a href="https://llmstxt.org" target="_blank" rel="noopener">llms.txt</a> convention: <a href="llms.txt"><code>llms.txt</code></a> has the same rules and links to the user guide and the references as Markdown, from the current release's tag, and <a href="llms-full.txt"><code>llms-full.txt</code></a> has all of them in one file. Without a rules file, a prompt like this gets an agent started: <em>"Read https://danielbartl.github.io/wicket-oat/llms.txt, then add a delete confirmation to the invoices table."</em></p>
 </section>
 <section class="guide-section" aria-labelledby="whats-new">
 <h2 id="whats-new">What's new in 0.6.0 <a class="guide-anchor" href="#whats-new" aria-label="Link to this section">#</a></h2>

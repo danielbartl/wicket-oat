@@ -2,6 +2,21 @@
 
 ## 0.7.0 (unreleased)
 
+### Upgrading from 0.6.x
+
+- In development mode, and so in `WicketTester` tests, a button without an accessible
+  name fails to render. Give an icon-only button an `aria-label`, or its `OatIcon` a
+  label. `OatSettings.setAccessibilityChecks(false)` turns the check off.
+
+### Changes
+
+- New: in development mode, a button styled by Oat (`OatButton`, `OatSubmitButton`,
+  `Oat.Behaviors.button()`) without an accessible name fails to render, with a message
+  saying how to name it. That is a button with no text, no `aria-label` and no labelled
+  icon, which a screen reader announces only as "button". Usually it is an icon-only
+  button. Deployment mode doesn't check; `OatSettings.setAccessibilityChecks(boolean)`
+  turns the check on or off in either mode.
+
 ## 0.6.0 (2026-10-23)
 
 A release of fixes, from a review of the whole library: a multi-select field that saved

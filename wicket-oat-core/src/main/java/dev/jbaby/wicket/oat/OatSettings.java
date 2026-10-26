@@ -27,6 +27,7 @@ public class OatSettings implements Serializable {
     private OatThemeStore themeStore = new CookieThemeStore();
     private OatDensity density = OatDensity.DEFAULT;
     private boolean addResources = true;
+    private boolean accessibilityChecks;
 
     /** The settings of the current application. */
     public static OatSettings get() {
@@ -37,6 +38,7 @@ public class OatSettings implements Serializable {
         OatSettings settings = application.getMetaData(KEY);
         if (settings == null) {
             settings = new OatSettings();
+            settings.accessibilityChecks = application.usesDevelopmentConfig();
             application.setMetaData(KEY, settings);
         }
         return settings;
@@ -102,6 +104,21 @@ public class OatSettings implements Serializable {
      */
     public OatSettings setAddResources(boolean addResources) {
         this.addResources = addResources;
+        return this;
+    }
+
+    public boolean isAccessibilityChecks() {
+        return accessibilityChecks;
+    }
+
+    /**
+     * Whether a page with an accessibility mistake that Oat can detect fails to render, with
+     * a message saying how to fix it. For now that is a button without an accessible name,
+     * such as an icon-only button without an {@code aria-label}. On in Wicket's development
+     * mode, so that tests and local runs catch the mistake; off in deployment.
+     */
+    public OatSettings setAccessibilityChecks(boolean accessibilityChecks) {
+        this.accessibilityChecks = accessibilityChecks;
         return this;
     }
 

@@ -54,7 +54,7 @@ class BehaviorsTest {
     void testButtonBehavior() {
         WebMarkupContainer link = new WebMarkupContainer("id");
         link.add(new ButtonBehavior(OatVariant.SECONDARY));
-        tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\"></a>"));
+        tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\">Save</a>"));
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("class")).contains("button");
         assertThat(tag.getAttribute("data-variant")).isEqualTo("secondary");
@@ -64,7 +64,7 @@ class BehaviorsTest {
     void testButtonBehaviorFactoryVariant() {
         WebMarkupContainer link = new WebMarkupContainer("id");
         link.add(Oat.Behaviors.button(OatVariant.DANGER));
-        tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\"></a>"));
+        tester.startComponentInPage(link, Markup.of("<a wicket:id=\"id\">Save</a>"));
         TagTester tag = tester.getTagByWicketId("id");
         assertThat(tag.getAttribute("data-variant")).isEqualTo("danger");
     }

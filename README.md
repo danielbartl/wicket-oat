@@ -30,6 +30,7 @@ Wicket Oat is a modern, lightweight, and themeable UI component library for [Apa
 - **Wicket 10+:** Fully compatible with Apache Wicket 10, on Java 17 or newer.
 - **Spring Boot Integration:** Seamless integration with Spring Boot applications.
 - **Comprehensive Component Set:** Includes everything from basic buttons to complex data tables.
+- **Accessibility Checks:** In development mode, a button without an accessible name (such as an icon-only button without an `aria-label`) fails to render, with a message saying how to fix it, so tests and local runs catch it before your users do.
 - **Accessible Forms by Default:** Every form field automatically wires `aria-describedby` (linking the field to its feedback/hint message) and toggles `aria-invalid` when validation fails — no extra markup or wiring required.
 - **Wicket-Style Forms:** Form fields work with `CompoundPropertyModel`, take their labels from `.properties` files, and re-render via Ajax like any Wicket component (see [Forms](#forms)).
 - **Translated:** The library's own texts (dialog buttons, menu toggle, upload hints, validation messages, ...) come in English, German, Spanish, French, Italian, Japanese, Dutch and Portuguese, following the component's locale like Wicket's own messages (see [Translations](#translations)).
@@ -781,6 +782,11 @@ size and color. It's decorative unless you give it a label:
 add(new OatIcon("edit", "pencil"));                         // <svg wicket:id="edit"></svg>
 add(new OatIcon("remove", "trash-2").setLabel("Delete"));  // role="img" aria-label="Delete"
 ```
+
+A button showing only an icon needs a name for screen readers: an `aria-label`, or a
+labelled icon as above. In development mode, and so in `WicketTester` tests, a button
+without any name fails to render with a message saying so;
+`OatSettings.setAccessibilityChecks(false)` turns the check off.
 
 `OatCookieConsent` asks for consent to optional cookies, remembers the answer for a
 year, and hides itself once the user has answered. Check the answer with

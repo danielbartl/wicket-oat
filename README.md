@@ -1303,6 +1303,10 @@ The project includes an examples module `wicket-oat-examples`, which also runs a
    ```
 4. Access the demo at `http://localhost:8080/`.
 
+`http://localhost:8080/showcase` shows every component on one page, as the website does,
+and `?theme=nord` in any theme. The browser checks run over it (see
+[CONTRIBUTING.md](CONTRIBUTING.md#the-showcase-and-the-browser-checks)).
+
 ### Deploying the Examples
 
 The repository's `Dockerfile` builds the examples app into a container that runs Wicket in

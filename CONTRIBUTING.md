@@ -9,6 +9,37 @@
 This builds both `wicket-oat-core` (the library) and `wicket-oat-examples`
 (the demo app) and runs their test suites.
 
+## The showcase and the browser checks
+
+The examples app's `/showcase` page shows every component as the website's component
+showcase does, rendered by the library: `/showcase?theme=nord` in one theme,
+`?density=compact` compact, `?scenario=button,badge` only those. Its scenarios are in
+`Scenarios` (in `wicket-oat-examples`): markup with `wicket:id`s and the components that
+fill it.
+
+Two kinds of test use it:
+
+- `ShowcasePreviewsTest`, part of `./mvnw test`, renders every scenario and writes their
+  markup to `wicket-oat-examples/target/showcase/previews.json`. With
+  `-Dshowcase.site=../wicket-oat-site/index.html` (a checkout of the `gh-pages` branch) it
+  puts each preview into the website's card with the same `data-preview` attribute.
+- `ShowcaseBrowserTest` opens the page in Chromium with Playwright. It fails on any
+  WCAG 2.2 AA violation axe-core finds, in every built-in theme, on any console error
+  (such as a style or script the Content Security Policy blocked), and on a control
+  that shows no focus when tabbed to, in the light and dark themes and with forced
+  colors. It runs in CI, or with
+
+  ```bash
+  ./mvnw install -DskipTests -pl wicket-oat-core -am
+  ./mvnw test -pl wicket-oat-examples -Pbrowser
+  ```
+
+  Playwright downloads its Chromium the first time; set `BROWSER_EXECUTABLE` to use
+  another one. Themes in its `CONTRAST_TO_FIX` list don't meet the contrast yet: their
+  contrast violations are printed rather than failed, until their colors are fixed.
+
+A new component gets a scenario, so the checks cover it.
+
 ## Running the examples app
 
 See the "Running the Examples" section of the [README](README.md#running-the-examples).

@@ -22,6 +22,14 @@
   anything with the `oat-screen-only` class. `OatAppLayout`'s main area and
   `OatSplitLayout`'s panes print in full, one pane below the other, and charts and
   table rows aren't split across sheets.
+- Fix: the text of tinted badges and alerts (success, warning, danger) had less than
+  WCAG AA's 4.5:1 contrast with their tint, even in the light and dark themes (4.0 to
+  4.4). It is pulled a quarter of the way towards the theme's text color now, which keeps
+  its hue. Found by the new browser checks of the examples app's showcase page.
+- Fix: the avatars of an `OatAvatarGroup` built from `OatAvatar`s didn't overlap. Oat
+  overlaps all but the last child of a group, and an `OatAvatar`'s picture is the last
+  child of its own tag. Now every avatar overlaps the next but the one in the group's
+  last item, at each size.
 - Fix: a page in a dark theme printed its light text pale on white paper, as browsers
   leave out backgrounds when printing, and the cookie banner and skip link printed
   over the content of every sheet. The dark themes now print in Oat's light palette.

@@ -24,3 +24,31 @@ jobs:
 
       - name: Build and test
         run: ./mvnw -B test
+
+  browser:
+    name: Browser checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v6
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Playwright's Chromium
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('wicket-oat-examples/pom.xml') }}
+
+      - name: Install the library
+        run: ./mvnw -B install -DskipTests -pl wicket-oat-core -am
+
+      - name: Install Chromium and its system libraries
+        run: ./mvnw -B -pl wicket-oat-examples exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps chromium" -Dexec.classpathScope=test
+
+      - name: Check the showcase in Chromium
+        run: ./mvnw -B test -pl wicket-oat-examples -Pbrowser

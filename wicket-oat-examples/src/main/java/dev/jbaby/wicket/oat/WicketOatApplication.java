@@ -1,6 +1,7 @@
 package dev.jbaby.wicket.oat;
 
 import dev.jbaby.wicket.oat.app.*;
+import dev.jbaby.wicket.oat.app.showcase.ShowcasePage;
 import org.apache.wicket.Page;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -74,6 +75,7 @@ public class WicketOatApplication {
                 mountPage("/mobile/capacity", MobileCapacityPage.class);
                 mountPage("/mobile/team", MobileTeamPage.class);
                 mountPage("/mobile/add", MobileAddAbsencePage.class);
+                mountPage("/showcase", ShowcasePage.class);
 
                 getComponentInstantiationListeners().add(
                         new SpringComponentInjector(this, ctx));

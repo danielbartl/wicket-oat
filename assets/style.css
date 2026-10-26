@@ -380,6 +380,27 @@ a.unstyled, .site-nav a {
     display: block;
 }
 
+/* Previews rendered by the library (the examples app's showcase): what a component
+   needs to show in a card rather than where it sits on a page */
+.showcase-preview .oat-cookie-consent {
+    position: static;
+    margin: 0;
+    max-width: none;
+}
+
+.showcase-preview > article.card {
+    margin: 0;
+}
+
+.showcase-icons {
+    font-size: 1.5rem;
+}
+
+.showcase-statuses {
+    width: fit-content;
+    margin-inline: auto;
+}
+
 .showcase-preview .demo-autocomplete {
     position: static;
     margin-block-start: var(--space-1);

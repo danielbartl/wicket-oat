@@ -2255,3 +2255,63 @@ a.oat-tree-label[aria-current] {
     flex: 1;
     border-block-start: 1px solid var(--border);
 }
+
+/*
+ * Printing: the page alone, over as many sheets as it needs. The app shell (top bar,
+ * sidebar, skip link, bottom tab bar) and what floats over the page (toasts, the cookie
+ * banner, a context menu) stay off the paper, and so does anything with the
+ * oat-screen-only class, for an app's own screen-only parts. Scrolling areas print in
+ * full: the layout's main area, and split panes one below the other. The dark themes
+ * print in the light palette (themes.css).
+ */
+@media print {
+    [data-sidebar-layout] > :is(header, nav)[data-topnav],
+    [data-sidebar-layout] > aside[data-sidebar],
+    .oat-skip-link,
+    .oat-bottom-nav,
+    .oat-cookie-consent,
+    .toast-container,
+    .oat-context-menu,
+    .oat-screen-only {
+        display: none !important;
+    }
+
+    [data-sidebar-layout] {
+        display: block;
+        height: auto;
+    }
+
+    [data-sidebar-layout] > main {
+        overflow: visible;
+    }
+
+    .oat-split {
+        display: block;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+    }
+
+    .oat-split-pane {
+        width: auto;
+        max-width: none;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        resize: none;
+    }
+
+    .oat-split-first {
+        border-inline-end: 0;
+        border-block-end: 1px solid var(--border);
+    }
+
+    :is(h1, h2, h3, h4, h5, h6) {
+        break-after: avoid;
+    }
+
+    tr,
+    .oat-chart {
+        break-inside: avoid;
+    }
+}

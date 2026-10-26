@@ -16,6 +16,15 @@
   icon, which a screen reader announces only as "button". Usually it is an icon-only
   button. Deployment mode doesn't check; `OatSettings.setAccessibilityChecks(boolean)`
   turns the check on or off in either mode.
+- New: printed pages show the page alone. The app shell (`OatAppLayout`'s top bar,
+  sidebar and skip link, `OatMobileLayout`'s tab bar) and what floats over the page
+  (toasts, `OatCookieConsent`, a context menu) are left out of print, and so is
+  anything with the `oat-screen-only` class. `OatAppLayout`'s main area and
+  `OatSplitLayout`'s panes print in full, one pane below the other, and charts and
+  table rows aren't split across sheets.
+- Fix: a page in a dark theme printed its light text pale on white paper, as browsers
+  leave out backgrounds when printing, and the cookie banner and skip link printed
+  over the content of every sheet. The dark themes now print in Oat's light palette.
 
 ## 0.6.0 (2026-10-23)
 

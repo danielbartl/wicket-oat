@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -33,6 +34,7 @@ class ShowcasePreviewsTest {
 
     private static final Pattern RELATIVE_LINK = Pattern.compile("href=\"(\\./|\\.\\./|\\?)[^\"]*\"");
     private static final Pattern CARD = Pattern.compile("<div[^>]*\\sdata-preview=\"([a-z0-9-]+)\"[^>]*>");
+    private static final Pattern ID = Pattern.compile("\\sid=\"([^\"]+)\"");
     private static final Pattern DIV = Pattern.compile("<div[\\s>]|</div>");
 
     @Autowired
@@ -53,8 +55,25 @@ class ShowcasePreviewsTest {
         String site = System.getProperty("showcase.site");
         if (site != null) {
             Path index = Path.of(site);
-            Files.writeString(index, fillCards(Files.readString(index), previews));
+            String filled = fillCards(Files.readString(index), previews);
+            // Previews bring markup ids; one taken twice breaks labels and menus
+            List<String> ids = ID.matcher(filled).results().map(id -> id.group(1)).toList();
+            assertThat(ids).as("ids on the website's page").doesNotHaveDuplicates();
+            Files.writeString(index, filled);
         }
+    }
+
+    @Test
+    void fillsTheWebsitesCardsAndTheirLayout() {
+        String site = """
+                <div class="showcase-card"><div class="showcase-preview" style="display:block" data-preview="alert">
+                    <div role="alert">A copy</div>
+                </div><div class="showcase-footer">OatAlert</div></div>""";
+
+        assertThat(fillCards(site, Map.of("alert", "<div role=\"alert\">Rendered</div>"))).isEqualTo("""
+                <div class="showcase-card"><div class="showcase-preview block" data-preview="alert">
+                <div role="alert">Rendered</div>
+                </div><div class="showcase-footer">OatAlert</div></div>""");
     }
 
     private Map<String, String> render() {
@@ -82,16 +101,21 @@ class ShowcasePreviewsTest {
         }
     }
 
-    // The website's page with each card's preview replaced; a card without a scenario fails
+    // The website's page with each card's preview and layout replaced; a card without a
+    // scenario fails
     static String fillCards(String site, Map<String, String> previews) {
         StringBuilder filled = new StringBuilder();
         Matcher card = CARD.matcher(site);
         int copied = 0;
         while (card.find(copied)) {
             String id = card.group(1);
-            assertThat(previews).as("the website's card " + id + " has a scenario").containsKey(id);
+            Scenario scenario = Scenarios.find(id);
+            assertThat(scenario).as("the website's card " + id + " has a scenario").isNotNull();
             int end = closingDiv(site, card.end());
-            filled.append(site, copied, card.end()).append('\n').append(previews.get(id)).append('\n');
+            filled.append(site, copied, card.start())
+                    .append("<div class=\"showcase-preview").append(scenario.block() ? " block" : "")
+                    .append("\" data-preview=\"").append(id).append("\">\n")
+                    .append(previews.get(id)).append('\n');
             copied = end;
         }
         return filled.append(site.substring(copied)).toString();

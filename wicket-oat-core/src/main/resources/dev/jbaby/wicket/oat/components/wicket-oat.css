@@ -700,6 +700,29 @@ figure[data-variant="avatar"] > abbr {
     text-decoration: none;
 }
 
+/*
+ * OatAvatarGroup: Oat overlaps every avatar in a group but the last child. An OatAvatar's
+ * <figure> sits in its own tag and its list item's, though, so it is always a last child,
+ * and none overlapped. Every avatar overlaps the next here, at each size, except the one
+ * in the group's last item.
+ */
+[data-variant="avatar"][role="group"] figure[data-variant="avatar"] {
+    margin-inline-end: calc(var(--space-5) * -1);
+}
+
+[data-variant="avatar"][role="group"].small figure[data-variant="avatar"] {
+    margin-inline-end: calc(var(--space-4) * -.8);
+}
+
+[data-variant="avatar"][role="group"].large figure[data-variant="avatar"] {
+    margin-inline-end: calc(var(--space-6) * -1);
+}
+
+[data-variant="avatar"][role="group"] > :last-child figure[data-variant="avatar"],
+[data-variant="avatar"][role="group"] > figure[data-variant="avatar"]:last-child {
+    margin-inline-end: 0;
+}
+
 /* OatUserMenu: picture and name in the top bar; name, detail, links and Sign out in the menu */
 .oat-user-menu-trigger {
     display: inline-flex;

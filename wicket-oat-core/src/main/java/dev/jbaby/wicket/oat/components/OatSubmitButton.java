@@ -65,7 +65,10 @@ public class OatSubmitButton extends AjaxButton {
         return this;
     }
 
-    /** Square button sized for a single icon. */
+    /**
+     * Square button sized for a single icon. Name it for screen readers with an
+     * {@code aria-label} or a {@link OatIcon#setLabel labelled icon}.
+     */
     public OatSubmitButton setIcon(boolean icon) {
         buttonBehavior.setIcon(icon);
         return this;

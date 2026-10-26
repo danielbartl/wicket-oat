@@ -58,7 +58,7 @@ class OatButtonTest {
             public void onClick(AjaxRequestTarget target) {
             }
         }.setIcon(true).setVariant(OatVariant.DANGER);
-        tester.startComponentInPage(icon, Markup.of("<button wicket:id=\"button\"><svg></svg></button>"));
+        tester.startComponentInPage(icon, Markup.of("<button wicket:id=\"button\" aria-label=\"Delete\"><svg></svg></button>"));
 
         TagTester tag = tester.getTagByWicketId("button");
         assertThat(tag.getValue()).isEqualTo("<svg></svg>");

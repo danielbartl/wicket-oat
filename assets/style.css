@@ -563,6 +563,11 @@ a.unstyled, .site-nav a {
     font-variant-ligatures: none;
 }
 
+/* A long expression in running text breaks instead of widening the page on a phone */
+.guide-content :not(pre) > code {
+    overflow-wrap: anywhere;
+}
+
 .guide-code {
     position: relative;
     margin-block: var(--space-4);

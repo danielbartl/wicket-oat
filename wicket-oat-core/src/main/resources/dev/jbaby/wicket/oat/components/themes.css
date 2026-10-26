@@ -426,3 +426,49 @@
 :is([data-theme="business"], [data-theme="business-dark"]) table {
     font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Printing: paper is white, and browsers leave out backgrounds by default, so a dark
+ * theme's light text would print pale on white. In print the dark themes, and Oat's
+ * default when the browser prefers dark, take the light palette. A dark theme of your
+ * own needs a print rule like this one for its data-theme value.
+ */
+@media print {
+    :root:not([data-theme]),
+    [data-theme="dark"],
+    [data-theme="midnight"],
+    [data-theme="nord"],
+    [data-theme="everforest"],
+    [data-theme="tokyo-night"],
+    [data-theme="royal"],
+    [data-theme="catppuccin-mocha"],
+    [data-theme="daisy"],
+    [data-theme="ultraviolet"],
+    [data-theme="halloween"],
+    [data-theme="xmas"],
+    [data-theme="business-dark"] {
+        color-scheme: light;
+        --background: #fff;
+        --foreground: #262626;
+        --card: #fff;
+        --card-foreground: #262626;
+        --primary: #262626;
+        --primary-foreground: #fafafa;
+        --secondary: #f4f4f5;
+        --secondary-foreground: #262626;
+        --muted: #f4f4f5;
+        --muted-foreground: #71717a;
+        --faint: #fafafa;
+        --faint-foreground: #a1a1aa;
+        --accent: #f4f4f5;
+        --danger: #d32f2f;
+        --danger-foreground: #fafafa;
+        --success: #008032;
+        --success-foreground: #fafafa;
+        --warning: #a65b00;
+        --warning-foreground: #09090b;
+        --border: #e4e4e7;
+        --input: #e4e4e7;
+        --ring: #71717a;
+    }
+}

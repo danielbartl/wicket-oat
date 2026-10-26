@@ -47,4 +47,6 @@ Define the CSS variables, then register the theme so it can be chosen:
 }
 ```
 
+A dark custom theme (`color-scheme: dark`) should also get an `@media print { [data-theme="custom-blue"] { color-scheme: light; --background: #fff; --foreground: #262626; ... } }` rule: paper is white and browsers leave out backgrounds, so the built-in dark themes print in Oat's light palette (copy it from the print rule at the end of `themes.css`).
+
 Theme values must be lowercase letters, digits and dashes. Only registered themes are accepted from the cookie; an unknown value falls back to the default.

@@ -43,6 +43,31 @@ class OatCssTest {
     }
 
     @Test
+    void everyDarkThemePrintsInOatsLightPalette() throws IOException {
+        String themes = read("themes.css");
+        int print = themes.indexOf("@media print {");
+        assertThat(print).as("themes.css's print rule").isPositive();
+        String rule = themes.substring(print, themes.indexOf('}', print));
+
+        Matcher theme = Pattern.compile("\\n(\\[data-theme=\"[a-z-]+\"\\]) \\{\\s*color-scheme: dark;").matcher(themes);
+        int dark = 0;
+        while (theme.find()) {
+            assertThat(rule).as("the print rule").contains(theme.group(1));
+            dark++;
+        }
+        assertThat(dark).as("dark themes").isGreaterThan(10);
+
+        int pinned = themes.indexOf("[data-theme=\"light\"],\n[data-theme=\"dark\"] {");
+        Map<String, String> light = new LinkedHashMap<>();
+        declarations(themes.substring(pinned, themes.indexOf('}', pinned))).forEach((token, value) -> {
+            if (!token.startsWith("--radius") && !token.startsWith("--shadow")) {
+                light.put(token, value.replaceFirst("^light-dark\\(([^,]+),.*\\)$", "$1"));
+            }
+        });
+        assertThat(declarations(rule)).as("the print rule's palette").isEqualTo(light);
+    }
+
+    @Test
     void wicketOatCssDeclaresOatsLayerOrderBeforeUsingALayer() throws IOException {
         Matcher oatOrder = Pattern.compile("@layer ([a-z, ]+);").matcher(read("oat.min.css"));
         assertThat(oatOrder.find()).isTrue();

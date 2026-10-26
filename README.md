@@ -283,6 +283,26 @@ the right language. Its first element is a "Skip to content" link: hidden until
 it gets keyboard focus, it moves focus past the top navigation and sidebar to
 `<main id="oat-main">`.
 
+### Printing
+
+A printed page is the page alone. In print, Wicket Oat leaves out the app shell (the
+top bar, the sidebar, the skip link and `OatMobileLayout`'s tab bar) and what floats
+over the page (toasts, the cookie banner, a context menu). The main area and
+`OatSplitLayout`'s panes print in full, one pane below the other, and a chart or a
+table row isn't split across two sheets. Put what the paper needs, such as a title or
+a date, in the page itself rather than in the top bar.
+
+Paper is white, so the dark themes print in the light palette (see
+[Custom themes](#theming) for a dark theme of your own). Hide your own screen-only
+parts, such as a row of buttons above an invoice, with the `oat-screen-only` class:
+
+```html
+<div class="oat-screen-only"><a wicket:id="back">All invoices</a></div>
+```
+
+Set the paper's size and margins with `@page` in your own stylesheet, e.g.
+`@page { size: A4; margin: 12mm; }`.
+
 ### Busy buttons
 
 For a slow action, a button can show that it's working: with
@@ -1219,7 +1239,10 @@ card.add(Oat.Behaviors.theme(OatTheme.LIGHT));
 ```
 
 A custom theme is a `[data-theme="brand"] { --background: ...; --primary: ...; }`
-block overriding Oat's CSS variables. To keep the choice somewhere else - only in
+block overriding Oat's CSS variables. The built-in dark themes print in Oat's light
+palette, because paper is white; give a dark theme of your own the same treatment
+with an `@media print { [data-theme="brand"] { color-scheme: light; --background: #fff; --foreground: #262626; ... } }`
+rule (`themes.css` has the full palette to copy). To keep the choice somewhere else - only in
 the session, or in a user profile - pass an `OatThemeStore` to
 `setThemeStore(...)` (`SessionThemeStore` is built in).
 

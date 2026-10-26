@@ -2257,6 +2257,19 @@ a.oat-tree-label[aria-current] {
 }
 
 /*
+ * Tinted badges and alerts (success, warning, danger): Oat draws their text in the
+ * variant's color over a tint of it, which falls under WCAG AA's 4.5:1 for small text
+ * (4.0 to 4.4 in the light and dark themes). The text is pulled a quarter of the way
+ * towards the theme's foreground, darker in a light theme and lighter in a dark one, so
+ * the contrast rises and the hue stays.
+ */
+.badge:is([data-variant="success"], [data-variant="warning"], [data-variant="danger"]),
+[role="alert"]:is([data-variant="error"], [data-variant="danger"], [data-variant="success"], [data-variant="warning"]),
+[role="alert"]:is([data-variant="error"], [data-variant="danger"], [data-variant="success"], [data-variant="warning"]) a {
+    color: color-mix(in oklab, var(--_variant-color), var(--foreground) 25%);
+}
+
+/*
  * Printing: the page alone, over as many sheets as it needs. The app shell (top bar,
  * sidebar, skip link, bottom tab bar) and what floats over the page (toasts, the cookie
  * banner, a context menu) stay off the paper, and so does anything with the

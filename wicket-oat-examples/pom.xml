@@ -12,6 +12,14 @@
 	<name>wicket-oat-examples</name>
 	<description>Example application showcasing Wicket Oat components</description>
 
+	<properties>
+		<playwright.version>1.64.0</playwright.version>
+		<axe-core-playwright.version>4.14.0</axe-core-playwright.version>
+		<!-- The browser checks (JUnit tag "browser") run only with -Pbrowser -->
+		<surefire.groups></surefire.groups>
+		<surefire.excludedGroups>browser</surefire.excludedGroups>
+	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -74,10 +82,30 @@
 			<artifactId>spring-modulith-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.microsoft.playwright</groupId>
+			<artifactId>playwright</artifactId>
+			<version>${playwright.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.deque.html.axe-core</groupId>
+			<artifactId>playwright</artifactId>
+			<version>${axe-core-playwright.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<groups>${surefire.groups}</groups>
+					<excludedGroups>${surefire.excludedGroups}</excludedGroups>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -113,4 +141,15 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<!-- ./mvnw test -pl wicket-oat-examples -Pbrowser: only the browser checks -->
+			<id>browser</id>
+			<properties>
+				<surefire.groups>browser</surefire.groups>
+				<surefire.excludedGroups></surefire.excludedGroups>
+			</properties>
+		</profile>
+	</profiles>
 </project>

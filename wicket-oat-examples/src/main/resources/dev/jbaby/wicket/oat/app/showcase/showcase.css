@@ -1,0 +1,102 @@
+/*
+ * The showcase page's cards, as the website draws them (its assets/style.css), and what a
+ * preview needs to show a component in a card rather than where it sits on a page.
+ */
+.showcase {
+    padding-block: var(--space-8);
+}
+
+.showcase-group {
+    margin-block-end: var(--space-10);
+}
+
+.showcase-group > h2 {
+    font-size: var(--text-3);
+    border-bottom: 1px solid var(--border);
+    padding-block-end: var(--space-2);
+}
+
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-5);
+    margin-block-start: var(--space-5);
+}
+
+.showcase-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    background-color: var(--card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.showcase-card.wide {
+    grid-column: span 2;
+}
+
+@media (max-width: 640px) {
+    .showcase-card.wide {
+        grid-column: auto;
+    }
+}
+
+.showcase-preview {
+    padding: var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 5rem;
+    flex: 1;
+}
+
+.showcase-preview.block {
+    display: block;
+}
+
+.showcase-footer {
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--border);
+    background-color: var(--faint);
+}
+
+.showcase-footer strong {
+    display: block;
+    font-size: var(--text-7);
+}
+
+.showcase-footer code {
+    font-size: var(--text-8);
+    color: var(--muted-foreground);
+    background: none;
+    padding: 0;
+    word-break: break-word;
+}
+
+/* Components that sit on the page's edge or corner, shown in their card */
+.showcase-preview .oat-cookie-consent {
+    position: static;
+    margin: 0;
+    max-width: none;
+}
+
+.showcase-preview > article.card {
+    margin: 0;
+}
+
+.showcase-icons {
+    font-size: 1.5rem;
+}
+
+.showcase-statuses {
+    width: fit-content;
+    margin-inline: auto;
+}
+
+/* No ligatures: "->" and "<>" stay as typed */
+.showcase-footer code {
+    font-variant-ligatures: none;
+}

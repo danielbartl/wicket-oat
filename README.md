@@ -1338,6 +1338,15 @@ Once installed, the AI agent will automatically understand instructions like:
 - "Turn this standard Wicket Label into an Oat success badge."
 - "Create a registration form using Oat components."
 
+### Other Agents
+For Codex, Cursor, Copilot, Gemini CLI and other agents, the website publishes
+[`llms.txt`](https://danielbartl.github.io/wicket-oat/llms.txt): the rules agents most
+often get wrong and links to the docs as Markdown, for the current release. The
+[Coding agents](https://danielbartl.github.io/wicket-oat/guide.html#ai-skill) section of
+the guide has the same rules to paste into your `AGENTS.md`, `CLAUDE.md` or
+`.github/copilot-instructions.md`. [`context7.json`](context7.json) describes the
+library to [Context7](https://context7.com).
+
 ## Requirements
 
 - Java 17 or higher

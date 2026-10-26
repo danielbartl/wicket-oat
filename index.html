@@ -488,111 +488,137 @@ add(OatButton.onClick("save", "Save changes", target -&gt;
             <h3>General</h3>
             <div class="showcase-grid">
                 <div class="showcase-card">
-                    <div class="showcase-preview">
-                        <button>Primary</button>
-                        <button data-variant="secondary">Secondary</button>
-                        <button class="outline">Outline</button>
-                    </div>
+                    <div class="showcase-preview" data-preview="button">
+<button id="primary1" type="button">Primary</button>
+<button id="secondary2" type="button" data-variant="secondary">Secondary</button>
+<button id="outline3" type="button" class="outline">Outline</button>
+</div>
                     <div class="showcase-footer"><strong>OatButton / OatSubmitButton</strong><code>OatButton.onClick(id, label, onClick)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview">
-                        <span class="badge">Default</span>
-                        <span class="badge" data-variant="success">Success</span>
-                        <span class="badge outline" data-variant="danger">Danger</span>
-                    </div>
+                    <div class="showcase-preview" data-preview="badge">
+<span class="badge">Default</span>
+<span class="badge" data-variant="success">Success</span>
+<span class="badge outline" data-variant="danger">Danger</span>
+</div>
                     <div class="showcase-footer"><strong>OatBadge</strong><code>new OatBadge(id, label, OatVariant)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview">
-                        <figure data-variant="avatar" role="group">
-                            <figure data-variant="avatar" aria-label="Jane Doe"><img src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='64'%3E%3Crect%20width='64'%20height='64'%20fill='%23f97316'/%3E%3C/svg%3E" alt="" loading="lazy"></figure>
-                            <figure data-variant="avatar" aria-label="John Smith"><img src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='64'%3E%3Crect%20width='64'%20height='64'%20fill='%230ea5e9'/%3E%3C/svg%3E" alt="" loading="lazy"></figure>
-                            <figure data-variant="avatar" aria-label="Oat"><abbr title="Oat User">OT</abbr></figure>
-                        </figure>
-                    </div>
+                    <div class="showcase-preview" data-preview="avatar">
+<figure data-variant="avatar" role="group">
+    <div>
+    <figure data-variant="avatar">
+        <img src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;64&#039;%20height=&#039;64&#039;%3E%3Crect%20width=&#039;64&#039;%20height=&#039;64&#039;%20fill=&#039;%23f97316&#039;/%3E%3C/svg%3E" alt=""/>
+        <abbr title="JD">JD</abbr>
+    </figure>
+</div><div>
+    <figure data-variant="avatar">
+        <img src="data:image/svg+xml,%3Csvg%20xmlns=&#039;http://www.w3.org/2000/svg&#039;%20width=&#039;64&#039;%20height=&#039;64&#039;%3E%3Crect%20width=&#039;64&#039;%20height=&#039;64&#039;%20fill=&#039;%230ea5e9&#039;/%3E%3C/svg%3E" alt=""/>
+        <abbr title="JS">JS</abbr>
+    </figure>
+</div><div>
+    <figure data-variant="avatar">
+        
+        <abbr title="OU">OU</abbr>
+    </figure>
+</div>
+</figure>
+</div>
                     <div class="showcase-footer"><strong>OatAvatar / OatAvatarGroup</strong><code>new OatAvatar(id, imageUrl)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview" style="display:block">
-                        <div role="alert" data-variant="success"><strong>Saved.</strong> Your changes were applied.</div>
-                    </div>
+                    <div class="showcase-preview block" data-preview="alert">
+<div role="alert" data-variant="success">Saved. Your changes were applied.</div>
+</div>
                     <div class="showcase-footer"><strong>OatAlert</strong><code>new OatAlert(id, message, OatVariant)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview" style="display:block">
-                        <article class="card" style="margin:0">
-                            <header><h4 style="margin:0">Plan</h4></header>
-                            <p style="margin-block:var(--space-2) 0">Any HTML can live inside.</p>
-                        </article>
-                    </div>
+                    <div class="showcase-preview block" data-preview="card">
+<article class="card">
+    <header><h4>Plan</h4></header>
+    <p>Any HTML can live inside.</p>
+</article>
+</div>
                     <div class="showcase-footer"><strong>OatCard</strong><code>new OatCard(id)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview">
-                        <menu class="buttons oat-split-button">
-                            <li><button>New invoice</button></li>
-                            <li><ot-dropdown>
-                                <button popovertarget="demo-split" aria-label="More actions">&#9662;</button>
-                                <menu popover id="demo-split">
-                                    <button role="menuitem" class="ghost">New quote</button>
-                                    <button role="menuitem" class="ghost">New credit note</button>
-                                    <button role="menuitem" class="ghost" data-variant="danger">Archive customer</button>
-                                </menu>
-                            </ot-dropdown></li>
-                        </menu>
-                    </div>
+                    <div class="showcase-preview" data-preview="split-button">
+<div id="newInvoicea">
+    <menu class="buttons oat-split-button">
+        <li><button type="button" id="primary4">New invoice</button></li>
+        <li>
+    <ot-dropdown>
+        <button type="button" aria-haspopup="menu" aria-expanded="false" popovertarget="menub" aria-label="More actions"><span>▾</span></button>
+        <menu popover="" role="menu" id="menub">
+            <button type="button" role="menuitem" class="ghost" id="id05"><span>New quote</span></button><button type="button" role="menuitem" class="ghost" id="id16"><span>New credit note</span></button><button type="button" role="menuitem" class="ghost" id="id27" data-variant="danger"><span>Archive customer</span></button>
+        </menu>
+    </ot-dropdown>
+</li>
+    </menu>
+</div>
+</div>
                     <div class="showcase-footer"><strong>OatSplitButton</strong><code>save.addAction("Save as draft", target -&gt; ...)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview">
-<article class="card oat-stat" style="margin:0;width:100%">
+                    <div class="showcase-preview block" data-preview="stat-card">
+<article class="card oat-stat">
     <span class="oat-stat-label">Orders</span>
     <span class="oat-stat-value">6,054</span>
-    <span class="oat-stat-trend oat-sparkline" aria-hidden="true"><svg class="oat-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline class="oat-sparkline-line" points="0.00,27.38 9.09,29.00 18.18,22.41 27.27,20.56 36.36,16.98 45.45,18.60 54.55,15.25 63.64,19.64 72.73,11.67 81.82,9.01 90.91,6.81 100.00,3.00" vector-effect="non-scaling-stroke"/></svg><svg class="oat-sparkline-svg" width="100%" height="32"><circle class="oat-dot-1" cx="100.00%" cy="3.00" r="3"/></svg></span>
+    <span class="oat-stat-trend oat-sparkline" aria-hidden="true"><svg class="oat-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none"><polyline class="oat-sparkline-line" points="0.00,27.24 9.09,29.00 18.18,22.36 27.27,20.48 36.36,16.84 45.45,18.47 54.55,15.08 63.64,19.47 72.73,11.45 81.82,8.82 90.91,6.56 100.00,3.00" vector-effect="non-scaling-stroke"/></svg><svg class="oat-sparkline-svg" width="100%" height="32"><circle class="oat-dot-1" cx="100.00%" cy="3.00" r="3"/></svg></span>
     <span class="hstack gap-2 oat-stat-footer"><span class="badge" data-variant="success">+9.1%</span><span class="text-light">vs. last year</span></span>
+    
 </article>
-                    </div>
+</div>
                     <div class="showcase-footer"><strong>OatStatCard</strong><code>new OatStatCard(id, "Orders", value).setChange(percent).setTrend(last12Months)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview block">
-                        <div class="hstack gap-4 demo-icons" style="font-size:1.5rem"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
-                    </div>
+                    <div class="showcase-preview block" data-preview="icon">
+<div class="hstack gap-4 showcase-icons"><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg><svg class="oat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+</div>
                     <div class="showcase-footer"><strong>OatIcon</strong><code>new OatIcon(id, "pencil") &middot; .setLabel("Edit") &middot; 64 Lucide icons</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview block">
-                        <section class="oat-cookie-consent" aria-label="Cookie consent" style="position:static;margin:0;max-width:none">
-                            <p>We use cookies to make this site work and, with your consent, to improve it. <a href="#components">Privacy policy</a></p>
-                            <div class="hstack justify-end"><button type="button" class="outline small">Only necessary</button><button type="button" class="small">Accept</button></div>
-                        </section>
-                    </div>
+                    <div class="showcase-preview block" data-preview="cookie-consent">
+<div id="cookiesc">
+    <section class="oat-cookie-consent" aria-label="Cookie consent">
+        <p><span>We use cookies to make this site work and, with your consent, to improve it.</span> <a href="#">Privacy policy</a></p>
+        <div class="hstack justify-end">
+            <button type="button" id="necessary9" class="outline small">Only necessary</button>
+            <button type="button" id="accept8" class="small">Accept</button>
+        </div>
+    </section>
+</div>
+</div>
                     <div class="showcase-footer"><strong>OatCookieConsent</strong><code>cookieConsent(id).setPolicyLink(PrivacyPage.class) &middot; OatCookieConsent.isAccepted()</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview block">
-                        <div class="hstack gap-6 items-center justify-center">
-                            <span class="oat-indicator"><button type="button" class="outline">Inbox</button><span class="badge oat-indicator-item" data-variant="danger" data-corner="top-end">3</span></span>
-                            <span class="oat-indicator"><figure data-variant="avatar"><abbr title="Mira Novak">MN</abbr></figure><span class="oat-status oat-indicator-item" data-variant="success" role="img" aria-label="Online" data-corner="bottom-end"></span></span>
-                        </div>
-                        <ul class="unstyled vstack gap-1 mt-4" style="width:fit-content;margin-inline:auto">
-                            <li><span class="oat-status" data-variant="success" aria-hidden="true"></span> API online</li>
-                            <li><span class="oat-status" data-variant="warning" aria-hidden="true"></span> Search slow</li>
-                            <li><span class="oat-status" data-variant="danger" aria-hidden="true"></span> Mail down</li>
-                        </ul>
-                    </div>
+                    <div class="showcase-preview block" data-preview="indicator">
+<div class="hstack gap-6 items-center justify-center">
+    <span id="inboxd" class="oat-indicator"><button type="button" class="outline">Inbox</button><span id="iteme" class="badge oat-indicator-item" data-variant="danger" data-corner="top-end">3</span></span>
+    <span id="presencef" class="oat-indicator">
+    <figure data-variant="avatar">
+        
+        <abbr title="MN">MN</abbr>
+    </figure>
+<span id="item10" class="oat-status oat-indicator-item" data-variant="success" role="img" aria-label="Online" data-corner="bottom-end"></span></span>
+</div>
+<ul class="unstyled vstack gap-1 mt-4 showcase-statuses">
+    <li><span class="oat-status" data-variant="success" aria-hidden="true"></span> API online</li>
+    <li><span class="oat-status" data-variant="warning" aria-hidden="true"></span> Search slow</li>
+    <li><span class="oat-status" data-variant="danger" aria-hidden="true"></span> Mail down</li>
+</ul>
+</div>
                     <div class="showcase-footer"><strong>OatIndicator / OatStatus</strong><code>new OatIndicator(id, () -&gt; unread) &middot; OatIndicator.status(id, variant, label) &middot; new OatStatus(...)</code></div>
                 </div>
                 <div class="showcase-card">
-                    <div class="showcase-preview block">
-                        <p class="small">Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search, or <kbd><kbd>Shift</kbd>+<kbd>?</kbd></kbd> for all shortcuts.</p>
-                        <div class="vstack gap-2">
-                            <button type="button" class="outline">Continue with your company account</button>
-                            <div class="oat-divider">or</div>
-                            <button type="button">Sign in with email</button>
-                        </div>
-                    </div>
+                    <div class="showcase-preview block" data-preview="keys-divider">
+<p>Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search, or <kbd><kbd>Shift</kbd>+<kbd>?</kbd></kbd> for all shortcuts.</p>
+<div class="vstack gap-2">
+    <button type="button" class="outline">Continue with your company account</button>
+    <div class="oat-divider">or</div>
+    <button type="button">Sign in with email</button>
+</div>
+</div>
                     <div class="showcase-footer"><strong>Keys and divider</strong><code>&lt;kbd&gt;Ctrl&lt;/kbd&gt; &middot; &lt;div class="oat-divider"&gt;or&lt;/div&gt;</code></div>
                 </div>
             </div>
